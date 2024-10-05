@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Persona;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $persona = $request->user()->persona;
+        $persona->fecha_nacimiento = \Carbon\Carbon::createFromFormat('Y-m-d', $persona->fecha_nacimiento)->format('m/d/Y');
         return view('profile.edit', [
             'user' => $request->user(),
+            'persona' => $request->user()->persona
         ]);
     }
 

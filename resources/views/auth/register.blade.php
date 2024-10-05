@@ -2,25 +2,80 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Name -->
+        <!-- Nombres -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="nombre" :value="__('Nombre')" />
             <x-text-input
-                id="name"
+                id="nombre"
                 class="mt-1 block w-full"
                 type="text"
-                name="name"
-                :value="old('name')"
+                name="nombre"
+                :value="old('nombre')"
                 required
                 autofocus
-                autocomplete="name"
+                autocomplete="nombre"
             />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
+        </div>
+
+        <!-- Apellidos -->
+        <div>
+            <x-input-label for="apellido" :value="__('Apellido')" />
+            <x-text-input
+                id="apellido"
+                class="mt-1 block w-full"
+                type="text"
+                name="apellido"
+                :value="old('apellido')"
+                required
+                autofocus
+                autocomplete="apellido"
+            />
+            <x-input-error :messages="$errors->get('apellido')" class="mt-2" />
+        </div>
+
+        <!-- Fecha de nacimiento -->
+        <div>
+            <x-input-label for="fecha_nacimiento" :value="__('Fecha de nacimiento')" />
+            <x-date-input name="fecha_nacimiento" :value="old('fecha_nacimiento')" placeholder="Seleccione una fecha" />
+            <x-input-error :messages="$errors->get('fecha_nacimiento')" class="mt-2" />
+        </div>
+
+        <!-- No. de teléfono -->
+        <div>
+            <x-input-label for="telefono" :value="__('Teléfono')" />
+            <x-text-input
+                id="telefono"
+                class="mt-1 block w-full"
+                type="text"
+                name="telefono"
+                :value="old('telefono')"
+                required
+                autofocus
+                autocomplete="telefono"
+            />
+            <x-input-error :messages="$errors->get('telefono')" class="mt-2" />
+        </div>
+
+        <!-- Carnet -->
+        <div>
+            <x-input-label for="carnet" :value="__('Carnet')" />
+            <x-text-input
+                id="carnet"
+                class="mt-1 block w-full"
+                type="text"
+                name="carnet"
+                :value="old('carnet')"
+                required
+                autofocus
+                autocomplete="carnet"
+            />
+            <x-input-error :messages="$errors->get('carnet')" class="mt-2" />
         </div>
 
         <!-- Email Address -->
         <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="__('Correo electrónico')" />
             <x-text-input
                 id="email"
                 class="mt-1 block w-full"
@@ -35,7 +90,7 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Contraseña')" />
 
             <x-text-input
                 id="password"
@@ -51,7 +106,7 @@
 
         <!-- Confirm Password -->
         <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-input-label for="password_confirmation" :value="__('Confirmar contraseña')" />
 
             <x-text-input
                 id="password_confirmation"
@@ -70,11 +125,11 @@
                 class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 href="{{ route('login') }}"
             >
-                {{ __('Already registered?') }}
+                {{ __('¿Ya tienes una cuenta?') }}
             </a>
 
             <x-primary-button class="ms-4">
-                {{ __('Register') }}
+                {{ __('Registrarse') }}
             </x-primary-button>
         </div>
     </form>
