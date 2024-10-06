@@ -10,14 +10,17 @@ export default {
         './node_modules/flowbite/**/*.js'
     ],
 
+
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                'escarlata-ues': '#771D1D',
             },
         },
     },
-
     plugins: [
         forms,
         require('flowbite/plugin')
