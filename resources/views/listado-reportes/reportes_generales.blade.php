@@ -21,8 +21,8 @@
 <div class="p-5 flex flex-col">
     <a
         class="w-full h-[300px] p-6 bg-white border border-gray-200 rounded-lg shadow flex flex-col justify-center items-start mb-4">
-        <p class="font-bold text-scarlet-700 text-2xl">Últimos reportes de</p>
-        <p class="font-black text-scarlet-700 text-4xl">INCIDENCIAS EN LA FACULTAD</p>
+        <p class="font-bold text-escarlata-ues text-2xl">Últimos reportes de</p>
+        <p class="font-black text-escarlata-ues text-4xl">INCIDENCIAS EN LA FACULTAD</p>
         <p class="font-normal text-gray-500">Mantente pendiente de los ultimos reportes notificados
             de tu facultad</p>
     </a>
