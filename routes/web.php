@@ -31,4 +31,8 @@ Route::middleware('auth')->group(function () {
     })->name('profile.edit');
 });
 
+Route::get('/reportes-generales', function () {
+    return view('listado-reportes.reportes_generales');
+});
+
 require __DIR__ . '/auth.php';
