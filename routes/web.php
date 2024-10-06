@@ -29,10 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/realizar-reporte', function () {
         return view('reportes-dd/crear-reporte');
     })->name('crear-reporte');
+    Route::get('/reportes-generales', function () {
+        return view('listado-reportes.reportes_generales');
+    })->name('reportes-generales');
 });
-
-Route::get('/reportes-generales', function () {
-    return view('listado-reportes.reportes_generales');
-})->name('reportes-generales');
 
 require __DIR__ . '/auth.php';
