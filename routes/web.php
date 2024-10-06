@@ -28,11 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/realizar-reporte', function () {
         return view('reportes-dd/crear-reporte');
-    })->name('profile.edit');
+    })->name('crear-reporte');
 });
 
 Route::get('/reportes-generales', function () {
     return view('listado-reportes.reportes_generales');
-});
+})->name('reportes-generales');
 
 require __DIR__ . '/auth.php';
