@@ -18,18 +18,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/inicio', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/realizar-reporte', function () {
+        return view('reportes-dd/crear-reporte');
+    })->name('crear-reporte');
 });
 
 Route::get('/reportes-generales', function () {
     return view('listado-reportes.reportes_generales');
-});
+})->name('reportes-generales');
 
 require __DIR__ . '/auth.php';

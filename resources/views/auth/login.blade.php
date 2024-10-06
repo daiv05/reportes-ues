@@ -5,25 +5,25 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email Address -->
+        <!-- Carnet -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="carnet" :value="__('Carnet')" />
             <x-text-input
-                id="email"
+                id="carnet"
                 class="mt-1 block w-full"
-                type="email"
-                name="email"
-                :value="old('email')"
+                type="text"
+                name="carnet"
+                :value="old('carnet')"
                 required
                 autofocus
-                autocomplete="username"
+                autocomplete="carnet"
             />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-error :messages="$errors->get('carnet')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Contraseña')" />
 
             <x-text-input
                 id="password"
@@ -46,7 +46,7 @@
                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
                     name="remember"
                 />
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Recordarme') }}</span>
             </label>
         </div>
 
@@ -56,12 +56,12 @@
                     class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                     href="{{ route('password.request') }}"
                 >
-                    {{ __('Forgot your password?') }}
+                    {{ __('¿Olvidaste tu contraseña?') }}
                 </a>
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __('Iniciar sesión') }}
             </x-primary-button>
         </div>
     </form>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('personas', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 50);
-            $table->string('apellidos', 50);
+            $table->string('apellido', 50);
             $table->date('fecha_nacimiento');
             $table->string('telefono', 50);
             $table->timestamps();
