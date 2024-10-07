@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AulasController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,6 +33,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/reportes-generales', function () {
         return view('listado-reportes.reportes_generales');
     })->name('reportes-generales');
+
+    //Mantenimientos
+    Route::resource('aulas', AulasController::class)->except(['destroy']);
+    Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
 });
 
 // Rutas para Tipo de Actividades
