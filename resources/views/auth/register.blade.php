@@ -37,7 +37,11 @@
         <!-- Fecha de nacimiento -->
         <div>
             <x-input-label for="fecha_nacimiento" :value="__('Fecha de nacimiento')" />
-            <x-date-input name="fecha_nacimiento" :value="old('fecha_nacimiento')" placeholder="Seleccione una fecha" />
+            <x-date-input
+                name="fecha_nacimiento"
+                :value="old('fecha_nacimiento')"
+                placeholder="Seleccione una fecha"
+            />
             <x-input-error :messages="$errors->get('fecha_nacimiento')" class="mt-2" />
         </div>
 
