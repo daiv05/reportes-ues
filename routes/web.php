@@ -34,4 +34,13 @@ Route::middleware('auth')->group(function () {
     })->name('reportes-generales');
 });
 
+// Rutas para Tipo de Actividades
+Route::get('/tipo-actividad', [App\Http\Controllers\TipoActividadController::class, 'create'])->name('actividad-tipo.create');
+Route::post('/actividades', [App\Http\Controllers\TipoActividadController::class, 'store'])->name('tipo-actividades.store');
+// Ruta para la edición
+Route::put('/tipo-actividad/{id}', [App\Http\Controllers\TipoActividadController::class, 'update'])->name('actividad-tipo.update');
+
+// Ruta para la eliminación
+Route::delete('/tipo-actividad/{id}', [App\Http\Controllers\TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
+
 require __DIR__ . '/auth.php';
