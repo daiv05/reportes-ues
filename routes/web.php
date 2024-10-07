@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     })->name('reportes-generales');
 
     //Mantenimientos
+    Route::get('/aulas', [AulasController::class, 'index'])->name('aulas.index');
     Route::resource('aulas', AulasController::class)->except(['destroy']);
     Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
 });
