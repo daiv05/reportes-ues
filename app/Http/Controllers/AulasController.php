@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aulas;
+use App\Models\Facultades;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -15,7 +16,8 @@ class AulasController extends Controller
     public function index(): View
     {
         $aulas = Aulas::all();
-        return view('mantenimientos.aulas.index', compact('aulas'));
+        $facultades = Facultades::all();
+        return view('mantenimientos.aulas.index', compact('aulas', 'facultades'));
     }
 
     /**
@@ -32,8 +34,9 @@ class AulasController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required',
             'id_facultad' => 'required|exists:facultades,id',
+            'nombre' => 'required|max:50',
+            'activo' => 'required|boolean',
         ]);
 
         Aulas::create($request->all());
@@ -64,8 +67,9 @@ class AulasController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required',
             'id_facultad' => 'required|exists:facultades,id',
+            'nombre' => 'required|max:50',
+            'activo' => 'required|boolean',
         ]);
 
         $aula = Aulas::findOrFail($id);
