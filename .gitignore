@@ -8,6 +8,8 @@
 .env
 .env.backup
 .env.production
+package-lock.json
+composer.lock
 Homestead.json
 Homestead.yaml
 auth.json
