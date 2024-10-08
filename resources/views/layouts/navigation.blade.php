@@ -1,7 +1,7 @@
 <nav class="border-orange-200 bg-orange-900 dark:bg-gray-900">
     <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
         <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" class="h-10" alt="Reportfia Logo"/>
+            <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" class="h-10" alt="Reportfia Logo" />
             <span class="self-center whitespace-nowrap text-2xl font-semibold text-white">Reportfia</span>
         </a>
         <div class="flex items-center space-x-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
@@ -58,7 +58,7 @@
             <button
                 data-collapse-toggle="navbar-user"
                 type="button"
-                class="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-white hover:text-slate-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 md:hidden"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-white hover:bg-gray-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-200 md:hidden"
                 aria-controls="navbar-user"
                 aria-expanded="false"
             >
@@ -133,16 +133,23 @@
                     </button>
                     <div
                         id="mantenimientos-dropdown"
-                        class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700"
+                        class="z-10 hidden w-44 divide-y divide-gray-100 rounded bg-white shadow dark:bg-gray-700"
                     >
-                        <ul class="py-1 text-sm text-escarlata-ues"
-                            aria-labelledby="mantenimientos-button">
+                        <ul class="py-1 text-sm text-escarlata-ues" aria-labelledby="mantenimientos-button">
                             <li>
                                 <a
                                     href="{{ route('aulas.index') }}"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                 >
                                     Aulas
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="{{ route('departamentos.index') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                >
+                                    Departamentos
                                 </a>
                             </li>
                         </ul>
