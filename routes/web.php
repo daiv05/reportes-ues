@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AulasController;
+use App\Http\Controllers\DepartamentoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/aulas', [AulasController::class, 'index'])->name('aulas.index');
     Route::resource('aulas', AulasController::class)->except(['destroy']);
     Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
+
+
+    // Departamentos
+    Route::prefix('departamentos')->group(function () {
+        Route::get('/', [DepartamentoController::class, 'index'])->name('departamentos.index');
+        Route::post('/', [DepartamentoController::class, 'store'])->name('departamentos.store');
+        Route::put('/{id}', [DepartamentoController::class, 'update'])->name('departamentos.update');
+    });
+
 });
 
 // Rutas para Tipo de Actividades
