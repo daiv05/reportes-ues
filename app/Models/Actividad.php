@@ -22,4 +22,9 @@ class Actividad extends Model
     {
         return $this->belongsTo(TipoActividad::class, 'id_tipo_actividad');
     }
+
+    public function modalidad()
+    {
+        return $this->belongsTo(Modalidad::class, 'id_modalidad');
+    }
 }
