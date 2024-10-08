@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AulasController;
 use App\Http\Controllers\DepartamentoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EscuelaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,16 +42,26 @@ Route::middleware('auth')->group(function () {
     Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
 
     //Actividades
-    Route::get('/tipo-actividad', [App\Http\Controllers\TipoActividadController::class, 'create'])->name('actividad-tipo.create');
-    Route::post('/actividades', [App\Http\Controllers\TipoActividadController::class, 'store'])->name('tipo-actividades.store');
-    Route::put('/tipo-actividad/{id}', [App\Http\Controllers\TipoActividadController::class, 'update'])->name('actividad-tipo.update');
-    Route::delete('/tipo-actividad/{id}', [App\Http\Controllers\TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
+    Route::prefix('actividad')->group(function () {
+        Route::get('/tipo', [App\Http\Controllers\TipoActividadController::class, 'index'])->name('actividad-tipo.index');
+        Route::post('/tipo', [App\Http\Controllers\TipoActividadController::class, 'store'])->name('actividades_tipo.store');
+        Route::put('/tipo/{id}', [App\Http\Controllers\TipoActividadController::class, 'update'])->name('actividad-tipo.update');
+        Route::delete('/tipo/{id}', [App\Http\Controllers\TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
+    });
 
-    //Esucela
-    Route::get('/escuela', [App\Http\Controllers\EscuelaController::class, 'create'])->name('escuela.create');
-    Route::post('/escuela', [App\Http\Controllers\EscuelaController::class, 'store'])->name('escuela.store');
-    Route::put('/escuela/{id}', [App\Http\Controllers\EscuelaController::class, 'update'])->name('escuela.update');
-    Route::delete('/escuela/{id}', [App\Http\Controllers\EscuelaController::class, 'destroy'])->name('escuela.destroy');
+    // Rutas de Escuela
+    Route::prefix('escuela')->group(function () {
+        Route::get('/', [EscuelaController::class, 'index'])->name('escuela.index');
+        Route::patch('/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuela.toggleActivo');
+    });
+    Route::resource('/escuela', EscuelaController::class)->except(['destroy']);
+
+    // Departamentos
+    Route::prefix('departamentos')->group(function () {
+        Route::get('/', [DepartamentoController::class, 'index'])->name('departamentos.index');
+        Route::post('/', [DepartamentoController::class, 'store'])->name('departamentos.store');
+        Route::put('/{id}', [DepartamentoController::class, 'update'])->name('departamentos.update');
+    });
 
 });
 

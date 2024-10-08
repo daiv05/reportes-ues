@@ -3,79 +3,117 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Escuela;
+use App\Models\Facultades;
+use Illuminate\View\View;
 
 class EscuelaController extends Controller
 {
+    public function index(): View
+    {
+        $escuelas = Escuela::paginate(10);
+        $facultades = Facultades::all();
+        return view('mantenimientos.escuela.index', compact('escuelas', 'facultades'))->with('message', [
+            'type' => 'success',
+            'content' => 'El aula se ha creado exitosamente.'
+        ]);
+    }
 
+      /**
+     * Display a listing of the resource.
+     */
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        // Obtener todas las escuelas para mostrarlas en la tabla debajo del formulario
-        $escuelas = Escuela::all();
-        return view('mantenimientos.escuela.index', compact('escuelas'));
+        return view('escuela.create')->with('message', [
+            'type' => 'info',
+            'content' => 'Bienvenido al mantenimiento de aulas.'
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         // Validar la solicitud
-        $validatedData = $request->validate([
-            'id_facultad' => 'required|integer',
-            'nombre' => 'required|string|max:50',
+        $request->validate([
+            'id_facultad' => 'required|exists:facultades,id',
+            'nombre' => 'required|max:50',
             'activo' => 'required|boolean',
         ]);
 
-        // Crear la escuela
-        Escuela::create($validatedData);
-
-        // Redirigir con un mensaje de éxito al formulario de creación
-        return redirect()->route('escuela.create')->with('message', [
-            'type' => 'success', // Cambia 'success' por 'error', 'warning' o 'info' según la acción
-            'content' => 'Escuela creada exitosamente'
+        Escuela::create($request->all());
+        return redirect()->route('escuela.index')->with('message', [
+            'type' => 'success',
+            'content' => 'El aula se ha creado exitosamente.'
         ]);
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id): View
+    {
+        $escuela = Escuela::findOrFail($id);
+        return view('escuela.show', compact('escuela'))->with('message', [
+            'type' => 'success',
+            'content' => 'El aula se ha creado exitosamente.'
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id): View
+    {
+        $escuela = Escuela::findOrFail($id);
+        return view('escuela.edit', compact('escuela'))->with('message', [
+            'type' => 'success',
+            'content' => 'El aula se ha editado exitosamente.'
+        ]);
+    }
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id): RedirectResponse
     {
-        // Validar la solicitud
-        $validatedData = $request->validate([
-            'id_facultad' => 'required|integer',
-            'nombre' => 'required|string|max:50',
+        $request->validate([
+            'id_facultad' => 'required|exists:facultades,id',
+            'nombre' => 'required|max:50',
             'activo' => 'required|boolean',
         ]);
 
-        // Buscar y actualizar la escuela
         $escuela = Escuela::findOrFail($id);
-        $escuela->update($validatedData);
-
-        // Redirigir con un mensaje de éxito
-        return redirect()->route('escuela.create')->with('message', [
-            'type' => 'info', // Cambia 'success' por 'error', 'warning' o 'info' según la acción
-            'content' => 'Escuela actualizada exitosamente'
+        $escuela->update($request->all());
+        return redirect()->route('escuela.index')->with('message', [
+            'type' => 'success',
+            'content' => 'El aula se ha actualizado exitosamente.'
+        ]);
+    }
+  /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id): RedirectResponse
+    {
+        $escuela = Escuela::findOrFail($id);
+        $escuela->delete();
+        return redirect()->route('escuela.index')->with('message', [
+            'type' => 'success',
+            'content' => 'El aula se ha creado exitosamente.'
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    public function toggleActivo(Escuela $escuela): RedirectResponse
     {
-        // Buscar y eliminar la escuela
-        $escuela = Escuela::findOrFail($id);
-        $escuela->delete();
-
-        // Redirigir con un mensaje de éxito
-        return redirect()->route('escuela.create')->with('message', [
-            'type' => 'warning', // Cambia 'success' por 'error', 'warning' o 'info' según la acción
-            'content' => 'Escuela eliminada exitosamente'
+        $escuela->activo = !$escuela->activo;
+        $escuela->save();
+        return redirect()->route('escuela.index')->with('message', [
+            'type' => 'success',
+            'content' => 'El aula se ha creado exitosamente.'
         ]);
     }
 }

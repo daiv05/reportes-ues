@@ -1,271 +1,177 @@
 <x-app-layout>
+    <!-- Mensaje de éxito -->
     <x-slot name="header">
         <div class="p-6 text-2xl font-bold text-red-900 dark:text-gray-100">
-            {{ __('Mantenimiento de escuelas') }}
+            @if (session('message'))
+                <x-alert :type="session('message')['type']" :message="session('message')['content']" />
+            @endif
+            {{ __('Escuela') }}
         </div>
-
     </x-slot>
 
+
+
+
+    <!-- Boton agregar -->
     <div class="pb-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <!-- Mensaje de éxito -->
-                    @if (session('message'))
-                        @php
-                            $alertType = session('message')['type'];
-                            $alertColors = [
-                                'success' => 'bg-green-100 border border-green-400 text-green-700',
-                                'error' => 'bg-red-100 border border-red-400 text-red-700',
-                                'warning' => 'bg-yellow-100 border border-yellow-400 text-yellow-700',
-                                'info' => 'bg-blue-100 border border-blue-400 text-blue-700',
-                            ];
-                        @endphp
-                        <div id="alert" class="{{ $alertColors[$alertType] }} px-4 py-3 rounded relative my-4"
-                            role="alert">
-                            <strong class="font-bold">
-                                @if ($alertType == 'success')
-                                    ¡Éxito!
-                                @elseif($alertType == 'error')
-                                    ¡Error!
-                                @elseif($alertType == 'warning')
-                                    ¡Advertencia!
-                                @else
-                                    Información
-                                @endif
-                            </strong>
-                            <span class="block sm:inline">{{ session('message')['content'] }}</span>
-                            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3 close-alert"
-                                aria-label="Cerrar">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                    class="size-5">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
-                                        clip-rule="evenodd" />
-                                </svg>
-
-                            </button>
-                        </div>
-                    @endif
-
-
-                    <!-- Formulario para agregar la escuela -->
-                    <!-- Título con negritas para el formulario -->
-
-                    <h2 class="text-lg font-bold py-4 text-left text-gray-800">Ingrese los datos</h2>
-
-
-                    <form method="POST" action="{{ route('escuela.store') }}"
-                        class="bg-white p-6 rounded-lg shadow-md">
-                        @csrf
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
-                            <!-- Facultad ID (Select con lista de facultades) -->
-                            <div>
-                                <label for="id_facultad"
-                                    class="block mb-2 text-sm font-semibold text-gray-700">Facultad</label>
-                                <select id="id_facultad" name="id_facultad" required
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option value="1">Ingeniería</option>
-                                    <option value="2">Arquitectura</option>
-                                </select>
-                            </div>
-
-                            <!-- Nombre de la Escuela -->
-                            <div>
-                                <label for="nombre" class="block mb-2 text-sm font-semibold text-gray-700">Nombre de
-                                    la Escuela</label>
-                                <input type="text" id="nombre" name="nombre" required
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Ingrese el nombre de la escuela">
-                            </div>
-
-                            <!-- Estado de la Escuela -->
-                            <div>
-                                <label for="activo"
-                                    class="block mb-2 text-sm font-semibold text-gray-700">Estado</label>
-                                <select id="activo" name="activo"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option value="1">Activo</option>
-                                    <option value="0">Inactivo</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Botón de Crear -->
-                        <div class="flex justify-end">
-                            <button type="submit"
-                                class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 flex items-center shadow-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                    class="w-5 h-5 mr-2">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-11.25a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                Crear
-                            </button>
-                        </div>
-                    </form>
-
-
-                    @if ($escuelas->isNotEmpty())
-                        <div class="mt-8 overflow-x-auto">
-                            <table id="search-table"
-                                class="min-w-full table-auto bg-white border border-gray-300 shadow-lg">
-                                <caption class="text-lg font-bold py-4 text-center text-gray-800">Detalle de escuelas
-                                </caption>
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="px-6 py-2 text-center text-sm font-bold text-gray-700 uppercase">ID
-                                        </th>
-                                        <th class="px-6 py-2 text-center text-sm font-bold text-gray-700 uppercase">
-                                            Nombre</th>
-                                        <th class="px-6 py-2 text-center text-sm font-bold text-gray-700 uppercase">
-                                            Estado</th>
-                                        <th class="px-6 py-2 text-center text-sm font-bold text-gray-700 uppercase">
-                                            Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($escuelas as $escuela)
-                                        <tr class="border-b">
-                                            <td class="px-2 py-1 text-center text-sm font-semibold text-gray-900">
-                                                {{ $escuela->id }}</td>
-                                            <td class="px-2 py-1 text-center text-sm font-semibold text-gray-900">
-                                                {{ $escuela->nombre }}</td>
-                                            <td class="px-2 py-1 text-center text-sm font-semibold text-gray-900">
-                                                {{ $escuela->activo ? 'Activo' : 'Inactivo' }}</td>
-                                            <td class="px-2 py-1 text-center text-sm">
-                                                <button type="button" data-modal-target="editModal{{ $escuela->id }}"
-                                                    data-modal-toggle="editModal{{ $escuela->id }}"
-                                                    class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                        fill="currentColor" class="size-5">
-                                                        <path
-                                                            d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
-                                                        <path
-                                                            d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
-                                                    </svg>
-
-
-                                                </button>
-                                                <form action="{{ route('escuela.destroy', $escuela->id) }}"
-                                                    method="POST" class="inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
-                                                        onclick="return confirm('¿Estás seguro de eliminar esta escuela?');">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                            fill="currentColor" class="size-5">
-                                                            <path fill-rule="evenodd"
-                                                                d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z"
-                                                                clip-rule="evenodd" />
-                                                        </svg>
-
-
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        <script>
-                                            if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
-                                                const dataTable = new simpleDatatables.DataTable("#search-table", {
-                                                    searchable: true,
-                                                    sortable: false
-                                                });
-                                            }
-                                        </script>
-                                        <!-- Modal de Edición -->
-                                        <x-form-modal :id="'editModal' . $escuela->id">
-                                            <x-slot name="header">
-                                                Editar Escuela
-                                                <button type="button"
-                                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                                    data-modal-hide="editModal{{ $escuela->id }}">
-                                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
-                                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd"
-                                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                                            clip-rule="evenodd"></path>
-                                                    </svg>
-                                                    <span class="sr-only">Cerrar modal</span>
-                                                </button>
-                                            </x-slot>
-
-                                            <x-slot name="body">
-                                                <form action="{{ route('escuela.update', $escuela->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-
-                                                    <!-- Facultad ID (Select con lista de facultades) -->
-                                                    <div class="w-full">
-                                                        <label for="id_facultad"
-                                                            class="block mb-2 text-sm font-medium text-gray-900">Facultad</label>
-                                                        <select id="id_facultad" name="id_facultad" required
-                                                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                            <option value="1"
-                                                                {{ $escuela->id_facultad == 1 ? 'selected' : '' }}>
-                                                                Ingeniería</option>
-                                                            <option value="2"
-                                                                {{ $escuela->id_facultad == 2 ? 'selected' : '' }}>
-                                                                Arquitectura</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <!-- Nombre de la Escuela -->
-                                                    <div class="mb-4">
-                                                        <label for="nombre"
-                                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Nombre
-                                                            de la
-                                                            Escuela</label>
-                                                        <input type="text" name="nombre" id="nombre"
-                                                            value="{{ $escuela->nombre }}" required
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                            placeholder="Ingrese el nombre de la escuela">
-                                                    </div>
-
-                                                    <!-- Estado de la Escuela -->
-                                                    <div class="mb-4">
-                                                        <label for="activo"
-                                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Estado</label>
-                                                        <select name="activo" id="activo"
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                            <option value="1"
-                                                                {{ $escuela->activo ? 'selected' : '' }}>Activo
-                                                            </option>
-                                                            <option value="0"
-                                                                {{ !$escuela->activo ? 'selected' : '' }}>Inactivo
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                            </x-slot>
-
-                                            <x-slot name="footer">
-                                                <button data-modal-hide="editModal{{ $escuela->id }}" type="submit"
-                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                                                    Guardar cambios
-                                                </button>
-                                                <button data-modal-hide="editModal{{ $escuela->id }}" type="button"
-                                                    class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600">
-                                                    Cancelar
-                                                </button>
-                                            </x-slot>
-                                        </x-form-modal>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <p class="mt-8 text-sm text-gray-600 dark:text-gray-400">No hay escuelas registradas.</p>
-                    @endif
+                <div class="p-6">
+                    <x-primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
+                        type="button">
+                        Añadir
+                    </x-primary-button>
                 </div>
             </div>
         </div>
-        <script>
-            document.querySelector('.close-alert').addEventListener('click', function() {
-                this.closest('div[role="alert"]').style.display = 'none';
-            });
-        </script>
     </div>
+
+    <!-- tabla de datos -->
+    <div class="flex flex-col justify-center items-center overflow-x-auto shadow-md sm:rounded-lg w-[64%] mx-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">Nombre</th>
+                    <th scope="col" class="px-6 py-3">Facultad</th>
+                    <th scope="col" class="px-6 py-3">Activo</th>
+                    <th scope="col" class="px-6 py-3">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($escuelas as $escuela)
+                    <tr
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ $escuela->nombre }}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{ $escuela->facultades->nombre }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $escuela->activo ? 'Sí' : 'No' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="#"
+                                class="font-medium text-green-600 dark:text-green-400 hover:underline edit-button"
+                                data-id="{{ $escuela->id }}" data-nombre="{{ $escuela->nombre }}"
+                                data-facultad="{{ $escuela->facultades->id }}" data-activo="{{ $escuela->activo }}">
+                                <x-heroicon-o-pencil class="w-5 h-5" />
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            aria-label="Table navigation">
+            {{ $escuelas->links() }}
+        </nav>
+    </div>
+    <!-- Modal agregar-->
+    <x-form-modal id="static-modal">
+        <x-slot name="header">
+            <h3 class="text-2xl font-bold text-escarlata-ues">
+                Añadir escuela
+            </h3>
+        </x-slot>
+        <x-slot name="body">
+            <form id="add-escuela-form" method="POST" action="{{ route('escuela.store') }}">
+                @csrf
+                <div id="general-errors" class="text-red-500 text-sm mb-4"></div>
+                <div class="mb-4">
+                    <label for="id_facultad"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Facultad</label>
+                    <select id="id_facultad" name="id_facultad"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md dark:bg-gray-700 dark:text-gray-300">
+                        @foreach ($facultades as $facultad)
+                            <option value="{{ $facultad->id }}">{{ $facultad->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('id_facultad')
+                        <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-4">
+                    <label for="nombre"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+                    <input type="text" id="nombre" name="nombre"
+                        class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm dark:bg-gray-700 dark:text-gray-300">
+                    @error('nombre')
+                        <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-4">
+                    <label for="activo"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Activo</label>
+                    <select id="activo" name="activo"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-escarlata-ues sm:text-sm rounded-md dark:bg-gray-700 dark:text-gray-300">
+                        <option value="1">Sí</option>
+                        <option value="0">No</option>
+                    </select>
+                    @error('activo')
+                        <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+            </form>
+        </x-slot>
+        <x-slot name="footer">
+            <button data-modal-hide="static-modal" type="button"
+                class="bg-gray-700 text-white py-2.5 px-7 text-sm font-medium focus:outline-none rounded-lg border focus:z-10 focus:ring-4">
+                Cancelar
+            </button>
+            <button type="submit" form="add-escuela-form"
+                class="bg-red-700 ms-6 text-white focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-8 py-2.5 text-center">
+                Guardar
+            </button>
+        </x-slot>
+    </x-form-modal>
 </x-app-layout>
+<script>
+    document.getElementById('add-escuela-form').addEventListener('submit', function(event) {
+        let hasErrors = false;
+        let errorMessage = '';
+
+        const nombre = document.getElementById('nombre').value.trim();
+        if (nombre === '') {
+            hasErrors = true;
+            errorMessage += 'El campo Nombre es obligatorio<br>';
+        } else if (nombre.length > 50) {
+            hasErrors = true;
+            errorMessage += 'El campo Nombre no debe exceder los 50 caracteres<br>';
+        }
+
+        if (hasErrors) {
+            event.preventDefault();
+            document.getElementById('general-errors').innerHTML = errorMessage;
+        }
+    });
+
+    document.querySelectorAll('[data-modal-hide="static-modal"]').forEach(button => {
+        button.addEventListener('click', function() {
+            document.getElementById('add-escuela-form').reset();
+            document.getElementById('general-errors').innerHTML = '';
+            document.querySelectorAll('.text-red-500').forEach(error => error.innerHTML = '');
+        });
+    });
+
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+            const facultad = this.getAttribute('data-facultad');
+            const activo = this.getAttribute('data-activo');
+
+            document.getElementById('add-escuela-form').action = `/escuela/${id}`;
+            document.getElementById('add-escuela-form').method = 'POST';
+            document.getElementById('add-escuela-form').innerHTML +=
+                '<input type="hidden" name="_method" value="PUT">';
+
+            document.getElementById('nombre').value = nombre;
+            document.getElementById('id_facultad').value = facultad;
+            document.getElementById('activo').value = activo;
+
+            document.querySelector('[data-modal-target="static-modal"]').click();
+        });
+    });
+</script>

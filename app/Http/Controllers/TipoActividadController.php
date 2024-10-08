@@ -12,7 +12,9 @@ class TipoActividadController extends Controller
      */
     public function index()
     {
-        //
+        // Obtener todos los tipos de actividades para mostrarlos en la tabla debajo del formulario
+        $tiposActividades = TipoActividad::all();
+        return view('actividades.tipo_actividad', compact('tiposActividades'));
     }
 
     /**
@@ -20,11 +22,7 @@ class TipoActividadController extends Controller
      */
     public function create()
     {
-        // Obtener todos los tipos de actividades para mostrarlos en la tabla debajo del formulario
-        $tiposActividades = TipoActividad::all();
 
-        // Retornar la vista del formulario de creación con los tipos de actividades
-        return view('actividades.tipo_actividad', compact('tiposActividades'));
     }
 
 
@@ -44,7 +42,7 @@ class TipoActividadController extends Controller
         TipoActividad::create($validatedData);
 
         // Redirigir con un mensaje de éxito al formulario de creación
-        return redirect()->route('actividad-tipo.create')->with('success', 'Tipo de actividad creado exitosamente');
+        return redirect()->route('actividad-tipo.index')->with('success', 'Tipo de actividad creado exitosamente');
     }
 
     /**
@@ -61,30 +59,30 @@ class TipoActividadController extends Controller
     public function edit($id)
     {
         $tipoActividad = TipoActividad::findOrFail($id);
-        return view('actividades.tipos.edit_tipo', compact('tipoActividad'));
+        return view('actividades.tipo_actividad', compact('tipoActividad'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     /**
- * Update the specified resource in storage.
- */
-public function update(Request $request, $id)
-{
-    // Validar la solicitud
-    $validatedData = $request->validate([
-        'nombre' => 'required|string|max:255',
-        'activo' => 'required|boolean',
-    ]);
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        // Validar la solicitud
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'activo' => 'required|boolean',
+        ]);
 
-    // Buscar y actualizar el tipo de actividad
-    $tipoActividad = TipoActividad::findOrFail($id);
-    $tipoActividad->update($validatedData);
+        // Buscar y actualizar el tipo de actividad
+        $tipoActividad = TipoActividad::findOrFail($id);
+        $tipoActividad->update($validatedData);
 
-    // Redirigir con un mensaje de éxito
-    return redirect()->route('actividad-tipo.create')->with('success', 'Tipo de actividad actualizado exitosamente');
-}
+        // Redirigir con un mensaje de éxito
+        return redirect()->route('actividad-tipo.index')->with('success', 'Tipo de actividad actualizado exitosamente');
+    }
 
 
     /**
@@ -95,6 +93,6 @@ public function update(Request $request, $id)
         $tipoActividad = TipoActividad::findOrFail($id);
         $tipoActividad->delete();
 
-        return redirect()->route('actividad-tipo.create')->with('success', 'Tipo de actividad eliminado exitosamente');
+        return redirect()->route('actividad-tipo.index')->with('success', 'Tipo de actividad eliminado exitosamente');
     }
 }
