@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\TipoEvento;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,5 +17,13 @@ class DatabaseSeeder extends Seeder
         $this->call(PersonaSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(UsuarioRolSeeder::class);
+        $this->call(ModalidadSeeder::class);
+        $this->call(TipoClaseSeeder::class);
+        $this->call(DiaSeeder::class);
+        $this->call(TipoEventoSeeder::class);
+        $this->call(SedesSeeder::class);
+        $this->call(FacultadesSeeder::class);
+        $this->call(EscuelaSeeder::class);
     }
+
 }
