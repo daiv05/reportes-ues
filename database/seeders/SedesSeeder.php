@@ -15,21 +15,22 @@ class SedesSeeder extends Seeder
      public function run(): void
      {
          $sedes = [
-             [
-                 'nombre' => 'Sede Centro',
-                 'direccion' => 'Calle Principal 123',
-                 'activo' => true,
-             ],
-             [
-                 'nombre' => 'Sede Norte',
-                 'direccion' => 'Avenida Norte 456',
-                 'activo' => true,
-             ],
-             [
-                 'nombre' => 'Sede Sur',
-                 'direccion' => 'Calle Sur 789',
-                 'activo' => true,
-             ],
+            [
+                'nombre' => 'Sede Central',
+                'direccion' => 'Departamento de San Salvador',
+            ],
+            [
+                'nombre' => 'Sede Oriental',
+                'direccion' => 'Departamento de San Miguel/La Unión',
+            ],
+            [
+                'nombre' => 'Sede de Paracentral',
+                'direccion' => 'Departamento de San Vicente',
+            ],
+            [
+                'nombre' => 'Sede Occidental',
+                'direccion' => 'Departamento de Santa Ana',
+            ],
          ];
 
          foreach ($sedes as $sede) {
