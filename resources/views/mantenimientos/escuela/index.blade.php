@@ -175,3 +175,8 @@
         });
     });
 </script>
+<script>
+    function editarDepartamento(depa) {
+        document.getElementById('static-modal-update')
+    }
+</script>
