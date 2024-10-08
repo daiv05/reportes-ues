@@ -39,14 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('aulas', AulasController::class)->except(['destroy']);
     Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
 
-    // Rutas para Tipo de Actividades
+    //Actividades
     Route::get('/tipo-actividad', [App\Http\Controllers\TipoActividadController::class, 'create'])->name('actividad-tipo.create');
     Route::post('/actividades', [App\Http\Controllers\TipoActividadController::class, 'store'])->name('tipo-actividades.store');
     Route::put('/tipo-actividad/{id}', [App\Http\Controllers\TipoActividadController::class, 'update'])->name('actividad-tipo.update');
     Route::delete('/tipo-actividad/{id}', [App\Http\Controllers\TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
 
     //Esucela
-    // Rutas para Escuela
     Route::get('/escuela', [App\Http\Controllers\EscuelaController::class, 'create'])->name('escuela.create');
     Route::post('/escuela', [App\Http\Controllers\EscuelaController::class, 'store'])->name('escuela.store');
     Route::put('/escuela/{id}', [App\Http\Controllers\EscuelaController::class, 'update'])->name('escuela.update');
