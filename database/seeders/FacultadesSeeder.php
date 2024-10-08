@@ -13,23 +13,70 @@ class FacultadesSeeder extends Seeder
      */
     public function run()
     {
+
+        // Facultad de Ciencias y Humanidades
+        // Facultad Multidisciplinaria de Oriente
+        // Facultad de Ingeníeria y Arquitectura
+        // Facultad de Agronomía
+        // Facultad de Odontología
+        // Facultad de Medicina
+        // Facultad Multidisciplinaria Paracentral
+        // Facultad de Jurisprudencia y Ciencias Sociales
+        // Facultad de Química y Farmacia
+        // Facultad de Ciencias Naturales y Matemática
+        // Facultad Multidisciplinaria de Occidente
+        // Facultad de Ciencias Económicas
         $facultades = [
             [
                 'id_sedes' => 1,
-                'nombre' => 'Facultad de Ciencias',
-                'activo' => true
-            ],
-            [
-                'id_sedes' => 1,
-                'nombre' => 'Facultad de Artes',
-                'activo' => true
+                'nombre' => 'Facultad de Ciencias y Humanidades',
             ],
             [
                 'id_sedes' => 2,
-                'nombre' => 'Facultad de Ingeniería',
-                'activo' => false
+                'nombre' => 'Facultad Multidisciplinaria de Oriente',
+                'activo' => false,
             ],
-            // Agrega más facultades según sea necesario
+            [
+                'id_sedes' => 1,
+                'nombre' => 'Facultad de Ingeníeria y Arquitectura',
+            ],
+            [
+                'id_sedes' => 1,
+                'nombre' => 'Facultad de Agronomía',
+            ],
+            [
+                'id_sedes' => 1,
+                'nombre' => 'Facultad de Odontología',
+            ],
+            [
+                'id_sedes' => 1,
+                'nombre' => 'Facultad de Medicina',
+            ],
+            [
+                'id_sedes' => 3,
+                'nombre' => 'Facultad Multidisciplinaria Paracentral',
+                'activo' => false,
+            ],
+            [
+                'id_sedes' => 1,
+                'nombre' => 'Facultad de Jurisprudencia y Ciencias Sociales',
+            ],
+            [
+                'id_sedes' => 1,
+                'nombre' => 'Facultad de Química y Farmacia',
+            ],
+            [
+                'id_sedes' => 1,
+                'nombre' => 'Facultad de Ciencias Naturales y Matemática',
+            ],
+            [
+                'id_sedes' => 4,
+                'nombre' => 'Facultad Multidisciplinaria de Occidente',
+            ],
+            [
+                'id_sedes' => 1,
+                'nombre' => 'Facultad de Ciencias Económicas',
+            ]
         ];
 
         foreach ($facultades as $facultad) {
