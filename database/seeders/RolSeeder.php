@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Enums\RolesEnum;
+use Spatie\Permission\Models\Role;
 
 class RolSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        foreach (RolesEnum::cases() as $rol) {
+            Role::create(['name' => $rol->value]);
+        }
     }
 }

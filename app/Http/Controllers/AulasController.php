@@ -15,7 +15,7 @@ class AulasController extends Controller
      */
     public function index(): View
     {
-        $aulas = Aulas::all();
+        $aulas = Aulas::paginate(10);
         $facultades = Facultades::all();
         return view('mantenimientos.aulas.index', compact('aulas', 'facultades'));
     }

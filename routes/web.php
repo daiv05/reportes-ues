@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AulasController;
+use App\Http\Controllers\DepartamentoController;
 use Illuminate\Support\Facades\Route;
 
 /*
