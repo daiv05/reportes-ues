@@ -18,8 +18,8 @@
             <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                 <div class="p-6">
                     <x-primary-button
-                        data-modal-target="static-modal"
-                        data-modal-toggle="static-modal"
+                        data-modal-target="static-modal-add"
+                        data-modal-toggle="static-modal-add"
                         class="block"
                         type="button"
                     >
@@ -99,7 +99,7 @@
                         name="descripcion"
                         rows="4"
                         :value="old('descripcion')"
-                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                        class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                         placeholder="Describa brevemente las funciones..."
                     ></textarea>
                     <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
