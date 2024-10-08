@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AulasController;
 use App\Http\Controllers\DepartamentoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EscuelaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,20 @@ Route::middleware('auth')->group(function () {
     Route::resource('aulas', AulasController::class)->except(['destroy']);
     Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
 
+    //Actividades
+    Route::prefix('actividad')->group(function () {
+        Route::get('/tipo', [App\Http\Controllers\TipoActividadController::class, 'index'])->name('actividad-tipo.index');
+        Route::post('/tipo', [App\Http\Controllers\TipoActividadController::class, 'store'])->name('actividades_tipo.store');
+        Route::put('/tipo/{id}', [App\Http\Controllers\TipoActividadController::class, 'update'])->name('actividad-tipo.update');
+        Route::delete('/tipo/{id}', [App\Http\Controllers\TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
+    });
+
+    // Rutas de Escuela
+    Route::prefix('escuela')->group(function () {
+        Route::get('/', [EscuelaController::class, 'index'])->name('escuela.index');
+        Route::patch('/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuela.toggleActivo');
+    });
+    Route::resource('/escuela', EscuelaController::class)->except(['destroy']);
 
     // Departamentos
     Route::prefix('departamentos')->group(function () {
@@ -50,13 +65,6 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// Rutas para Tipo de Actividades
-Route::get('/tipo-actividad', [App\Http\Controllers\TipoActividadController::class, 'create'])->name('actividad-tipo.create');
-Route::post('/actividades', [App\Http\Controllers\TipoActividadController::class, 'store'])->name('tipo-actividades.store');
-// Ruta para la edición
-Route::put('/tipo-actividad/{id}', [App\Http\Controllers\TipoActividadController::class, 'update'])->name('actividad-tipo.update');
 
-// Ruta para la eliminación
-Route::delete('/tipo-actividad/{id}', [App\Http\Controllers\TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
 
 require __DIR__ . '/auth.php';

@@ -16,4 +16,10 @@ class Facultades extends Model
     {
         return $this->belongsTo(Sedes::class, 'id_sede');
     }
+
+    public function escuelas()
+    {
+        return $this->hasMany(Escuela::class, 'id_facultad');
+    }
+
 }
