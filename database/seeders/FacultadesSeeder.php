@@ -13,19 +13,6 @@ class FacultadesSeeder extends Seeder
      */
     public function run()
     {
-
-        // Facultad de Ciencias y Humanidades
-        // Facultad Multidisciplinaria de Oriente
-        // Facultad de Ingeníeria y Arquitectura
-        // Facultad de Agronomía
-        // Facultad de Odontología
-        // Facultad de Medicina
-        // Facultad Multidisciplinaria Paracentral
-        // Facultad de Jurisprudencia y Ciencias Sociales
-        // Facultad de Química y Farmacia
-        // Facultad de Ciencias Naturales y Matemática
-        // Facultad Multidisciplinaria de Occidente
-        // Facultad de Ciencias Económicas
         $facultades = [
             [
                 'id_sedes' => 1,

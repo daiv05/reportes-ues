@@ -17,7 +17,7 @@ class SedesSeeder extends Seeder
          $sedes = [
             [
                 'nombre' => 'Sede Central',
-                'direccion' => 'Final 25 Avenida Norte "Mártires 30 de Julio", Ciudad Universitaria, San Salvador',
+                'direccion' => 'Departamento de San Salvador',
             ],
             [
                 'nombre' => 'Sede Oriental',
