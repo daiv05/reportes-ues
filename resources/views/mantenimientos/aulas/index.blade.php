@@ -19,6 +19,47 @@
         </div>
     </div>
 
+    <div class="flex flex-col justify-center items-center overflow-x-auto shadow-md sm:rounded-lg w-[64%] mx-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">Nombre</th>
+                <th scope="col" class="px-6 py-3">Facultad</th>
+                <th scope="col" class="px-6 py-3">Activo</th>
+                <th scope="col" class="px-6 py-3">Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($aulas as $aula)
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ $aula->nombre }}
+                    </th>
+                    <td class="px-6 py-4">
+                        {{ $aula->facultades->nombre }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ $aula->activo ? 'Sí' : 'No' }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="#" class="font-medium text-green-600 dark:text-green-400 hover:underline edit-button"
+                           data-id="{{ $aula->id }}"
+                           data-nombre="{{ $aula->nombre }}"
+                           data-facultad="{{ $aula->facultades->id }}"
+                           data-activo="{{ $aula->activo }}">
+                            <x-heroicon-o-pencil class="w-5 h-5"/>
+                        </a>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+             aria-label="Table navigation">
+            {{ $aulas->links() }}
+        </nav>
+    </div>
+
     <x-form-modal id="static-modal">
         <x-slot name="header">
             <h3 class="text-2xl font-bold text-escarlata-ues">
@@ -102,6 +143,25 @@
             document.getElementById('add-aula-form').reset();
             document.getElementById('general-errors').innerHTML = '';
             document.querySelectorAll('.text-red-500').forEach(error => error.innerHTML = '');
+        });
+    });
+
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+            const facultad = this.getAttribute('data-facultad');
+            const activo = this.getAttribute('data-activo');
+
+            document.getElementById('add-aula-form').action = `/aulas/${id}`;
+            document.getElementById('add-aula-form').method = 'POST';
+            document.getElementById('add-aula-form').innerHTML += '<input type="hidden" name="_method" value="PUT">';
+
+            document.getElementById('nombre').value = nombre;
+            document.getElementById('id_facultad').value = facultad;
+            document.getElementById('activo').value = activo;
+
+            document.querySelector('[data-modal-target="static-modal"]').click();
         });
     });
 </script>
