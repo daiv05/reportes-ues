@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('modalidad', function (Blueprint $table) {
+        Schema::create('tipo_clases', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
             $table->boolean('activo')->default(1); //0 == inactivo  &&  1  == activo
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modalidad');
+        Schema::dropIfExists('tipo_clase');
     }
 };

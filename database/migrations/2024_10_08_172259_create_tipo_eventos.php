@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipo_evento', function (Blueprint $table) {
+        Schema::create('tipo_eventos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
             $table->boolean('activo')->default(1); //0 == inactivo  &&  1  == activo
