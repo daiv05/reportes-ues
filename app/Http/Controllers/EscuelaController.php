@@ -7,6 +7,7 @@ use App\Models\Escuela;
 
 class EscuelaController extends Controller
 {
+
     /**
      * Show the form for creating a new resource.
      */
@@ -14,9 +15,7 @@ class EscuelaController extends Controller
     {
         // Obtener todas las escuelas para mostrarlas en la tabla debajo del formulario
         $escuelas = Escuela::all();
-
-        // Retornar la vista del formulario de creación con las escuelas
-        return view('mantenimiento.matenimiento_escuela', compact('escuelas'));
+        return view('mantenimientos.escuela.index', compact('escuelas'));
     }
 
     /**
