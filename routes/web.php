@@ -5,6 +5,7 @@ use App\Http\Controllers\AulasController;
 use App\Http\Controllers\DepartamentoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EscuelaController;
+use App\Http\Controllers\AsignaturaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,12 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('/escuela', EscuelaController::class)->except(['destroy']);
 
+    // Rutas de asignatura
+    Route::prefix('asignatura')->group(function () {
+        Route::get('/', [AsignaturaController::class, 'index'])->name('asignatura.index');
+        Route::patch('/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->name('asignatura.toggleActivo');
+    });
+    Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
     // Departamentos
     Route::prefix('departamentos')->group(function () {
         Route::get('/', [DepartamentoController::class, 'index'])->name('departamentos.index');
