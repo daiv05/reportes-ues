@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\ModalidadEnum;
-use App\Models\Modalidad;
+use App\Models\General\Modalidad;
 use Illuminate\Database\Seeder;
 
 class ModalidadSeeder extends Seeder

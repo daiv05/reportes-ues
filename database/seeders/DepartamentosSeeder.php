@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Departamento;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Mantenimientos\Departamento;
 use Illuminate\Database\Seeder;
 
 class DepartamentosSeeder extends Seeder

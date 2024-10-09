@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Mantenimientos;
 
-use App\Models\Aulas;
-use App\Models\Facultades;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\General\Facultades;
+use App\Models\Mantenimientos\Aulas;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class AulasController extends Controller

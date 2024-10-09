@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Mantenimientos;
 
-use App\Models\Departamento;
-use App\Models\Facultades;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Mantenimientos\Departamento;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 

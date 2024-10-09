@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Actividades;
 
+use App\Http\Controllers\Controller;
+use App\Models\Mantenimientos\TipoActividad;
 use Illuminate\Http\Request;
-use App\Models\TipoActividad;
 
 class TipoActividadController extends Controller
 {

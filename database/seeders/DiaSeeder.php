@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\DiasEnum;
-use App\Models\Dia;
+use App\Models\General\Dia;
 use Illuminate\Database\Seeder;
 
 class DiaSeeder extends Seeder

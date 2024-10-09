@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Seguridad\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Persona;
-use App\Models\User;
+use App\Models\Registro\Persona;
+use App\Models\Seguridad\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;

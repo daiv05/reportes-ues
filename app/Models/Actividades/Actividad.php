@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Actividades;
 
+use App\Models\General\Modalidad;
+use App\Models\Mantenimientos\TipoActividad;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

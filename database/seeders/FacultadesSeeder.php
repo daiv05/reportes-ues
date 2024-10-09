@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\General\Facultades;
 use Illuminate\Database\Seeder;
-use App\Models\Facultades;
 
 class FacultadesSeeder extends Seeder
 {

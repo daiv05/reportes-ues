@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Mantenimientos;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,5 +17,5 @@ class Asignatura extends Model
     {
         return $this->belongsTo(Escuela::class, 'id_escuela');
     }
-   
+
 }

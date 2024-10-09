@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Seguridad;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Registro\Persona;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
