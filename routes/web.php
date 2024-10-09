@@ -70,6 +70,14 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}', [DepartamentoController::class, 'update'])->name('departamentos.update');
     });
 
+    Route::prefix('actividades')->group(function () {
+        Route::get('/clases', function () {
+            return view('listado-actividades.listado-clases');
+        })->name('listado-clases');
+        Route::get('/eventos-evaluaciones', function () {
+            return view('listado-actividades.listado-eventos-evaluaciones');
+        })->name('listado-eventos-evaluaciones');
+    });
 });
 
 

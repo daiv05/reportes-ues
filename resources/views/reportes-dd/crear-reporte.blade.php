@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="my-16">
-                    <form class="mx-16 max-w-sm">
+                    <form class="mx-16 max-w-5xl">
                         <!-- Titulo -->
                         <div class="mb-5">
                             <label for="titulo" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
@@ -67,7 +67,7 @@
                                 Actividad seleccionada
                             </label>
 
-                            <div class="relative overflow-x-auto">
+                            <div>
                                 <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
                                     <thead
                                         class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
@@ -88,31 +88,10 @@
                                             >
                                                 Parcial I
                                             </th>
+                                            <td class="px-6 py-4">Sistemas</td>
                                             <td class="px-6 py-4">B11</td>
                                             <td class="px-6 py-4">MIP115, COS115</td>
-                                            <td class="px-6 py-4">$2999</td>
-                                        </tr>
-                                        <tr class="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
-                                            <th
-                                                scope="row"
-                                                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                                            >
-                                                Microsoft Surface Pro
-                                            </th>
-                                            <td class="px-6 py-4">White</td>
-                                            <td class="px-6 py-4">Laptop PC</td>
-                                            <td class="px-6 py-4">$1999</td>
-                                        </tr>
-                                        <tr class="bg-white dark:bg-gray-800">
-                                            <th
-                                                scope="row"
-                                                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                                            >
-                                                Magic Mouse 2
-                                            </th>
-                                            <td class="px-6 py-4">Black</td>
-                                            <td class="px-6 py-4">Accessories</td>
-                                            <td class="px-6 py-4">$99</td>
+                                            <td class="px-6 py-4">8:00 AM - 11:00 PM</td>
                                         </tr>
                                     </tbody>
                                 </table>
