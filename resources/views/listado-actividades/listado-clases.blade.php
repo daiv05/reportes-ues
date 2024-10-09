@@ -216,7 +216,6 @@
                                         <th scope="col" class="px-6 py-3">Responsable</th>
                                         <th scope="col" class="px-6 py-3">Escuela</th>
                                         <th scope="col" class="px-6 py-3">Horario</th>
-                                        <th scope="col" class="px-6 py-3">Estado</th>
                                         <th scope="col" class="px-6 py-3">Acciones</th>
                                     </tr>
                                 </thead>
@@ -229,9 +228,6 @@
                                         <td class="px-6 py-4">Juan Pérez</td>
                                         <td class="px-6 py-4">Sistemas</td>
                                         <td class="px-6 py-4">8:00 AM - 11:00 PM</td>
-                                        <td class="px-6 py-4"><div class="py-2 px-4 mb-2 text-sm text-center text-red-800 rounded-full bg-red-50 dark:bg-gray-800 dark:text-red-400">
-                                            <span class="font-medium">CANCELADO</span>
-                                          </div></td>
                                         <td class="px-6 py-4">
                                             <a href="{{ route('crear-reporte')}}" class="font-medium text-gray-700 hover:underline">
                                                 <x-heroicon-s-flag class="h-4 mx-2" />
@@ -245,9 +241,6 @@
                                         <td class="px-6 py-4">Juan Pérez</td>
                                         <td class="px-6 py-4">Industrial</td>
                                         <td class="px-6 py-4">8:00 AM - 11:00 PM</td>
-                                        <td class="px-6 py-4"><div class="py-2 px-4 mb-2 text-sm text-center text-green-800 rounded-full bg-green-50 dark:bg-green-800 dark:text-green-400">
-                                            <span class="font-medium">VIGENTE</span>
-                                          </div></td>
                                         <td class="px-6 py-4">
                                             <a href="{{ route('crear-reporte')}}" class="font-medium text-gray-700 hover:underline">
                                                 <x-heroicon-s-flag class="h-4 mx-2" />
