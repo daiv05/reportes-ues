@@ -34,7 +34,7 @@
                 {{ $slot }}
             </main>
         </div>
-        <footer class="bg-gray-100 py-2">
+        <footer class="py-2">
             <div class="mx-auto w-full max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
                 <div class="flex items-center mb-2 ">
                     <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="Reportia logo" class="h-10 w-fit mr-2">
