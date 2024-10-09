@@ -76,6 +76,29 @@
                         Reportes
                     </a>
                 </li>
+                <li class="relative">
+                    <button id="actividades-button" data-dropdown-toggle="actividades-dropdown"
+                        class="block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0">
+                        Actividades
+                    </button>
+                    <div id="actividades-dropdown"
+                        class="z-10 hidden w-44 divide-y divide-gray-100 rounded bg-white shadow dark:bg-gray-700">
+                        <ul class="py-1 text-sm text-escarlata-ues" aria-labelledby="actividades-button">
+                            <li>
+                                <a href="{{ route('listado-clases') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Clases
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('listado-eventos-evaluaciones') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Eventos y evaluaciones
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
                 <li>
                     <a href="{{ route('crear-reporte') }}" @class([
                         'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->routeIs(

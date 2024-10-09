@@ -13,7 +13,7 @@ class DepartamentoController extends Controller
 {
     public function index(): View
     {
-        $departamentos = Departamento::paginate(2);
+        $departamentos = Departamento::paginate(5);
         return view('mantenimientos.departamentos.index', compact('departamentos'));
     }
 
