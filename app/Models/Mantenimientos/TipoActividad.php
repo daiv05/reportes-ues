@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class TipoActividad extends Model
 {
     use HasFactory;
+    
     protected $table = 'tipo_actividades';
 
     protected $fillable = [

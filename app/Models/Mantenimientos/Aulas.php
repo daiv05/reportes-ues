@@ -11,6 +11,7 @@ class Aulas extends Model
     use HasFactory;
 
     protected $table = 'aulas';
+    
     protected $fillable = ['nombre', 'activo', 'id_facultad'];
 
     public function facultades()

@@ -9,8 +9,6 @@ class Asignatura extends Model
 {
     use HasFactory;
 
-    use HasFactory;
-
     protected $fillable = ['id_escuela', 'nombre', 'activo'];
 
     public function escuela()

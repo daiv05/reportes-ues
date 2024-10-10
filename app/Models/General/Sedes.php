@@ -10,5 +10,6 @@ class Sedes extends Model
     use HasFactory;
 
     protected $table = 'sedes';
+    
     protected $fillable = ['nombre', 'direccion', 'activo'];
 }

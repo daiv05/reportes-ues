@@ -11,6 +11,7 @@ class Facultades extends Model
     use HasFactory;
 
     protected $table = 'facultades';
+    
     protected $fillable = ['nombre', 'activo', 'id_sede'];
 
     public function sedes()
