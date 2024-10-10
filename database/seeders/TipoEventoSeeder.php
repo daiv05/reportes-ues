@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\TipoEventoEnum;
-use App\Models\TipoEvento;
+use App\Models\General\TipoEvento;
 use Illuminate\Database\Seeder;
 
 class TipoEventoSeeder extends Seeder

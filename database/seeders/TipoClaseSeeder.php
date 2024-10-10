@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\TipoClaseEnum;
-use App\Models\TipoClase;
+use App\Models\General\TipoClase;
 use Illuminate\Database\Seeder;
 
 class TipoClaseSeeder extends Seeder

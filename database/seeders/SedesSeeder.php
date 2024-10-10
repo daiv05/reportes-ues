@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\General\Sedes;
 use Illuminate\Database\Seeder;
-use App\Models\Sedes;
 
 class SedesSeeder extends Seeder
 {

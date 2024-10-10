@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AulasController;
-use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\Mantenimientos\AsignaturaController;
+use App\Http\Controllers\Mantenimientos\AulasController;
+use App\Http\Controllers\Mantenimientos\DepartamentoController;
+use App\Http\Controllers\Mantenimientos\EscuelaController;
+use App\Http\Controllers\Seguridad\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EscuelaController;
-use App\Http\Controllers\AsignaturaController;
+use App\Http\Controllers\Actividades\TipoActividadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,10 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/realizar-reporte', function () {
-        return view('reportes-dd/crear-reporte');
+        return view('reportes.reportes-dd.crear-reporte');
     })->name('crear-reporte');
     Route::get('/reportes-generales', function () {
-        return view('listado-reportes.reportes_generales');
+        return view('reportes.listado-reportes.reportes_generales');
     })->name('reportes-generales');
 
     //Mantenimientos
@@ -44,10 +45,10 @@ Route::middleware('auth')->group(function () {
 
     //Actividades
     Route::prefix('actividad')->group(function () {
-        Route::get('/tipo', [App\Http\Controllers\TipoActividadController::class, 'index'])->name('actividad-tipo.index');
-        Route::post('/tipo', [App\Http\Controllers\TipoActividadController::class, 'store'])->name('actividades_tipo.store');
-        Route::put('/tipo/{id}', [App\Http\Controllers\TipoActividadController::class, 'update'])->name('actividad-tipo.update');
-        Route::delete('/tipo/{id}', [App\Http\Controllers\TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
+        Route::get('/tipo', [TipoActividadController::class, 'index'])->name('actividad-tipo.index');
+        Route::post('/tipo', [TipoActividadController::class, 'store'])->name('actividades_tipo.store');
+        Route::put('/tipo/{id}', [TipoActividadController::class, 'update'])->name('actividad-tipo.update');
+        Route::delete('/tipo/{id}', [TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
     });
 
     // Rutas de Escuela
@@ -72,10 +73,10 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('actividades')->group(function () {
         Route::get('/clases', function () {
-            return view('listado-actividades.listado-clases');
+            return view('actividades.listado-actividades.listado-clases');
         })->name('listado-clases');
         Route::get('/eventos-evaluaciones', function () {
-            return view('listado-actividades.listado-eventos-evaluaciones');
+            return view('actividades.listado-actividades.listado-eventos-evaluaciones');
         })->name('listado-eventos-evaluaciones');
     });
 });

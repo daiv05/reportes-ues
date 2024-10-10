@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\RolesEnum;
-use App\Models\User;
+use App\Models\Seguridad\User;
 use Illuminate\Database\Seeder;
 
 class UsuarioRolSeeder extends Seeder
