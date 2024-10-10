@@ -9,18 +9,13 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                 <div class="p-6">
-                    <x-primary-button
-                        data-modal-target="static-modal"
-                        data-modal-toggle="static-modal"
-                        class="block"
-                        type="button"
-                    >
+                    <x-primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
+                        type="button" id="add-button">
                         Añadir
                     </x-primary-button>
                 </div>
                 <div
-                    class="mx-auto mb-8 flex max-w-[85%] flex-col items-center justify-center overflow-x-auto sm:rounded-lg"
-                >
+                    class="mx-auto mb-8 flex max-w-[85%] flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
                     <table class="w-full text-left text-sm text-gray-500 shadow-md dark:text-gray-400 rtl:text-right">
                         <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -33,12 +28,9 @@
                         <tbody>
                             @foreach ($departamentos as $depa)
                                 <tr
-                                    class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                                >
-                                    <th
-                                        scope="row"
-                                        class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                                    >
+                                    class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
+                                    <th scope="row"
+                                        class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                                         {{ $depa->nombre }}
                                     </th>
                                     <td class="px-6 py-4">
@@ -48,14 +40,11 @@
                                         {{ $depa->activo ? 'ACTIVO' : 'INACTIVO' }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <a
-                                            href="#"
+                                        <a href="#"
                                             class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                            data-id="{{ $depa->id }}"
-                                            data-nombre="{{ $depa->nombre }}"
+                                            data-id="{{ $depa->id }}" data-nombre="{{ $depa->nombre }}"
                                             data-descripcion="{{ $depa->descripcion }}"
-                                            data-activo="{{ $depa->activo }}"
-                                        >
+                                            data-activo="{{ $depa->activo }}">
                                             <x-heroicon-o-pencil class="h-5 w-5" />
                                         </a>
                                     </td>
@@ -63,10 +52,8 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <nav
-                        class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
-                        aria-label="Table navigation"
-                    >
+                    <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
+                        aria-label="Table navigation">
                         {{ $departamentos->links() }}
                     </nav>
                 </div>
@@ -76,39 +63,28 @@
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
-            <h3 class="text-2xl font-bold text-escarlata-ues">Añadir Departamento</h3>
+            <h3 id="head-text" class="text-2xl font-bold text-escarlata-ues">Añadir Departamento</h3>
         </x-slot>
         <x-slot name="body">
             <form id="add-departamentos-form" method="POST" action="{{ route('departamentos.store') }}">
                 @csrf
                 <div class="mb-4">
                     <x-input-label for="nombre" :value="__('Nombre')" />
-                    <input
-                        type="text"
-                        id="nombre"
-                        name="nombre"
-                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
-                    />
+                    <input type="text" id="nombre" name="nombre"
+                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm" />
                     <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                 </div>
                 <div class="mb-4">
                     <x-input-label for="descripcion" :value="__('Descripcion')" />
-                    <textarea
-                        id="descripcion"
-                        name="descripcion"
-                        rows="4"
+                    <textarea id="descripcion" name="descripcion" rows="4"
                         class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                        placeholder="Describa brevemente las funciones..."
-                    ></textarea>
+                        placeholder="Describa brevemente las funciones..."></textarea>
                     <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
                 </div>
                 <div class="mb-4">
-                    <x-input-label for="activo" :value="__('Activo')" />
-                    <select
-                        id="activo"
-                        name="activo"
-                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
-                    >
+                    <x-input-label for="activo" :value="__('Estado')" />
+                    <select id="activo" name="activo"
+                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                         <option value="1">ACTIVO</option>
                         <option value="0">INACTIVO</option>
                     </select>
@@ -117,90 +93,19 @@
             </form>
         </x-slot>
         <x-slot name="footer">
-            <button
-                data-modal-hide="static-modal"
-                type="button"
-                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4"
-            >
+            <button data-modal-hide="static-modal" type="button"
+                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                 Cancelar
             </button>
-            <button
-                type="submit"
-                form="add-departamentos-form"
-                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
-            >
+            <button type="submit" form="add-departamentos-form"
+                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
                 Guardar
             </button>
         </x-slot>
     </x-form-modal>
-
-    {{--
-        <x-form-modal id="static-modal-update">
-        <x-slot name="header">
-        <h3 class="text-2xl font-bold text-escarlata-ues">Añadir Departamento</h3>
-        </x-slot>
-        <x-slot name="body">
-        <form id="update-departamentos-form" method="POST" action="{{ route('departamentos.update') }}">
-        @method('PUT')
-        @csrf
-        <div class="mb-4">
-        <x-input-label for="nombre" :value="__('Nombre')" />
-        <input
-        type="text"
-        id="nombre"
-        name="nombre"
-        :value="old('nombre')"
-        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
-        />
-        <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
-        </div>
-        <div class="mb-4">
-        <x-input-label for="descripcion" :value="__('Descripcion')" />
-        <textarea
-        id="descripcion"
-        name="descripcion"
-        rows="4"
-        :value="old('descripcion')"
-        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-        placeholder="Describa brevemente las funciones..."
-        ></textarea>
-        <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
-        </div>
-        <div class="mb-4">
-        <x-input-label for="activo" :value="__('Activo')" />
-        <select
-        id="activo"
-        name="activo"
-        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
-        >
-        <option value="1">ACTIVO</option>
-        <option value="0">INACTIVO</option>
-        </select>
-        <x-input-error :messages="$errors->get('activo')" class="mt-2" />
-        </div>
-        </form>
-        </x-slot>
-        <x-slot name="footer">
-        <button
-        data-modal-hide="static-modal"
-        type="button"
-        class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4"
-        >
-        Cancelar
-        </button>
-        <button
-        type="submit"
-        form="add-departamentos-form"
-        class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
-        >
-        Guardar
-        </button>
-        </x-slot>
-        </x-form-modal>
-    --}}
 </x-app-layout>
 <script>
-    document.getElementById('add-departamentos-form').addEventListener('submit', function (event) {
+    document.getElementById('add-departamentos-form').addEventListener('submit', function(event) {
         let hasErrors = false;
         let errorMessage = '';
 
@@ -228,15 +133,20 @@
     });
 
     document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
             document.getElementById('add-departamentos-form').reset();
-            document.getElementById('general-errors').innerHTML = '';
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
         });
     });
 
+    document.getElementById('add-button').addEventListener('click', function(event) {
+        console.log("fdadada");
+        document.getElementById('head-text').innerHTML = "Agregar departamento";
+    });
+
     document.querySelectorAll('.edit-button').forEach((button) => {
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
             const id = this.getAttribute('data-id');
             const nombre = this.getAttribute('data-nombre');
             const descripcion = this.getAttribute('data-descripcion');
@@ -244,11 +154,14 @@
 
             document.getElementById('add-departamentos-form').action = `/departamentos/${id}`;
             document.getElementById('add-departamentos-form').method = 'POST';
-            document.getElementById('add-departamentos-form').innerHTML += '<input type="hidden" name="_method" value="PUT">';
+            document.getElementById('add-departamentos-form').innerHTML +=
+                '<input type="hidden" name="_method" value="PUT">';
 
             document.getElementById('nombre').value = nombre;
             document.getElementById('descripcion').value = descripcion;
             document.getElementById('activo').value = activo;
+            document.getElementById('head-text').textContent = "Editar departamento";
+            console.log(document.getElementById('head-text'), 'document.getElementById');
 
             document.querySelector('[data-modal-target="static-modal"]').click();
         });
