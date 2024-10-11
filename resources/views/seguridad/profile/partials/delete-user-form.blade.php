@@ -27,9 +27,9 @@
             </p>
 
             <div class="mt-6">
-                <x-input-label for="password" value="{{ __('Contraseña') }}" class="sr-only" />
+                <x-forms.input-label for="password" value="{{ __('Contraseña') }}" class="sr-only" />
 
-                <x-text-input
+                <x-forms.text-input
                     id="password"
                     name="password"
                     type="password"
@@ -37,7 +37,7 @@
                     placeholder="{{ __('Contraseña') }}"
                 />
 
-                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                <x-forms.input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
             </div>
 
             <div class="mt-6 flex justify-end">

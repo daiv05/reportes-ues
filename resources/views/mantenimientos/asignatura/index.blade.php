@@ -17,10 +17,10 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                 <div class="p-6">
-                    <x-primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
+                    <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                         type="button">
                         Añadir
-                    </x-primary-button>
+                    </x-forms.primary-button>
                 </div>
             </div>
         </div>

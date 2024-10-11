@@ -9,10 +9,10 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                 <div class="p-6">
-                    <x-primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
+                    <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                         type="button" id="add-button">
                         Añadir
-                    </x-primary-button>
+                    </x-forms.primary-button>
                 </div>
                 <div
                     class="mx-auto mb-8 flex max-w-[85%] flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
@@ -69,26 +69,26 @@
             <form id="add-departamentos-form" method="POST" action="{{ route('departamentos.store') }}">
                 @csrf
                 <div class="mb-4">
-                    <x-input-label for="nombre" :value="__('Nombre')" />
+                    <x-forms.input-label for="nombre" :value="__('Nombre')" />
                     <input type="text" id="nombre" name="nombre"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm" />
-                    <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
+                    <x-forms.input-error :messages="$errors->get('nombre')" class="mt-2" />
                 </div>
                 <div class="mb-4">
-                    <x-input-label for="descripcion" :value="__('Descripcion')" />
+                    <x-forms.input-label for="descripcion" :value="__('Descripcion')" />
                     <textarea id="descripcion" name="descripcion" rows="4"
                         class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                         placeholder="Describa brevemente las funciones..."></textarea>
-                    <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
+                    <x-forms.input-error :messages="$errors->get('descripcion')" class="mt-2" />
                 </div>
                 <div class="mb-4">
-                    <x-input-label for="activo" :value="__('Estado')" />
+                    <x-forms.input-label for="activo" :value="__('Estado')" />
                     <select id="activo" name="activo"
                         class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                         <option value="1">ACTIVO</option>
                         <option value="0">INACTIVO</option>
                     </select>
-                    <x-input-error :messages="$errors->get('activo')" class="mt-2" />
+                    <x-forms.input-error :messages="$errors->get('activo')" class="mt-2" />
                 </div>
             </form>
         </x-slot>

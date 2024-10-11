@@ -14,9 +14,9 @@
             @csrf
 
             <div>
-                <x-primary-button>
+                <x-forms.primary-button>
                     {{ __('Reenviar verificación de correo electrónico') }}
-                </x-primary-button>
+                </x-forms.primary-button>
             </div>
         </form>
 

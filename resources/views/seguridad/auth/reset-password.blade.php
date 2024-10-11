@@ -7,8 +7,8 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Correo electrónico')" />
-            <x-text-input
+            <x-forms.input-label for="email" :value="__('Correo electrónico')" />
+            <x-forms.text-input
                 id="email"
                 class="mt-1 block w-full"
                 type="email"
@@ -18,13 +18,13 @@
                 autofocus
                 autocomplete="email"
             />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Contraseña')" />
-            <x-text-input
+            <x-forms.input-label for="password" :value="__('Contraseña')" />
+            <x-forms.text-input
                 id="password"
                 class="mt-1 block w-full"
                 type="password"
@@ -32,14 +32,14 @@
                 required
                 autocomplete="new-password"
             />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Confirm Password -->
         <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirmar contraseña')" />
+            <x-forms.input-label for="password_confirmation" :value="__('Confirmar contraseña')" />
 
-            <x-text-input
+            <x-forms.text-input
                 id="password_confirmation"
                 class="mt-1 block w-full"
                 type="password"
@@ -48,13 +48,13 @@
                 autocomplete="new-password"
             />
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
         <div class="mt-4 flex items-center justify-end">
-            <x-primary-button>
+            <x-forms.primary-button>
                 {{ __('Restablecer contraseña') }}
-            </x-primary-button>
+            </x-forms.primary-button>
         </div>
     </form>
 </x-guest-layout>

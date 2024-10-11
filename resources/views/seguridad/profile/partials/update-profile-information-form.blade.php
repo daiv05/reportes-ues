@@ -19,8 +19,8 @@
 
         <!-- Nombres -->
         <div>
-            <x-input-label for="nombre" :value="__('Nombre')" />
-            <x-text-input
+            <x-forms.input-label for="nombre" :value="__('Nombre')" />
+            <x-forms.text-input
                 id="nombre"
                 name="nombre"
                 type="text"
@@ -30,13 +30,13 @@
                 autofocus
                 autocomplete="nombre"
             />
-            <x-input-error class="mt-2" :messages="$errors->get('nombre')" />
+            <x-forms.input-error class="mt-2" :messages="$errors->get('nombre')" />
         </div>
 
         <!-- Apellidos -->
         <div>
-            <x-input-label for="apellido" :value="__('Apellido')" />
-            <x-text-input
+            <x-forms.input-label for="apellido" :value="__('Apellido')" />
+            <x-forms.text-input
                 id="apellido"
                 class="mt-1 block w-full"
                 type="text"
@@ -46,24 +46,24 @@
                 autofocus
                 autocomplete="apellido"
             />
-            <x-input-error :messages="$errors->get('apellido')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('apellido')" class="mt-2" />
         </div>
 
         <!-- Fecha de nacimiento -->
         <div>
-            <x-input-label for="fecha_nacimiento" :value="__('Fecha de nacimiento')" />
+            <x-forms.input-label for="fecha_nacimiento" :value="__('Fecha de nacimiento')" />
             <x-date-input
                 name="fecha_nacimiento"
                 :value="old('fecha_nacimiento', $persona->fecha_nacimiento)"
                 placeholder="Seleccionar"
             />
-            <x-input-error :messages="$errors->get('fecha_nacimiento')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('fecha_nacimiento')" class="mt-2" />
         </div>
 
         <!-- No. de teléfono -->
         <div>
-            <x-input-label for="telefono" :value="__('Teléfono')" />
-            <x-text-input
+            <x-forms.input-label for="telefono" :value="__('Teléfono')" />
+            <x-forms.text-input
                 id="telefono"
                 class="mt-1 block w-full"
                 type="text"
@@ -73,13 +73,13 @@
                 autofocus
                 autocomplete="telefono"
             />
-            <x-input-error :messages="$errors->get('telefono')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('telefono')" class="mt-2" />
         </div>
 
         <!-- Carnet -->
         <div>
-            <x-input-label for="carnet" :value="__('Carnet')" />
-            <x-text-input
+            <x-forms.input-label for="carnet" :value="__('Carnet')" />
+            <x-forms.text-input
                 id="carnet"
                 class="mt-1 block w-full"
                 type="text"
@@ -89,12 +89,12 @@
                 autofocus
                 autocomplete="carnet"
             />
-            <x-input-error :messages="$errors->get('carnet')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('carnet')" class="mt-2" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Correo electrónico')" />
-            <x-text-input
+            <x-forms.input-label for="email" :value="__('Correo electrónico')" />
+            <x-forms.text-input
                 id="email"
                 name="email"
                 type="email"
@@ -103,7 +103,7 @@
                 required
                 autocomplete="email"
             />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <x-forms.input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div>
@@ -128,7 +128,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Guardar') }}</x-primary-button>
+            <x-forms.primary-button>{{ __('Guardar') }}</x-forms.primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
