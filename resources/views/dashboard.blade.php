@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-4">
             <h3 class="text-2xl font-semibold mb-4">Resumen de Actividad Reciente</h3>
             <div class="flex justify-around text-center">
                 <div>

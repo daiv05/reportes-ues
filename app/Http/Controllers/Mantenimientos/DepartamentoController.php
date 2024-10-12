@@ -32,6 +32,7 @@ class DepartamentoController extends Controller
         $request->validate([
             'nombre' => ['required', Rule::unique('departamentos')->ignore($id), 'max:50'],
             'descripcion' => 'required|max:50',
+            'activo' => 'required|boolean',
         ]);
 
         $departamento = Departamento::findOrFail($id);

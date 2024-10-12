@@ -52,7 +52,7 @@
         <!-- Fecha de nacimiento -->
         <div>
             <x-forms.input-label for="fecha_nacimiento" :value="__('Fecha de nacimiento')" />
-            <x-date-input
+            <x-forms.date-input
                 name="fecha_nacimiento"
                 :value="old('fecha_nacimiento', $persona->fecha_nacimiento)"
                 placeholder="Seleccionar"

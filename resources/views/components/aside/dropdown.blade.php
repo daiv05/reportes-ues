@@ -16,10 +16,7 @@
         data-collapse-toggle="{{ $id }}">
         @svg($icon, $active ? $iconDropdownActive : $iconDropdownNormal, ['style' => ' '])
         <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">{{ $label }}</span>
-        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 1 4 4 4-4" />
-        </svg>
+        @svg('heroicon-s-chevron-down', 'w-3 h-3', ['style' => ' '])
     </button>
 
 </li>
