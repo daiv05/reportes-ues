@@ -1,3 +1,12 @@
+@php
+    $headers = [
+        ['text' => 'Nombre', 'align' => 'left'],
+        ['text' => 'Descripción', 'align' => 'left'],
+        ['text' => 'Estado', 'align' => 'center'],
+        ['text' => 'Acciones', 'align' => 'left'],
+    ];
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Departamentos" />
@@ -16,48 +25,33 @@
             </x-forms.primary-button>
         </div>
         <div class="mx-auto mb-8 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
-            <table class="w-full text-left text-sm text-gray-500 shadow-md dark:text-gray-400 rtl:text-right">
-                <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">Nombre</th>
-                        <th scope="col" class="px-6 py-3">Descripcion</th>
-                        <th scope="col" class="px-6 py-3">Estado</th>
-                        <th scope="col" class="px-6 py-3">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($departamentos as $depa)
-                        <tr
-                            class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                        >
-                            <th
-                                scope="row"
-                                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+            <x-table.base :headers="$headers">
+                @foreach ($departamentos as $depa)
+                    <x-table.tr>
+                        <x-table.td>
+                            {{ $depa->nombre }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $depa->descripcion }}
+                        </x-table.td>
+                        <x-table.td>
+                            <x-status.is-active :active="$depa->activo" />
+                        </x-table.td>
+                        <x-table.td>
+                            <a
+                                href="#"
+                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                data-id="{{ $depa->id }}"
+                                data-nombre="{{ $depa->nombre }}"
+                                data-descripcion="{{ $depa->descripcion }}"
+                                data-activo="{{ $depa->activo }}"
                             >
-                                {{ $depa->nombre }}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ $depa->descripcion }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-status.is-active :active="$depa->activo" />
-                            </td>
-                            <td class="px-6 py-4">
-                                <a
-                                    href="#"
-                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                    data-id="{{ $depa->id }}"
-                                    data-nombre="{{ $depa->nombre }}"
-                                    data-descripcion="{{ $depa->descripcion }}"
-                                    data-activo="{{ $depa->activo }}"
-                                >
-                                    <x-heroicon-o-pencil class="h-5 w-5" />
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                <x-heroicon-o-pencil class="h-5 w-5" />
+                            </a>
+                        </x-table.td>
+                    </x-table.tr>
+                @endforeach
+            </x-table.base>
             <nav
                 class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
                 aria-label="Table navigation"
