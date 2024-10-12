@@ -1,20 +1,5 @@
-{{--
-    @php
-    $textNormal = 'flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group';
-    $textActive = 'flex items-center p-2 text-gray-900 rounded-lg bg-gray-100 group';
-    $textDropdownNormal =
-    'flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100';
-    $textDropdownActive =
-    'flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group bg-gray-100';
-    $iconNormal = 'w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900';
-    $iconActive = 'w-5 h-5 text-gray-900 transition duration-75';
-    $iconDropdownNormal = 'flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900';
-    $iconDropdownActive = 'flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75';
-    @endphp
---}}
-
 @php
-    $itemsInit = [
+    $sidebarItems = [
         [
             'type' => 1,
             'to' => 'dashboard',
@@ -78,13 +63,11 @@
             ],
         ],
     ];
-
-    $sidebarItems = $itemsInit;
 @endphp
 
 <aside
     id="logo-sidebar"
-    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-20 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0"
+    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0"
     aria-label="Sidebar"
 >
     <div class="h-full overflow-y-auto bg-white px-3 pb-4 dark:bg-gray-800">
