@@ -7,8 +7,8 @@
 
         <!-- Carnet -->
         <div>
-            <x-input-label for="carnet" :value="__('Carnet')" />
-            <x-text-input
+            <x-forms.input-label for="carnet" :value="__('Carnet')" />
+            <x-forms.text-input
                 id="carnet"
                 class="mt-1 block w-full"
                 type="text"
@@ -18,14 +18,14 @@
                 autofocus
                 autocomplete="carnet"
             />
-            <x-input-error :messages="$errors->get('carnet')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('carnet')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Contraseña')" />
+            <x-forms.input-label for="password" :value="__('Contraseña')" />
 
-            <x-text-input
+            <x-forms.text-input
                 id="password"
                 class="mt-1 block w-full"
                 type="password"
@@ -34,7 +34,7 @@
                 autocomplete="current-password"
             />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Remember Me -->
@@ -60,9 +60,9 @@
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-forms.primary-button class="ms-3">
                 {{ __('Iniciar sesión') }}
-            </x-primary-button>
+            </x-forms.primary-button>
         </div>
     </form>
 </x-guest-layout>

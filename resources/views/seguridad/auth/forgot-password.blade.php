@@ -11,8 +11,8 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Correo electrónico')" />
-            <x-text-input
+            <x-forms.input-label for="email" :value="__('Correo electrónico')" />
+            <x-forms.text-input
                 id="email"
                 class="mt-1 block w-full"
                 type="email"
@@ -21,13 +21,13 @@
                 required
                 autofocus
             />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <div class="mt-4 flex items-center justify-end">
-            <x-primary-button>
+            <x-forms.primary-button>
                 {{ __('Enviar enlace para reestablecer') }}
-            </x-primary-button>
+            </x-forms.primary-button>
         </div>
     </form>
 </x-guest-layout>

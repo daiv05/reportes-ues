@@ -1,49 +1,25 @@
 @php
     $headers = [
-        [
-            'text' => 'Nombre',
-            'align' => 'left',
-        ],
-        [
-            'text' => 'Asignaturas',
-            'align' => 'left',
-        ],
-        [
-            'text' => 'Aulas',
-            'align' => 'left',
-        ],
-        [
-            'text' => 'Responsable',
-            'align' => 'left',
-        ],
-        [
-            'text' => 'Fecha',
-            'align' => 'left',
-        ],
-        [
-            'text' => 'Horario',
-            'align' => 'left',
-        ],
-        [
-            'text' => 'Estado',
-            'align' => 'center',
-        ],
-        [
-            'text' => 'Acciones',
-            'align' => 'left',
-        ],
+        ['text' => 'Título', 'align' => 'left'],
+        ['text' => 'Fecha y Hora', 'align' => 'left'],
+        ['text' => 'Responsable', 'align' => 'left'],
+        ['text' => 'Salón', 'align' => 'left'],
+        ['text' => 'Departamento', 'align' => 'left'],
+        ['text' => 'Actividad', 'align' => 'left'],
+        ['text' => 'Estado', 'align' => 'center'],
+        ['text' => 'Acciones', 'align' => 'left'],
     ];
 @endphp
 
 <x-app-layout>
     <x-slot name="header">
         <x-header.main
-            tituloMenor="Listado de"
-            tituloMayor="EVENTOS DE LA FACULTAD"
+            tituloMenor="Últimos reportes de"
+            tituloMayor="INCIDENCIAS EN LA FACULTAD"
             subtitulo="Mantente pendiente de los ultimos reportes notificados de tu facultad"
         >
             <x-slot name="acciones">
-                <x-button-redirect to="reportes-generales" label="Ver listado de reportes" />
+                <x-button-redirect to="crear-reporte" label="Reportar" />
             </x-slot>
         </x-header.main>
     </x-slot>
@@ -222,50 +198,200 @@
         {{-- TABLA --}}
         <x-table.base :headers="$headers">
             <x-table.tr>
-                <x-table.td>Parcial I</x-table.td>
-                <x-table.td>COS115</x-table.td>
-                <x-table.td>B11, C11</x-table.td>
+                <x-table.td>Reunión de Proyecto</x-table.td>
+                <x-table.td>2023-10-01 10:00</x-table.td>
                 <x-table.td>Juan Pérez</x-table.td>
-                <x-table.td>12/09/2024</x-table.td>
-                <x-table.td>8:00 AM - 11:00 PM</x-table.td>
+                <x-table.td>Aula 101</x-table.td>
+                <x-table.td>Ingeniería</x-table.td>
+                <x-table.td>Reunión</x-table.td>
                 <x-table.td>
-                    <x-status.chips text="CANCELADO" color="red" />
+                    <div
+                        class="mb-2 rounded-full bg-red-50 px-4 py-2 text-center text-sm text-red-800 dark:bg-gray-800 dark:text-red-400"
+                    >
+                        <span class="font-medium">PENDIENTE</span>
+                    </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="{{ route('crear-reporte') }}" class="font-medium text-gray-700 hover:underline">
-                        <x-heroicon-s-flag class="mx-2 h-4" />
+                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"
+                            ></path>
+                        </svg>
                     </a>
                 </x-table.td>
             </x-table.tr>
             <x-table.tr>
-                <x-table.td>Laboratorio II</x-table.td>
-                <x-table.td>MAT115</x-table.td>
-                <x-table.td>D11, ESPINO</x-table.td>
-                <x-table.td>Juan Pérez</x-table.td>
-                <x-table.td>12/09/2024</x-table.td>
-                <x-table.td>8:00 AM - 11:00 PM</x-table.td>
+                <x-table.td>Clase de Matemáticas</x-table.td>
+                <x-table.td>2023-10-02 08:00</x-table.td>
+                <x-table.td>María López</x-table.td>
+                <x-table.td>Aula 202</x-table.td>
+                <x-table.td>Matemáticas</x-table.td>
+                <x-table.td>Clase</x-table.td>
                 <x-table.td>
-                    <x-status.chips text="VIGENTE" color="green" />
+                    <div
+                        class="mb-2 rounded-full bg-green-50 px-4 py-2 text-center text-sm text-green-800 dark:bg-green-800 dark:text-green-400"
+                    >
+                        <span class="font-medium">FINALIZADO</span>
+                    </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="{{ route('crear-reporte') }}" class="font-medium text-gray-700 hover:underline">
-                        <x-heroicon-s-flag class="mx-2 h-4" />
+                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"
+                            ></path>
+                        </svg>
                     </a>
                 </x-table.td>
             </x-table.tr>
             <x-table.tr>
-                <x-table.td>Conferencia I</x-table.td>
-                <x-table.td>MAT115</x-table.td>
-                <x-table.td>D11, ESPINO</x-table.td>
-                <x-table.td>Juan Pérez</x-table.td>
-                <x-table.td>12/09/2024</x-table.td>
-                <x-table.td>8:00 AM - 11:00 PM</x-table.td>
+                <x-table.td>Taller de Programación</x-table.td>
+                <x-table.td>2023-10-03 14:00</x-table.td>
+                <x-table.td>Carlos García</x-table.td>
+                <x-table.td>Laboratorio 1</x-table.td>
+                <x-table.td>Informática</x-table.td>
+                <x-table.td>Taller</x-table.td>
                 <x-table.td>
-                    <x-status.chips text="CANCELADO" color="red" />
+                    <div
+                        class="mb-2 rounded-full bg-purple-50 px-4 py-2 text-center text-sm text-purple-800 dark:bg-purple-800 dark:text-purple-400"
+                    >
+                        <span class="font-medium">EN PROCESO</span>
+                    </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="{{ route('crear-reporte') }}" class="font-medium text-gray-700 hover:underline">
-                        <x-heroicon-s-flag class="mx-2 h-4" />
+                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"
+                            ></path>
+                        </svg>
+                    </a>
+                </x-table.td>
+            </x-table.tr>
+            <x-table.tr>
+                <x-table.td>Seminario de Física</x-table.td>
+                <x-table.td>2023-10-04 09:00</x-table.td>
+                <x-table.td>Ana Martínez</x-table.td>
+                <x-table.td>Aula 303</x-table.td>
+                <x-table.td>Física</x-table.td>
+                <x-table.td>Seminario</x-table.td>
+                <x-table.td>
+                    <div
+                        class="mb-2 rounded-full bg-green-50 px-4 py-2 text-center text-sm text-green-800 dark:bg-green-800 dark:text-green-400"
+                    >
+                        <span class="font-medium">FINALIZADO</span>
+                    </div>
+                </x-table.td>
+                <x-table.td>
+                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"
+                            ></path>
+                        </svg>
+                    </a>
+                </x-table.td>
+            </x-table.tr>
+            <x-table.tr>
+                <x-table.td>Conferencia de Química</x-table.td>
+                <x-table.td>2023-10-05 11:00</x-table.td>
+                <x-table.td>Luis Fernández</x-table.td>
+                <x-table.td>Aula Magna</x-table.td>
+                <x-table.td>Química</x-table.td>
+                <x-table.td>Conferencia</x-table.td>
+                <x-table.td>
+                    <div
+                        class="mb-2 rounded-full bg-purple-50 px-4 py-2 text-center text-sm text-purple-800 dark:bg-purple-800 dark:text-purple-400"
+                    >
+                        <span class="font-medium">EN PROCESO</span>
+                    </div>
+                </x-table.td>
+                <x-table.td>
+                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"
+                            ></path>
+                        </svg>
+                    </a>
+                </x-table.td>
+            </x-table.tr>
+            <x-table.tr>
+                <x-table.td>Examen de Historia</x-table.td>
+                <x-table.td>2023-10-06 13:00</x-table.td>
+                <x-table.td>Laura Gómez</x-table.td>
+                <x-table.td>Aula 404</x-table.td>
+                <x-table.td>Historia</x-table.td>
+                <x-table.td>Examen</x-table.td>
+                <x-table.td>
+                    <div
+                        class="mb-2 rounded-full bg-purple-50 px-4 py-2 text-center text-sm text-purple-800 dark:bg-purple-800 dark:text-purple-400"
+                    >
+                        <span class="font-medium">EN PROCESO</span>
+                    </div>
+                </x-table.td>
+                <x-table.td>
+                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"
+                            ></path>
+                        </svg>
                     </a>
                 </x-table.td>
             </x-table.tr>

@@ -8,9 +8,9 @@
 
         <!-- Password -->
         <div>
-            <x-input-label for="password" :value="__('Contraseña')" />
+            <x-forms.input-label for="password" :value="__('Contraseña')" />
 
-            <x-text-input
+            <x-forms.text-input
                 id="password"
                 class="mt-1 block w-full"
                 type="password"
@@ -19,13 +19,13 @@
                 autocomplete="current-password"
             />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-forms.input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <div class="mt-4 flex justify-end">
-            <x-primary-button>
+            <x-forms.primary-button>
                 {{ __('Confirmar') }}
-            </x-primary-button>
+            </x-forms.primary-button>
         </div>
     </form>
 </x-guest-layout>

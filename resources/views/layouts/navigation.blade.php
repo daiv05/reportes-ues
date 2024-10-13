@@ -58,9 +58,9 @@
                 class="mt-4 flex flex-col rounded-lg font-medium md:mt-0 md:flex-row md:space-x-8 md:p-0 rtl:space-x-reverse">
                 <li>
                     <a href="{{ route('dashboard') }}" @class([
-                        'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->routeIs(
+                        'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->is(
                             'dashboard'),
-                        'block rounded px-3 py-2 text-white underline underline-offset-8 md:bg-transparent md:p-0' => request()->routeIs(
+                        'block rounded px-3 py-2 text-white underline underline-offset-8 md:bg-transparent md:p-0' => request()->is(
                             'dashboard'),
                     ])>
                         Inicio
@@ -68,17 +68,22 @@
                 </li>
                 <li>
                     <a href="{{ route('reportes-generales') }}" @class([
-                        'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->routeIs(
-                            'reportes-generales'),
-                        'block rounded px-3 py-2 text-white underline underline-offset-8 md:bg-transparent md:p-0' => request()->routeIs(
-                            'reportes-generales'),
+                        'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->is(
+                            'reportes-generales/*'),
+                        'block rounded px-3 py-2 text-white underline underline-offset-8 md:bg-transparent md:p-0' => request()->is(
+                            'reportes-generales/*'),
                     ])>
                         Reportes
                     </a>
                 </li>
                 <li class="relative">
                     <button id="actividades-button" data-dropdown-toggle="actividades-dropdown"
-                        class="block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0">
+                        @class([
+                            'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->is(
+                                'actividades/*'),
+                            'block rounded px-3 py-2 text-white underline underline-offset-8 md:bg-transparent md:p-0' => request()->is(
+                                'actividades/*'),
+                        ])>
                         Actividades
                     </button>
                     <div id="actividades-dropdown"
@@ -96,7 +101,7 @@
                                     Eventos y evaluaciones
                                 </a>
                             </li>
-                            
+
                         </ul>
                     </div>
                 <li>
@@ -111,7 +116,12 @@
                 </li>
                 <li class="relative">
                     <button id="mantenimientos-button" data-dropdown-toggle="mantenimientos-dropdown"
-                        class="block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0">
+                        @class([
+                            'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->is(
+                                'mantenimientos/*'),
+                            'block rounded px-3 py-2 text-white underline underline-offset-8 md:bg-transparent md:p-0' => request()->is(
+                                'mantenimientos/*'),
+                        ])>
                         Mantenimientos
                     </button>
                     <div id="mantenimientos-dropdown"
