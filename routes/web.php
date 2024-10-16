@@ -7,6 +7,8 @@ use App\Http\Controllers\Mantenimientos\EscuelaController;
 use App\Http\Controllers\Seguridad\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Actividades\TipoActividadController;
+use App\Http\Controllers\Seguridad\RoleController;
+use App\Http\Controllers\Seguridad\UsuarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +96,20 @@ Route::middleware('auth')->group(function () {
             Route::put('/{id}', [DepartamentoController::class, 'update'])->name('departamentos.update');
         });
     });
+    /* ****************************************** */
+    /*   ************* ROLES ************   */
+    /* ****************************************** */
+    /*Route::prefix('seguridad')->group(function () {
+        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+        Route::resource('roles', RoleController::class)->except(['destroy']);
+        Route::patch('roles/{rol}/toggle', [RoleController::class, 'toggleActivo'])->name('roles.toggleActivo');
+
+        Route::get('/usuarios', [UsuarioController::class, , 'index'])->name('usuarios.index');
+        Route::resource('usuarios', UsuarioController::class)->except(['destroy']);
+        Route::patch('usuarios/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->name('usuarios.toggleActivo');
+
+    });*/
+
 });
 
 

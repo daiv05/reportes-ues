@@ -66,6 +66,49 @@
                         Inicio
                     </a>
                 </li>
+                <li class="relative">
+                    <button id="seguridad-button" data-dropdown-toggle="seguridad-dropdown"
+                        @class([
+                            'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->is(
+                                'seguridad/*'),
+                            'block rounded px-3 py-2 text-white underline underline-offset-8 md:bg-transparent md:p-0' => request()->is(
+                                'seguridad/*'),
+                        ])>
+                        Seguridad
+                    </button>
+                    <div id="seguridad-dropdown"
+                        class="z-10 hidden w-44 divide-y divide-gray-100 rounded bg-white shadow dark:bg-gray-700">
+                        <ul class="py-1 text-sm text-escarlata-ues" aria-labelledby="seguridad-button">
+                            <li>
+                                <a href="{{ route('seguridad.index') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Roles
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('departamentos.index') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Departamentos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('escuela.index') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Escuela
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('asignatura.index') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Asignaturas
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+
+
                 <li>
                     <a href="{{ route('reportes-generales') }}" @class([
                         'block rounded px-3 py-2 text-slate-200 hover:text-white md:p-0' => !request()->is(
