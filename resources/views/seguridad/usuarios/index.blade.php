@@ -1,133 +1,165 @@
+@php
+    $headers = [
+        ['text' => 'Usuario', 'align' => 'left'],
+        ['text' => 'Email', 'align' => 'left'],
+        ['text' => 'Roles', 'align' => 'left'],
+        ['text' => 'Acciones', 'align' => 'left'],
+    ];
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
-        <div class="p-6 text-2xl font-bold text-red-900 dark:text-gray-100">
-            {{ __('Gestión de Usuarios') }}
-        </div>
+        <x-header.simple titulo="Gestión de Roles" />
     </x-slot>
 
-    <div class="pb-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                <div class="p-6 text-center text-gray-500 dark:text-gray-100">
-                    {{ index.blade.php__('Fecha y hora actual: ') . \Carbon\Carbon::now()->format('d/m/Y h:i A') }}
-                </div>
-
-                <div class="my-16">
-                    <form class="mx-16 max-w-sm">
-                        <!-- Titulo -->
-                        <div class="mb-5">
-                            <label for="titulo" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                Titulo del reporte
-                            </label>
-                            <div class="relative">
-                                <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-                                    <svg
-                                            class="h-4 w-4 text-gray-500 dark:text-gray-400"
-                                            aria-hidden="true"
-                                            viewBox="0 0 14 9"
-                                            fill="currentColor"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                                d="M0.833313 1.6V1H1.49998V1.6H0.833313ZM0.833313 4.8V4.2H1.49998V4.8H0.833313ZM0.833313 8V7.4H1.49998V8H0.833313ZM12.8333 1.6H4.49998C4.40514 1.6 4.31808 1.56364 4.25699 1.50499C4.19659 1.44701 4.16665 1.37283 4.16665 1.3C4.16665 1.22717 4.19659 1.15299 4.25699 1.09501C4.31808 1.03636 4.40514 1 4.49998 1H12.8333C12.9282 1 13.0152 1.03636 13.0763 1.09501C13.1367 1.15299 13.1666 1.22717 13.1666 1.3C13.1666 1.37283 13.1367 1.44701 13.0763 1.50499C13.0152 1.56364 12.9282 1.6 12.8333 1.6ZM12.8333 4.8H4.49998C4.40514 4.8 4.31808 4.76364 4.25699 4.70499C4.19659 4.64701 4.16665 4.57283 4.16665 4.5C4.16665 4.42717 4.19659 4.35299 4.25699 4.29501C4.31808 4.23636 4.40514 4.2 4.49998 4.2H12.8333C12.9282 4.2 13.0152 4.23636 13.0763 4.29501C13.1367 4.35299 13.1666 4.42717 13.1666 4.5C13.1666 4.57283 13.1367 4.64701 13.0763 4.70499C13.0152 4.76364 12.9282 4.8 12.8333 4.8ZM12.8333 8H4.49998C4.40514 8 4.31808 7.96364 4.25699 7.90499C4.19659 7.84701 4.16665 7.77283 4.16665 7.7C4.16665 7.62717 4.19659 7.55299 4.25699 7.49501C4.31808 7.43636 4.40514 7.4 4.49998 7.4H12.8333C12.9282 7.4 13.0152 7.43636 13.0763 7.49501C13.1367 7.55299 13.1666 7.62717 13.1666 7.7C13.1666 7.77283 13.1367 7.84701 13.0763 7.90499C13.0152 7.96364 12.9282 8 12.8333 8Z"
-                                                fill="#6B7280"
-                                                stroke="#6B7280"
-                                        />
-                                    </svg>
-                                </div>
-                                <input
-                                        type="text"
-                                        id="titulo"
-                                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                                        placeholder="Aula sin cuidado..."
-                                />
-                            </div>
-                        </div>
-                        <!-- Descripción -->
-                        <div class="mb-5">
-                            <label
-                                    for="descripcion"
-                                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+    <div>
+        <div class="p-6">
+            <x-forms.primary-button
+                data-modal-target="static-modal"
+                data-modal-toggle="static-modal"
+                class="block"
+                type="button"
+                id="add-button"
+            >
+                Añadir
+            </x-forms.primary-button>
+        </div>
+        <div class="mx-auto mb-6 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
+            <x-table.base :headers="$headers">
+                @foreach ($usuarios as $usuario)
+                    <x-table.tr>
+                        <x-table.td>
+                            {{ $usuario->carnet }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $usuario->email }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ implode(', ', $usuario->roles->pluck('name')->toArray()) }}
+                        </x-table.td>
+                        <x-table.td>
+                            <a
+                                href="#"
+                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                data-id="{{ $usuario->id }}"
+                                data-carnet="{{ $usuario->carnet }}"
+                                data-email="{{ $usuario->email }}"
+                                data-rol=" {{ implode(', ', $usuario->roles->pluck('name')->toArray()) }}"
                             >
-                                Descripción
-                            </label>
-                            <textarea
-                                    id="descripcion"
-                                    rows="4"
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                                    placeholder="Se ha observado..."
-                            ></textarea>
-                            <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="descripcion_hint">
-                                Recuerda ser claro y conciso
-                            </div>
-                        </div>
-                        <!-- Actividad a reportar -->
-                        <div class="mb-5">
-                            <label for="titulo" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                Actividad seleccionada
-                            </label>
-
-                            <div class="relative overflow-x-auto">
-                                <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-                                    <thead
-                                            class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
-                                    >
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">Nombre</th>
-                                        <th scope="col" class="px-6 py-3">Escuela</th>
-                                        <th scope="col" class="px-6 py-3">Aulas</th>
-                                        <th scope="col" class="px-6 py-3">Asignaturas</th>
-                                        <th scope="col" class="px-6 py-3">Horario</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr class="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
-                                        <th
-                                                scope="row"
-                                                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Parcial I
-                                        </th>
-                                        <td class="px-6 py-4">B11</td>
-                                        <td class="px-6 py-4">MIP115, COS115</td>
-                                        <td class="px-6 py-4">$2999</td>
-                                    </tr>
-                                    <tr class="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
-                                        <th
-                                                scope="row"
-                                                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Microsoft Surface Pro
-                                        </th>
-                                        <td class="px-6 py-4">White</td>
-                                        <td class="px-6 py-4">Laptop PC</td>
-                                        <td class="px-6 py-4">$1999</td>
-                                    </tr>
-                                    <tr class="bg-white dark:bg-gray-800">
-                                        <th
-                                                scope="row"
-                                                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Magic Mouse 2
-                                        </th>
-                                        <td class="px-6 py-4">Black</td>
-                                        <td class="px-6 py-4">Accessories</td>
-                                        <td class="px-6 py-4">$99</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <button
-                                type="submit"
-                                class="w-full rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto"
-                        >
-                            Enviar reporte
-                        </button>
-                    </form>
-                </div>
-            </div>
+                                <x-heroicon-o-pencil class="h-5 w-5" />
+                            </a>
+                        </x-table.td>
+                    </x-table.tr>
+                @endforeach
+            </x-table.base>
+            <nav
+                class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
+                aria-label="Table navigation"
+            >
+                {{ $usuarios->links() }}
+            </nav>
         </div>
     </div>
+
+    <x-form-modal id="static-modal">
+        <x-slot name="header">
+            <h3 id="head-text" class="text-2xl font-bold text-escarlata-ues">Añadir Uusario</h3>
+        </x-slot>
+        <x-slot name="body">
+            <form id="add-roles-form" method="POST" action="{{ route('roles.store') }}">
+                @csrf
+                <div class="mb-4">
+                    <x-forms.input-label for="nombre" :value="__('Nombre')" />
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
+                    />
+                    <x-forms.input-error :messages="$errors->get('name')" class="mt-2" />
+                </div>
+                <div class="mb-4">
+                    <x-forms.input-label for="activo" :value="__('Estado')" />
+                    <select
+                        id="activo"
+                        name="activo"
+                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
+                    >
+                        <option value="1">ACTIVO</option>
+                        <option value="0">INACTIVO</option>
+                    </select>
+                    <x-forms.input-error :messages="$errors->get('activo')" class="mt-2" />
+                </div>
+            </form>
+        </x-slot>
+        <x-slot name="footer">
+            <button
+                data-modal-hide="static-modal"
+                type="button"
+                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4"
+            >
+                Cancelar
+            </button>
+            <button
+                type="submit"
+                form="add-roles-form"
+                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
+            >
+                Guardar
+            </button>
+        </x-slot>
+    </x-form-modal>
 </x-app-layout>
+<script>
+    document.getElementById('add-roles-form').addEventListener('submit', function (event) {
+        let hasErrors = false;
+        let errorMessage = '';
+
+        const nombre = document.getElementById('nombre').value.trim();
+        if (nombre === '') {
+            hasErrors = true;
+            errorMessage += 'El campo Nombre es obligatorio<br>';
+        } else if (nombre.length > 50) {
+            hasErrors = true;
+            errorMessage += 'El campo Nombre no debe exceder los 50 caracteres<br>';
+        }
+
+        if (hasErrors) {
+            event.preventDefault();
+            document.getElementById('general-errors').innerHTML = errorMessage;
+        }
+    });
+
+    document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
+        button.addEventListener('click', function () {
+            document.getElementById('add-roles-form').reset();
+            document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
+        });
+    });
+
+    document.getElementById('add-button').addEventListener('click', function (event) {
+        console.log('fdadada');
+        document.getElementById('head-text').innerHTML = 'Agregar Rol';
+    });
+
+    document.querySelectorAll('.edit-button').forEach((button) => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const id = this.getAttribute('data-id');
+            const name = this.getAttribute('data-name');
+            const activo = this.getAttribute('data-activo');
+
+            document.getElementById('add-roles-form').action = `/seguridad/roles/${id}`;
+            document.getElementById('add-roles-form').method = 'POST';
+            document.getElementById('add-roles-form').innerHTML +=
+                '<input type="hidden" name="_method" value="PUT">';
+
+            document.getElementById('name').value = name;
+            document.getElementById('activo').value = activo;
+            document.getElementById('head-text').textContent = 'Editar rol';
+            console.log(document.getElementById('head-text'), 'document.getElementById');
+
+            document.querySelector('[data-modal-target="static-modal"]').click();
+        });
+    });
+</script>

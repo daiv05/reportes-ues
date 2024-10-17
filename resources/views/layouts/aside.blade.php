@@ -22,17 +22,7 @@
                 [
                     'to' => 'usuarios.index',
                     'active' => request()->is('seguridad/usuarios'),
-                    'label' => 'Usarios',
-                ],
-                [
-                    'to' => 'escuela.index',
-                    'active' => request()->is('mantenimientos/escuelas'),
-                    'label' => 'Escuelas',
-                ],
-                [
-                    'to' => 'asignaturas.index',
-                    'active' => request()->is('mantenimientos/asignaturas'),
-                    'label' => 'Asignaturas',
+                    'label' => 'Usuarios',
                 ],
             ],
         ],

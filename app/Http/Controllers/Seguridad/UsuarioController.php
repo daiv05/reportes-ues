@@ -7,49 +7,29 @@ use App\Models\Seguridad\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
-class AulasController extends Controller
+class UsuarioController extends Controller
 {
     public function index(): View
     {
-        $usuarios = User::all();
-        return view('usuarios.index', compact('usuarios'));
+        $usuarios = User::with('roles')->paginate(10);
+        return view('seguridad.usuarios.index', compact('usuarios'));
     }
 
-    // public function show(string $id): View
-    // {
-    //     $usuario = User::findOrFail($id);
-    //     return view('usuarios.show', compact('usuario'));
-    // }
 
-    // public function edit(string $id): View
-    // {
-    //     $usuario = User::findOrFail($id);
-    //     return view('aulas.edit', compact('aula'));
-    // }
-
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, string $id)
     {
-        $request->validate([
-            'nombre' => 'required',
-            'id_facultad' => 'required|exists:facultades,id',
-        ]);
-        $usuario = User::findOrFail($id);
-        $usuario->update($request->all());
-        return redirect()->route('usuario.index');
+
     }
 
-    public function destroy(string $id): RedirectResponse
+    public function destroy(string $id)
     {
-        $aula = User::findOrFail($id);
-        $aula->delete();
-        return redirect()->route('aulas.index');
+
     }
 
-    public function toggleActivo(User $aula): RedirectResponse
+    public function toggleActivo(User $aula)
     {
-        $aula->activo = !$aula->activo;
-        $aula->save();
-        return redirect()->route('aulas.index');
+
     }
 }

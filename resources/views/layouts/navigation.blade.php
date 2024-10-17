@@ -80,27 +80,15 @@
                         class="z-10 hidden w-44 divide-y divide-gray-100 rounded bg-white shadow dark:bg-gray-700">
                         <ul class="py-1 text-sm text-escarlata-ues" aria-labelledby="seguridad-button">
                             <li>
-                                <a href="{{ route('seguridad.index') }}"
+                                <a href="{{ route('roles.index') }}"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                     Roles
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('departamentos.index') }}"
+                                <a href="{{ route('usuarios.index') }}"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                    Departamentos
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('escuela.index') }}"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                    Escuela
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('asignatura.index') }}"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                    Asignaturas
+                                    Usuarios
                                 </a>
                             </li>
                         </ul>
