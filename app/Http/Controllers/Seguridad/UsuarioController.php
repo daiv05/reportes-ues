@@ -77,7 +77,10 @@ class UsuarioController extends Controller
         // Sincronizar roles
         $user->syncRoles($roles);
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado con éxito.');
+        return redirect()->route('usuarios.index')->with('message', [
+            'type' => 'success',
+            'content' => 'Usuario actulizado y roles asignados correctamente.',
+        ]);
     }
 
 
