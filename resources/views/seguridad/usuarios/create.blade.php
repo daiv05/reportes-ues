@@ -1,6 +1,6 @@
 <x-app-layout>
     @if (session('message'))
-    <x-alert :type="session('message')['type']" :message="session('message')['content']" />
+        <x-alert :type="session('message')['type']" :message="session('message')['content']" />
     @endif
     <x-slot name="header">
         <x-header.simple titulo="Gestión de usuarios" />
@@ -20,29 +20,35 @@
                     <div class="sm:col-span-2">
                         <label for="persona" class="block text-sm font-medium text-gray-700">Seleccionar Persona</label>
                         <select name="persona_id" id="persona"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
+                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                             @foreach ($personasSinUsuario as $persona)
                                 <option value="{{ $persona->id }}">{{ $persona->nombre }}
                                 </option>
                             @endforeach
                         </select>
-                        @if ($errors->has('email'))
-                        <span class="text-red-500 text-sm">{{ $errors->first('email') }}</span>
-                    @endif
+                        @if ($errors->has('persona_id'))
+                            <span class="text-red-500 text-sm">{{ $errors->first('persona_id') }}</span>
+                        @endif
                     </div>
 
                     <!-- Correo Electrónico -->
                     <div class="sm:col-span-1">
                         <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
                         <input type="email" name="email" id="email"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
+                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
+                        @if ($errors->has('email'))
+                            <span class="text-red-500 text-sm">{{ $errors->first('email') }}</span>
+                        @endif
                     </div>
 
                     <!-- Carnet -->
                     <div class="sm:col-span-1">
                         <label for="carnet" class="block text-sm font-medium text-gray-700">Carnet</label>
                         <input type="text" name="carnet" id="carnet"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
+                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
+                        @if ($errors->has('carnet'))
+                            <span class="text-red-500 text-sm">{{ $errors->first('carnet') }}</span>
+                        @endif
                     </div>
 
                     <!-- Estado Activo -->
@@ -50,7 +56,7 @@
                         <label for="activo" class="block text-sm font-medium text-gray-700">Estado</label>
                         <div class="flex items-center mt-1">
                             <input type="checkbox" name="activo" id="activo"
-                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded">
                             <label for="activo" class="ml-2 block text-sm text-gray-900">Activo</label>
                         </div>
                     </div>
@@ -68,12 +74,12 @@
                         <div class="w-full">
                             <h3 class="text-sm font-medium text-gray-700 mb-2">Roles disponibles</h3>
                             <input type="text" id="search-available" placeholder="Buscar roles..."
-                                class="mb-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
+                            class="mb-2 block w-full rounded-md border border-gray-300 px-3  py-2  shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
 
                             <ul id="available-roles" class="border border-gray-300 rounded p-2 h-48 overflow-y-auto">
                                 @foreach ($roles as $role)
-                                    <li class="p-2 hover:bg-gray-100 cursor-pointer"
-                                        data-role-id="{{ $role->id }}" data-role-name="{{ $role->name }}">
+                                    <li class="p-2 hover:bg-gray-100 cursor-pointer" data-role-id="{{ $role->id }}"
+                                        data-role-name="{{ $role->name }}">
                                         {{ $role->name }}
                                     </li>
                                 @endforeach
@@ -83,19 +89,19 @@
                         <!-- Controles para agregar y quitar roles -->
                         <div class="flex flex-col justify-center space-y-2">
                             <button id="add-all-roles"
-                                class="bg-blue-500 text-white p-1 w-min rounded-full shadow hover:bg-blue-600 flex items-center justify-center">
+                                class="bg-[#6b1919] text-white p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
                                 <x-heroicon-o-chevron-double-right class="h-4 w-4" />
                             </button>
                             <button id="add-role"
-                                class="bg-blue-500 text-white p-1 w-min rounded-full shadow hover:bg-blue-600 flex items-center justify-center">
+                                class="bg-[#6b1919] text-white p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
                                 <x-heroicon-o-chevron-right class="h-4 w-4" />
                             </button>
                             <button id="remove-role"
-                                class="bg-blue-500 text-white p-1 w-min rounded-full shadow hover:bg-blue-600 flex items-center justify-center">
+                                class="bg-[#6b1919] text-white p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
                                 <x-heroicon-o-chevron-left class="h-4 w-4" />
                             </button>
                             <button id="remove-all-roles"
-                                class="bg-blue-500 text-white p-1 w-min rounded-full shadow hover:bg-blue-600 flex items-center justify-center">
+                                class="bg-[#6b1919] text-white p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
                                 <x-heroicon-o-chevron-double-left class="h-4 w-4" />
                             </button>
                         </div>
@@ -104,7 +110,7 @@
                         <div class="w-full">
                             <h3 class="text-sm font-medium text-gray-700 mb-2">Roles asignados</h3>
                             <input type="text" id="search-assigned" placeholder="Buscar roles..."
-                                class="mb-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
+                            class="mb-2 block w-full rounded-md border border-gray-300 px-3  py-2  shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
 
                             <ul id="assigned-roles" class="border border-gray-300 rounded p-2 h-48 overflow-y-auto">
                                 <!-- Esta lista se rellenará con los roles asignados -->
@@ -119,10 +125,10 @@
                 <!-- Botones para guardar o cancelar -->
                 <div class="flex justify-end">
                     <a href="{{ route('usuarios.index') }}"
-                        class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                         Cancelar
                     </a>
-                    <button type="submit" class="ml-3 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <button type="submit" class="ml-3 rounded-lg border  bg-[#6b1919] text-white px-4 py-2 rounded hover:bg-red-600">
                         Crear Usuario
                     </button>
                 </div>
@@ -141,15 +147,18 @@
         const addAllRolesButton = document.querySelector('#add-all-roles');
         const removeAllRolesButton = document.querySelector('#remove-all-roles');
 
+        // Función para mover roles entre listas
         function moveRole(fromList, toList) {
             const selectedRole = fromList.querySelector('.selected');
             if (selectedRole) {
                 toList.appendChild(selectedRole);
-                selectedRole.classList.remove('selected');
+                selectedRole.classList.remove('selected', 'bg-gray-200',
+                    'font-bold'); // Eliminar estilos después de mover
                 updateRolesInput();
             }
         }
 
+        // Función para mover todos los roles entre listas
         function moveAllRoles(fromList, toList) {
             const roles = Array.from(fromList.querySelectorAll('li'));
             roles.forEach(role => {
@@ -158,12 +167,14 @@
             updateRolesInput();
         }
 
+        // Actualizar el campo oculto con los roles asignados
         function updateRolesInput() {
             const roleIds = Array.from(assignedRoles.querySelectorAll('li'))
                 .map(li => li.getAttribute('data-role-id'));
             rolesInput.value = roleIds.join(',');
         }
 
+        // Filtrar roles en la lista
         function filterRoles(searchInput, list) {
             const filter = searchInput.value.toLowerCase();
             Array.from(list.querySelectorAll('li')).forEach(role => {
@@ -176,49 +187,62 @@
             });
         }
 
+        // Agregar un rol
         addRoleButton.addEventListener('click', (event) => {
-            event.preventDefault();
+            event.preventDefault(); // Evitar que se envíe el formulario
             moveRole(availableRoles, assignedRoles);
         });
 
+        // Quitar un rol
         removeRoleButton.addEventListener('click', (event) => {
-            event.preventDefault();
+            event.preventDefault(); // Evitar que se envíe el formulario
             moveRole(assignedRoles, availableRoles);
         });
 
+        // Agregar todos los roles
         addAllRolesButton.addEventListener('click', (event) => {
-            event.preventDefault();
+            event.preventDefault(); // Evitar que se envíe el formulario
             moveAllRoles(availableRoles, assignedRoles);
         });
 
+        // Quitar todos los roles
         removeAllRolesButton.addEventListener('click', (event) => {
-            event.preventDefault();
+            event.preventDefault(); // Evitar que se envíe el formulario
             moveAllRoles(assignedRoles, availableRoles);
         });
 
+        // Manejar selección de roles en las listas
         availableRoles.addEventListener('click', (e) => {
             if (e.target.tagName === 'LI') {
                 clearSelection(availableRoles);
-                e.target.classList.add('selected');
+                e.target.classList.add('selected', 'bg-gray-200',
+                    'font-bold'); // Agregar clases al seleccionado
             }
         });
 
         assignedRoles.addEventListener('click', (e) => {
             if (e.target.tagName === 'LI') {
                 clearSelection(assignedRoles);
-                e.target.classList.add('selected');
+                e.target.classList.add('selected', 'bg-gray-200',
+                    'font-bold'); // Agregar clases al seleccionado
             }
         });
 
+        // Limpiar selección previa
         function clearSelection(list) {
-            Array.from(list.children).forEach(item => item.classList.remove('selected'));
+            Array.from(list.children).forEach(item => {
+                item.classList.remove('bg-gray-200',
+                    'font-bold'); // Eliminar las clases cuando se limpia
+            });
         }
 
+        // Búsqueda en roles disponibles
         const searchAvailable = document.querySelector('#search-available');
         searchAvailable.addEventListener('input', () => {
             filterRoles(searchAvailable, availableRoles);
         });
 
+        // Búsqueda en roles asignados
         const searchAssigned = document.querySelector('#search-assigned');
         searchAssigned.addEventListener('input', () => {
             filterRoles(searchAssigned, assignedRoles);

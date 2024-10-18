@@ -1,7 +1,7 @@
 <x-app-layout>
     @if (session('message'))
-    <x-alert :type="session('message')['type']" :message="session('message')['content']" />
-@endif
+        <x-alert :type="session('message')['type']" :message="session('message')['content']" />
+    @endif
     <x-slot name="header">
         <x-header.simple titulo="Gestión de usuarios " />
     </x-slot>
@@ -20,23 +20,24 @@
                     <!-- Nombre -->
                     <div class="sm:col-span-1">
                         <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre completo</label>
-                        <input type="text" readonly name="nombre" id="nombre" value="{{ $user->persona->nombre }}"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
+                        <input type="text" readonly name="nombre" id="nombre"
+                            value="{{ $user->persona->nombre }}"
+                            class="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                     </div>
 
 
                     <!-- Correo Electrónico -->
                     <div class="sm:col-span-1">
                         <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-                        <input type="email" name="email" id="email" value="{{ $user->email }}"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
+                        <input type="email" readonly name="email" id="email" value="{{ $user->email }}"
+                        class="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                     </div>
 
                     <!-- Carnet -->
                     <div class="sm:col-span-1">
                         <label for="carnet" class="block text-sm font-medium text-gray-700">Carnet</label>
-                        <input type="text" name="carnet" id="carnet" value="{{ $user->carnet }}"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
+                        <input type="text" readonly name="carnet" id="carnet" value="{{ $user->carnet }}"
+                        class="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                     </div>
 
 
@@ -45,7 +46,7 @@
                         <label for="activo" class="block text-sm font-medium text-gray-700">Estado</label>
                         <div class="flex items-center mt-1">
                             <input type="checkbox" name="activo" id="activo" {{ $user->activo ? 'checked' : '' }}
-                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded">
                             <label for="activo" class="ml-2 block text-sm text-gray-900">Activo</label>
                         </div>
                     </div>
@@ -63,8 +64,7 @@
                         <div class="w-full">
                             <h3 class="text-sm font-medium text-gray-700 mb-2">Roles disponibles</h3>
                             <input type="text" id="search-available" placeholder="Buscar roles..."
-                                class="mb-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
-
+                                class="mb-2 block w-full rounded-md border border-gray-300 px-3  py-2  shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                             <ul id="available-roles" class="border border-gray-300 rounded p-2 h-48 overflow-y-auto">
                                 @foreach ($roles as $role)
                                     @if (!$user->roles->contains($role->id))
@@ -81,19 +81,19 @@
                         <!-- Controles para agregar y quitar roles -->
                         <div class="flex flex-col justify-center space-y-2">
                             <button id="add-all-roles"
-                                class="bg-blue-500 text-white p-1 w-min rounded-full shadow hover:bg-blue-600 flex items-center justify-center">
+                                class="bg-[#6b1919] text-white p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
                                 <x-heroicon-o-chevron-double-right class="h-4 w-4" />
                             </button>
                             <button id="add-role"
-                                class="bg-blue-500 text-white p-1 w-min rounded-full shadow hover:bg-blue-600 flex items-center justify-center">
+                                class="bg-[#6b1919] text-white p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
                                 <x-heroicon-o-chevron-right class="h-4 w-4" />
                             </button>
                             <button id="remove-role"
-                                class="bg-blue-500 text-white p-1 w-min rounded-full shadow hover:bg-blue-600 flex items-center justify-center">
+                                class="bg-[#6b1919] text-white p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
                                 <x-heroicon-o-chevron-left class="h-4 w-4" />
                             </button>
                             <button id="remove-all-roles"
-                                class="bg-blue-500 text-white p-1 w-min rounded-full shadow hover:bg-blue-600 flex items-center justify-center">
+                                class="bg-[#6b1919] text-white p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
                                 <x-heroicon-o-chevron-double-left class="h-4 w-4" />
                             </button>
                         </div>
@@ -102,8 +102,7 @@
                         <div class="w-full">
                             <h3 class="text-sm font-medium text-gray-700 mb-2">Roles asignados</h3>
                             <input type="text" id="search-assigned" placeholder="Buscar roles..."
-                                class="mb-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300 sm:text-sm">
-
+                                class="mb-2 block w-full rounded-md border border-gray-300 px-3  py-2  shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                             <ul id="assigned-roles" class="border border-gray-300 rounded p-2 h-48 overflow-y-auto">
                                 @foreach ($user->roles as $role)
                                     <li class="p-2 hover:bg-gray-100 cursor-pointer" data-role-id="{{ $role->id }}"
@@ -123,10 +122,10 @@
                 <!-- Botones para guardar o cancelar -->
                 <div class="flex justify-end">
                     <a href="{{ route('usuarios.index') }}"
-                        class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                         Cancelar
                     </a>
-                    <button type="submit" class="ml-3 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <button type="submit" class="ml-3 rounded-lg border  bg-[#6b1919] text-white px-4 py-2 rounded hover:bg-red-600">
                         Guardar Cambios
                     </button>
                 </div>
@@ -151,7 +150,8 @@
             const selectedRole = fromList.querySelector('.selected');
             if (selectedRole) {
                 toList.appendChild(selectedRole);
-                selectedRole.classList.remove('selected');
+                selectedRole.classList.remove('selected', 'bg-gray-200',
+                    'font-bold'); // Eliminar estilos después de mover
                 updateRolesInput();
             }
         }
@@ -213,20 +213,25 @@
         availableRoles.addEventListener('click', (e) => {
             if (e.target.tagName === 'LI') {
                 clearSelection(availableRoles);
-                e.target.classList.add('selected');
+                e.target.classList.add('selected', 'bg-gray-200',
+                    'font-bold'); // Agregar clases al seleccionado
             }
         });
 
         assignedRoles.addEventListener('click', (e) => {
             if (e.target.tagName === 'LI') {
                 clearSelection(assignedRoles);
-                e.target.classList.add('selected');
+                e.target.classList.add('selected', 'bg-gray-200',
+                    'font-bold'); // Agregar clases al seleccionado
             }
         });
 
         // Limpiar selección previa
         function clearSelection(list) {
-            Array.from(list.children).forEach(item => item.classList.remove('selected'));
+            Array.from(list.children).forEach(item => {
+                item.classList.remove('bg-gray-200',
+                    'font-bold'); // Eliminar las clases cuando se limpia
+            });
         }
 
         // Búsqueda en roles disponibles
