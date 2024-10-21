@@ -53,6 +53,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/registrar', function () {
             return view('reportes.create');
         })->name('crear-reporte');
+        Route::get('/detalle', function () {
+            return view('reportes.detail');
+        })->name('detalle-reporte');
     });
 
     /* ****************************************** */
@@ -112,7 +115,6 @@ Route::middleware('auth')->group(function () {
 
     });
 });
-
 
 
 require __DIR__ . '/auth.php';

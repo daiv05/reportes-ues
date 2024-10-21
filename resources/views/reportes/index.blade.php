@@ -19,7 +19,7 @@
             subtitulo="Mantente pendiente de los ultimos reportes notificados de tu facultad"
         >
             <x-slot name="acciones">
-                <x-button-redirect to="crear-reporte" label="Reportar" />
+                <x-button-redirect to="crear-reporte" label="Reportar"/>
             </x-slot>
         </x-header.main>
     </x-slot>
@@ -212,7 +212,7 @@
                     </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                    <a href="{{ route('detalle-reporte') }}" class="font-medium text-gray-700 hover:underline">
                         <svg
                             class="h-6 w-6"
                             fill="none"
@@ -245,7 +245,7 @@
                     </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                    <a href="{{ route('detalle-reporte') }}" class="font-medium text-gray-700 hover:underline">
                         <svg
                             class="h-6 w-6"
                             fill="none"
@@ -278,7 +278,7 @@
                     </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                    <a href="{{ route('detalle-reporte') }}" class="font-medium text-gray-700 hover:underline">
                         <svg
                             class="h-6 w-6"
                             fill="none"
@@ -311,7 +311,7 @@
                     </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                    <a href="{{ route('detalle-reporte') }}" class="font-medium text-gray-700 hover:underline">
                         <svg
                             class="h-6 w-6"
                             fill="none"
@@ -344,7 +344,7 @@
                     </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                    <a href="{{ route('detalle-reporte') }}" class="font-medium text-gray-700 hover:underline">
                         <svg
                             class="h-6 w-6"
                             fill="none"
@@ -377,7 +377,7 @@
                     </div>
                 </x-table.td>
                 <x-table.td>
-                    <a href="#" class="font-medium text-gray-700 hover:underline">
+                    <a href="{{ route('detalle-reporte') }}" class="font-medium text-gray-700 hover:underline">
                         <svg
                             class="h-6 w-6"
                             fill="none"
