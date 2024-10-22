@@ -56,7 +56,7 @@
             'type' => 2,
             'id' => 'rhu-dropdown',
             'active' => request()->is('rhu/*'),
-            'icon' => 'heroicon-s-calendar-days',
+           'icon' => 'heroicon-s-user-group',
             'label' => 'Recursos humanos',
             'items' => [
                 [
