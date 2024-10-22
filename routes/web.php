@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Actividades\TipoActividadController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
+use App\Http\Controllers\rhu\PuestoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +113,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
         Route::resource('usuarios', UsuarioController::class)->except(['destroy']);
         Route::patch('usuarios/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->name('usuarios.toggleActivo');
+
+    });
+
+       /* ****************************************** */
+    /*   ************* RHU ************   */
+    /* ****************************************** */
+    Route::prefix('rhu')->group(function () {
+        /*Puestos*/
+        Route::get('/puestos', [PuestoController::class, 'index'])->name('puestos.index');
+        Route::resource('puestos', PuestoController::class)->except(['destroy']);
+        Route::patch('puestos/{puesto}/toggle', [PuestoController::class, 'toggleActivo'])->name('puestos.toggleActivo');
 
     });
 });

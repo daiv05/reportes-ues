@@ -136,114 +136,112 @@
     </div>
 </x-app-layout>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const availableRoles = document.querySelector('#available-roles');
-        const assignedRoles = document.querySelector('#assigned-roles');
-        const rolesInput = document.querySelector('#roles-input');
-        const addRoleButton = document.querySelector('#add-role');
-        const removeRoleButton = document.querySelector('#remove-role');
-        const addAllRolesButton = document.querySelector('#add-all-roles');
-        const removeAllRolesButton = document.querySelector('#remove-all-roles');
+document.addEventListener('DOMContentLoaded', () => {
+    const availableRoles = document.querySelector('#available-roles');
+    const assignedRoles = document.querySelector('#assigned-roles');
+    const rolesInput = document.querySelector('#roles-input');
+    const addRoleButton = document.querySelector('#add-role');
+    const removeRoleButton = document.querySelector('#remove-role');
+    const addAllRolesButton = document.querySelector('#add-all-roles');
+    const removeAllRolesButton = document.querySelector('#remove-all-roles');
 
-        // Función para mover roles entre listas
-        function moveRole(fromList, toList) {
-            const selectedRole = fromList.querySelector('.selected');
-            if (selectedRole) {
-                toList.appendChild(selectedRole);
-                selectedRole.classList.remove('selected', 'bg-gray-200',
-                    'font-bold'); // Eliminar estilos después de mover
-                updateRolesInput();
-            }
-        }
-
-        // Función para mover todos los roles entre listas
-        function moveAllRoles(fromList, toList) {
-            const roles = Array.from(fromList.querySelectorAll('li'));
-            roles.forEach(role => {
-                toList.appendChild(role);
-            });
+    // Función para mover un rol entre listas
+    function moveRole(fromList, toList) {
+        const selectedRole = fromList.querySelector('.selected');
+        if (selectedRole) {
+            toList.appendChild(selectedRole);
+            selectedRole.classList.remove('selected', 'bg-gray-200', 'font-bold');
             updateRolesInput();
         }
+    }
 
-        // Actualizar el campo oculto con los roles asignados
-        function updateRolesInput() {
-            const roleIds = Array.from(assignedRoles.querySelectorAll('li'))
-                .map(li => li.getAttribute('data-role-id'));
-            rolesInput.value = roleIds.join(',');
-        }
-
-        // Filtrar roles en la lista
-        function filterRoles(searchInput, list) {
-            const filter = searchInput.value.toLowerCase();
-            Array.from(list.querySelectorAll('li')).forEach(role => {
-                const roleName = role.getAttribute('data-role-name').toLowerCase();
-                if (roleName.includes(filter)) {
-                    role.style.display = '';
-                } else {
-                    role.style.display = 'none';
-                }
-            });
-        }
-
-        // Agregar un rol
-        addRoleButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Evitar que se envíe el formulario
-            moveRole(availableRoles, assignedRoles);
+    // Función para mover todos los roles entre listas
+    function moveAllRoles(fromList, toList) {
+        const roles = Array.from(fromList.querySelectorAll('li'));
+        roles.forEach(role => {
+            toList.appendChild(role);
         });
+        updateRolesInput();
+    }
 
-        // Quitar un rol
-        removeRoleButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Evitar que se envíe el formulario
-            moveRole(assignedRoles, availableRoles);
-        });
+    // Actualizar el campo oculto con los roles asignados
+    function updateRolesInput() {
+        const roleIds = Array.from(assignedRoles.querySelectorAll('li'))
+            .map(li => li.getAttribute('data-role-id'));
+        rolesInput.value = roleIds.join(',');
+    }
 
-        // Agregar todos los roles
-        addAllRolesButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Evitar que se envíe el formulario
-            moveAllRoles(availableRoles, assignedRoles);
-        });
-
-        // Quitar todos los roles
-        removeAllRolesButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Evitar que se envíe el formulario
-            moveAllRoles(assignedRoles, availableRoles);
-        });
-
-        // Manejar selección de roles en las listas
-        availableRoles.addEventListener('click', (e) => {
-            if (e.target.tagName === 'LI') {
-                clearSelection(availableRoles);
-                e.target.classList.add('selected', 'bg-gray-200',
-                    'font-bold'); // Agregar clases al seleccionado
+    // Filtrar roles en la lista
+    function filterRoles(searchInput, list) {
+        const filter = searchInput.value.toLowerCase();
+        Array.from(list.querySelectorAll('li')).forEach(role => {
+            const roleName = role.getAttribute('data-role-name').toLowerCase();
+            if (roleName.includes(filter)) {
+                role.style.display = '';
+            } else {
+                role.style.display = 'none';
             }
         });
+    }
 
-        assignedRoles.addEventListener('click', (e) => {
-            if (e.target.tagName === 'LI') {
-                clearSelection(assignedRoles);
-                e.target.classList.add('selected', 'bg-gray-200',
-                    'font-bold'); // Agregar clases al seleccionado
-            }
-        });
-
-        // Limpiar selección previa
-        function clearSelection(list) {
-            Array.from(list.children).forEach(item => {
-                item.classList.remove('bg-gray-200',
-                    'font-bold'); // Eliminar las clases cuando se limpia
-            });
+    // Manejar el clic en los roles disponibles
+    availableRoles.addEventListener('click', (e) => {
+        if (e.target.tagName === 'LI') {
+            clearSelection(availableRoles); // Limpia la selección anterior
+            e.target.classList.add('selected', 'bg-gray-200', 'font-bold'); // Marca el nuevo seleccionado
         }
-
-        // Búsqueda en roles disponibles
-        const searchAvailable = document.querySelector('#search-available');
-        searchAvailable.addEventListener('input', () => {
-            filterRoles(searchAvailable, availableRoles);
-        });
-
-        // Búsqueda en roles asignados
-        const searchAssigned = document.querySelector('#search-assigned');
-        searchAssigned.addEventListener('input', () => {
-            filterRoles(searchAssigned, assignedRoles);
-        });
     });
+
+    // Manejar el clic en los roles asignados
+    assignedRoles.addEventListener('click', (e) => {
+        if (e.target.tagName === 'LI') {
+            clearSelection(assignedRoles); // Limpia la selección anterior
+            e.target.classList.add('selected', 'bg-gray-200', 'font-bold'); // Marca el nuevo seleccionado
+        }
+    });
+
+    // Limpiar selección previa
+    function clearSelection(list) {
+        Array.from(list.children).forEach(item => {
+            item.classList.remove('bg-gray-200', 'font-bold', 'selected'); // Eliminar las clases cuando se limpia
+        });
+    }
+
+    // Agregar un rol
+    addRoleButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        moveRole(availableRoles, assignedRoles);
+    });
+
+    // Quitar un rol
+    removeRoleButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        moveRole(assignedRoles, availableRoles);
+    });
+
+    // Agregar todos los roles
+    addAllRolesButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        moveAllRoles(availableRoles, assignedRoles);
+    });
+
+    // Quitar todos los roles
+    removeAllRolesButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        moveAllRoles(assignedRoles, availableRoles);
+    });
+
+    // Búsqueda en roles disponibles
+    const searchAvailable = document.querySelector('#search-available');
+    searchAvailable.addEventListener('input', () => {
+        filterRoles(searchAvailable, availableRoles);
+    });
+
+    // Búsqueda en roles asignados
+    const searchAssigned = document.querySelector('#search-assigned');
+    searchAssigned.addEventListener('input', () => {
+        filterRoles(searchAssigned, assignedRoles);
+    });
+});
+
 </script>
