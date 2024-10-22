@@ -20,7 +20,7 @@
                     <div class="sm:col-span-2">
                         <label for="persona" class="block text-sm font-medium text-gray-700">Seleccionar Persona</label>
                         <select name="persona_id" id="persona"
-                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
+                            class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                             @foreach ($personasSinUsuario as $persona)
                                 <option value="{{ $persona->id }}">{{ $persona->nombre }}
                                 </option>
@@ -35,7 +35,7 @@
                     <div class="sm:col-span-1">
                         <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
                         <input type="email" name="email" id="email"
-                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
+                            class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                         @if ($errors->has('email'))
                             <span class="text-red-500 text-sm">{{ $errors->first('email') }}</span>
                         @endif
@@ -45,7 +45,7 @@
                     <div class="sm:col-span-1">
                         <label for="carnet" class="block text-sm font-medium text-gray-700">Carnet</label>
                         <input type="text" name="carnet" id="carnet"
-                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
+                            class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                         @if ($errors->has('carnet'))
                             <span class="text-red-500 text-sm">{{ $errors->first('carnet') }}</span>
                         @endif
@@ -74,7 +74,7 @@
                         <div class="w-full">
                             <h3 class="text-sm font-medium text-gray-700 mb-2">Roles disponibles</h3>
                             <input type="text" id="search-available" placeholder="Buscar roles..."
-                            class="mb-2 block w-full rounded-md border border-gray-300 px-3  py-2  shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
+                                class="mb-2 block w-full rounded-md border border-gray-300 px-3  py-2  shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
 
                             <ul id="available-roles" class="border border-gray-300 rounded p-2 h-48 overflow-y-auto">
                                 @foreach ($roles as $role)
@@ -110,7 +110,7 @@
                         <div class="w-full">
                             <h3 class="text-sm font-medium text-gray-700 mb-2">Roles asignados</h3>
                             <input type="text" id="search-assigned" placeholder="Buscar roles..."
-                            class="mb-2 block w-full rounded-md border border-gray-300 px-3  py-2  shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
+                                class="mb-2 block w-full rounded-md border border-gray-300 px-3  py-2  shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
 
                             <ul id="assigned-roles" class="border border-gray-300 rounded p-2 h-48 overflow-y-auto">
                                 <!-- Esta lista se rellenará con los roles asignados -->
@@ -125,10 +125,11 @@
                 <!-- Botones para guardar o cancelar -->
                 <div class="flex justify-end">
                     <a href="{{ route('usuarios.index') }}"
-                    class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
+                        class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                         Cancelar
                     </a>
-                    <button type="submit" class="ml-3 rounded-lg border  bg-[#6b1919] text-white px-4 py-2 rounded hover:bg-red-600">
+                    <button type="submit"
+                        class="ml-3 rounded-lg border  bg-[#6b1919] text-white px-4 py-2 rounded hover:bg-red-600">
                         Crear Usuario
                     </button>
                 </div>
@@ -152,8 +153,7 @@
             const selectedRole = fromList.querySelector('.selected');
             if (selectedRole) {
                 toList.appendChild(selectedRole);
-                selectedRole.classList.remove('selected', 'bg-gray-200',
-                    'font-bold'); // Eliminar estilos después de mover
+                selectedRole.classList.remove('selected', 'bg-gray-200', 'font-bold');
                 updateRolesInput();
             }
         }
@@ -187,54 +187,53 @@
             });
         }
 
+        // Limpiar selección previa
+        function clearSelection(list) {
+            Array.from(list.children).forEach(item => {
+                item.classList.remove('bg-gray-200', 'font-bold', 'selected');
+            });
+        }
+
         // Agregar un rol
         addRoleButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Evitar que se envíe el formulario
+            event.preventDefault();
             moveRole(availableRoles, assignedRoles);
         });
 
         // Quitar un rol
         removeRoleButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Evitar que se envíe el formulario
+            event.preventDefault();
             moveRole(assignedRoles, availableRoles);
         });
 
         // Agregar todos los roles
         addAllRolesButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Evitar que se envíe el formulario
+            event.preventDefault();
             moveAllRoles(availableRoles, assignedRoles);
         });
 
         // Quitar todos los roles
         removeAllRolesButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Evitar que se envíe el formulario
+            event.preventDefault();
             moveAllRoles(assignedRoles, availableRoles);
         });
 
         // Manejar selección de roles en las listas
         availableRoles.addEventListener('click', (e) => {
             if (e.target.tagName === 'LI') {
-                clearSelection(availableRoles);
+                clearSelection(availableRoles); // Limpia la selección anterior
                 e.target.classList.add('selected', 'bg-gray-200',
-                    'font-bold'); // Agregar clases al seleccionado
+                'font-bold'); // Marca el nuevo seleccionado
             }
         });
 
         assignedRoles.addEventListener('click', (e) => {
             if (e.target.tagName === 'LI') {
-                clearSelection(assignedRoles);
+                clearSelection(assignedRoles); // Limpia la selección anterior
                 e.target.classList.add('selected', 'bg-gray-200',
-                    'font-bold'); // Agregar clases al seleccionado
+                'font-bold'); // Marca el nuevo seleccionado
             }
         });
-
-        // Limpiar selección previa
-        function clearSelection(list) {
-            Array.from(list.children).forEach(item => {
-                item.classList.remove('bg-gray-200',
-                    'font-bold'); // Eliminar las clases cuando se limpia
-            });
-        }
 
         // Búsqueda en roles disponibles
         const searchAvailable = document.querySelector('#search-available');

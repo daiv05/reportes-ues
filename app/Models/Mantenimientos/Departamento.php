@@ -14,6 +14,14 @@ class Departamento extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
-        'activo'
+        'activo',
+        'id_departamento', // Asegúrate de incluir este campo
+        'jerarquia'        // Asegúrate de incluir este campo
     ];
+
+    public function padre()
+    {
+        return $this->belongsTo(Departamento::class, 'id_departamento', 'id');
+    }
 }
+

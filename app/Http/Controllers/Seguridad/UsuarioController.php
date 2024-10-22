@@ -71,6 +71,7 @@ class UsuarioController extends Controller
             'activo' => $request->has('activo'),
         ]);
 
+       // dd($request->roles);
         // Convertir IDs de roles a nombres de roles
         $roles = Role::whereIn('id', explode(',', $request->roles))->pluck('name')->toArray();
 
