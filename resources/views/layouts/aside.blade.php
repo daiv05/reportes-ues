@@ -108,11 +108,11 @@
                     'active' => request()->is('maquetacion/general'),
                     'label' => 'Componentes globales',
                 ],
-                [
-                    'to' => 'detalle-reporte',
-                    'active' => request()->is('reportes/detalle'),
-                    'label' => 'Detalle de reporte',
-                ],
+                // [
+                //     'to' => 'detalle-reporte',
+                //     'active' => request()->is('reportes/detalle'),
+                //     'label' => 'Detalle de reporte',
+                // ],
             ],
         ],
     ];

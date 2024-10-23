@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('reportes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_aula');
-            $table->unsignedBigInteger('id_actividad');
+            $table->unsignedBigInteger('id_aula')->nullable();
+            $table->unsignedBigInteger('id_actividad')->nullable();
             $table->unsignedBigInteger('id_usuario_reporta');
             $table->text('descripcion');
             $table->string('titulo', 50);

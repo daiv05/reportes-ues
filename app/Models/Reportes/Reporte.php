@@ -17,6 +17,8 @@ class Reporte extends Model
 
     protected $table = 'reportes';
 
+    protected $appends = ['estado_ultimo_historial'];
+
     protected $fillable = [
         'id_aula',
         'id_actividad',
@@ -28,28 +30,41 @@ class Reporte extends Model
         'no_procede',
     ];
 
-    public function aula() : BelongsTo
+    public function aula(): BelongsTo
     {
         return $this->belongsTo(Aulas::class, 'id_aula');
     }
 
-    public function actividad() : BelongsTo
+    public function actividad(): BelongsTo
     {
         return $this->belongsTo(Actividad::class, 'id_actividad');
     }
 
-    public function usuarioReporta() : BelongsTo
+    public function usuarioReporta(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_usuario_reporta');
     }
 
-    public function accionesReporte() : HasOne
+    public function accionesReporte(): HasOne
     {
-        return $this->hasOne(Reporte::class, 'id_reporte');
+        return $this->hasOne(AccionesReporte::class, 'id_reporte');
     }
 
-    public function empleadosAcciones() : HasMany
+    public function empleadosAcciones(): HasMany
     {
         return $this->hasMany(EmpleadoAccion::class, 'id_reporte');
+    }
+
+    public function getEstadoUltimoHistorialAttribute()
+    {
+        return $this->accionesReporte()
+            ->with(['historialAccionesReporte' => function ($query) {
+                $query->orderBy('fecha_actualizacion_seguimiento', 'desc')->first();
+            }])
+            ->get()
+            ->pluck('historialAccionesReporte')
+            ->flatten()
+            ->sortByDesc('fecha_actualizacion_seguimiento')
+            ->first()?->estado;
     }
 }
