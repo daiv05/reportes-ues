@@ -87,6 +87,6 @@ class ReporteController extends Controller
     {
         $reporte = Reporte::findOrFail($id_reporte)->with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'accionesReporte.usuarioSupervisor', 'usuarioReporta', 'empleadosAcciones');
         $entidades = Entidades::all();
-        return view('reportes.detail');
+        return view('reportes.detail', compact('reporte', 'entidades'));
     }
 }
