@@ -4,7 +4,7 @@
         ['text' => 'Fecha y Hora', 'align' => 'left'],
         ['text' => 'Responsable', 'align' => 'left'],
         ['text' => 'Salón', 'align' => 'left'],
-        ['text' => 'Departamento', 'align' => 'left'],
+        ['text' => 'Entidadesa', 'align' => 'left'],
         ['text' => 'Actividad', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],

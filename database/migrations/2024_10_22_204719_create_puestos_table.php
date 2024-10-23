@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('puestos', function (Blueprint $table) {
             $table->id(); // Llave primaria
-            $table->foreignId('id_departamento')
-                ->constrained('departamentos') // Referencia a la tabla departamentos
+            $table->foreignId('id_entidad')
+                ->constrained('entidades') // Referencia a la tabla entidades
                 ->onDelete('cascade') // Si se elimina el departamento, se eliminan los puestos relacionados
                 ->onUpdate('cascade'); // Si se actualiza el departamento, se actualiza la referencia en puestos
             $table->string('nombre', 50);

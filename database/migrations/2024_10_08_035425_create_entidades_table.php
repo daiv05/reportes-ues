@@ -10,17 +10,17 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('departamentos', function (Blueprint $table) {
+        Schema::create('entidades', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 50);
             $table->text('descripcion');
             $table->boolean('activo')->default(true);
-            $table->unsignedBigInteger('id_departamento')->nullable(); // Campo recursivo
+            $table->unsignedBigInteger('id_entidad')->nullable(); // Campo recursivo
             $table->integer('jerarquia')->default(0); // Campo para la jerarquía
             $table->timestamps();
 
             // Definir la relación recursiva
-            $table->foreign('id_departamento')->references('id')->on('departamentos')->onDelete('set null');
+            $table->foreign('id_entidad')->references('id')->on('entidades')->onDelete('set null');
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('departamentos');
+        Schema::dropIfExists('entidades');
     }
 };

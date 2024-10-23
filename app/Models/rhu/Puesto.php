@@ -4,7 +4,6 @@ namespace App\Models\rhu;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Mantenimientos\Departamento;
 
 class Puesto extends Model
 {
@@ -19,11 +18,11 @@ class Puesto extends Model
     ];
 
     /**
-     * Relación con el modelo Departamento.
+     * Relación con el modelo Entidadesa.
      * Un puesto pertenece a un departamento.
      */
-    public function departamento()
+    public function entidad()
     {
-        return $this->belongsTo(Departamento::class, 'id_departamento');
+        return $this->belongsTo(Entidadesa::class, 'id_entidad');
     }
 }

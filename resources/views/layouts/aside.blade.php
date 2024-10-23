@@ -60,9 +60,9 @@
             'label' => 'Recursos humanos',
             'items' => [
                 [
-                    'to' => 'departamentos.index',
-                    'active' => request()->is('rhu/departamentos'),
-                    'label' => 'Departamentos',
+                    'to' => 'entidades.index',
+                    'active' => request()->is('rhu/entidades'),
+                    'label' => 'Entidades',
                 ],
                 [
                     'to' => 'puestos.index',
