@@ -2,7 +2,7 @@
 
 namespace App\Models\Reportes;
 
-use App\Models\Mantenimientos\Departamento;
+use App\Models\rhu\Entidades;
 use App\Models\Seguridad\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +38,7 @@ class AccionesReporte extends Model
 
     public function entidadAsignada() : BelongsTo
     {
-        return $this->belongsTo(Departamento::class, 'id_entidad_asignada');
+        return $this->belongsTo(Entidades::class, 'id_entidad_asignada');
     }
 
     public function usuarioSupervisor() : BelongsTo

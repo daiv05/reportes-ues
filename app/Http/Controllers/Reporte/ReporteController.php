@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Reporte;
 use App\Enums\TipoReporteEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Actividades\Actividad;
-use App\Models\Mantenimientos\Departamento;
+use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -85,8 +85,8 @@ class ReporteController extends Controller
 
     public function detalle(Request $request, $id_reporte)
     {
-        $reporte = Reporte::findOrFail($id_reporte)->with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'usuarioReporta', 'empleadosAcciones');
-        $entidades = Departamento::all();
+        $reporte = Reporte::findOrFail($id_reporte)->with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'accionesReporte.usuarioSupervisor', 'usuarioReporta', 'empleadosAcciones');
+        $entidades = Entidades::all();
         return view('reportes.detail');
     }
 }

@@ -27,7 +27,7 @@ return new class extends Migration
 
             $table->foreign('id_reporte')->references('id')->on('reportes')->onDelete('restrict');
             $table->foreign('id_usuario_administracion')->references('id')->on('users')->onDelete('restrict');
-            $table->foreign('id_entidad_asignada')->references('id')->on('departamentos')->onDelete('restrict');
+            $table->foreign('id_entidad_asignada')->references('id')->on('entidades')->onDelete('restrict');
             $table->foreign('id_usuario_supervisor')->references('id')->on('users')->onDelete('restrict');
         
         });

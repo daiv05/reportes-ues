@@ -14,14 +14,14 @@ class Puesto extends Model
     protected $table = 'puestos';
 
     protected $fillable = [
-        'id_departamento',
+        'id_entidad',
         'nombre',
         'activo',
     ];
 
     /**
-     * Relación con el modelo Entidadesa.
-     * Un puesto pertenece a un departamento.
+     * Relación con el modelo Entidades.
+     * Un puesto pertenece a una entidad.
      */
     public function entidad()
     {
