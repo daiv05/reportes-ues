@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Mantenimientos\Departamento;
+use App\Models\rhu\Entidades;
 use Illuminate\Database\Seeder;
 
-class DepartamentosSeeder extends Seeder
+class EntidadesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $departamentos = [
+        $entidades = [
             [
                 'nombre' => 'Carpinteria',
                 'descripcion' => 'Descripcion'
@@ -39,8 +39,8 @@ class DepartamentosSeeder extends Seeder
             ]
         ];
 
-        foreach ($departamentos as $depa) {
-            Departamento::create($depa);
+        foreach ($entidades as $entidad) {
+            Entidades::create($entidad);
         }
     }
 }

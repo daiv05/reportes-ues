@@ -29,13 +29,13 @@ class PersonaSeeder extends Seeder
                 'telefono' => '74641460',
             ],
             [
-                'nombre' => 'Encargado Departamento 1',
+                'nombre' => 'Encargado Entidadesa 1',
                 'apellido' => '-',
                 'fecha_nacimiento' => '2002-02-11',
                 'telefono' => '74641460',
             ],
             [
-                'nombre' => 'Encargado Departamento 2',
+                'nombre' => 'Encargado Entidadesa 2',
                 'apellido' => '-',
                 'fecha_nacimiento' => '2002-10-14',
                 'telefono' => '74641460',
