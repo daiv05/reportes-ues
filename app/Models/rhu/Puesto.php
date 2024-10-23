@@ -23,6 +23,6 @@ class Puesto extends Model
      */
     public function entidad()
     {
-        return $this->belongsTo(Entidadesa::class, 'id_entidad');
+        return $this->belongsTo(Entidades::class, 'id_entidad');
     }
 }

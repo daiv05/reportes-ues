@@ -103,7 +103,7 @@ class PuestoController extends Controller
         // Buscar el puesto y actualizarlo
         $puesto = Puesto::findOrFail($id);
         $puesto->nombre = $validated['nombre'];
-        $puesto->id_departamento = $validated['id_entidad'];
+        $puesto->id_entidad = $validated['id_entidad'];
         $puesto->activo = $validated['activo'];
         $puesto->save();
 
