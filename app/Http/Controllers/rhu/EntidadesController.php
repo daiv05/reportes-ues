@@ -67,10 +67,10 @@ class EntidadesController extends Controller
 
         // Crear el departamento con los datos validados y la jerarquía calculada
         // dd($validatedData);
-        \App\Models\rhu\Entidadesa::create($validatedData);
+        Entidades::create($validatedData);
 
         // Redirección a la vista de departamentos con un mensaje de éxito (opcional)
-        return redirect()->route('entidades.index')->with('success', 'Entidadesa creado exitosamente');
+        return redirect()->route('entidades.index')->with('success', 'Entidades creado exitosamente');
     }
 
 
@@ -102,7 +102,10 @@ class EntidadesController extends Controller
 
         $entidad->save();
 
-        return redirect()->route('entidades.index')->with('success', 'Entidadesa actualizado exitosamente');
+        return redirect()->route('entidades.index')->with('message', [
+            'type' => 'success',
+            'content' => 'Entidades actualizado exitosamente.'
+        ]);
     }
 
     public function destroy(string $id): RedirectResponse

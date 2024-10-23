@@ -8,6 +8,9 @@
 @endphp
 
 <x-app-layout>
+    @if (session('message'))
+    <x-alert :type="session('message')['type']" :message="session('message')['content']" />
+@endif
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Puestos" />
     </x-slot>
@@ -17,8 +20,7 @@
         <form method="GET" action="{{ route('puestos.index') }}"
             class="w-full md:w-auto flex flex-wrap items-center space-y-4 md:space-y-0 md:space-x-4">
             <div class="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2">
-                <label for="id_entidad"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Entidad</label>
+                <label for="id_entidad" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Entidad</label>
                 <select id="id_entidad" name="id_entidad"
                     class="w-full md:w-auto block rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                     <option value="">Todos</option>
@@ -98,45 +100,35 @@
         <x-slot name="body">
             <form id="add-puesto-form" method="POST" action="{{ route('puestos.store') }}">
                 @csrf
-                <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <div class="mb-4">
-                    <label for="nombre"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+                    <x-forms.input-label for="nombre" :value="__('Nombre')" />
                     <input type="text" id="nombre" name="nombre"
                         class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm" />
-                    @error('nombre')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
+                    <x-forms.input-error :messages="$errors->get('nombre')" class="mt-2" />
                 </div>
                 <div class="mb-4">
-                    <label for="id_entidad"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Entidad</label>
+                    <x-forms.input-label for="id_entidad" :value="__('Entidad')" />
                     <select id="id_entidad" name="id_entidad"
                         class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                         @foreach ($entidades as $entidad)
                             <option value="{{ $entidad->id }}">{{ $entidad->nombre }}</option>
                         @endforeach
                     </select>
-                    @error('id_entidad')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
+                    <x-forms.input-error :messages="$errors->get('id_entidad')" class="mt-2" />
                 </div>
                 <div class="mb-4">
-                    <label for="activo"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Activo</label>
+                    <x-forms.input-label for="activo" :value="__('Estado')" />
                     <select id="activo" name="activo"
                         class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
+                        <option value="1">ACTIVO</option>
+                        <option value="0">INACTIVO</option>
                     </select>
-                    @error('activo')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
+                    <x-forms.input-error :messages="$errors->get('activo')" class="mt-2" />
                 </div>
             </form>
         </x-slot>
         <x-slot name="footer">
-            <button id="close-modal" type="button"
+            <button data-modal-hide="static-modal" type="button"
                 class="rounded-lg border bg-gray-700 hover:bg-gray-600 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                 Cancelar
             </button>
