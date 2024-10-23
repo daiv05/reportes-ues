@@ -55,6 +55,25 @@
         ],
         [
             'type' => 2,
+            'id' => 'rhu-dropdown',
+            'active' => request()->is('rhu/*'),
+           'icon' => 'heroicon-s-user-group',
+            'label' => 'Recursos humanos',
+            'items' => [
+                [
+                    'to' => 'departamentos.index',
+                    'active' => request()->is('rhu/departamentos'),
+                    'label' => 'Departamentos',
+                ],
+                [
+                    'to' => 'puestos.index',
+                    'active' => request()->is('rhu/puestos'),
+                    'label' => 'Puestos',
+                ],
+            ],
+        ],
+        [
+            'type' => 2,
             'id' => 'mantenimientos-dropdown',
             'active' => request()->is('mantenimientos/*'),
             'icon' => 'heroicon-s-table-cells',
@@ -64,11 +83,6 @@
                     'to' => 'aulas.index',
                     'active' => request()->is('mantenimientos/aulas'),
                     'label' => 'Aulas',
-                ],
-                [
-                    'to' => 'departamentos.index',
-                    'active' => request()->is('mantenimientos/departamentos'),
-                    'label' => 'Departamentos',
                 ],
                 [
                     'to' => 'escuela.index',
