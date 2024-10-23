@@ -2,15 +2,18 @@
     $headers = [
         ['text' => 'Nombre', 'align' => 'left'],
         ['text' => 'Descripción', 'align' => 'left'],
-        ['text' => 'Departamento Padre', 'align' => 'left'], // Nueva columna
+        ['text' => 'Entidades Padre', 'align' => 'left'], // Nueva columna
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
 @endphp
 
 <x-app-layout>
+    @if (session('message'))
+    <x-alert :type="session('message')['type']" :message="session('message')['content']" />
+@endif
     <x-slot name="header">
-        <x-header.simple titulo="Gestión de Departamentos" />
+        <x-header.simple titulo="Gestión de Entidades" />
     </x-slot>
 
     <div>
@@ -22,27 +25,27 @@
         </div>
         <div class="mx-auto mb-8 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
             <x-table.base :headers="$headers">
-                @foreach ($departamentos as $depa)
+                @foreach ($entidades as $entidad)
                     <x-table.tr>
                         <x-table.td>
-                            {{ $depa->nombre }}
+                            {{ $entidad->nombre }}
                         </x-table.td>
                         <x-table.td>
-                            {{ $depa->descripcion }}
+                            {{ $entidad->descripcion }}
                         </x-table.td>
                         <x-table.td>
-                            {{-- Mostrar el departamento padre o "Raíz" si es null --}}
-                            {{ $depa->id_departamento ? $depa->padre->nombre : 'Raíz' }}
+                            {{-- Mostrar el entidad padre o "Raíz" si es null --}}
+                            {{ $entidad->id_entidad ? $depa->padre->nombre : '' }}
                         </x-table.td>
                         <x-table.td>
-                            <x-status.is-active :active="$depa->activo" />
+                            <x-status.is-active :active="$entidad->activo" />
                         </x-table.td>
                         <x-table.td>
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                data-id="{{ $depa->id }}" data-nombre="{{ $depa->nombre }}"
-                                data-descripcion="{{ $depa->descripcion }}" data-activo="{{ $depa->activo }}"
-                                data-id_departamento="{{ $depa->id_departamento }}">
+                                data-id="{{ $entidad->id }}" data-nombre="{{ $entidad->nombre }}"
+                                data-descripcion="{{ $entidad->descripcion }}" data-activo="{{ $entidad->activo }}"
+                                data-id_entidad="{{ $entidad->id_entidad }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
                         </x-table.td>
@@ -51,7 +54,7 @@
             </x-table.base>
             <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
                 aria-label="Table navigation">
-                {{ $departamentos->links() }}
+                {{ $entidades->links() }}
             </nav>
         </div>
     </div>
@@ -59,10 +62,10 @@
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
-            <h3 id="head-text" class="text-2xl font-bold text-escarlata-ues">Añadir Departamento</h3>
+            <h3 id="head-text" class="text-2xl font-bold text-escarlata-ues">Añadir entidad</h3>
         </x-slot>
         <x-slot name="body">
-            <form id="add-departamentos-form" method="POST" action="{{ route('departamentos.store') }}">
+            <form id="add-entidades-form" method="POST" action="{{ route('entidades.store') }}">
                 @csrf
                 <div class="mb-4">
                     <x-forms.input-label for="nombre" :value="__('Nombre')" />
@@ -78,17 +81,17 @@
                     <x-forms.input-error :messages="$errors->get('descripcion')" class="mt-2" />
                 </div>
                 <div class="mb-4">
-                    <x-forms.input-label for="id_departamento" :value="__('Departamento Padre')" />
-                    <select id="id_departamento" name="id_departamento"
+                    <x-forms.input-label for="id_entidad" :value="__('Entidadesa Padre')" />
+                    <select id="id_entidad" name="id_entidad"
                         class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                         <option value="">Ninguno (Raíz)</option>
-                        @foreach ($departamentosLista as $departamento)
-                            <option value="{{ $departamento->id }}">
-                                {{ $departamento->nombre }}
+                        @foreach ($entidadesLista as $entidad)
+                            <option value="{{ $entidad->id }}">
+                                {{ $entidad->nombre }}
                             </option>
                         @endforeach
                     </select>
-                    <x-forms.input-error :messages="$errors->get('id_departamento')" class="mt-2" />
+                    <x-forms.input-error :messages="$errors->get('id_entidad')" class="mt-2" />
                 </div>
                 <div class="mb-4">
                     <x-forms.input-label for="activo" :value="__('Estado')" />
@@ -106,7 +109,7 @@
                 class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                 Cancelar
             </button>
-            <button type="submit" form="add-departamentos-form"
+            <button type="submit" form="add-entidades-form"
                 class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
                 Guardar
             </button>
@@ -114,7 +117,7 @@
     </x-form-modal>
 </x-app-layout>
 <script>
-    document.getElementById('add-departamentos-form').addEventListener('submit', function(event) {
+    document.getElementById('add-entidades-form').addEventListener('submit', function(event) {
         let hasErrors = false;
         let errorMessage = '';
 
@@ -143,19 +146,19 @@
 
     document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
         button.addEventListener('click', function() {
-            document.getElementById('add-departamentos-form').reset();
+            document.getElementById('add-entidades-form').reset();
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
         });
     });
 
     document.getElementById('add-button').addEventListener('click', function(event) {
-        // Cambiar el título del modal a "Añadir Departamento"
+        // Cambiar el título del modal a "Añadir Entidadesa"
 
 
-        document.getElementById('head-text').innerHTML = 'Agregar departamento';
-        // Habilitar todas las opciones del select de departamento padre
-        const selectDepartamento = document.getElementById('id_departamento');
-        Array.from(selectDepartamento.options).forEach((option) => {
+        document.getElementById('head-text').innerHTML = 'Agregar entidad';
+        // Habilitar todas las opciones del select de entidad padre
+        const selectEntidad = document.getElementById('id_entidad');
+        Array.from(selectEntidad.options).forEach((option) => {
             option.disabled = false;
         });
     });
@@ -167,14 +170,14 @@
             const nombre = this.getAttribute('data-nombre');
             const descripcion = this.getAttribute('data-descripcion');
             const activo = this.getAttribute('data-activo');
-            const id_departamento = this.getAttribute(
-                'data-id_departamento'); // Obtener el id del departamento padre
+            const id_entidad = this.getAttribute(
+                'data-id_entidad'); // Obtener el id del entidad padre
 
             // Ajustar el formulario para la edición
-            document.getElementById('add-departamentos-form').action =
-                `/mantenimientos/departamentos/${id}`;
-            document.getElementById('add-departamentos-form').method = 'POST';
-            document.getElementById('add-departamentos-form').innerHTML +=
+            document.getElementById('add-entidades-form').action =
+                `/rhu/entidades/${id}`;
+            document.getElementById('add-entidades-form').method = 'POST';
+            document.getElementById('add-entidades-form').innerHTML +=
                 '<input type="hidden" name="_method" value="PUT">';
 
             // Asignar los valores al formulario
@@ -182,21 +185,21 @@
             document.getElementById('descripcion').value = descripcion;
             document.getElementById('activo').value = activo;
 
-            // Asignar el valor del departamento padre al campo select
-            if (id_departamento) {
-                document.getElementById('id_departamento').value = id_departamento;
+            // Asignar el valor del entidad padre al campo select
+            if (id_entidad) {
+                document.getElementById('id_entidad').value = id_entidad;
             } else {
-                document.getElementById('id_departamento').value = ''; // Ninguno (Raíz)
+                document.getElementById('id_entidad').value = ''; // Ninguno (Raíz)
             }
 
-            // Deshabilitar la opción del mismo departamento en el select para evitar seleccionar a sí mismo como padre
-            const selectDepartamento = document.getElementById('id_departamento');
-            Array.from(selectDepartamento.options).forEach((option) => {
+            // Deshabilitar la opción del mismo entidad en el select para evitar seleccionar a sí mismo como padre
+            const selectEntidad = document.getElementById('id_entidad');
+            Array.from(selectEntidad.options).forEach((option) => {
                 option.disabled = option.value == id;
             });
 
-            // Cambiar el título del modal a "Editar departamento"
-            document.getElementById('head-text').textContent = 'Editar departamento';
+            // Cambiar el título del modal a "Editar entidad"
+            document.getElementById('head-text').textContent = 'Editar entidad';
 
             // Abrir el modal
             document.querySelector('[data-modal-target="static-modal"]').click();;

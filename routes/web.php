@@ -1,16 +1,16 @@
 <?php
 
+use App\Http\Controllers\Actividades\TipoActividadController;
 use App\Http\Controllers\Mantenimientos\AsignaturaController;
 use App\Http\Controllers\Mantenimientos\AulasController;
-use App\Http\Controllers\Mantenimientos\DepartamentoController;
 use App\Http\Controllers\Mantenimientos\EscuelaController;
+use App\Http\Controllers\rhu\EntidadesController;
+use App\Http\Controllers\rhu\PuestoController;
 use App\Http\Controllers\Seguridad\ProfileController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Actividades\TipoActividadController;
 use App\Http\Controllers\Reporte\ReporteController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
-use App\Http\Controllers\rhu\PuestoController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,13 +88,6 @@ Route::middleware('auth')->group(function () {
             Route::patch('/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->name('asignaturas.toggleActivo');
         });
         Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
-
-        // Rutas de Departamentos
-        Route::prefix('departamentos')->group(function () {
-            Route::get('/', [DepartamentoController::class, 'index'])->name('departamentos.index');
-            Route::post('/', [DepartamentoController::class, 'store'])->name('departamentos.store');
-            Route::put('/{id}', [DepartamentoController::class, 'update'])->name('departamentos.update');
-        });
     });
     /* ****************************************** */
     /*   ************* SEGURIDAD ************   */
@@ -116,6 +109,12 @@ Route::middleware('auth')->group(function () {
     /*   ************* RHU ************   */
     /* ****************************************** */
     Route::prefix('rhu')->group(function () {
+        // Rutas de entidades
+        Route::prefix('entidades')->group(function () {
+            Route::get('/', [EntidadesController::class, 'index'])->name('entidades.index');
+            Route::post('/', [EntidadesController::class, 'store'])->name('entidades.store');
+            Route::put('/{id}', [EntidadesController::class, 'update'])->name('entidades.update');
+        });
         /*Puestos*/
         Route::get('/puestos', [PuestoController::class, 'index'])->name('puestos.index');
         Route::resource('puestos', PuestoController::class)->except(['destroy']);

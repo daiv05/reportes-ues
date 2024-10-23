@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Models\Mantenimientos;
+namespace App\Models\rhu;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Departamento extends Model
+class Entidades extends Model
 {
     use HasFactory;
 
-    protected $table = 'departamentos';
+    protected $table = 'entidades';
 
     protected $fillable = [
         'nombre',
         'descripcion',
         'activo',
-        'id_departamento', // Asegúrate de incluir este campo
+        'id_entidad', // Asegúrate de incluir este campo
         'jerarquia'        // Asegúrate de incluir este campo
     ];
 
     public function padre()
     {
-        return $this->belongsTo(Departamento::class, 'id_departamento', 'id');
+        return $this->belongsTo(Entidades::class, 'id_entidad', 'id');
     }
 }
 

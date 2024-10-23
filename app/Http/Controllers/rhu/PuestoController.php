@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\rhu;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\rhu\Entidades;
 use App\Models\rhu\Puesto;
-use App\Models\Mantenimientos\Departamento;
+use Illuminate\Http\Request;
 
 class PuestoController extends Controller
 {
@@ -14,15 +14,15 @@ class PuestoController extends Controller
      */
     public function index(Request $request)
     {
-        $departamentos = Departamento::all();
-        $idDepartamento = $request->input('id_departamento');
+        $entidades = Entidades::all();
+        $idEntidad = $request->input('id_entidad');
         $search = $request->input('search');
 
         $puestos = Puesto::query();
 
-        // Filtro por departamento si está seleccionado
-        if ($idDepartamento) {
-            $puestos->where('id_departamento', $idDepartamento);
+        // Filtro por entidad si está seleccionado
+        if ($idEntidad) {
+            $puestos->where('id_entidad', $idEntidad);
         }
 
         // Filtro por búsqueda de nombre
@@ -33,7 +33,7 @@ class PuestoController extends Controller
         // Paginación
         $puestos = $puestos->paginate(10);
 
-        return view('rhu.puestos.index', compact('puestos', 'departamentos'));
+        return view('rhu.puestos.index', compact('puestos', 'entidades'));
     }
 
 
@@ -54,14 +54,14 @@ class PuestoController extends Controller
         // Validar los datos recibidos
         $validated = $request->validate([
             'nombre' => 'required|string|max:50',
-            'id_departamento' => 'required|integer|exists:departamentos,id',
+            'id_entidad' => 'required|integer|exists:entidades,id',
             'activo' => 'required|boolean',
         ]);
 
         // Crear el puesto con los datos validados
         $puesto = new Puesto();
         $puesto->nombre = $validated['nombre'];
-        $puesto->id_departamento = $validated['id_departamento'];
+        $puesto->id_entidad = $validated['id_entidad'];
         $puesto->activo = $validated['activo'];
         $puesto->save();
 
@@ -96,14 +96,14 @@ class PuestoController extends Controller
         // Validar los datos recibidos
         $validated = $request->validate([
             'nombre' => 'required|string|max:50',
-            'id_departamento' => 'required|integer|exists:departamentos,id',
+            'id_entidad' => 'required|integer|exists:entidades,id',
             'activo' => 'required|boolean',
         ]);
 
         // Buscar el puesto y actualizarlo
         $puesto = Puesto::findOrFail($id);
         $puesto->nombre = $validated['nombre'];
-        $puesto->id_departamento = $validated['id_departamento'];
+        $puesto->id_entidad = $validated['id_entidad'];
         $puesto->activo = $validated['activo'];
         $puesto->save();
 
