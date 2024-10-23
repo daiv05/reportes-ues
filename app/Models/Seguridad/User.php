@@ -4,8 +4,11 @@ namespace App\Models\Seguridad;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Registro\Persona;
+use App\Models\Reportes\Reporte;
+use App\Models\rhu\EmpleadoPuesto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -35,5 +38,15 @@ class User extends Authenticatable
     public function persona() : BelongsTo
     {
         return $this->belongsTo(Persona::class, 'id_persona');
+    }
+
+    public function empleadosPuestos() : HasMany
+    {
+        return $this->hasMany(EmpleadoPuesto::class, 'id_usuario');
+    }
+
+    public function reportes() : HasMany
+    {
+        return $this->hasMany(Reporte::class, 'id_usuario_reporta');
     }
 }
