@@ -150,7 +150,7 @@
                     <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada }}</x-table.td>
                     <x-table.td>{{ $reporte->actividad?->descripcion }}</x-table.td>
                     <x-table.td>
-                        <x-status.chips :text="$reporte->estado_ultimo_historial ?? 'No asignado'" :color="'red'"
+                        <x-status.chips :text="$reporte->estado_ultimo_historial ?? 'No asignado'"
                                         class="mb-2"/>
                     </x-table.td>
                     <x-table.td>
