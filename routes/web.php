@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/registrar', [ReporteController::class, 'create'])->name('crear-reporte');
         Route::post('/store', [ReporteController::class, 'store'])->name('reportes.store');
         Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->name('detalle-reporte');
+        Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->name('reportes.noProcede');
     });
 
     /* ****************************************** */

@@ -7,5 +7,4 @@ use App\Http\Controllers\Controller;
 
 class AccionesReporteController extends Controller
 {
-    //
 }

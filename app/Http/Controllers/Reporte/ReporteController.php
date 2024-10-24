@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Reporte;
 use App\Enums\TipoReporteEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Actividades\Actividad;
+use App\Models\Reportes\AccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -20,7 +23,7 @@ class ReporteController extends Controller
 
     public function index()
     {
-        $reportes = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'usuarioReporta', 'empleadosAcciones')->paginate(10);
+        $reportes = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'usuarioReporta', 'usuarioReporta.persona', 'empleadosAcciones')->paginate(10);
         return response()->json([
             'status' => 200,
             'data' => $reportes
@@ -30,6 +33,14 @@ class ReporteController extends Controller
 
     public function create(Request $request): View
     {
+        $validated = $request->validate(
+            [
+                'actividad' => 'integer|exists:actividades,id',
+            ],
+            [
+                'actividad.exists' => 'La actividad seleccionada no existe'
+            ]
+        );
         $idActividad = $request->query('actividad');
         $actividad = null;
         if ($idActividad) {
@@ -45,12 +56,8 @@ class ReporteController extends Controller
                 'id_aula' => 'integer|exists:aulas,id',
                 'id_actividad' => 'integer|exists:actividades,id',
                 'tipoReporte' => [Rule::enum(TipoReporteEnum::class)],
-                // 'id_usuario_reporta',
-                // 'fecha_reporte',
-                // 'hora_reporte',
                 'descripcion' => 'required|string',
                 'titulo' => 'required|string|max:50',
-                // 'no_procede'
             ],
             [
                 'id_aula.exists' => 'El aula no existe',
@@ -85,8 +92,61 @@ class ReporteController extends Controller
 
     public function detalle(Request $request, $id_reporte)
     {
-        $reporte = Reporte::findOrFail($id_reporte)->with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'accionesReporte.usuarioSupervisor', 'usuarioReporta', 'empleadosAcciones');
-        $entidades = Entidades::all();
-        return view('reportes.detail', compact('reporte', 'entidades'));
+        $reporte = Reporte::find($id_reporte)->with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'accionesReporte.usuarioSupervisor', 'usuarioReporta', 'usuarioReporta.persona', 'empleadosAcciones');
+        if (isset($reporte)) {
+            $entidades = Entidades::all();
+            return view('reportes.detail', compact('reporte', 'entidades'));
+        } else {
+            return redirect()->route('reportes.index')->with('message', [
+                'type' => 'error',
+                'content' => 'El reporte especificado no existe'
+            ]);
+        }
+    }
+
+    public function marcarNoProcede(Request $request, $id_reporte)
+    {
+        $reporte = Reporte::find($id_reporte);
+        if (isset($reporte)) {
+            $reporte->no_procede = !$reporte->no_procede;
+            $reporte->save();
+            return response()->json([
+                'message' => 'Reporte actualizado',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Reporte no encontrado',
+            ], 404);
+        }
+    }
+
+    public function actualizarEntidadAsignada(Request $request, $id_reporte)
+    {
+        $validated = $request->validate(
+            ['id_entidad' => 'integer|exists:entidades,id'],
+            ['id_entidad.exists' => 'La entidad seleccionada no existe']
+        );
+        $reporte = Reporte::find($id_reporte);
+        if (isset($reporte)) {
+            $accionesReporte = AccionesReporte::where('id_reporte', $id_reporte)->first();
+            if (isset($accionesReporte)) {
+                $accionesReporte->id_entidad_asignada = $validated['id_entidad'];
+                $accionesReporte->save();
+            } else {
+                $newAccionesReporte = new AccionesReporte;
+                $newAccionesReporte->id_reporte = $id_reporte;
+                $newAccionesReporte->id_usuario_administracion = Auth::user()->id;
+                $newAccionesReporte->id_entidad_asignada = $validated['id_entidad'];
+                $newAccionesReporte->id_reporte = $id_reporte;
+                $newAccionesReporte->save();
+            }
+            return response()->json([
+                'message' => 'Reporte actualizado',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Reporte no encontrado',
+            ], 404);
+        }
     }
 }
