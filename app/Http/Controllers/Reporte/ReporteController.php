@@ -17,15 +17,41 @@ use Illuminate\Validation\ValidationException;
 
 class ReporteController extends Controller
 {
-
-    public function index()
+    public function index(Request $request)
     {
-        $reportes = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'usuarioReporta', 'empleadosAcciones')->paginate(10);
-        return response()->json([
-            'status' => 200,
-            'data' => $reportes
-        ], 200);
-        // return view('reportes.index', compact('reportes'));
+        $query = Reporte::query();
+
+        // Filtro por fecha
+        if ($request->has('filter-radio')) {
+            $filtro = $request->input('filter-radio');
+
+            switch ($filtro) {
+                case 'hoy':
+                    $query->whereDate('fecha_reporte', today());
+                    break;
+                case '7_dias':
+                    $query->where('fecha_reporte', '>=', now()->subDays(7));
+                    break;
+                case '30_dias':
+                    $query->where('fecha_reporte', '>=', now()->subDays(30));
+                    break;
+                case 'mes':
+                    $query->where('fecha_reporte', '>=', now()->subMonth());
+                    break;
+                case 'anio':
+                    $query->where('fecha_reporte', '>=', now()->subYear());
+                    break;
+            }
+        }
+
+        // Filtro por título (búsqueda por nombre)
+        if ($request->has('titulo')) {
+            $titulo = $request->input('titulo');
+            $query->where('titulo', 'like', '%' . $titulo . '%');
+        }
+
+        $reportes = $query->paginate(10);
+        return view('reportes.index', compact('reportes'));
     }
 
     public function create(Request $request): View
