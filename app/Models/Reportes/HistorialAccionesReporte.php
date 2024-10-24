@@ -20,7 +20,8 @@ class HistorialAccionesReporte extends Model
         'id_estado',
         'foto_evidencia',
         'descripcion',
-        'fecha_actualizacion_seguimiento',
+        'fecha_actualizacion',
+        'hora_actualizacion',
     ];
 
     public function accionesReporte() : BelongsTo

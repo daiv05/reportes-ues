@@ -17,12 +17,12 @@ return new class extends Migration
             $table->unsignedBigInteger('id_usuario_administracion');
             $table->unsignedBigInteger('id_entidad_asignada');
             $table->unsignedBigInteger('id_usuario_supervisor');
-            $table->text('comentario_encargado');
+            $table->text('comentario_encargado')->nullable();
             $table->date('fecha_asignacion');
-            $table->date('fecha_inicio');
-            $table->time('hora_inicio');
-            $table->date('fecha_finalizacion');
-            $table->time('hora_finalizacion');
+            $table->date('fecha_inicio')->nullable();
+            $table->time('hora_inicio')->nullable();
+            $table->date('fecha_finalizacion')->nullable();
+            $table->time('hora_finalizacion')->nullable();
             $table->timestamps();
 
             $table->foreign('id_reporte')->references('id')->on('reportes')->onDelete('restrict');
