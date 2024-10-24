@@ -16,9 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_acciones_reporte');
             $table->unsignedBigInteger('id_empleado_puesto');
             $table->unsignedBigInteger('id_estado');
-            $table->text('foto_evidencia');
-            $table->text('descripcion');
-            $table->date('fecha_actualizacion_seguimiento');
+            $table->text('foto_evidencia')->nullable();
+            $table->text('descripcion')->nullable();
+            $table->date('fecha_actualizacion');
+            $table->time('hora_actualizacion');
             $table->timestamps();
 
             $table->foreign('id_acciones_reporte')->references('id')->on('acciones_reportes')->onDelete('restrict');

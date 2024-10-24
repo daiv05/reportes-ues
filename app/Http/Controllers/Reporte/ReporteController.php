@@ -6,6 +6,7 @@ use App\Enums\TipoReporteEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Actividades\Actividad;
 use App\Models\Reportes\AccionesReporte;
+use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use Carbon\Carbon;
@@ -13,6 +14,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -146,29 +148,57 @@ class ReporteController extends Controller
         }
     }
 
-    public function actualizarEntidadAsignada(Request $request, $id_reporte)
+    public function realizarAsignacion(Request $request, $id_reporte)
     {
         $validated = $request->validate(
-            ['id_entidad' => 'integer|exists:entidades,id'],
-            ['id_entidad.exists' => 'La entidad seleccionada no existe']
+            [
+                'id_empleados_puestos' => 'required|array',
+                'id_empleados_puestos.*' => 'integer|exists:empleados_puestos,id',
+                'comentario' => 'nullable|string',
+                'id_entidad' => 'required|integer|exists:entidades,id',
+                'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
+            ],
+            [
+                'id_empleado_puesto.required' => 'Debe asignar al menos un empleado al reporte.',
+                'id_empleado_puesto.array' => 'Estructura de empleados asignados inválida.',
+                'id_empleado_puesto.*.integer' => 'Cada empleado debe tener un ID válido.',
+                'id_empleado_puesto.*.exists' => 'Uno o más empleados seleccionados no existen.',
+                'comentario.string' => 'El comentario debe ser un texto válido.',
+                'id_entidad.required' => 'Debe seleccionar una entidad.',
+                'id_entidad.integer' => 'El ID de la entidad debe ser un número entero.',
+                'id_entidad.exists' => 'La entidad seleccionada no existe.',
+                'id_empleado_supervisor.required' => 'Debe seleccionar un supervsior para el reporte.',
+                'id_empleado_supervisor.integer' => 'El ID del supervsior debe ser un número entero.',
+                'id_empleado_supervisor.exists' => 'El empleado supervisor seleccionado no existe.',
+            ]
         );
         $reporte = Reporte::find($id_reporte);
         if (isset($reporte)) {
-            $accionesReporte = AccionesReporte::where('id_reporte', $id_reporte)->first();
-            if (isset($accionesReporte)) {
-                $accionesReporte->id_entidad_asignada = $validated['id_entidad'];
-                $accionesReporte->save();
-            } else {
-                $newAccionesReporte = new AccionesReporte;
-                $newAccionesReporte->id_reporte = $id_reporte;
-                $newAccionesReporte->id_usuario_administracion = Auth::user()->id;
-                $newAccionesReporte->id_entidad_asignada = $validated['id_entidad'];
-                $newAccionesReporte->id_reporte = $id_reporte;
-                $newAccionesReporte->save();
-            }
-            return response()->json([
-                'message' => 'Reporte actualizado',
-            ], 200);
+            DB::transaction(function ($id_reporte, $validated) {
+                // Registro en ACCIONES_REPORTE
+                $accReporte = new AccionesReporte();
+                $accReporte->id_reporte = $id_reporte;
+                $accReporte->id_usuario_administracion = Auth::user()->id;
+                $accReporte->id_entidad_asignada = $validated['id_entidad'];
+                $accReporte->id_usuario_supervisor = $validated['id_empleado_supervisor'];
+                $accReporte->comentario = $validated['comentario'] ?? '';
+                $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
+                $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
+                $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
+                $accReporte->save();
+                // Registro en HISTORIAL_ACCIONES_REPORTES
+                $histAccReporte = new HistorialAccionesReporte();
+                $histAccReporte->id_acciones_reportes = $accReporte->id;
+                $histAccReporte->id_empleado_puesto = Auth::user()->empleadosPuestos->first()->id;
+                $histAccReporte->id_estado = 1;
+                $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
+                $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
+                $histAccReporte->save();
+
+                return response()->json([
+                    'message' => 'Reporte actualizado',
+                ], 200);
+            });
         } else {
             return response()->json([
                 'message' => 'Reporte no encontrado',
