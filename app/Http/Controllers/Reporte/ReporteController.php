@@ -126,15 +126,17 @@ class ReporteController extends Controller
 
     public function detalle(Request $request, $id_reporte)
     {
-        $reporte = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'accionesReporte.usuarioSupervisor', 'usuarioReporta', 'usuarioReporta.persona', 'empleadosAcciones')
-        ->find($id_reporte);
+        $reporte = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada',
+            'accionesReporte.usuarioSupervisor', 'usuarioReporta', 'usuarioReporta.persona',
+            'empleadosAcciones', 'empleadosAcciones.empleadoPuesto',
+            'empleadosAcciones.empleadoPuesto.usuario', 'empleadosAcciones.empleadoPuesto.usuario.persona')->find($id_reporte);
         if (isset($reporte)) {
             $entidades = Entidades::all();
-            // return response()->json([
-            //     'status' => 200,
-            //     'reporte' => $reporte,
-            //     'entidades' => $entidades
-            // ], 200);
+            return response()->json([
+                'status' => 200,
+                'reporte' => $reporte,
+                'entidades' => $entidades
+            ], 200);
             return view('reportes.detail', compact('reporte', 'entidades'));
         } else {
             return redirect()->route('reportes.index')->with('message', [
