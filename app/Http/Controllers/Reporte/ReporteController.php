@@ -9,6 +9,7 @@ use App\Models\Reportes\AccionesReporte;
 use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
+use App\Models\Mantenimientos\Aulas;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -74,45 +75,36 @@ class ReporteController extends Controller
         if ($idActividad) {
             $actividad = Actividad::findOrFail($idActividad);
         }
-        return view('reportes.create', compact('actividad'));
+        $aulas = Aulas::all(); // Obtener todas las aulas
+        return view('reportes.create', compact('actividad', 'aulas'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate(
             [
-                'id_aula' => 'integer|exists:aulas,id',
-                'id_actividad' => 'integer|exists:actividades,id',
-                'tipoReporte' => [Rule::enum(TipoReporteEnum::class)],
+                'id_aula' => 'nullable|integer|exists:aulas,id',
                 'descripcion' => 'required|string',
                 'titulo' => 'required|string|max:50',
             ],
             [
                 'id_aula.exists' => 'El aula no existe',
-                'id_actividad.exists' => 'La actividad no existe',
                 'descripcion.required' => 'Debe ingresar la descripción del reporte',
                 'titulo.required' => 'Debe ingresar el titulo del reporte',
             ]
         );
+
         $reporte = new Reporte();
-        $errors = Validator::make([], []);
-        if ($request->tipoReporte == 'actividad') {
-            if (isset($request->id_actividad)) {
-                $reporte->id_actividad = $validated['id_actividad'];
-            } else {
-                $errors->getMessageBag()->add('id_actividad', 'Debe especificar una actividad');
-                throw new ValidationException($errors);
-            }
-        }
-        // He pensado en guardar aqui las aulas relacionadas a la actividad, pero por ahora no xd
         $reporte->id_usuario_reporta = Auth::user()->id;
         $reporte->fecha_reporte = Carbon::now()->format('Y-m-d');
         $reporte->hora_reporte = Carbon::now()->format('H:i:s');
         $reporte->titulo = $validated['titulo'];
         $reporte->descripcion = $validated['descripcion'];
+        $reporte->id_aula = $validated['id_aula'] ?? null; // Asignar null si no se seleccionó aula
+
         $reporte->save();
 
-        return redirect()->route('reportes.index')->with('message', [
+        return redirect()->route('reportes-generales')->with('message', [
             'type' => 'success',
             'content' => 'Reporte enviado exitosamente.'
         ]);
