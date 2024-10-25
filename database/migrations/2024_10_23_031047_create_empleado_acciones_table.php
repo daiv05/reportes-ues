@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->foreign('id_reporte')->references('id')->on('reportes')->onDelete('restrict');
             $table->foreign('id_empleado_puesto')->references('id')->on('empleados_puestos')->onDelete('restrict');
-        
+            $table->timestamps();
         });
     }
 

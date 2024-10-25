@@ -59,12 +59,12 @@ class Reporte extends Model
     {
         return $this->accionesReporte()
             ->with(['historialAccionesReporte' => function ($query) {
-                $query->orderBy('fecha_actualizacion_seguimiento', 'desc')->first();
+                $query->orderBy('fecha_actualizacion', 'desc')->first();
             }])
             ->get()
             ->pluck('historialAccionesReporte')
             ->flatten()
-            ->sortByDesc('fecha_actualizacion_seguimiento')
+            ->sortByDesc('fecha_actualizacion')
             ->first()?->estado;
     }
 }

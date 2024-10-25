@@ -11,14 +11,13 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('puestos', function (Blueprint $table) {
-            $table->id(); // Llave primaria
+            $table->id();
             $table->foreignId('id_entidad')
-                ->constrained('entidades') // Referencia a la tabla entidades
-                ->onDelete('cascade') // Si se elimina el departamento, se eliminan los puestos relacionados
-                ->onUpdate('cascade'); // Si se actualiza el departamento, se actualiza la referencia en puestos
+                ->constrained('entidades')
+                ->onDelete('restrict');
             $table->string('nombre', 50);
             $table->boolean('activo')->default(1);
-            $table->timestamps(); // created_at y updated_at
+            $table->timestamps();
         });
     }
 

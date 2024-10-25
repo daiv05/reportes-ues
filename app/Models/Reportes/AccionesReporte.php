@@ -18,7 +18,7 @@ class AccionesReporte extends Model
         'id_usuario_administracion',
         'id_entidad_asignada',
         'id_usuario_supervisor',
-        'comentario_encargado',
+        'comentario',
         'fecha_asignacion',
         'fecha_inicio',
         'hora_inicio',

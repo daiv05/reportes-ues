@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_usuario');
             $table->unsignedBigInteger('id_puesto');
-            $table->text('descripcion');
+            $table->text('descripcion')->nullable();
             $table->boolean('activo')->default(true);
             $table->timestamps();
 
