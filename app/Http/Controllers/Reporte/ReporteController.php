@@ -127,7 +127,7 @@ class ReporteController extends Controller
     public function detalle(Request $request, $id_reporte)
     {
         $reporte = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada',
-            'accionesReporte.usuarioSupervisor', 'usuarioReporta', 'usuarioReporta.persona',
+            'accionesReporte.usuarioSupervisor', 'accionesReporte.usuarioSupervisor.persona', 'usuarioReporta', 'usuarioReporta.persona',
             'empleadosAcciones', 'empleadosAcciones.empleadoPuesto',
             'empleadosAcciones.empleadoPuesto.usuario', 'empleadosAcciones.empleadoPuesto.usuario.persona')->find($id_reporte);
         if (isset($reporte)) {
@@ -148,18 +148,25 @@ class ReporteController extends Controller
 
     public function marcarNoProcede(Request $request, $id_reporte)
     {
-        $reporte = Reporte::find($id_reporte);
-        if (isset($reporte)) {
-            $reporte->no_procede = !$reporte->no_procede;
-            $reporte->save();
+        try {
+            $reporte = Reporte::find($id_reporte);
+            if (isset($reporte)) {
+                $reporte->no_procede = !$reporte->no_procede;
+                $reporte->save();
+                return response()->json([
+                    'message' => 'Reporte actualizado',
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Reporte no encontrado',
+                ], 404);
+            }
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Reporte actualizado',
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Reporte no encontrado',
-            ], 404);
+                'message' => $e->getMessage(),
+            ], 500);
         }
+
     }
 
     public function realizarAsignacion(Request $request, $id_reporte)

@@ -8,6 +8,7 @@ use App\Http\Controllers\rhu\EntidadesController;
 use App\Http\Controllers\rhu\PuestoController;
 use App\Http\Controllers\Seguridad\ProfileController;
 use App\Http\Controllers\Reporte\ReporteController;
+use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
 use Illuminate\Support\Facades\Route;
@@ -121,6 +122,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/puestos', [PuestoController::class, 'index'])->name('puestos.index');
         Route::resource('puestos', PuestoController::class)->except(['destroy']);
         Route::patch('puestos/{puesto}/toggle', [PuestoController::class, 'toggleActivo'])->name('puestos.toggleActivo');
+         /*Empleados Puestos*/
+        Route::get('/busqueda-por-nombre/{id_entidad}', [EmpleadoPuestoController::class, 'buscarPorNombre'])->name('empleadosPuestos.buscarPorNombre');
 
     });
 });
