@@ -12,86 +12,114 @@ class UserSeeder extends Seeder
         $usuarios = [
             [
                 "id_persona" => 1,
-                "carnet" => "aa00001",
-                "email" => "aa00001@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "aa11001",
+                "email" => "aa11001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_SUPER_ADMIN"
             ],
             [
                 "id_persona" => 2,
-                "carnet" => "er00001",
-                "email" => "er00001@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "rr11001",
+                "email" => "rr11001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_ADMIN_REPORTE"
             ],
             [
                 "id_persona" => 3,
-                "carnet" => "er00002",
-                "email" => "er00002@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "ss11001",
+                "email" => "ss11001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_SUPERVISOR_REPORTE"
             ],
             [
                 "id_persona" => 4,
-                "carnet" => "ed00001",
-                "email" => "ed00001@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "ss21001",
+                "email" => "ss21001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_SUPERVISOR_REPORTE"
             ],
             [
                 "id_persona" => 5,
-                "carnet" => "ed00002",
-                "email" => "ed00002@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "ee11001",
+                "email" => "ee11001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_EMPLEADO"
             ],
             [
                 "id_persona" => 6,
-                "carnet" => "em00001",
-                "email" => "em00001@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "ee21001",
+                "email" => "ee21001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_EMPLEADO"
             ],
             [
                 "id_persona" => 7,
-                "carnet" => "em00002",
-                "email" => "em00002@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "ee31001",
+                "email" => "ee31001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_EMPLEADO"
             ],
             [
                 "id_persona" => 8,
-                "carnet" => "em00003",
-                "email" => "em00003@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "ee41001",
+                "email" => "ee41001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_EMPLEADO"
             ],
             [
                 "id_persona" => 9,
-                "carnet" => "em00004",
-                "email" => "em00004@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "ee51001",
+                "email" => "ee51001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_EMPLEADO"
             ],
             [
                 "id_persona" => 10,
-                "carnet" => "us00001",
-                "email" => "us00001@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "ee61001",
+                "email" => "ee61001@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_EMPLEADO"
             ],
             [
                 "id_persona" => 11,
-                "carnet" => "us00002",
-                "email" => "us00002@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "nn1101",
+                "email" => "nn1101@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_BASE"
             ],
             [
                 "id_persona" => 12,
-                "carnet" => "us00003",
-                "email" => "us00003@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "nn2101",
+                "email" => "nn2101@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_BASE"
             ],
             [
                 "id_persona" => 13,
-                "carnet" => "us00004",
-                "email" => "us00004@ues.edu.sv",
-                "password" => bcrypt("password123")
+                "carnet" => "nn3101",
+                "email" => "nn3101@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_BASE"
+            ],
+            [
+                "id_persona" => 14,
+                "carnet" => "nn4101",
+                "email" => "nn4101@ues.edu.sv",
+                "password" => bcrypt("pass123"),
+                "role" => "ROLE_USUARIO_BASE"
             ],
         ];
 
         foreach ($usuarios as $usuario) {
-            User::create($usuario);
+            $user = User::create(
+                [
+                    "id_persona" => $usuario["id_persona"],
+                    "carnet" => $usuario["carnet"],
+                    "email" => $usuario["email"],
+                    "password" => $usuario["password"]
+                ]
+            );
+            $user->assignRole($usuario["role"]);
         }
     }
 }

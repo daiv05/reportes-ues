@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('id_entidad')
                 ->constrained('entidades')
                 ->onDelete('restrict');
-            $table->string('nombre', 50);
+            $table->string('nombre', 100);
             $table->boolean('activo')->default(1);
             $table->timestamps();
         });

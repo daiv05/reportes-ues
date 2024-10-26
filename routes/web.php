@@ -124,7 +124,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('puestos/{puesto}/toggle', [PuestoController::class, 'toggleActivo'])->name('puestos.toggleActivo');
          /*Empleados Puestos*/
         Route::get('/busqueda-por-nombre/{id_entidad}', [EmpleadoPuestoController::class, 'buscarPorNombre'])->name('empleadosPuestos.buscarPorNombre');
-
+        Route::get('/busqueda-supervisor-por-nombre', [EmpleadoPuestoController::class, 'buscarSupervisorPorNombre'])->name('empleadosPuestos.buscarSupervisorPorNombre');
     });
 });
 

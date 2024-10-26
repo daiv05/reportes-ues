@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\rhu;
 
+use App\Enums\RolesEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Registro\Persona;
@@ -68,20 +69,12 @@ class EmpleadoPuestoController extends Controller
         }
     }
 
-    public function buscarSupervisorPorNombre(Request $request, $idEntidad)
+    public function buscarSupervisorPorNombre(Request $request)
     {
         try {
-            $entidad = Entidades::find($idEntidad);
-            if (!isset($entidad)) {
-                return response()->json([
-                    'message' => 'Entidad no encontrada',
-                ], 404);
-            }
             $busqueda = $request->input('nombre_empleado');
             $empleadosPuestos = EmpleadoPuesto::whereHas('usuario.roles', function ($query) {
-                $query->where('name', 'ROLE_USUARIO_ENCARGADO_REPORTE');
-            })->whereHas('puesto.entidad', function ($query) use ($idEntidad) {
-                $query->where('id', '=', $idEntidad);
+                $query->where('name', RolesEnum::SUPERVISOR_REPORTE->value);
             })->whereHas('usuario.persona', function ($query) use ($busqueda) {
                 $query->where('nombre', 'like', "%{$busqueda}%")
                     ->orWhere('apellido', 'like', "%{$busqueda}%");
@@ -100,7 +93,7 @@ class EmpleadoPuestoController extends Controller
             })->toArray();
             return response()->json([
                 'status' => 200,
-                'lista_empleados' => $mappedEmpleados,
+                'lista_supervisores' => $mappedEmpleados,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
