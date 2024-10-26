@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Actividades\ActividadController;
 use App\Http\Controllers\Actividades\TipoActividadController;
 use App\Http\Controllers\Mantenimientos\AsignaturaController;
 use App\Http\Controllers\Mantenimientos\AulasController;
@@ -67,6 +68,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/eventos-y-evaluaciones', function () {
             return view('actividades.listado-actividades.listado-eventos-evaluaciones');
         })->name('listado-eventos-evaluaciones');
+        Route::get('/importar-actividades', function () {
+            return view('actividades.importacion-actividades.importacion-actividades');
+        })->name('importar-actividades');
+        Route::post('/importar-actividades', [ActividadController::class, 'importarExcel'])->name('importar-actividades-post');
     });
     /* ********************************************* */
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */
