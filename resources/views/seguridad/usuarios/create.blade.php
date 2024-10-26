@@ -43,7 +43,7 @@
 
                     <!-- Carnet -->
                     <div class="sm:col-span-1">
-                        <label for="carnet" class="block text-sm font-medium text-gray-700">Carnet</label>
+                        <label for="carnet" class="block text-sm font-medium text-gray-700">Carnet / Nombre de usuario</label>
                         <input type="text" name="carnet" id="carnet"
                             class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                         @if ($errors->has('carnet'))

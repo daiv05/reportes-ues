@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('actividades', function (Blueprint $table) {
+        Schema::create('tipo_ciclos', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
-            $table->foreignId('id_modalidad')->constrained('modalidades');
-            $table->foreignId('id_ciclo')->constrained('ciclos');
+            $table->string('nombre');
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('actividades');
+        Schema::dropIfExists('tipo_ciclos');
     }
 };

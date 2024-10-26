@@ -1,4 +1,5 @@
 @php
+    // type: 1 = normal, 2 dropdown
     $sidebarItems = [
         [
             'type' => 1,
@@ -49,6 +50,11 @@
                     'to' => 'listado-eventos-evaluaciones',
                     'active' => request()->is('actividades/eventos-y-evaluaciones'),
                     'label' => 'Eventos',
+                ],
+                [
+                    'to' => 'importar-actividades',
+                    'active' => request()->is('actividades/importacion-actividades'),
+                    'label' => 'Importación de actividades',
                 ],
             ],
         ],
@@ -107,32 +113,29 @@
                     'active' => request()->is('maquetacion/general'),
                     'label' => 'Componentes globales',
                 ],
-                [
-                    'to' => 'detalle-reporte',
-                    'active' => request()->is('reportes/detalle'),
-                    'label' => 'Detalle de reporte',
-                ],
+                // [
+                //     'to' => 'detalle-reporte',
+                //     'active' => request()->is('reportes/detalle'),
+                //     'label' => 'Detalle de reporte',
+                // ],
             ],
         ],
     ];
 @endphp
 
 <aside id="logo-sidebar"
-       class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0"
-       aria-label="Sidebar">
+    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0"
+    aria-label="Sidebar">
     <div class="h-full overflow-y-auto bg-white px-3 pb-4 dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
             @foreach ($sidebarItems as $sit)
                 @if ($sit['type'] === 1)
-                    <x-aside.base to="{{ $sit['to'] }}" active="{{ $sit['active'] }}" icon="{{ $sit['icon'] }}"
-                                  label="{{ $sit['label'] }}"/>
+                    <x-aside.base :to="$sit['to']" :active="$sit['active']" :icon="$sit['icon']" :label="$sit['label']" />
                 @elseif ($sit['type'] === 2)
-                    <x-aside.dropdown id="{{ $sit['id'] }}" active="{{ $sit['active'] }}" icon="{{ $sit['icon'] }}"
-                                      label="{{ $sit['label'] }}"/>
+                    <x-aside.dropdown id="{{ $sit['id'] }}" :active="$sit['active']" :icon="$sit['icon']" :label="$sit['label']" />
                     <ul id="{{ $sit['id'] }}" class="hidden space-y-2 py-2">
                         @foreach ($sit['items'] as $item)
-                            <x-aside.dropdown-item to="{{ $item['to'] }}" active="{{ $item['active'] }}"
-                                                   label="{{ $item['label'] }}"/>
+                            <x-aside.dropdown-item :to="$item['to']" :active="$item['active']" :label="$item['label']" />
                         @endforeach
                     </ul>
                 @else

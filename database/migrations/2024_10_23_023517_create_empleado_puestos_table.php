@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('actividades', function (Blueprint $table) {
+        Schema::create('empleados_puestos', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
-            $table->foreignId('id_modalidad')->constrained('modalidades');
-            $table->foreignId('id_ciclo')->constrained('ciclos');
+            $table->unsignedBigInteger('id_usuario');
+            $table->unsignedBigInteger('id_puesto');
+            $table->text('descripcion')->nullable();
             $table->boolean('activo')->default(true);
             $table->timestamps();
+
+            $table->foreign('id_usuario')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('id_puesto')->references('id')->on('puestos')->onDelete('restrict');
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('actividades');
+        Schema::dropIfExists('empleados_puestos');
     }
 };

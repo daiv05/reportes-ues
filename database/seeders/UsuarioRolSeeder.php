@@ -28,11 +28,11 @@ class UsuarioRolSeeder extends Seeder
             ],
             [
                 'id_usuario' => 4,
-                'rol' => RolesEnum::ENCARGADO_DEPARTAMENTO
+                'rol' => RolesEnum::ENCARGADO_REPORTE
             ],
             [
                 'id_usuario' => 5,
-                'rol' => RolesEnum::ENCARGADO_DEPARTAMENTO
+                'rol' => RolesEnum::ENCARGADO_REPORTE
             ],
             [
                 'id_usuario' => 6,

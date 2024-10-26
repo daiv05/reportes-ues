@@ -4,6 +4,8 @@ namespace App\Models\rhu;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\rhu\Entidades;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Puesto extends Model
 {
@@ -12,17 +14,22 @@ class Puesto extends Model
     protected $table = 'puestos';
 
     protected $fillable = [
-        'id_departamento',
+        'id_entidad',
         'nombre',
         'activo',
     ];
 
     /**
-     * Relación con el modelo Entidadesa.
-     * Un puesto pertenece a un departamento.
+     * Relación con el modelo Entidades.
+     * Un puesto pertenece a una entidad.
      */
     public function entidad()
     {
         return $this->belongsTo(Entidades::class, 'id_entidad');
+    }
+
+    public function empleadosPuestos() : HasMany
+    {
+        return $this->hasMany(EmpleadoPuesto::class, 'id_puesto');
     }
 }

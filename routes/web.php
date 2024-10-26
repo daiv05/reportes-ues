@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Actividades\ActividadController;
 use App\Http\Controllers\Actividades\TipoActividadController;
 use App\Http\Controllers\Mantenimientos\AsignaturaController;
 use App\Http\Controllers\Mantenimientos\AulasController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Mantenimientos\EscuelaController;
 use App\Http\Controllers\rhu\EntidadesController;
 use App\Http\Controllers\rhu\PuestoController;
 use App\Http\Controllers\Seguridad\ProfileController;
+use App\Http\Controllers\Reporte\ReporteController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
 use Illuminate\Support\Facades\Route;
@@ -48,15 +50,12 @@ Route::middleware('auth')->group(function () {
     /*   ************* REPORTES *************    */
     /* ***************************************** */
     Route::prefix('reportes')->group(function () {
-        Route::get('/listado-general', function () {
-            return view('reportes.index');
-        })->name('reportes-generales');
-        Route::get('/registrar', function () {
-            return view('reportes.create');
-        })->name('crear-reporte');
-        Route::get('/detalle', function () {
-            return view('reportes.detail');
-        })->name('detalle-reporte');
+        Route::get('/listado-general', [ReporteController::class, 'index'])->name('reportes-generales');
+        Route::get('/registrar', [ReporteController::class, 'create'])->name('crear-reporte');
+        Route::post('/store', [ReporteController::class, 'store'])->name('reportes.store');
+        Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->name('detalle-reporte');
+        Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->name('reportes.noProcede');
+        Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->name('reportes.realizarAsignacion');
     });
 
     /* ****************************************** */
@@ -69,6 +68,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/eventos-y-evaluaciones', function () {
             return view('actividades.listado-actividades.listado-eventos-evaluaciones');
         })->name('listado-eventos-evaluaciones');
+        Route::get('/importar-actividades', function () {
+            return view('actividades.importacion-actividades.importacion-actividades');
+        })->name('importar-actividades');
+        Route::post('/importar-actividades', [ActividadController::class, 'importarExcel'])->name('importar-actividades-post');
     });
     /* ********************************************* */
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */
