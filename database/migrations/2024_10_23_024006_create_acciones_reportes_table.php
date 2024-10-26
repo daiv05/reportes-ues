@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_usuario_administracion');
             $table->unsignedBigInteger('id_entidad_asignada');
             $table->unsignedBigInteger('id_usuario_supervisor');
-            $table->text('comentario_encargado')->nullable();
+            $table->text('comentario')->nullable();
             $table->date('fecha_asignacion');
             $table->date('fecha_inicio')->nullable();
             $table->time('hora_inicio')->nullable();

@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // Definir la relación recursiva
-            $table->foreign('id_entidad')->references('id')->on('entidades')->onDelete('set null');
+            $table->foreign('id_entidad')->references('id')->on('entidades')->onDelete('restrict');
         });
     }
 

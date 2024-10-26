@@ -6,11 +6,13 @@ use App\Enums\TipoReporteEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Actividades\Actividad;
 use App\Models\Reportes\AccionesReporte;
+use App\Models\Reportes\EmpleadoAccion;
 use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
 use Carbon\Carbon;
+use Error;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -57,6 +59,10 @@ class ReporteController extends Controller
         }
 
         $reportes = $query->paginate(10);
+        // return response()->json([
+        //     'status' => 200,
+        //     'data' => $reportes
+        // ], 200);
         return view('reportes.index', compact('reportes'));
     }
 
@@ -112,9 +118,17 @@ class ReporteController extends Controller
 
     public function detalle(Request $request, $id_reporte)
     {
-        $reporte = Reporte::find($id_reporte)->with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada', 'accionesReporte.usuarioSupervisor', 'usuarioReporta', 'usuarioReporta.persona', 'empleadosAcciones');
+        $reporte = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada',
+            'accionesReporte.usuarioSupervisor', 'accionesReporte.usuarioSupervisor.persona', 'usuarioReporta', 'usuarioReporta.persona',
+            'empleadosAcciones', 'empleadosAcciones.empleadoPuesto',
+            'empleadosAcciones.empleadoPuesto.usuario', 'empleadosAcciones.empleadoPuesto.usuario.persona')->find($id_reporte);
         if (isset($reporte)) {
             $entidades = Entidades::all();
+            return response()->json([
+                'status' => 200,
+                'reporte' => $reporte,
+                'entidades' => $entidades
+            ], 200);
             return view('reportes.detail', compact('reporte', 'entidades'));
         } else {
             return redirect()->route('reportes.index')->with('message', [
@@ -126,18 +140,25 @@ class ReporteController extends Controller
 
     public function marcarNoProcede(Request $request, $id_reporte)
     {
-        $reporte = Reporte::find($id_reporte);
-        if (isset($reporte)) {
-            $reporte->no_procede = !$reporte->no_procede;
-            $reporte->save();
+        try {
+            $reporte = Reporte::find($id_reporte);
+            if (isset($reporte)) {
+                $reporte->no_procede = !$reporte->no_procede;
+                $reporte->save();
+                return response()->json([
+                    'message' => 'Reporte actualizado',
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Reporte no encontrado',
+                ], 404);
+            }
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Reporte actualizado',
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Reporte no encontrado',
-            ], 404);
+                'message' => $e->getMessage(),
+            ], 500);
         }
+
     }
 
     public function realizarAsignacion(Request $request, $id_reporte)
@@ -151,46 +172,52 @@ class ReporteController extends Controller
                 'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
             ],
             [
-                'id_empleado_puesto.required' => 'Debe asignar al menos un empleado al reporte.',
-                'id_empleado_puesto.array' => 'Estructura de empleados asignados inválida.',
-                'id_empleado_puesto.*.integer' => 'Cada empleado debe tener un ID válido.',
-                'id_empleado_puesto.*.exists' => 'Uno o más empleados seleccionados no existen.',
+                'id_empleados_puestos.required' => 'Debe asignar al menos un empleado al reporte.',
+                'id_empleados_puestos.array' => 'Estructura de empleados asignados inválida.',
+                'id_empleados_puestos.*.integer' => 'Cada empleado debe tener un ID válido.',
+                'id_empleados_puestos.*.exists' => 'Uno o más empleados seleccionados no existen.',
                 'comentario.string' => 'El comentario debe ser un texto válido.',
                 'id_entidad.required' => 'Debe seleccionar una entidad.',
                 'id_entidad.integer' => 'El ID de la entidad debe ser un número entero.',
                 'id_entidad.exists' => 'La entidad seleccionada no existe.',
-                'id_empleado_supervisor.required' => 'Debe seleccionar un supervsior para el reporte.',
+                'id_empleado_supervisor.required' => 'Debe seleccionar un supervisor para el reporte.',
                 'id_empleado_supervisor.integer' => 'El ID del supervsior debe ser un número entero.',
                 'id_empleado_supervisor.exists' => 'El empleado supervisor seleccionado no existe.',
             ]
         );
         $reporte = Reporte::find($id_reporte);
         if (isset($reporte)) {
-            DB::transaction(function ($id_reporte, $validated) {
-                // Registro en ACCIONES_REPORTE
-                $accReporte = new AccionesReporte();
-                $accReporte->id_reporte = $id_reporte;
-                $accReporte->id_usuario_administracion = Auth::user()->id;
-                $accReporte->id_entidad_asignada = $validated['id_entidad'];
-                $accReporte->id_usuario_supervisor = $validated['id_empleado_supervisor'];
-                $accReporte->comentario = $validated['comentario'] ?? '';
-                $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
-                $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
-                $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
-                $accReporte->save();
-                // Registro en HISTORIAL_ACCIONES_REPORTES
-                $histAccReporte = new HistorialAccionesReporte();
-                $histAccReporte->id_acciones_reportes = $accReporte->id;
-                $histAccReporte->id_empleado_puesto = Auth::user()->empleadosPuestos->first()->id;
-                $histAccReporte->id_estado = 1;
-                $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
-                $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
-                $histAccReporte->save();
-
-                return response()->json([
-                    'message' => 'Reporte actualizado',
-                ], 200);
+            DB::transaction(function () use ($id_reporte, $validated) {
+                    // Registro en ACCIONES_REPORTE
+                    $accReporte = new AccionesReporte();
+                    $accReporte->id_reporte = $id_reporte;
+                    $accReporte->id_usuario_administracion = Auth::user()->id;
+                    $accReporte->id_entidad_asignada = $validated['id_entidad'];
+                    $accReporte->id_usuario_supervisor = $validated['id_empleado_supervisor'];
+                    $accReporte->comentario = $validated['comentario'] ?? '';
+                    $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
+                    $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
+                    $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
+                    $accReporte->save();
+                    // Registro en HISTORIAL_ACCIONES_REPORTES
+                    $histAccReporte = new HistorialAccionesReporte();
+                    $histAccReporte->id_acciones_reporte = $accReporte->id;
+                    $histAccReporte->id_empleado_puesto = Auth::user()->empleadosPuestos->first()->id;
+                    $histAccReporte->id_estado = 1;
+                    $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
+                    $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
+                    $histAccReporte->save();
+                    // Registro en EMPLEADOS_ACCIONES
+                    foreach ($validated['id_empleados_puestos'] as $emp) {
+                        $empAcciones = new EmpleadoAccion();
+                        $empAcciones->id_empleado_puesto = $emp;
+                        $empAcciones->id_reporte = $id_reporte;
+                        $empAcciones->save();
+                    }
             });
+            return response()->json([
+                'message' => 'Reporte asignado con exito',
+            ], 200);
         } else {
             return response()->json([
                 'message' => 'Reporte no encontrado',
