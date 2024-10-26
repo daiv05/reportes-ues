@@ -124,11 +124,11 @@ class ReporteController extends Controller
             'empleadosAcciones.empleadoPuesto.usuario', 'empleadosAcciones.empleadoPuesto.usuario.persona')->find($id_reporte);
         if (isset($reporte)) {
             $entidades = Entidades::all();
-            return response()->json([
-                'status' => 200,
-                'reporte' => $reporte,
-                'entidades' => $entidades
-            ], 200);
+//            return response()->json([
+//                'status' => 200,
+//                'reporte' => $reporte,
+//                'entidades' => $entidades
+//            ], 200);
             return view('reportes.detail', compact('reporte', 'entidades'));
         } else {
             return redirect()->route('reportes.index')->with('message', [
@@ -188,32 +188,32 @@ class ReporteController extends Controller
         $reporte = Reporte::find($id_reporte);
         if (isset($reporte)) {
             DB::transaction(function () use ($id_reporte, $validated) {
-                    // Registro en ACCIONES_REPORTE
-                    $accReporte = new AccionesReporte();
-                    $accReporte->id_reporte = $id_reporte;
-                    $accReporte->id_usuario_administracion = Auth::user()->id;
-                    $accReporte->id_entidad_asignada = $validated['id_entidad'];
-                    $accReporte->id_usuario_supervisor = $validated['id_empleado_supervisor'];
-                    $accReporte->comentario = $validated['comentario'] ?? '';
-                    $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
-                    $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
-                    $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
-                    $accReporte->save();
-                    // Registro en HISTORIAL_ACCIONES_REPORTES
-                    $histAccReporte = new HistorialAccionesReporte();
-                    $histAccReporte->id_acciones_reporte = $accReporte->id;
-                    $histAccReporte->id_empleado_puesto = Auth::user()->empleadosPuestos->first()->id;
-                    $histAccReporte->id_estado = 1;
-                    $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
-                    $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
-                    $histAccReporte->save();
-                    // Registro en EMPLEADOS_ACCIONES
-                    foreach ($validated['id_empleados_puestos'] as $emp) {
-                        $empAcciones = new EmpleadoAccion();
-                        $empAcciones->id_empleado_puesto = $emp;
-                        $empAcciones->id_reporte = $id_reporte;
-                        $empAcciones->save();
-                    }
+                // Registro en ACCIONES_REPORTE
+                $accReporte = new AccionesReporte();
+                $accReporte->id_reporte = $id_reporte;
+                $accReporte->id_usuario_administracion = Auth::user()->id;
+                $accReporte->id_entidad_asignada = $validated['id_entidad'];
+                $accReporte->id_usuario_supervisor = $validated['id_empleado_supervisor'];
+                $accReporte->comentario = $validated['comentario'] ?? '';
+                $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
+                $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
+                $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
+                $accReporte->save();
+                // Registro en HISTORIAL_ACCIONES_REPORTES
+                $histAccReporte = new HistorialAccionesReporte();
+                $histAccReporte->id_acciones_reporte = $accReporte->id;
+                $histAccReporte->id_empleado_puesto = Auth::user()->empleadosPuestos->first()->id;
+                $histAccReporte->id_estado = 1;
+                $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
+                $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
+                $histAccReporte->save();
+                // Registro en EMPLEADOS_ACCIONES
+                foreach ($validated['id_empleados_puestos'] as $emp) {
+                    $empAcciones = new EmpleadoAccion();
+                    $empAcciones->id_empleado_puesto = $emp;
+                    $empAcciones->id_reporte = $id_reporte;
+                    $empAcciones->save();
+                }
             });
             return response()->json([
                 'message' => 'Reporte asignado con exito',
