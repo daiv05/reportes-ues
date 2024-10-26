@@ -12,6 +12,11 @@
 @endphp
 
 <x-app-layout>
+    @if (session('message'))
+        <div class="alert alert-{{ session('message.type') }}">
+            {{ session('message.content') }}
+        </div>
+    @endif
     <x-slot name="header">
         <x-header.main
             tituloMenor="Últimos reportes de"
@@ -120,7 +125,7 @@
                 </div>
 
                 <button type="submit"
-                        class="align-middle rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        class="align-middle rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor" class="h-4 w-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -129,8 +134,8 @@
                 </button>
 
                 <button type="reset"
-                        class="align-middle rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                        onclick="document.getElementById('filter-form').reset();">
+                        class="align-middle rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                        onclick="window.location.href='{{ route('reportes-generales') }}';">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor" class="h-4 w-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -147,14 +152,15 @@
                     <x-table.td>{{ $reporte->fecha_reporte }} {{ $reporte->hora_reporte }}</x-table.td>
                     <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
                     <x-table.td>{{ $reporte->aula?->nombre }}</x-table.td>
-                    <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada }}</x-table.td>
+                    <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
                     <x-table.td>{{ $reporte->actividad?->descripcion }}</x-table.td>
                     <x-table.td>
-                        <x-status.chips :text="$reporte->estado_ultimo_historial ?? 'No asignado'" :color="'red'"
+                        <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
                                         class="mb-2"/>
                     </x-table.td>
                     <x-table.td>
-                        <a href="#" class="font-medium text-gray-700 hover:underline">
+                        <a href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
+                           class="font-medium text-gray-700 hover:underline">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

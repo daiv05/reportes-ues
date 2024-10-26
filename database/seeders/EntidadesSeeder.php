@@ -14,27 +14,39 @@ class EntidadesSeeder extends Seeder
     {
         $entidades = [
             [
-                'nombre' => 'Carpinteria',
+                'nombre' => 'UNIDAD DE PLANIFICACION',
                 'descripcion' => 'Descripcion'
             ],
             [
-                'nombre' => 'Soporte',
+                'nombre' => 'DESARROLLO E INFRAESTRUCTURA',
                 'descripcion' => 'Descripcion'
             ],
             [
-                'nombre' => 'Limpieza',
+                'nombre' => 'LOGISTICA Y GESTION',
                 'descripcion' => 'Descripcion'
             ],
             [
-                'nombre' => 'Fontaneria',
+                'nombre' => 'REGISTRO Y ESTADISTICAS',
                 'descripcion' => 'Descripcion'
             ],
             [
-                'nombre' => 'Parqueo',
+                'nombre' => 'MANTENIMIENTO Y SERVICIOS GENERALES',
                 'descripcion' => 'Descripcion'
             ],
             [
-                'nombre' => 'Transporte',
+                'nombre' => 'ESCUELA DE INGENIERIA DE SISTEMAS INFORMATICOS',
+                'descripcion' => 'Descripcion'
+            ],
+            [
+                'nombre' => 'ESCUELA DE ARQUITECTURA',
+                'descripcion' => 'Descripcion'
+            ],
+            [
+                'nombre' => 'ESCUELA DE INGENIERIA INDUSTRIAL',
+                'descripcion' => 'Descripcion'
+            ],
+            [
+                'nombre' => 'ESCUELA DE INGENIERIA CIVIL',
                 'descripcion' => 'Descripcion'
             ]
         ];
