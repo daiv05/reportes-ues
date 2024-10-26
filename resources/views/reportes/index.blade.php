@@ -159,7 +159,8 @@
                                         class="mb-2"/>
                     </x-table.td>
                     <x-table.td>
-                        <a href="#" class="font-medium text-gray-700 hover:underline">
+                        <a href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
+                           class="font-medium text-gray-700 hover:underline">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

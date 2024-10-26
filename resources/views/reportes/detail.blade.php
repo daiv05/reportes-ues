@@ -12,7 +12,7 @@
                 <div class="mb-4">
                     <!-- Fila 1 -->
                     <div class="text-3xl font-bold ml-12 mb-8">
-                        <p>Basura tirada</p>
+                        <p>{{ $reporte->titulo }}</p>
                     </div>
                 </div>
                 <div class="mb-4">
@@ -28,7 +28,7 @@
                         </div>
                         <div class="ml-12 mt-2">
                             <x-text-area id="descripcion" rows="8" :disabled="true">
-                                Este es un ejemplo
+                                {{ $reporte->descripcion }}
                             </x-text-area>
                         </div>
 
@@ -48,7 +48,7 @@
                         <div class="ml-12 mt-2">
                             <input type="text"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                   placeholder="Aula de ejemplo" disabled/>
+                                   placeholder="Aula de ejemplo" value="{{ $reporte->aula?->nombre }}" disabled/>
                         </div>
 
                     </div>
@@ -56,49 +56,33 @@
             </div>
 
             <!-- Columna derecha (30%) -->
-            <div class="w-full lg:w-[40%]">
-                <div class="p-4 space-y-3">
-                    <div class="flex flex-row items-center space-x-8">
-                        <p class="text-gray-500 font-semibold">
+            <div class="w-full lg:w-[25%]">
+                <div class="grid grid-cols-1 lg:grid-cols-2 grid-rows-8 lg:grid-rows-4 gap-4 p-4">
+                    <div><p class="text-gray-500 font-semibold">
                             Estado
-                        </p>
-                        <div
-                            class="rounded-full bg-green-500 px-3 py-0.5 text-center text-sm text-white dark:bg-green-800 dark:text-green-400"
-                        >
-                            <span class="font-medium">Finalizado</span>
-                        </div>
+                        </p></div>
+                    <div>
+                        <x-status.chips :text="$reporte->estado_ultimo_historial ?? 'No asignado'"
+                                        class="mb-2"/>
                     </div>
-                    <div class="flex flex-row items-center space-x-8">
-                        <p class="text-gray-500 font-semibold">
-                            Módulo
-                        </p>
-                        <p class="text-black font-semibold">
-                            Generales
-                        </p>
-                    </div>
-                    <div class="flex flex-row items-center space-x-8">
-                        <p class="text-gray-500 font-semibold">
+                    <div><p class="text-gray-500 font-semibold">
                             Fecha
-                        </p>
-                        <p class="text-black font-semibold">
-                            12/02/2024
-                        </p>
-                    </div>
-                    <div class="flex flex-row items-center space-x-8">
-                        <p class="text-gray-500 font-semibold">
+                        </p></div>
+                    <div><p class="text-black font-semibold">
+                            {{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y') }}
+                        </p></div>
+                    <div><p class="text-gray-500 font-semibold">
                             Hora
-                        </p>
-                        <p class="text-black font-semibold">
-                            7:06 AM
-                        </p>
-                    </div>
-                    <div class="flex flex-row items-center space-x-8">
-                        <p class="text-gray-500 font-semibold">
-                            Alfredo
-                        </p>
-                        <p class="text-black font-semibold">
-                            Landaverde
-                    </div>
+                        </p></div>
+                    <div><p class="text-black font-semibold">
+                            {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}
+                        </p></div>
+                    <div><p class="text-gray-500 font-semibold">
+                            Encargado
+                        </p></div>
+                    <div><p class="text-black font-semibold">
+                            {{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}
+                        </p></div>
                 </div>
             </div>
         </div>
