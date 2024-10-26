@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('actividades', function (Blueprint $table) {
+        Schema::create('clases', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
-            $table->foreignId('id_modalidad')->constrained('modalidades');
-            $table->foreignId('id_ciclo')->constrained('ciclos');
-            $table->boolean('activo')->default(true);
+            $table->integer('numero_grupo');
+            $table->integer('id_actividad')->constrained('actividades');
+            $table->integer('id_tipo_clase')->constrained('tipo_clases');
+            $table->json('dias_actividad');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('actividades');
+        Schema::dropIfExists('clases');
     }
 };

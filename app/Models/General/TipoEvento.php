@@ -2,13 +2,14 @@
 
 namespace App\Models\General;
 
+use App\Models\Evento;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TipoEvento extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'tipo_eventos';
 
     protected $fillable = [
@@ -16,8 +17,8 @@ class TipoEvento extends Model
         'activo',
     ];
 
-//     public function eventos()
-//     {
-//         return $this->hasMany(Evento::class, 'id_tipo_evento');
-//     }
+    public function eventos()
+    {
+        return $this->hasMany(Evento::class, 'id_tipo_evento');
+    }
 }
