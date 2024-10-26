@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_empleado_puesto');
             $table->unsignedBigInteger('id_estado');
             $table->text('foto_evidencia')->nullable();
-            $table->text('descripcion')->nullable();
+            $table->text('comentario')->nullable();
             $table->date('fecha_actualizacion');
             $table->time('hora_actualizacion');
             $table->timestamps();

@@ -11,6 +11,7 @@ use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
+use App\Models\Reportes\RecursoReporte;
 use Carbon\Carbon;
 use Error;
 use Illuminate\Contracts\View\View;
@@ -118,17 +119,27 @@ class ReporteController extends Controller
 
     public function detalle(Request $request, $id_reporte)
     {
-        $reporte = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada',
-            'accionesReporte.usuarioSupervisor', 'accionesReporte.usuarioSupervisor.persona', 'usuarioReporta', 'usuarioReporta.persona',
-            'empleadosAcciones', 'empleadosAcciones.empleadoPuesto',
-            'empleadosAcciones.empleadoPuesto.usuario', 'empleadosAcciones.empleadoPuesto.usuario.persona')->find($id_reporte);
+        $reporte = Reporte::with(
+            'aula',
+            'actividad',
+            'accionesReporte',
+            'accionesReporte.entidadAsignada',
+            'accionesReporte.usuarioSupervisor',
+            'accionesReporte.usuarioSupervisor.persona',
+            'usuarioReporta',
+            'usuarioReporta.persona',
+            'empleadosAcciones',
+            'empleadosAcciones.empleadoPuesto',
+            'empleadosAcciones.empleadoPuesto.usuario',
+            'empleadosAcciones.empleadoPuesto.usuario.persona'
+        )->find($id_reporte);
         if (isset($reporte)) {
             $entidades = Entidades::all();
-//            return response()->json([
-//                'status' => 200,
-//                'reporte' => $reporte,
-//                'entidades' => $entidades
-//            ], 200);
+                       return response()->json([
+                           'status' => 200,
+                           'reporte' => $reporte,
+                           'entidades' => $entidades
+                       ], 200);
             return view('reportes.detail', compact('reporte', 'entidades'));
         } else {
             return redirect()->route('reportes.index')->with('message', [
@@ -158,7 +169,6 @@ class ReporteController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
-
     }
 
     public function realizarAsignacion(Request $request, $id_reporte)
@@ -223,5 +233,82 @@ class ReporteController extends Controller
                 'message' => 'Reporte no encontrado',
             ], 404);
         }
+    }
+
+    public function actualizarEstadoReporte(Request $request, $id_reporte)
+    {
+        $request->validate(
+            [
+                'comentario' => 'required|string',
+                'id_estado' => 'required|integer|exists:estados,id',
+                'evidencia' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+                'recursos' => 'nullable|array',
+                'recursos.*.nombre' => 'required|string|max:100',
+                'recursos.*.costo' => 'required|numeric|min:0',
+            ],
+            [
+                'recursos.array' => 'Estructura de recursos utilizados inválida.',
+                'recursos.*.nombre.required' => 'Debe especificar un nombre de recurso válido.',
+                'recursos.*.nombre.string' => 'Debe especificar un nombre de recurso válido.',
+                'recursos.*.nombre.max' => 'El nombre del recurso no debe exceder los 50 caracteres',
+                'recursos.*.costo.required' => 'Debe especificar un nombre de recurso válido.',
+                'recursos.*.costo.numeric' => 'Debe especificar un nombre de recurso válido.',
+                'recursos.*.costo.min' => 'El costo del recurso no puede ser menor a cero.',
+                'comentario.required' => 'Debe especificar las acciones realizadas.',
+                'comentario.string' => 'El comentario debe ser un texto válido.',
+                'evidencia.image' => 'La evidencia debe ser un archivo de imagen.',
+                'evidencia.mimes' => 'La evidencia debe ser una imagen de tipo: png, jp o jpeg.',
+                'id_estado.required' => 'Debe seleccionar un estado para actualizar el reporte.',
+                'id_estado.integer' => 'El ID del estado debe ser un número entero.',
+                'id_estado.exists' => 'El estado seleccionado no existe.',
+            ]
+        );
+        $reporte = Reporte::find($id_reporte);
+        if (!isset($reporte)) {
+            return response()->json([
+                'message' => 'Reporte no encontrado',
+            ], 404);
+        }
+        $accionReporte = $reporte->accionesReporte;
+        if (!isset($accionReporte)) {
+            return response()->json([
+                'message' => 'El reporte no tiene ninguna asignación',
+            ], 404);
+        }
+        $empleadoAcciones = $reporte->empleadosAcciones;
+        $puestosEmpleado = Auth::user()->empleadosPuestos;
+        $puestosEmpleadoIds = $puestosEmpleado->pluck('id')->toArray();
+        $empleadoPuestoAccion = $empleadoAcciones->firstWhere(fn($accion) => in_array($accion->id_empleado_puesto, $puestosEmpleadoIds));
+        if (!isset($empleadoPuestoAccion)) {
+            return response()->json([
+                'message' => 'No tienes permiso para actualizar este reporte',
+            ], 403);
+        }
+
+        DB::transaction(function () use ($request, $empleadoPuestoAccion, $accionReporte) {
+            $newHistorialAccionesReportes = new HistorialAccionesReporte();
+            $newHistorialAccionesReportes->id_acciones_reporte = $accionReporte->id;
+            $newHistorialAccionesReportes->id_empleado_puesto = $empleadoPuestoAccion->id_empleado_puesto;
+            $newHistorialAccionesReportes->id_estado = $request['id_estado'];
+            $newHistorialAccionesReportes->fecha_actualizacion = Carbon::now()->format('Y-m-d');
+            $newHistorialAccionesReportes->hora_actualizacion = Carbon::now()->format('H:i:s');
+            $newHistorialAccionesReportes->comentario = $request['comentario'];
+            // Guardar evidencia en el storage
+            $path = $request->file('image')->store('public/reportes/evidencia');
+            $newHistorialAccionesReportes->foto_evidencia = $path;
+            $newHistorialAccionesReportes->save();
+            // Guardar recursos
+            foreach ($request->recursos as $recurso) {
+                RecursoReporte::create([
+                    'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+                    'nombre' => $recurso['nombre'],
+                    'costo' => $recurso['costo'],
+                ]);
+            }
+        });
+
+        return response()->json([
+            'message' => 'Seguimiento de reporte actualizado con exito',
+        ], 200);
     }
 }

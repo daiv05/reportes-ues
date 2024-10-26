@@ -14,7 +14,7 @@ class RecursoReporte extends Model
 
     protected $fillable = [
         'nombre',
-        'precio',
+        'costo',
         'id_historial_acciones_reporte'
     ];
 
