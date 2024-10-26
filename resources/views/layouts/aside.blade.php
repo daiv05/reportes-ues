@@ -51,6 +51,11 @@
                     'active' => request()->is('actividades/eventos-y-evaluaciones'),
                     'label' => 'Eventos',
                 ],
+                [
+                    'to' => 'importar-actividades',
+                    'active' => request()->is('actividades/importacion-actividades'),
+                    'label' => 'Importación de actividades',
+                ],
             ],
         ],
         [
