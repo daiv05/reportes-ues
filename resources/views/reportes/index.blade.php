@@ -152,10 +152,10 @@
                     <x-table.td>{{ $reporte->fecha_reporte }} {{ $reporte->hora_reporte }}</x-table.td>
                     <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
                     <x-table.td>{{ $reporte->aula?->nombre }}</x-table.td>
-                    <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada }}</x-table.td>
+                    <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
                     <x-table.td>{{ $reporte->actividad?->descripcion }}</x-table.td>
                     <x-table.td>
-                        <x-status.chips :text="$reporte->estado_ultimo_historial ?? 'No asignado'"
+                        <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
                                         class="mb-2"/>
                     </x-table.td>
                     <x-table.td>
