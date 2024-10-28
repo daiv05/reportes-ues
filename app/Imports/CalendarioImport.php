@@ -1,11 +1,7 @@
 <?php
 
 namespace App\Imports;
-
-use App\Models\Calendario;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithStartRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class CalendarioImport implements ToModel
@@ -18,7 +14,9 @@ class CalendarioImport implements ToModel
 
     public function model(array $row)
     {
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        if(count($row) < 12){
+            return null;
+        }
         $horario = $row[11] ?? null;
 
         if($row[0]){

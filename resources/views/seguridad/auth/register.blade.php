@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" class="space-y-2">
         @csrf
 
         <!-- Nombres -->
@@ -43,6 +43,24 @@
                 placeholder="Seleccione una fecha"
             />
             <x-forms.input-error :messages="$errors->get('fecha_nacimiento')" class="mt-2" />
+        </div>
+
+        <!-- Escuela -->
+        <div>
+            <x-forms.input-label for="escuela" :value="__('Escuela')" />
+            <select
+                id="escuela"
+                class="block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                name="escuela"
+                required
+                autofocus
+                autocomplete="escuela"
+            >
+                @foreach($escuelas as $escuela)
+                    <option value="{{ $escuela->id }}">{{ $escuela->nombre }}</option>
+                @endforeach
+            </select>
+            <x-forms.input-error :messages="$errors->get('escuela')" class="mt-2" />
         </div>
 
         <!-- No. de teléfono -->

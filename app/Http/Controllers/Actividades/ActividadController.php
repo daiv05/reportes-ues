@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Actividades;
 
 use App\Http\Controllers\Controller;
 use App\Imports\CalendarioImport;
+use App\Imports\HorarioImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -11,13 +12,17 @@ class ActividadController extends Controller
 {
     public function importarExcel(Request $request)
     {
-        // Validar que el archivo sea un archivo Excel
+        $import = null;
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls,csv',
             'tipo_actividad' => 'required'
         ]);
         // Procesar el archivo Excel y extraer los datos
-        $import = new CalendarioImport();
+        if ($request->input('tipo_actividad') == 'evento') {
+            $import = new CalendarioImport();
+        } else {
+            $import = new HorarioImport();
+        }
         Excel::import($import, $request->file('excel_file'));
 
         // Asumamos que el importador guarda los datos importados en una variable
