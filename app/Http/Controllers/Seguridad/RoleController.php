@@ -28,13 +28,22 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-
+        // Validar los campos recibidos
         $request->validate([
             'name' => 'required|unique:roles|max:50',
+            'activo' => 'required|boolean', // Validación para el campo activo
         ]);
-        Role::create($request->all());
-        return redirect()->route('roles.index');
+
+        // Crear el nuevo rol con los campos validados
+        Role::create($request->only(['name', 'activo']));
+
+        // Redirigir al índice de roles con un mensaje de éxito
+        return redirect()->route('roles.index')->with('message', [
+            'type' => 'success',
+            'content' => 'Rol creado exitosamente.',
+        ]);
     }
+
 
     /**
      * Display the specified resource.
@@ -64,7 +73,10 @@ class RoleController extends Controller
 
         $role = Role::findOrFail($id);
         $role->update($request->all());
-        return redirect()->route('roles.index');
+        return redirect()->route('roles.index')->with('message', [
+            'type' => 'success',
+            'content' => 'Rol actulizado exitosamente.',
+        ]);
     }
 
     /**
