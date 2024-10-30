@@ -135,11 +135,11 @@ class ReporteController extends Controller
         )->find($id_reporte);
         if (isset($reporte)) {
             $entidades = Entidades::all();
-                       return response()->json([
-                           'status' => 200,
-                           'reporte' => $reporte,
-                           'entidades' => $entidades
-                       ], 200);
+//                       return response()->json([
+//                           'status' => 200,
+//                           'reporte' => $reporte,
+//                           'entidades' => $entidades
+//                       ], 200);
             return view('reportes.detail', compact('reporte', 'entidades'));
         } else {
             return redirect()->route('reportes.index')->with('message', [
