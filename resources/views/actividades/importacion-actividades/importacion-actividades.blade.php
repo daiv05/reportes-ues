@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            @if(isset($excelData) && $tipoActividad == 'evento')
+            @if(isset($excelData) && $tipoActividad === 'evento')
                 <form class="p-5">
                     {{-- Caso para eventos --}}
                     @foreach($excelData as $row)
@@ -157,6 +157,18 @@
                                 />
                                 <x-forms.input-error :messages="$errors->get('comentarios')" class="mt-2" />
                             </div>
+                        </div>
+                    @endforeach
+                </form>
+            @endif
+
+            @if(isset($excelData) && $tipoActividad !== 'evento')
+                <form class="p-5">
+                    {{-- Caso para eventos --}}
+                    @foreach($excelData as $row)
+                        <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Registro de {{ $tipoActividad }} {{ $loop->iteration }}</h1>
+
+                        {{ json_encode($row) }}
                         </div>
                     @endforeach
                 </form>

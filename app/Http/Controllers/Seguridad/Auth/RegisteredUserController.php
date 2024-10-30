@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seguridad\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mantenimientos\Escuela;
 use App\Models\Registro\Persona;
 use App\Models\Seguridad\User;
 use App\Providers\RouteServiceProvider;
@@ -21,7 +22,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('seguridad.auth.register');
+        $escuelas = Escuela::all();
+        return view('seguridad.auth.register', ['escuelas' => $escuelas]);
     }
 
     /**
