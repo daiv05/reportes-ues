@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
             return view('actividades.importacion-actividades.importacion-actividades');
         })->name('importar-actividades');
         Route::post('/importar-actividades', [ActividadController::class, 'importarExcel'])->name('importar-actividades-post');
+        Route::post('/importar-actividades/clases', [ActividadController::class, 'storeClases'])->name('importar-clases');
     });
     /* ********************************************* */
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */

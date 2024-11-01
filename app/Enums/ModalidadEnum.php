@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum ModalidadEnum: string
 {
-    case DISTANCIA = 'En línea';
+    case DISTANCIA = 'Virtual';
     case PRESENCIAL = 'Presencial';
 }
