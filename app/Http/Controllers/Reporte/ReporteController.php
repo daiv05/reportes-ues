@@ -126,6 +126,8 @@ class ReporteController extends Controller
             'accionesReporte.entidadAsignada',
             'accionesReporte.usuarioSupervisor',
             'accionesReporte.usuarioSupervisor.persona',
+            'accionesReporte.historialAccionesReporte',
+            'accionesReporte.historialAccionesReporte.estado',
             'usuarioReporta',
             'usuarioReporta.persona',
             'empleadosAcciones',
@@ -135,11 +137,11 @@ class ReporteController extends Controller
         )->find($id_reporte);
         if (isset($reporte)) {
             $entidades = Entidades::all();
-//                       return response()->json([
-//                           'status' => 200,
-//                           'reporte' => $reporte,
-//                           'entidades' => $entidades
-//                       ], 200);
+            // return response()->json([
+            //     'status' => 200,
+            //     'reporte' => $reporte,
+            //     'entidades' => $entidades
+            // ], 200);
             return view('reportes.detail', compact('reporte', 'entidades'));
         } else {
             return redirect()->route('reportes.index')->with('message', [
@@ -294,16 +296,20 @@ class ReporteController extends Controller
             $newHistorialAccionesReportes->hora_actualizacion = Carbon::now()->format('H:i:s');
             $newHistorialAccionesReportes->comentario = $request['comentario'];
             // Guardar evidencia en el storage
-            $path = $request->file('image')->store('public/reportes/evidencia');
-            $newHistorialAccionesReportes->foto_evidencia = $path;
+            if ($request->file('evidencia')) {
+                $path = $request->file('evidencia')->store('public/reportes/evidencia');
+                $newHistorialAccionesReportes->foto_evidencia = $path;
+            }
             $newHistorialAccionesReportes->save();
             // Guardar recursos
-            foreach ($request->recursos as $recurso) {
-                RecursoReporte::create([
-                    'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
-                    'nombre' => $recurso['nombre'],
-                    'costo' => $recurso['costo'],
-                ]);
+            if (isset($request->recursos)) {
+                foreach ($request->recursos as $recurso) {
+                    RecursoReporte::create([
+                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+                        'nombre' => $recurso['nombre'],
+                        'costo' => $recurso['costo'],
+                    ]);
+                }
             }
         });
 

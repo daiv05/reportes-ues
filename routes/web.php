@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->name('detalle-reporte');
         Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->name('reportes.noProcede');
         Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->name('reportes.realizarAsignacion');
+        Route::post('/actualizar-estado/{id}', [ReporteController::class, 'actualizarEstadoReporte'])->name('reportes.actualizarEstado');
     });
 
     /* ****************************************** */
