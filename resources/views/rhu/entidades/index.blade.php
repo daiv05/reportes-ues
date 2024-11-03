@@ -35,7 +35,7 @@
                         </x-table.td>
                         <x-table.td>
                             {{-- Mostrar el entidad padre o "Raíz" si es null --}}
-                            {{ $entidad->id_entidad ? $depa->padre->nombre : '' }}
+                            {{ $entidad->id_entidad ? $entidad->padre->nombre : '' }}
                         </x-table.td>
                         <x-table.td>
                             <x-status.is-active :active="$entidad->activo" />

@@ -9,21 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('tipo_ciclos', function (Blueprint $table) {
+        Schema::create('tipos_ciclos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->boolean('activo')->default(true);
+            $table->string('nombre', 50);
+            $table->boolean('activo');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('tipo_ciclos');
+        Schema::dropIfExists('tipos_ciclos');
     }
 };
