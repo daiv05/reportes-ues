@@ -103,6 +103,21 @@
         ],
         [
             'type' => 2,
+            'id' => 'general-dropdown',
+            'active' => request()->is('general/*'),
+            'icon' => 'heroicon-s-table-cells',
+            'label' => 'General',
+            'items' => [
+                [
+                    'to' => 'ciclos.index',
+                    'active' => request()->is('general/ciclos'),
+                    'label' => 'Ciclos',
+                ],
+
+            ],
+        ],
+        [
+            'type' => 2,
             'id' => 'maquetacion-dropdown',
             'active' => request()->is('maquetacion/*'),
             'icon' => 'heroicon-s-exclamation-triangle',
