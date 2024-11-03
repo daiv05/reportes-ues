@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('ciclos', function (Blueprint $table) {
             $table->id();
             $table->integer('anio');
-            $table->foreignId('id_tipo_ciclo')->constrained('tipo_ciclos');
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
+            $table->foreignId('id_tipo_ciclo')->constrained('tipos_ciclos'); // Cambiado a 'tipos_ciclos'
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });
