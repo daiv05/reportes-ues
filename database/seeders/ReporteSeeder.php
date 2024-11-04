@@ -14,7 +14,7 @@ class ReporteSeeder extends Seeder
             [
                 'id_aula' => null,
                 'id_actividad' => null,
-                'id_usuario_reporta' => 3,
+                'id_usuario_reporta' => 11,
                 'fecha_reporte' => '2024/10/23',
                 'hora_reporte' => '10:20:00',
                 'descripcion' => 'Basura tirada ...',
@@ -24,21 +24,21 @@ class ReporteSeeder extends Seeder
             [
                 'id_aula' => null,
                 'id_actividad' => null,
-                'id_usuario_reporta' => 3,
+                'id_usuario_reporta' => 12,
                 'fecha_reporte' => '2024/10/24',
                 'hora_reporte' => '12:30:00',
-                'descripcion' => 'Hola tirada ...',
-                'titulo'=> 'Hola',
+                'descripcion' => 'No fui yo ...',
+                'titulo'=> 'Baño tapado',
                 'no_procede' => false
             ],
             [
                 'id_aula' => null,
                 'id_actividad' => null,
-                'id_usuario_reporta' => 3,
+                'id_usuario_reporta' => 13,
                 'fecha_reporte' => '2024/10/25',
                 'hora_reporte' => '08:00:00',
-                'descripcion' => 'Derrumbre tirada ...',
-                'titulo'=> 'Derrumbre',
+                'descripcion' => 'Que caloooor ...',
+                'titulo'=> 'Aire descompuesto',
                 'no_procede' => false
             ],
         ];

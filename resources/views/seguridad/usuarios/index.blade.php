@@ -3,7 +3,7 @@
         ['text' => 'Persona', 'align' => 'left'],
         ['text' => 'Usuario', 'align' => 'left'],
         ['text' => 'Email', 'align' => 'left'],
-        ['text' => 'Estado', 'align' => 'left'],
+        ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
 @endphp

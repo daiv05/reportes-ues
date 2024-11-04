@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net" />
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.bunny.net"/>
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -46,7 +46,7 @@
                     </span>
         </div>
         <ul
-                class="mt-3 flex flex-wrap items-center text-sm font-medium dark:text-gray-400 sm:mt-0 text-orange-900"
+            class="mt-3 flex flex-wrap items-center text-sm font-medium dark:text-gray-400 sm:mt-0 text-orange-900"
         >
             <li>
                 <a href="#" class="me-4 hover:underline md:me-6">FIA - UES</a>

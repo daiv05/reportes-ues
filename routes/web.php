@@ -9,8 +9,10 @@ use App\Http\Controllers\rhu\EntidadesController;
 use App\Http\Controllers\rhu\PuestoController;
 use App\Http\Controllers\Seguridad\ProfileController;
 use App\Http\Controllers\Reporte\ReporteController;
+use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
+use App\Http\Controllers\Mantenimientos\CicloController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -96,6 +98,13 @@ Route::middleware('auth')->group(function () {
             Route::patch('/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->name('asignaturas.toggleActivo');
         });
         Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
+
+         // Rutas de Ciclos
+        Route::prefix('ciclos')->group(function () {
+            Route::get('/', [CicloController::class, 'index'])->name('ciclos.index');
+            Route::post('/', [CicloController::class, 'store'])->name('ciclos.store');
+            Route::put('/{id}', [CicloController::class, 'update'])->name('ciclos.update');
+        });
     });
     /* ****************************************** */
     /*   ************* SEGURIDAD ************   */
@@ -110,10 +119,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
         Route::resource('usuarios', UsuarioController::class)->except(['destroy']);
         Route::patch('usuarios/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->name('usuarios.toggleActivo');
-
     });
 
-       /* ****************************************** */
+    /* ****************************************** */
     /*   ************* RHU ************   */
     /* ****************************************** */
     Route::prefix('rhu')->group(function () {
@@ -127,6 +135,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/puestos', [PuestoController::class, 'index'])->name('puestos.index');
         Route::resource('puestos', PuestoController::class)->except(['destroy']);
         Route::patch('puestos/{puesto}/toggle', [PuestoController::class, 'toggleActivo'])->name('puestos.toggleActivo');
+        /*Empleados Puestos*/
+        Route::get('/busqueda-por-nombre/{id_entidad}', [EmpleadoPuestoController::class, 'buscarPorNombre'])->name('empleadosPuestos.buscarPorNombre');
+        Route::get('/busqueda-supervisor-por-nombre', [EmpleadoPuestoController::class, 'buscarSupervisorPorNombre'])->name('empleadosPuestos.buscarSupervisorPorNombre');
+    });
+
+
+    /* ****************************************** */
+    /*   ************* GENERAL ************   */
+    /* ****************************************** */
+    Route::prefix('general')->group(function () {
+        // Rutas de general
 
     });
 });

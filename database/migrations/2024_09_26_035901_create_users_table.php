@@ -20,7 +20,7 @@ return new class extends Migration
                 ->constrained('personas')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
-            $table->boolean('activo')->default(false);
+            $table->boolean('activo')->default(true);
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();

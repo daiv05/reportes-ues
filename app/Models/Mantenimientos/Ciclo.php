@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Mantenimientos;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\General\TipoCiclo;
 
 class Ciclo extends Model
 {
@@ -11,13 +12,13 @@ class Ciclo extends Model
 
     protected $table = 'ciclos';
 
-    protected $fillable = [
-        'anio',
-        'id_tipo_ciclo',
-        'fecha_inicio',
-        'fecha_fin',
-        'activo',
-    ];
+    // app/Models/Ciclo.php
+protected $fillable = [
+    'anio',
+    'id_tipo_ciclo',
+    'activo',
+];
+
 
     public function tipoCiclo()
     {

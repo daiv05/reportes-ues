@@ -99,6 +99,11 @@
                     'active' => request()->is('mantenimientos/asignaturas'),
                     'label' => 'Asignaturas',
                 ],
+                [
+                    'to' => 'ciclos.index',
+                    'active' => request()->is('mantenimientos/ciclos'),
+                    'label' => 'Ciclos',
+                ],
             ],
         ],
         [
