@@ -12,7 +12,7 @@ use App\Http\Controllers\Reporte\ReporteController;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
-use App\Http\Controllers\General\CicloController;
+use App\Http\Controllers\Mantenimientos\CicloController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -98,6 +98,13 @@ Route::middleware('auth')->group(function () {
             Route::patch('/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->name('asignaturas.toggleActivo');
         });
         Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
+
+         // Rutas de Ciclos
+        Route::prefix('ciclos')->group(function () {
+            Route::get('/', [CicloController::class, 'index'])->name('ciclos.index');
+            Route::post('/', [CicloController::class, 'store'])->name('ciclos.store');
+            Route::put('/{id}', [CicloController::class, 'update'])->name('ciclos.update');
+        });
     });
     /* ****************************************** */
     /*   ************* SEGURIDAD ************   */
@@ -139,11 +146,7 @@ Route::middleware('auth')->group(function () {
     /* ****************************************** */
     Route::prefix('general')->group(function () {
         // Rutas de general
-        Route::prefix('ciclos')->group(function () {
-            Route::get('/', [CicloController::class, 'index'])->name('ciclos.index');
-            Route::post('/', [CicloController::class, 'store'])->name('ciclos.store');
-            Route::put('/{id}', [CicloController::class, 'update'])->name('ciclos.update');
-        });
+
     });
 });
 

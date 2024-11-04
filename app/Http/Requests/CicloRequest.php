@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\General\Ciclo;
+use App\Models\Mantenimientos\Ciclo;
 
 class CicloRequest extends FormRequest
 {
@@ -26,10 +26,11 @@ class CicloRequest extends FormRequest
             'anio' => [
                 'required',
                 'integer',
-                // Validación única para la combinación de anio y id_tipo_ciclo
+                // Validación única para la combinación de anio y id_tipo_ciclo, excluyendo el ID actual
                 function ($attribute, $value, $fail) {
                     $exists = Ciclo::where('anio', $value)
                         ->where('id_tipo_ciclo', $this->id_tipo_ciclo)
+                        ->where('id', '<>', $this->route('id')) // Excluye el ciclo actual
                         ->exists();
 
                     if ($exists) {
