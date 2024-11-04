@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models\General;
+namespace App\Models\Mantenimientos;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\General\TipoCiclo;
 
 class Ciclo extends Model
 {
