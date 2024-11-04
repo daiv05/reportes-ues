@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Reporte;
 
-use App\Enums\TipoReporteEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Actividades\Actividad;
 use App\Models\Reportes\AccionesReporte;
@@ -13,16 +12,10 @@ use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
 use App\Models\Reportes\RecursoReporte;
 use Carbon\Carbon;
-use Error;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 
 class ReporteController extends Controller
 {
@@ -30,40 +23,43 @@ class ReporteController extends Controller
     {
         $query = Reporte::query();
 
-        // Filtro por fecha
-        if ($request->has('filter-radio')) {
-            $filtro = $request->input('filter-radio');
-
-            switch ($filtro) {
-                case 'hoy':
-                    $query->whereDate('fecha_reporte', today());
-                    break;
-                case '7_dias':
-                    $query->where('fecha_reporte', '>=', now()->subDays(7));
-                    break;
-                case '30_dias':
-                    $query->where('fecha_reporte', '>=', now()->subDays(30));
-                    break;
-                case 'mes':
-                    $query->where('fecha_reporte', '>=', now()->subMonth());
-                    break;
-                case 'anio':
-                    $query->where('fecha_reporte', '>=', now()->subYear());
-                    break;
-            }
+        // Para listar solo los creados por un usuario en específico
+        if ($request->has('id_usuario')) {
+            $query->where('id_usuario_reporta', $request['id_usuario']);
         }
 
-        // Filtro por título (búsqueda por nombre)
-        if ($request->has('titulo')) {
-            $titulo = $request->input('titulo');
-            $query->where('titulo', 'like', '%' . $titulo . '%');
-        }
+        $this->filtrosGenerales($request, $query);
 
         $reportes = $query->paginate(10);
-        // return response()->json([
-        //     'status' => 200,
-        //     'data' => $reportes
-        // ], 200);
+//         return response()->json([
+//             'status' => 200,
+//             'data' => $reportes
+//         ], 200);
+        return view('reportes.index', compact('reportes'));
+    }
+
+    public function misAsignaciones(Request $request)
+    {
+        //$idUsuario = Auth::user()->id;
+        $idUsuario = $request->input('id_usuario');
+
+        $query = Reporte::query();
+
+        $query->whereHas('accionesReporte.usuarioSupervisor', function ($query) use ($idUsuario) {
+            $query->where('id', $idUsuario);
+        })->orWhereHas('empleadosAcciones', function ($query) use ($idUsuario) {
+            $query->whereHas('empleadoPuesto.usuario', function ($query) use ($idUsuario) {
+                $query->where('id', $idUsuario);
+            });
+        });
+
+        $this->filtrosGenerales($request, $query);
+
+        $reportes = $query->paginate(10);
+//        return response()->json([
+//            'status' => 200,
+//            'data' => $reportes
+//        ], 200);
         return view('reportes.index', compact('reportes'));
     }
 
@@ -302,19 +298,50 @@ class ReporteController extends Controller
             }
             $newHistorialAccionesReportes->save();
             // Guardar recursos
-            if (isset($request->recursos)) {
-                foreach ($request->recursos as $recurso) {
-                    RecursoReporte::create([
-                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
-                        'nombre' => $recurso['nombre'],
-                        'costo' => $recurso['costo'],
-                    ]);
-                }
-            }
+//            if (isset($request->recursos)) {
+//                foreach ($request->recursos as $recurso) {
+//                    RecursoReporte::create([
+//                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+//                        'nombre' => $recurso['nombre'],
+//                        'costo' => $recurso['costo'],
+//                    ]);
+//                }
+//            }
         });
 
         return response()->json([
             'message' => 'Seguimiento de reporte actualizado con exito',
         ], 200);
+    }
+
+    public function filtrosGenerales(Request $request, \Illuminate\Database\Eloquent\Builder $query): void
+    {
+        if ($request->has('filter-radio')) {
+            $filtro = $request->input('filter-radio');
+
+            switch ($filtro) {
+                case 'hoy':
+                    $query->whereDate('fecha_reporte', today());
+                    break;
+                case '7_dias':
+                    $query->where('fecha_reporte', '>=', now()->subDays(7));
+                    break;
+                case '30_dias':
+                    $query->where('fecha_reporte', '>=', now()->subDays(30));
+                    break;
+                case 'mes':
+                    $query->where('fecha_reporte', '>=', now()->subMonth());
+                    break;
+                case 'anio':
+                    $query->where('fecha_reporte', '>=', now()->subYear());
+                    break;
+            }
+        }
+
+        // Filtro por título (búsqueda por nombre)
+        if ($request->has('titulo')) {
+            $titulo = $request->input('titulo');
+            $query->where('titulo', 'like', '%' . $titulo . '%');
+        }
     }
 }
