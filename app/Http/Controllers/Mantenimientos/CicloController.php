@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\General;
+namespace App\Http\Controllers\Mantenimientos;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\General\Ciclo;
+use App\Models\Mantenimientos\Ciclo;
 use App\Models\General\TipoCiclo;
 use App\Http\Requests\CicloRequest;
 
@@ -16,7 +16,7 @@ class CicloController extends Controller
         $ciclos = Ciclo::with('tipoCiclo')->paginate(10); // Usa paginación para mostrar la lista
         $tiposCiclos = TipoCiclo::all(); // Para el selector de tipos de ciclos en el modal
 
-        return view('general.ciclos.index', compact('ciclos', 'tiposCiclos'));
+        return view('mantenimientos.ciclos.index', compact('ciclos', 'tiposCiclos'));
     }
 
     public function store(CicloRequest $request)

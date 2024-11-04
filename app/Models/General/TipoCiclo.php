@@ -4,6 +4,7 @@ namespace App\Models\General;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Mantenimientos\Ciclo;
 
 class TipoCiclo extends Model
 {

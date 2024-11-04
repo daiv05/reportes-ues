@@ -99,21 +99,11 @@
                     'active' => request()->is('mantenimientos/asignaturas'),
                     'label' => 'Asignaturas',
                 ],
-            ],
-        ],
-        [
-            'type' => 2,
-            'id' => 'general-dropdown',
-            'active' => request()->is('general/*'),
-            'icon' => 'heroicon-s-table-cells',
-            'label' => 'General',
-            'items' => [
                 [
                     'to' => 'ciclos.index',
-                    'active' => request()->is('general/ciclos'),
+                    'active' => request()->is('mantenimientos/ciclos'),
                     'label' => 'Ciclos',
                 ],
-
             ],
         ],
         [

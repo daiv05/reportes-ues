@@ -88,8 +88,8 @@
                     </label>
                     <select id="activo" name="activo"
                         class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        <option value="1">Sí</option>
-                        <option value="0">No</option>
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
                     </select>
                     @error('activo')
                         <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
@@ -142,7 +142,7 @@
             const tipoCiclo = this.getAttribute('data-tipo_ciclo');
             const activo = this.getAttribute('data-activo');
 
-            document.getElementById('add-ciclo-form').action = `/general/ciclos/${id}`;
+            document.getElementById('add-ciclo-form').action = `/mantenimientos/ciclos/${id}`;
             document.getElementById('add-ciclo-form').method = 'POST';
             document.getElementById('add-ciclo-form').innerHTML +=
                 '<input type="hidden" name="_method" value="PUT">';
