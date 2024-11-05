@@ -13,6 +13,7 @@ use App\Models\Mantenimientos\Aulas;
 use App\Models\Reportes\RecursoReporte;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -40,8 +41,8 @@ class ReporteController extends Controller
 
     public function misAsignaciones(Request $request)
     {
-        //$idUsuario = Auth::user()->id;
-        $idUsuario = $request->input('id_usuario');
+        $idUsuario = Auth::user()->id;
+//        $idUsuario = $request->input('id_usuario');
 
         $query = Reporte::query();
 
@@ -147,7 +148,7 @@ class ReporteController extends Controller
         }
     }
 
-    public function marcarNoProcede(Request $request, $id_reporte)
+    public function marcarNoProcede(Request $request, $id_reporte): JsonResponse
     {
         try {
             $reporte = Reporte::find($id_reporte);
@@ -169,7 +170,7 @@ class ReporteController extends Controller
         }
     }
 
-    public function realizarAsignacion(Request $request, $id_reporte)
+    public function realizarAsignacion(Request $request, $id_reporte): JsonResponse
     {
         $validated = $request->validate(
             [
@@ -233,7 +234,7 @@ class ReporteController extends Controller
         }
     }
 
-    public function actualizarEstadoReporte(Request $request, $id_reporte)
+    public function actualizarEstadoReporte(Request $request, $id_reporte) : JsonResponse
     {
         $request->validate(
             [

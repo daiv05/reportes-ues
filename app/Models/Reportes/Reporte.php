@@ -91,7 +91,6 @@ class Reporte extends Model
             ->with('empleadoPuesto')
             ->get()
             ->pluck('empleadoPuesto.usuario.id');
-        error_log($empAcciones);
         if ($empAcciones->contains($idUsuario)) {
             $relaciones["trabajador"] = true;
         }
