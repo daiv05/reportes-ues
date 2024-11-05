@@ -55,6 +55,30 @@
     </div>
     @include('notify::components.notify')
     @notifyJs
+
+    @if (session('message'))
+        @switch(session('message')['type'])
+            @case('success')
+                @php
+                    notify()->success(session('message')['content'], 'Exito');
+                @endphp
+                @break
+            @case('error')
+                @php
+                    notify()->error(session('message')['content'], 'Error');
+                @endphp
+                @break
+            @case('warning')
+                @php
+                    notify()->warning(session('message')['content'], 'Advertencia');
+                @endphp
+                @break
+            @default
+                @php
+                    notify()->info(session('message')['content'], 'Info');
+                @endphp
+        @endswitch
+    @endif
 </body>
 
 </html>
