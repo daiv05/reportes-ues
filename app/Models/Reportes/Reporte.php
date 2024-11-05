@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Auth;
 
 class Reporte extends Model
 {
@@ -17,7 +18,10 @@ class Reporte extends Model
 
     protected $table = 'reportes';
 
-    protected $appends = ['estado_ultimo_historial'];
+    protected $appends = [
+        'estado_ultimo_historial',
+        'relacion_usuario'
+    ];
 
     protected $fillable = [
         'id_aula',
@@ -59,12 +63,38 @@ class Reporte extends Model
     {
         return $this->accionesReporte()
             ->with(['historialAccionesReporte' => function ($query) {
-                $query->orderBy('fecha_actualizacion', 'desc')->first();
+                $query->orderBy('created_at', 'desc')->first();
             }])
             ->get()
             ->pluck('historialAccionesReporte')
             ->flatten()
-            ->sortByDesc('fecha_actualizacion')
+            ->sortByDesc('created_at')
             ->first()?->estado;
     }
+
+    public function getRelacionUsuarioAttribute()
+    {
+        $idUsuario = Auth::user()->id;
+        $relaciones = [
+            "creador" => false,
+            "supervisor" => false,
+            "trabajador" => false,
+        ];
+        if ($this->id_usuario_reporta == $idUsuario) {
+            $relaciones["creador"] = true;
+        }
+        $userSupervisor = $this->accionesReporte()->with('usuarioSupervisor')->first();
+        if (isset($userSupervisor) && $userSupervisor->usuarioSupervisor->id == $idUsuario) {
+            $relaciones["supervisor"] = true;
+        }
+        $empAcciones = $this->empleadosAcciones()
+            ->with('empleadoPuesto')
+            ->get()
+            ->pluck('empleadoPuesto.usuario.id');
+        if ($empAcciones->contains($idUsuario)) {
+            $relaciones["trabajador"] = true;
+        }
+        return $relaciones;
+    }
+
 }

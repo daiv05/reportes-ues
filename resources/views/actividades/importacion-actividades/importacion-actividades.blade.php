@@ -49,48 +49,68 @@
                     </div>
                 </div>
             </div>
-            @if(isset($excelData) && $tipoActividad === 'evento')
-                <form class="p-5">
-                    {{-- Caso para eventos --}}
+            @if(session()->has('excelData') || isset($excelData))
+                @php
+                    $excelData = session('excelData', $excelData ?? []);
+                    $tipoClases = \App\Models\General\TipoClase::all();
+                    $modalidades = \App\Models\General\Modalidad::all();
+                    $dias = \App\Models\General\Dia::all();
+                @endphp
+                <form class="p-5" method="POST" action="{{ route('importar-clases') }}">
+                    @csrf
+                    <div class="flex items-center justify-center w-full mt-4 md:col-span-2">
+                        <button type="submit" class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
+                            Guardar clases
+                        </button>
+                    </div>
+
+                    {{-- Caso para clases --}}
                     @foreach($excelData as $row)
-                        <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Registro de evento {{ $loop->iteration }} - Semana {{ $row['semana'] }}</h1>
-
+                        <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Registro de actividad {{ $loop->iteration }}</h1>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                            <div class="space-y-2">
-                                <x-forms.input-label for="fecha[]" :value="__('Fecha')" />
-                                <x-forms.date-input
-                                    name="fecha[]"
-                                    :value="$row['fecha']"
-                                    required
-                                    autofocus
-                                    class="w-full mt-1"
-                                />
-                                <x-forms.input-error :messages="$errors->get('fecha')" class="mt-2" />
-                            </div>
 
-                            <div class="space-y-2">
+                            {{ $errors }}
+
+                            {{-- Nombre de la actividad --}}
+
+                            {{-- Materia --}}
+                            <div class="space-y-1">
                                 <x-forms.input-label for="materia[]" :value="__('Materia')" />
                                 <x-forms.text-input
                                     name="materia[]"
-                                    :value="$row['codigo']"
-                                    required
+                                    :value="old('materia.' . $loop->index, $row['materia'])"
                                     class="w-full mt-1"
                                 />
-                                <x-forms.input-error :messages="$errors->get('hora_inicio')" class="mt-2" />
+                                <x-forms.input-error :messages="$errors->get('materia.' . $loop->index)"/>
                             </div>
 
+                            {{-- Tipo de clase --}}
+                            <div class="space-y-2">
+                                <x-forms.input-label for="tipo[]" :value="__('Tipo de clase')" />
+                                <select id="tipo" name="tipo[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    @foreach($tipoClases as $tipoClase)
+                                        <option value="{{ $tipoClase->id }}" {{ $tipoClase->id == $row['tipo'] ? 'selected' : '' }}>
+                                            {{ $tipoClase->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <x-forms.input-error :messages="$errors->get('modalidad')" class="mt-2" />
+                            </div>
+
+                            {{-- Hora Inicio --}}
                             <div class="space-y-2">
                                 <x-forms.input-label for="hora_inicio[]" :value="__('Hora Inicio')" />
                                 <x-forms.text-input
                                     type="time"
                                     name="hora_inicio[]"
-                                    :value="$row['hora_inicio']"
+                                    :value="old('hora_inicio.' . $loop->index, $row['hora_inicio'])"
                                     required
                                     class="w-full mt-1"
                                 />
                                 <x-forms.input-error :messages="$errors->get('hora_inicio')" class="mt-2" />
                             </div>
 
+                            {{-- Hora Fin --}}
                             <div class="space-y-2">
                                 <x-forms.input-label for="hora_fin[]" :value="__('Hora Fin')" />
                                 <x-forms.text-input
@@ -103,76 +123,65 @@
                                 <x-forms.input-error :messages="$errors->get('hora_fin')" class="mt-2" />
                             </div>
 
-                            <div class="space-y-2">
-                                <x-forms.input-label for="evaluacion[]" :value="__('Evaluación')" />
-                                <x-forms.text-input
-                                    name="evaluacion[]"
-                                    :value="$row['evaluacion']"
-                                    required
-                                    class="w-full mt-1"
-                                />
-                                <x-forms.input-error :messages="$errors->get('evaluacion')" class="mt-2" />
-                            </div>
-
-                            <div class="space-y-2">
-                                <x-forms.input-label for="cantidad_estudiantes[]" :value="__('Cantidad de Estudiantes')" />
-                                <x-forms.text-input
-                                    type="number"
-                                    name="cantidad_estudiantes[]"
-                                    :value="$row['cantidad_estudiantes']"
-                                    required
-                                    class="w-full mt-1"
-                                />
-                                <x-forms.input-error :messages="$errors->get('cantidad_estudiantes')" class="mt-2" />
-                            </div>
-
+                            {{-- Modalidad --}}
                             <div class="space-y-2">
                                 <x-forms.input-label for="modalidad[]" :value="__('Modalidad')" />
-                                <x-forms.text-input
-                                    name="modalidad[]"
-                                    :value="$row['modalidad']"
-                                    required
-                                    class="w-full mt-1"
-                                />
+                                <select id="modalidad" name="modalidad[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    @foreach($modalidades as $modalidad)
+                                        <option value="{{ $modalidad->id }}" {{ $modalidad->id == $row['modalidad'] ? 'selected' : '' }}>
+                                            {{ $modalidad->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 <x-forms.input-error :messages="$errors->get('modalidad')" class="mt-2" />
                             </div>
 
-                            <div class="col-span-1 space-y-2">
-                                <x-forms.input-label for="local[]" :value="__('Locales')" />
-                                <x-forms.text-input
-                                    name="local[]"
-                                    :value="$row['local']"
-                                    required
-                                    class="w-full mt-1"
-                                />
-                                <x-forms.input-error :messages="$errors->get('local')" class="mt-2" />
+                            {{-- Selección de días --}}
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700">Días de la Semana</label>
+                                <div class="relative">
+                                    <button
+                                        id="dropdownDaysButton"
+                                        data-dropdown-toggle="dropdownDays{{ $loop->iteration }}"
+                                        class="w-full px-4 py-2 border rounded-lg text-left focus:outline-none focus:ring"
+                                        type="button">
+                                        Seleccionar días
+                                    </button>
+
+                                    <div
+                                        id="dropdownDays{{ $loop->iteration }}"
+                                        class="hidden z-20 w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+                                        data-popper-reference-hidden
+                                        data-popper-escaped
+                                        data-popper-placement="top">
+                                        <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDaysButton">
+                                            @foreach($dias as $dia)
+                                                <li class="flex items-center">
+                                                    <input
+                                                        id="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}"
+                                                        type="checkbox"
+                                                        value="{{ $dia->id }}"
+                                                        name="diasActividad[{{ $row['index'] }}][]"
+                                                        @if($loop->first)  @endif
+                                                        @if(in_array($dia->id, old('diasActividad.' . $loop->index, []))) checked @endif
+
+                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                                    <label for="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                        {{ $dia->nombre }}
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                                <x-forms.input-error :messages="$errors->get('diasActividad')" class="mt-2" />
                             </div>
 
-                            <div class="flex flex-col sm:col-span-2 md:col-span-4 space-y-2">
-                                <x-forms.input-label for="comentarios[]" :value="__('Comentarios')" />
-                                <x-forms.text-input
-                                    name="comentarios[]"
-                                    :value="$row['comentarios']"
-                                    class="w-full mt-1"
-                                />
-                                <x-forms.input-error :messages="$errors->get('comentarios')" class="mt-2" />
-                            </div>
                         </div>
                     @endforeach
                 </form>
             @endif
 
-            @if(isset($excelData) && $tipoActividad !== 'evento')
-                <form class="p-5">
-                    {{-- Caso para eventos --}}
-                    @foreach($excelData as $row)
-                        <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Registro de {{ $tipoActividad }} {{ $loop->iteration }}</h1>
-
-                        {{ json_encode($row) }}
-                        </div>
-                    @endforeach
-                </form>
-            @endif
         </div>
     </div>
 </x-app-layout>

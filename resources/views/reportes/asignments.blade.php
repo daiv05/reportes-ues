@@ -30,10 +30,9 @@
     </x-slot>
     <div>
         {{-- FILTROS --}}
-        <div class="flex flex-col space-y-4 pb-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <form method="GET" action="{{ route('reportes-generales') }}"
-                  class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-                <div class="relative">
+        <div class="flex-column flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0">
+            <form method="GET" action="{{ route('reportes-generales') }}" class="flex-row flex space-x-8 mt-4">
+                <div>
                     <button
                         id="dropdownRadioButton"
                         data-dropdown-toggle="dropdownRadio"
@@ -121,30 +120,28 @@
                         </svg>
                     </div>
                     <input type="text" id="table-search" name="titulo" value="{{ request('titulo') }}"
-                           class="block w-full sm:w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                           class="block w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                            placeholder="Buscar por nombre"/>
                 </div>
 
-                <div class="flex space-x-2">
-                    <button type="submit"
-                            class="align-middle rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor" class="h-4 w-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
-                        </svg>
-                    </button>
+                <button type="submit"
+                        class="align-middle rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="h-4 w-4">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                    </svg>
+                </button>
 
-                    <button type="reset"
-                            class="align-middle rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                            onclick="window.location.href='{{ route('reportes-generales') }}';">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor" class="h-4 w-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </div>
+                <button type="reset"
+                        class="align-middle rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                        onclick="window.location.href='{{ route('reportes-generales') }}';">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="h-4 w-4">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </form>
         </div>
         {{-- TABLA --}}
@@ -155,10 +152,10 @@
                     <x-table.td>{{ $reporte->fecha_reporte }} {{ $reporte->hora_reporte }}</x-table.td>
                     <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
                     <x-table.td>{{ $reporte->aula?->nombre }}</x-table.td>
-                    <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
+                    <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada }}</x-table.td>
                     <x-table.td>{{ $reporte->actividad?->descripcion }}</x-table.td>
                     <x-table.td>
-                        <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
+                        <x-status.chips :text="$reporte->estado_ultimo_historial ?? 'No asignado'"
                                         class="mb-2"/>
                     </x-table.td>
                     <x-table.td>

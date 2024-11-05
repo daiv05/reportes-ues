@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Reporte;
 
-use App\Enums\TipoReporteEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Actividades\Actividad;
 use App\Models\Reportes\AccionesReporte;
@@ -11,17 +10,13 @@ use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
+use App\Models\Reportes\RecursoReporte;
 use Carbon\Carbon;
-use Error;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 
 class ReporteController extends Controller
 {
@@ -29,40 +24,43 @@ class ReporteController extends Controller
     {
         $query = Reporte::query();
 
-        // Filtro por fecha
-        if ($request->has('filter-radio')) {
-            $filtro = $request->input('filter-radio');
-
-            switch ($filtro) {
-                case 'hoy':
-                    $query->whereDate('fecha_reporte', today());
-                    break;
-                case '7_dias':
-                    $query->where('fecha_reporte', '>=', now()->subDays(7));
-                    break;
-                case '30_dias':
-                    $query->where('fecha_reporte', '>=', now()->subDays(30));
-                    break;
-                case 'mes':
-                    $query->where('fecha_reporte', '>=', now()->subMonth());
-                    break;
-                case 'anio':
-                    $query->where('fecha_reporte', '>=', now()->subYear());
-                    break;
-            }
+        // Para listar solo los creados por un usuario en específico
+        if ($request->has('id_usuario')) {
+            $query->where('id_usuario_reporta', $request['id_usuario']);
         }
 
-        // Filtro por título (búsqueda por nombre)
-        if ($request->has('titulo')) {
-            $titulo = $request->input('titulo');
-            $query->where('titulo', 'like', '%' . $titulo . '%');
-        }
+        $this->filtrosGenerales($request, $query);
 
         $reportes = $query->paginate(10);
-        // return response()->json([
-        //     'status' => 200,
-        //     'data' => $reportes
-        // ], 200);
+//         return response()->json([
+//             'status' => 200,
+//             'data' => $reportes
+//         ], 200);
+        return view('reportes.index', compact('reportes'));
+    }
+
+    public function misAsignaciones(Request $request)
+    {
+        $idUsuario = Auth::user()->id;
+//        $idUsuario = $request->input('id_usuario');
+
+        $query = Reporte::query();
+
+        $query->whereHas('accionesReporte.usuarioSupervisor', function ($query) use ($idUsuario) {
+            $query->where('id', $idUsuario);
+        })->orWhereHas('empleadosAcciones', function ($query) use ($idUsuario) {
+            $query->whereHas('empleadoPuesto.usuario', function ($query) use ($idUsuario) {
+                $query->where('id', $idUsuario);
+            });
+        });
+
+        $this->filtrosGenerales($request, $query);
+
+        $reportes = $query->paginate(10);
+//        return response()->json([
+//            'status' => 200,
+//            'data' => $reportes
+//        ], 200);
         return view('reportes.index', compact('reportes'));
     }
 
@@ -118,17 +116,29 @@ class ReporteController extends Controller
 
     public function detalle(Request $request, $id_reporte)
     {
-        $reporte = Reporte::with('aula', 'actividad', 'accionesReporte', 'accionesReporte.entidadAsignada',
-            'accionesReporte.usuarioSupervisor', 'accionesReporte.usuarioSupervisor.persona', 'usuarioReporta', 'usuarioReporta.persona',
-            'empleadosAcciones', 'empleadosAcciones.empleadoPuesto',
-            'empleadosAcciones.empleadoPuesto.usuario', 'empleadosAcciones.empleadoPuesto.usuario.persona')->find($id_reporte);
+        $reporte = Reporte::with(
+            'aula',
+            'actividad',
+            'accionesReporte',
+            'accionesReporte.entidadAsignada',
+            'accionesReporte.usuarioSupervisor',
+            'accionesReporte.usuarioSupervisor.persona',
+            'accionesReporte.historialAccionesReporte',
+            'accionesReporte.historialAccionesReporte.estado',
+            'usuarioReporta',
+            'usuarioReporta.persona',
+            'empleadosAcciones',
+            'empleadosAcciones.empleadoPuesto',
+            'empleadosAcciones.empleadoPuesto.usuario',
+            'empleadosAcciones.empleadoPuesto.usuario.persona'
+        )->find($id_reporte);
         if (isset($reporte)) {
             $entidades = Entidades::all();
-//            return response()->json([
-//                'status' => 200,
-//                'reporte' => $reporte,
-//                'entidades' => $entidades
-//            ], 200);
+            // return response()->json([
+            //     'status' => 200,
+            //     'reporte' => $reporte,
+            //     'entidades' => $entidades
+            // ], 200);
             return view('reportes.detail', compact('reporte', 'entidades'));
         } else {
             return redirect()->route('reportes.index')->with('message', [
@@ -138,7 +148,7 @@ class ReporteController extends Controller
         }
     }
 
-    public function marcarNoProcede(Request $request, $id_reporte)
+    public function marcarNoProcede(Request $request, $id_reporte): JsonResponse
     {
         try {
             $reporte = Reporte::find($id_reporte);
@@ -158,10 +168,9 @@ class ReporteController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
-
     }
 
-    public function realizarAsignacion(Request $request, $id_reporte)
+    public function realizarAsignacion(Request $request, $id_reporte): JsonResponse
     {
         $validated = $request->validate(
             [
@@ -222,6 +231,118 @@ class ReporteController extends Controller
             return response()->json([
                 'message' => 'Reporte no encontrado',
             ], 404);
+        }
+    }
+
+    public function actualizarEstadoReporte(Request $request, $id_reporte) : JsonResponse
+    {
+        $request->validate(
+            [
+                'comentario' => 'required|string',
+                'id_estado' => 'required|integer|exists:estados,id',
+                'evidencia' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+                'recursos' => 'nullable|array',
+                'recursos.*.nombre' => 'required|string|max:100',
+                'recursos.*.costo' => 'required|numeric|min:0',
+            ],
+            [
+                'recursos.array' => 'Estructura de recursos utilizados inválida.',
+                'recursos.*.nombre.required' => 'Debe especificar un nombre de recurso válido.',
+                'recursos.*.nombre.string' => 'Debe especificar un nombre de recurso válido.',
+                'recursos.*.nombre.max' => 'El nombre del recurso no debe exceder los 50 caracteres',
+                'recursos.*.costo.required' => 'Debe especificar un nombre de recurso válido.',
+                'recursos.*.costo.numeric' => 'Debe especificar un nombre de recurso válido.',
+                'recursos.*.costo.min' => 'El costo del recurso no puede ser menor a cero.',
+                'comentario.required' => 'Debe especificar las acciones realizadas.',
+                'comentario.string' => 'El comentario debe ser un texto válido.',
+                'evidencia.image' => 'La evidencia debe ser un archivo de imagen.',
+                'evidencia.mimes' => 'La evidencia debe ser una imagen de tipo: png, jp o jpeg.',
+                'id_estado.required' => 'Debe seleccionar un estado para actualizar el reporte.',
+                'id_estado.integer' => 'El ID del estado debe ser un número entero.',
+                'id_estado.exists' => 'El estado seleccionado no existe.',
+            ]
+        );
+        $reporte = Reporte::find($id_reporte);
+        if (!isset($reporte)) {
+            return response()->json([
+                'message' => 'Reporte no encontrado',
+            ], 404);
+        }
+        $accionReporte = $reporte->accionesReporte;
+        if (!isset($accionReporte)) {
+            return response()->json([
+                'message' => 'El reporte no tiene ninguna asignación',
+            ], 404);
+        }
+        $empleadoAcciones = $reporte->empleadosAcciones;
+        $puestosEmpleado = Auth::user()->empleadosPuestos;
+        $puestosEmpleadoIds = $puestosEmpleado->pluck('id')->toArray();
+        $empleadoPuestoAccion = $empleadoAcciones->firstWhere(fn($accion) => in_array($accion->id_empleado_puesto, $puestosEmpleadoIds));
+        if (!isset($empleadoPuestoAccion)) {
+            return response()->json([
+                'message' => 'No tienes permiso para actualizar este reporte',
+            ], 403);
+        }
+
+        DB::transaction(function () use ($request, $empleadoPuestoAccion, $accionReporte) {
+            $newHistorialAccionesReportes = new HistorialAccionesReporte();
+            $newHistorialAccionesReportes->id_acciones_reporte = $accionReporte->id;
+            $newHistorialAccionesReportes->id_empleado_puesto = $empleadoPuestoAccion->id_empleado_puesto;
+            $newHistorialAccionesReportes->id_estado = $request['id_estado'];
+            $newHistorialAccionesReportes->fecha_actualizacion = Carbon::now()->format('Y-m-d');
+            $newHistorialAccionesReportes->hora_actualizacion = Carbon::now()->format('H:i:s');
+            $newHistorialAccionesReportes->comentario = $request['comentario'];
+            // Guardar evidencia en el storage
+            if ($request->file('evidencia')) {
+                $path = $request->file('evidencia')->store('public/reportes/evidencia');
+                $newHistorialAccionesReportes->foto_evidencia = $path;
+            }
+            $newHistorialAccionesReportes->save();
+            // Guardar recursos
+//            if (isset($request->recursos)) {
+//                foreach ($request->recursos as $recurso) {
+//                    RecursoReporte::create([
+//                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+//                        'nombre' => $recurso['nombre'],
+//                        'costo' => $recurso['costo'],
+//                    ]);
+//                }
+//            }
+        });
+
+        return response()->json([
+            'message' => 'Seguimiento de reporte actualizado con exito',
+        ], 200);
+    }
+
+    public function filtrosGenerales(Request $request, \Illuminate\Database\Eloquent\Builder $query): void
+    {
+        if ($request->has('filter-radio')) {
+            $filtro = $request->input('filter-radio');
+
+            switch ($filtro) {
+                case 'hoy':
+                    $query->whereDate('fecha_reporte', today());
+                    break;
+                case '7_dias':
+                    $query->where('fecha_reporte', '>=', now()->subDays(7));
+                    break;
+                case '30_dias':
+                    $query->where('fecha_reporte', '>=', now()->subDays(30));
+                    break;
+                case 'mes':
+                    $query->where('fecha_reporte', '>=', now()->subMonth());
+                    break;
+                case 'anio':
+                    $query->where('fecha_reporte', '>=', now()->subYear());
+                    break;
+            }
+        }
+
+        // Filtro por título (búsqueda por nombre)
+        if ($request->has('titulo')) {
+            $titulo = $request->input('titulo');
+            $query->where('titulo', 'like', '%' . $titulo . '%');
         }
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Imports;
+
+use App\Models\Mantenimientos\Asignatura;
 use Maatwebsite\Excel\Concerns\ToModel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
@@ -14,6 +16,8 @@ class CalendarioImport implements ToModel
 
     public function model(array $row)
     {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $modalidad = null;
         if(count($row) < 12){
             return null;
         }
@@ -29,7 +33,7 @@ class CalendarioImport implements ToModel
             }
         }
 
-        if(gettype($row[2] ?? null) == 'string' || gettype($row[2] ?? null) == 'NULL'){
+        if(gettype($this->date ?? null) == 'string' || gettype($this->date ?? null) == 'NULL'){
             return null;
         }
 
@@ -50,7 +54,14 @@ class CalendarioImport implements ToModel
         }
 
 
-        if(!$row[4] && !$row[5] && !$row[6] && !$row[7] && !$row[8] && !$row[9] && !$row[10] && !$row[11]){
+        if(strtolower($row[7]) == 'virtual' || strtolower($row[7]) == 'distancia' || strtolower($row[7]) == 'en línea' || strtolower($row[7]) == 'en linea'){
+            $modalidad = 1;
+        } elseif(strtolower($row[7]) == 'presencial' || !$row[7]){
+            $modalidad = 2;
+        }
+
+        if(!$row[4] && !$row[6] && !$row[7] && !$row[8] && !$row[11]){
+            $out->writeln('Fila ' . $this->index . ' ->'. $row[0] . ' ' . $row[1] . ' ' . $row[2] . ' ' . $row[3] . ' ' . $row[4] . ' ' . $row[5] . ' ' . $row[6] . ' ' . $row[7] . ' ' . $row[8] . ' ' . $row[9] . ' ' . $row[10] . ' ' . $row[11] . ' ' . $row[12]);
             return null;
         }
 
@@ -74,7 +85,7 @@ class CalendarioImport implements ToModel
             'fecha' => Date::excelToDateTimeObject($row[2] ?? $this->date)->format('d/m/Y'),
             'codigo' => $row[4] ?? null,
             'evaluacion' => $row[6] ?? null,
-            'modalidad' => $row[7] ?? null,
+            'modalidad' => $modalidad,
             'cantidad_estudiantes' => $row[8] ?? null,
             'comentarios' => $row[9] ?? null,
             'duracion' => $row[10] ?? null,

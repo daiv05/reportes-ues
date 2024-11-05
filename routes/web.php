@@ -58,6 +58,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->name('detalle-reporte');
         Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->name('reportes.noProcede');
         Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->name('reportes.realizarAsignacion');
+        Route::post('/actualizar-estado/{id}', [ReporteController::class, 'actualizarEstadoReporte'])->name('reportes.actualizarEstado');
+        Route::get('/mis-asignaciones', [ReporteController::class, 'misAsignaciones'])->name('reportes.misAsignaciones');
+
     });
 
     /* ****************************************** */
@@ -74,6 +77,7 @@ Route::middleware('auth')->group(function () {
             return view('actividades.importacion-actividades.importacion-actividades');
         })->name('importar-actividades');
         Route::post('/importar-actividades', [ActividadController::class, 'importarExcel'])->name('importar-actividades-post');
+        Route::post('/importar-actividades/clases', [ActividadController::class, 'storeClases'])->name('importar-clases');
     });
     /* ********************************************* */
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */

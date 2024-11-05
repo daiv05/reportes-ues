@@ -19,7 +19,7 @@ class HistorialAccionesReporte extends Model
         'id_empleado_puesto',
         'id_estado',
         'foto_evidencia',
-        'descripcion',
+        'comentario',
         'fecha_actualizacion',
         'hora_actualizacion',
     ];
