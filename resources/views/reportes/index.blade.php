@@ -12,11 +12,6 @@
 @endphp
 
 <x-app-layout>
-    @if (session('message'))
-        <div class="alert alert-{{ session('message.type') }}">
-            {{ session('message.content') }}
-        </div>
-    @endif
     <x-slot name="header">
         <x-header.main
             tituloMenor="Últimos reportes de"
@@ -152,7 +147,7 @@
             @foreach($reportes as $reporte)
                 <x-table.tr>
                     <x-table.td>{{ $reporte->titulo }}</x-table.td>
-                    <x-table.td>{{ $reporte->fecha_reporte }} {{ $reporte->hora_reporte }}</x-table.td>
+                    <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte . ' ' . $reporte->hora_reporte)->format('d/m/Y, h:i A') }}</x-table.td>
                     <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
                     <x-table.td>{{ $reporte->aula?->nombre }}</x-table.td>
                     <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
