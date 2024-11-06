@@ -36,6 +36,7 @@ class ReporteController extends Controller
 //             'status' => 200,
 //             'data' => $reportes
 //         ], 200);
+//        notify()->success('Reporte generado correctamente', 'Exito');
         return view('reportes.index', compact('reportes'));
     }
 

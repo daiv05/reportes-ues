@@ -9,6 +9,7 @@ use App\Http\Controllers\rhu\EntidadesController;
 use App\Http\Controllers\rhu\PuestoController;
 use App\Http\Controllers\Seguridad\ProfileController;
 use App\Http\Controllers\Reporte\ReporteController;
+use App\Http\Controllers\Reporte\EstadoController;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     /*   ************* REPORTES *************    */
     /* ***************************************** */
     Route::prefix('reportes')->group(function () {
+        // Reportes
         Route::get('/listado-general', [ReporteController::class, 'index'])->name('reportes-generales');
         Route::get('/registrar', [ReporteController::class, 'create'])->name('crear-reporte');
         Route::post('/store', [ReporteController::class, 'store'])->name('reportes.store');
@@ -60,7 +62,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->name('reportes.realizarAsignacion');
         Route::post('/actualizar-estado/{id}', [ReporteController::class, 'actualizarEstadoReporte'])->name('reportes.actualizarEstado');
         Route::get('/mis-asignaciones', [ReporteController::class, 'misAsignaciones'])->name('reportes.misAsignaciones');
-
+        // Estados
+        Route::get('/estados/{id_reporte}', [EstadoController::class, 'estadosReporte'])->name('reportes.estadosReporte');
     });
 
     /* ****************************************** */
