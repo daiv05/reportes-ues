@@ -2,16 +2,13 @@
     $headers = [
         ['text' => 'Nombre', 'align' => 'left'],
         ['text' => 'Descripción', 'align' => 'left'],
-        ['text' => 'Entidades Padre', 'align' => 'left'], // Nueva columna
+        ['text' => 'Entidad Padre', 'align' => 'left'], // Nueva columna
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
 @endphp
 
 <x-app-layout>
-    @if (session('message'))
-    <x-alert :type="session('message')['type']" :message="session('message')['content']" />
-@endif
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Entidades" />
     </x-slot>
@@ -23,40 +20,38 @@
                 Añadir
             </x-forms.primary-button>
         </div>
-        <div class="mx-auto mb-8 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
-            <x-table.base :headers="$headers">
-                @foreach ($entidades as $entidad)
-                    <x-table.tr>
-                        <x-table.td>
-                            {{ $entidad->nombre }}
-                        </x-table.td>
-                        <x-table.td>
-                            {{ $entidad->descripcion }}
-                        </x-table.td>
-                        <x-table.td>
-                            {{-- Mostrar el entidad padre o "Raíz" si es null --}}
-                            {{ $entidad->id_entidad ? $entidad->padre->nombre : '' }}
-                        </x-table.td>
-                        <x-table.td>
-                            <x-status.is-active :active="$entidad->activo" />
-                        </x-table.td>
-                        <x-table.td>
-                            <a href="#"
-                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                data-id="{{ $entidad->id }}" data-nombre="{{ $entidad->nombre }}"
-                                data-descripcion="{{ $entidad->descripcion }}" data-activo="{{ $entidad->activo }}"
-                                data-id_entidad="{{ $entidad->id_entidad }}">
-                                <x-heroicon-o-pencil class="h-5 w-5" />
-                            </a>
-                        </x-table.td>
-                    </x-table.tr>
-                @endforeach
-            </x-table.base>
-            <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
-                aria-label="Table navigation">
-                {{ $entidades->links() }}
-            </nav>
-        </div>
+        <x-table.base :headers="$headers">
+            @foreach ($entidades as $entidad)
+                <x-table.tr>
+                    <x-table.td>
+                        {{ $entidad->nombre }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $entidad->descripcion }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{-- Mostrar el entidad padre o "Raíz" si es null --}}
+                        {{ $entidad->id_entidad ? $entidad->padre->nombre : '-' }}
+                    </x-table.td>
+                    <x-table.td>
+                        <x-status.is-active :active="$entidad->activo" />
+                    </x-table.td>
+                    <x-table.td>
+                        <a href="#"
+                            class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                            data-id="{{ $entidad->id }}" data-nombre="{{ $entidad->nombre }}"
+                            data-descripcion="{{ $entidad->descripcion }}" data-activo="{{ $entidad->activo }}"
+                            data-id_entidad="{{ $entidad->id_entidad }}">
+                            <x-heroicon-o-pencil class="h-5 w-5" />
+                        </a>
+                    </x-table.td>
+                </x-table.tr>
+            @endforeach
+        </x-table.base>
+        <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
+            aria-label="Table navigation">
+            {{ $entidades->links() }}
+        </nav>
     </div>
 
 
@@ -195,14 +190,14 @@
             // Deshabilitar la opción del mismo entidad en el select para evitar seleccionar a sí mismo como padre
             const selectEntidad = document.getElementById('id_entidad');
             Array.from(selectEntidad.options).forEach((option) => {
-                option.disabled = option.value == id;
+                option.disabled = option.value === id;
             });
 
             // Cambiar el título del modal a "Editar entidad"
             document.getElementById('head-text').textContent = 'Editar entidad';
 
             // Abrir el modal
-            document.querySelector('[data-modal-target="static-modal"]').click();;
+            document.querySelector('[data-modal-target="static-modal"]').click();
         });
     });
 </script>

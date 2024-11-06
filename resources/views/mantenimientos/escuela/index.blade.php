@@ -1,11 +1,20 @@
+@php
+    $headers = [
+      ['text' => 'Nombre', 'align' => 'left'],
+      ['text' => 'Facultad', 'align' => 'left'],
+      ['text' => 'Estado', 'align' => 'center'],
+      ['text' => 'Acciones', 'align' => 'center'],
+    ];
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Escuelas" />
     </x-slot>
 
     <!-- Boton agregar -->
-    <div class="pb-12">
-        <div class="p-6">
+    <div>
+        <div class="flex flex-col space-y-4 pb-4 sm:flex-row sm:space-y-0 sm:space-x-4">
             <x-forms.primary-button
                 data-modal-target="static-modal"
                 data-modal-toggle="static-modal"
@@ -15,57 +24,33 @@
                 Añadir
             </x-forms.primary-button>
         </div>
-        <!-- tabla de datos -->
-        <div class="mx-auto flex flex-col items-center justify-center overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-                <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">Nombre</th>
-                        <th scope="col" class="px-6 py-3">Facultad</th>
-                        <th scope="col" class="px-6 py-3">Activo</th>
-                        <th scope="col" class="px-6 py-3">Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($escuelas as $escuela)
-                        <tr
-                            class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+        <x-table.base :headers="$headers">
+                @foreach ($escuelas as $escuela)
+                <x-table.tr>
+                    <x-table.td>{{ $escuela->nombre }}</x-table.td>
+                    <x-table.td>{{ $escuela->facultades->nombre }}</x-table.td>
+                    <x-table.td><x-status.is-active :active="$escuela->activo" /></x-table.td>
+                    <x-table.td>
+                        <a
+                            href="#"
+                            class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                            data-id="{{ $escuela->id }}"
+                            data-nombre="{{ $escuela->nombre }}"
+                            data-facultad="{{ $escuela->facultades->id }}"
+                            data-activo="{{ $escuela->activo }}"
                         >
-                            <th
-                                scope="row"
-                                class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                            >
-                                {{ $escuela->nombre }}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ $escuela->facultades->nombre }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-status.is-active :active="$escuela->activo" />
-                            </td>
-                            <td class="px-6 py-4">
-                                <a
-                                    href="#"
-                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                    data-id="{{ $escuela->id }}"
-                                    data-nombre="{{ $escuela->nombre }}"
-                                    data-facultad="{{ $escuela->facultades->id }}"
-                                    data-activo="{{ $escuela->activo }}"
-                                >
-                                    <x-heroicon-o-pencil class="h-5 w-5" />
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <nav
-                class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
-                aria-label="Table navigation"
-            >
-                {{ $escuelas->links() }}
-            </nav>
-        </div>
+                            <x-heroicon-o-pencil class="h-5 w-5" />
+                        </a>
+                    </x-table.td>
+                </x-table.tr>
+                @endforeach
+        </x-table.base>
+        <nav
+            class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
+            aria-label="Table navigation"
+        >
+            {{ $escuelas->links() }}
+        </nav>
     </div>
 
     <!-- Modal agregar-->
@@ -190,9 +175,4 @@
             document.querySelector('[data-modal-target="static-modal"]').click();
         });
     });
-</script>
-<script>
-    function editarDepartamento(depa) {
-        document.getElementById('static-modal-update');
-    }
 </script>

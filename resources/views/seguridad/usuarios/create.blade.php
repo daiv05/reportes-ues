@@ -1,7 +1,4 @@
 <x-app-layout>
-    @if (session('message'))
-        <x-alert :type="session('message')['type']" :message="session('message')['content']" />
-    @endif
     <x-slot name="header">
         <x-header.simple titulo="Gestión de usuarios" />
     </x-slot>

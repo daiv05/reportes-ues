@@ -12,11 +12,6 @@
 @endphp
 
 <x-app-layout>
-    @if (session('message'))
-        <div class="alert alert-{{ session('message.type') }}">
-            {{ session('message.content') }}
-        </div>
-    @endif
     <x-slot name="header">
         <x-header.main
             tituloMenor="Últimos reportes de"
