@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    @notifyCss
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -44,14 +44,48 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </main>
         <div class="p-4 sm:ml-64">
             <div class="rounded-lg">
                 @include('layouts.footer')
             </div>
         </div>
-    </div>
 
+    </div>
+    @include('notify::components.notify')
+    @notifyJs
+
+    @if (session('message'))
+        @switch(session('message')['type'])
+            @case('success')
+                @php
+                    notify()->success(session('message')['content'], 'Exito');
+                @endphp
+                @break
+            @case('error')
+                @php
+                    notify()->error(session('message')['content'], 'Error');
+                @endphp
+                @break
+            @case('warning')
+                @php
+                    notify()->warning(session('message')['content'], 'Advertencia');
+                @endphp
+                @break
+            @default
+                @php
+                    notify()->info(session('message')['content'], 'Info');
+                @endphp
+        @endswitch
+    @endif
 </body>
 
 </html>
+
+<style lang="css">
+    .notify {
+        top: 50px !important;
+        z-index: 9999 !important;
+    }
+</style>
