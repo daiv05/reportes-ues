@@ -115,6 +115,77 @@ class ReporteController extends Controller
         ]);
     }
 
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate(
+            [
+                'id_empleados_puestos' => 'required|array',
+                'id_empleados_puestos.*' => 'integer|exists:empleados_puestos,id',
+                'comentario' => 'nullable|string',
+                'id_entidad' => 'required|integer|exists:entidades,id',
+                'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
+            ],
+            [
+                'id_empleados_puestos.required' => 'Debe asignar al menos un empleado al reporte.',
+                'id_empleados_puestos.array' => 'Estructura de empleados asignados inválida.',
+                'id_empleados_puestos.*.integer' => 'Cada empleado debe tener un ID válido.',
+                'id_empleados_puestos.*.exists' => 'Uno o más empleados seleccionados no existen.',
+                'comentario.string' => 'El comentario debe ser un texto válido.',
+                'id_entidad.required' => 'Debe seleccionar una entidad.',
+                'id_entidad.integer' => 'El ID de la entidad debe ser un número entero.',
+                'id_entidad.exists' => 'La entidad seleccionada no existe.',
+                'id_empleado_supervisor.required' => 'Debe seleccionar un supervisor para el reporte.',
+                'id_empleado_supervisor.integer' => 'El ID del supervsior debe ser un número entero.',
+                'id_empleado_supervisor.exists' => 'El empleado supervisor seleccionado no existe.',
+            ]
+        );
+
+        $reporte = Reporte::findOrFail($id);
+
+        DB::transaction(function () use ($reporte, $validated) {
+            $reporte->update([
+                'id_usuario_administracion' => Auth::user()->id,
+                'id_entidad_asignada' => $validated['id_entidad'],
+                'id_usuario_supervisor' => $validated['id_empleado_supervisor'],
+                'comentario' => $validated['comentario'] ?? '',
+                'fecha_asignacion' => Carbon::now()->format('Y-m-d'),
+                'fecha_inicio' => Carbon::now()->format('Y-m-d'),
+                'hora_inicio' => Carbon::now()->format('H:i:s'),
+            ]);
+
+            $accReporte = new AccionesReporte();
+            $accReporte->id_reporte = $reporte->id;
+            $accReporte->id_usuario_administracion = Auth::user()->id;
+            $accReporte->id_entidad_asignada = $validated['id_entidad'];
+            $accReporte->id_usuario_supervisor = $validated['id_empleado_supervisor'];
+            $accReporte->comentario = $validated['comentario'] ?? '';
+            $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
+            $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
+            $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
+            $accReporte->save();
+
+            $histAccReporte = new HistorialAccionesReporte();
+            $histAccReporte->id_acciones_reporte = $accReporte->id;
+            $histAccReporte->id_empleado_puesto = Auth::user()->empleadosPuestos->first()->id;
+            $histAccReporte->id_estado = 1;
+            $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
+            $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
+            $histAccReporte->save();
+
+            foreach ($validated['id_empleados_puestos'] as $emp) {
+                $empAcciones = new EmpleadoAccion();
+                $empAcciones->id_empleado_puesto = $emp;
+                $empAcciones->id_reporte = $reporte->id;
+                $empAcciones->save();
+            }
+        });
+
+        return redirect()->route('reportes.index')->with('message', [
+            'type' => 'success',
+            'content' => 'Reporte actualizado con éxito.',
+        ]);
+    }
+
     public function detalle(Request $request, $id_reporte)
     {
         $reporte = Reporte::with(
@@ -235,7 +306,7 @@ class ReporteController extends Controller
         }
     }
 
-    public function actualizarEstadoReporte(Request $request, $id_reporte) : JsonResponse
+    public function actualizarEstadoReporte(Request $request, $id_reporte): JsonResponse
     {
         $request->validate(
             [
