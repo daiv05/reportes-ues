@@ -2,7 +2,7 @@
     $headers = [
       ['text' => 'Título', 'align' => 'left'],
       ['text' => 'Fecha y Hora', 'align' => 'left'],
-      ['text' => 'Responsable', 'align' => 'left'],
+      ['text' => 'Reportado por', 'align' => 'left'],
       ['text' => 'Salón', 'align' => 'left'],
       ['text' => 'Entidades', 'align' => 'left'],
       ['text' => 'Actividad', 'align' => 'left'],
@@ -40,7 +40,7 @@
                             <path
                                 d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
                         </svg>
-                        Filtrar por
+                        Filtrar
                         <svg class="ms-2.5 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                              fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -104,7 +104,6 @@
                         </ul>
                     </div>
                 </div>
-                <label for="table-search" class="sr-only">Search</label>
                 <div class="relative">
                     <div
                         class="rtl:inset-r-0 pointer-events-none absolute inset-y-0 left-0 flex items-center ps-3 rtl:right-0">
@@ -147,7 +146,7 @@
             @foreach($reportes as $reporte)
                 <x-table.tr>
                     <x-table.td>{{ $reporte->titulo }}</x-table.td>
-                    <x-table.td>{{ $reporte->fecha_reporte }} {{ $reporte->hora_reporte }}</x-table.td>
+                    <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y')  }} {{  \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</x-table.td>
                     <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
                     <x-table.td>{{ $reporte->aula?->nombre }}</x-table.td>
                     <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>

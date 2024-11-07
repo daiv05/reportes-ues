@@ -28,11 +28,28 @@
             ],
         ],
         [
-            'type' => 1,
-            'to' => 'reportes-generales',
+            'type' => 2,
+            'id' => 'reportes-dropdown',
             'active' => request()->is('reportes/*'),
             'icon' => 'heroicon-s-document-chart-bar',
             'label' => 'Reportes',
+            'items' => [
+                [
+                    'to' => 'reportes-generales',
+                    'active' => request()->is('reportes/listado-general'),
+                    'label' => 'Listado',
+                ],
+                [
+                    'to' => 'reportes.misReportes',
+                    'active' => request()->is('reportes/mis-reportes'),
+                    'label' => 'Mis reportes',
+                ],
+                [
+                    'to' => 'reportes.misAsignaciones',
+                    'active' => request()->is('reportes/mis-asignaciones'),
+                    'label' => 'Mis asignaciones',
+                ],
+            ],
         ],
         [
             'type' => 2,
@@ -62,7 +79,7 @@
             'type' => 2,
             'id' => 'rhu-dropdown',
             'active' => request()->is('rhu/*'),
-           'icon' => 'heroicon-s-user-group',
+            'icon' => 'heroicon-s-user-group',
             'label' => 'Recursos humanos',
             'items' => [
                 [

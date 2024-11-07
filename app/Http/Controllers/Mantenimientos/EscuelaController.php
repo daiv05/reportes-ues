@@ -7,6 +7,7 @@ use App\Models\General\Facultades;
 use App\Models\Mantenimientos\Escuela;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class EscuelaController extends Controller
@@ -15,6 +16,10 @@ class EscuelaController extends Controller
     {
         $escuelas = Escuela::paginate(10);
         $facultades = Facultades::all();
+        Session::flash('message', [
+            'type' => 'success',
+            'content' => 'El aula se ha creado exitosamente.'
+        ]);
         return view('mantenimientos.escuela.index', compact('escuelas', 'facultades'))->with('message', [
             'type' => 'success',
             'content' => 'El aula se ha creado exitosamente.'

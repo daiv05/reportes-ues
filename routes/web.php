@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->name('reportes.noProcede');
         Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->name('reportes.realizarAsignacion');
         Route::post('/actualizar-estado/{id}', [ReporteController::class, 'actualizarEstadoReporte'])->name('reportes.actualizarEstado');
+        Route::get('/mis-reportes', [ReporteController::class, 'indexMisReportes'])->name('reportes.misReportes');
         Route::get('/mis-asignaciones', [ReporteController::class, 'misAsignaciones'])->name('reportes.misAsignaciones');
         // Estados
         Route::get('/estados/{id_reporte}', [EstadoController::class, 'estadosReporte'])->name('reportes.estadosReporte');
@@ -105,7 +106,7 @@ Route::middleware('auth')->group(function () {
         });
         Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
 
-         // Rutas de Ciclos
+        // Rutas de Ciclos
         Route::prefix('ciclos')->group(function () {
             Route::get('/', [CicloController::class, 'index'])->name('ciclos.index');
             Route::post('/', [CicloController::class, 'store'])->name('ciclos.store');

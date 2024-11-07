@@ -24,26 +24,37 @@ class ReporteController extends Controller
     {
         $query = Reporte::query();
 
+        $this->filtrosGenerales($request, $query);
+
+        $reportes = $query->paginate(10);
+        //         return response()->json([
+        //             'status' => 200,
+        //             'data' => $reportes
+        //         ], 200);
+        return view('reportes.index', compact('reportes'));
+    }
+
+    public function indexMisReportes(Request $request)
+    {
+        $query = Reporte::query();
+
         // Para listar solo los creados por un usuario en específico
-        if ($request->has('id_usuario')) {
-            $query->where('id_usuario_reporta', $request['id_usuario']);
-        }
+        $query->where('id_usuario_reporta', Auth::user()->id);
 
         $this->filtrosGenerales($request, $query);
 
         $reportes = $query->paginate(10);
-//         return response()->json([
-//             'status' => 200,
-//             'data' => $reportes
-//         ], 200);
-//        notify()->success('Reporte generado correctamente', 'Exito');
-        return view('reportes.index', compact('reportes'));
+        //         return response()->json([
+        //             'status' => 200,
+        //             'data' => $reportes
+        //         ], 200);
+        return view('reportes.my-reports', compact('reportes'));
     }
 
     public function misAsignaciones(Request $request)
     {
         $idUsuario = Auth::user()->id;
-//        $idUsuario = $request->input('id_usuario');
+        //        $idUsuario = $request->input('id_usuario');
 
         $query = Reporte::query();
 
@@ -58,11 +69,11 @@ class ReporteController extends Controller
         $this->filtrosGenerales($request, $query);
 
         $reportes = $query->paginate(10);
-//        return response()->json([
-//            'status' => 200,
-//            'data' => $reportes
-//        ], 200);
-        return view('reportes.index', compact('reportes'));
+        //        return response()->json([
+        //            'status' => 200,
+        //            'data' => $reportes
+        //        ], 200);
+        return view('reportes.my-assignments', compact('reportes'));
     }
 
     public function create(Request $request): View
@@ -235,7 +246,7 @@ class ReporteController extends Controller
         }
     }
 
-    public function actualizarEstadoReporte(Request $request, $id_reporte) : JsonResponse
+    public function actualizarEstadoReporte(Request $request, $id_reporte): JsonResponse
     {
         $request->validate(
             [
@@ -300,15 +311,15 @@ class ReporteController extends Controller
             }
             $newHistorialAccionesReportes->save();
             // Guardar recursos
-//            if (isset($request->recursos)) {
-//                foreach ($request->recursos as $recurso) {
-//                    RecursoReporte::create([
-//                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
-//                        'nombre' => $recurso['nombre'],
-//                        'costo' => $recurso['costo'],
-//                    ]);
-//                }
-//            }
+            //            if (isset($request->recursos)) {
+            //                foreach ($request->recursos as $recurso) {
+            //                    RecursoReporte::create([
+            //                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+            //                        'nombre' => $recurso['nombre'],
+            //                        'costo' => $recurso['costo'],
+            //                    ]);
+            //                }
+            //            }
         });
 
         return response()->json([
