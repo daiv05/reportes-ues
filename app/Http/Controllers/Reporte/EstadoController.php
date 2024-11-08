@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 class EstadoController extends Controller
 {
-    public function estadosReporte(Request $request) : JsonResponse
+    public function estadosReporte($idReporte)
     {
         return response()->json(Estado::all());
     }

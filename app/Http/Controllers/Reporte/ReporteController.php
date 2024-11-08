@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reporte;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Models\Actividades\Actividad;
 use App\Models\Reportes\AccionesReporte;
 use App\Models\Reportes\EmpleadoAccion;
@@ -17,6 +18,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Builder;
 
 class ReporteController extends Controller
 {
@@ -128,61 +132,41 @@ class ReporteController extends Controller
 
     public function detalle(Request $request, $id_reporte)
     {
-        $reporte = Reporte::with(
-            'aula',
-            'actividad',
-            'accionesReporte',
-            'accionesReporte.entidadAsignada',
-            'accionesReporte.usuarioSupervisor',
-            'accionesReporte.usuarioSupervisor.persona',
-            'accionesReporte.historialAccionesReporte',
-            'accionesReporte.historialAccionesReporte.estado',
-            'usuarioReporta',
-            'usuarioReporta.persona',
-            'empleadosAcciones',
-            'empleadosAcciones.empleadoPuesto',
-            'empleadosAcciones.empleadoPuesto.usuario',
-            'empleadosAcciones.empleadoPuesto.usuario.persona'
-        )->find($id_reporte);
-        if (isset($reporte)) {
-            $entidades = Entidades::all();
-            // return response()->json([
-            //     'status' => 200,
-            //     'reporte' => $reporte,
-            //     'entidades' => $entidades
-            // ], 200);
-            return view('reportes.detail', compact('reporte', 'entidades'));
+        $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+        if (isset($infoReporte['reporte'])) {
+            return view('reportes.detail', $infoReporte);
         } else {
-            return redirect()->route('reportes.index')->with('message', [
+            Session::flash('message', [
                 'type' => 'error',
                 'content' => 'El reporte especificado no existe'
             ]);
+            return redirect()->route('reportes.index');
         }
     }
 
-    public function marcarNoProcede(Request $request, $id_reporte): JsonResponse
+    public function marcarNoProcede(Request $request, $id_reporte): View
     {
-        try {
-            $reporte = Reporte::find($id_reporte);
-            if (isset($reporte)) {
-                $reporte->no_procede = !$reporte->no_procede;
-                $reporte->save();
-                return response()->json([
-                    'message' => 'Reporte actualizado',
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'Reporte no encontrado',
-                ], 404);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 500);
+        $reporte = Reporte::find($id_reporte);
+        if (isset($reporte)) {
+            $reporte->no_procede = !$reporte->no_procede;
+            $reporte->save();
+            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+            Session::flash('message', [
+                'type' => 'success',
+                'content' => 'Reporte actualizado'
+            ]);
+            return view('reportes.detail', $infoReporte);
+        } else {
+            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'Reporte no encontrado'
+            ]);
+            return view('reportes.detail', $infoReporte);
         }
     }
 
-    public function realizarAsignacion(Request $request, $id_reporte): JsonResponse
+    public function realizarAsignacion(Request $request, $id_reporte): View
     {
         $validated = $request->validate(
             [
@@ -202,51 +186,43 @@ class ReporteController extends Controller
                 'id_entidad.integer' => 'El ID de la entidad debe ser un número entero.',
                 'id_entidad.exists' => 'La entidad seleccionada no existe.',
                 'id_empleado_supervisor.required' => 'Debe seleccionar un supervisor para el reporte.',
-                'id_empleado_supervisor.integer' => 'El ID del supervsior debe ser un número entero.',
+                'id_empleado_supervisor.integer' => 'El ID del supervisor debe ser un número entero.',
                 'id_empleado_supervisor.exists' => 'El empleado supervisor seleccionado no existe.',
             ]
         );
-        $reporte = Reporte::find($id_reporte);
-        if (isset($reporte)) {
-            DB::transaction(function () use ($id_reporte, $validated) {
-                // Registro en ACCIONES_REPORTE
-                $accReporte = new AccionesReporte();
-                $accReporte->id_reporte = $id_reporte;
-                $accReporte->id_usuario_administracion = Auth::user()->id;
-                $accReporte->id_entidad_asignada = $validated['id_entidad'];
-                $accReporte->id_usuario_supervisor = $validated['id_empleado_supervisor'];
-                $accReporte->comentario = $validated['comentario'] ?? '';
-                $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
-                $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
-                $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
-                $accReporte->save();
-                // Registro en HISTORIAL_ACCIONES_REPORTES
-                $histAccReporte = new HistorialAccionesReporte();
-                $histAccReporte->id_acciones_reporte = $accReporte->id;
-                $histAccReporte->id_empleado_puesto = Auth::user()->empleadosPuestos->first()->id;
-                $histAccReporte->id_estado = 1;
-                $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
-                $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
-                $histAccReporte->save();
-                // Registro en EMPLEADOS_ACCIONES
-                foreach ($validated['id_empleados_puestos'] as $emp) {
-                    $empAcciones = new EmpleadoAccion();
-                    $empAcciones->id_empleado_puesto = $emp;
-                    $empAcciones->id_reporte = $id_reporte;
-                    $empAcciones->save();
-                }
-            });
-            return response()->json([
-                'message' => 'Reporte asignado con exito',
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Reporte no encontrado',
-            ], 404);
-        }
+        DB::transaction(function () use ($id_reporte, $validated) {
+            // Registro en ACCIONES_REPORTE
+            $accReporte = new AccionesReporte();
+            $accReporte->id_reporte = $id_reporte;
+            $accReporte->id_usuario_administracion = Auth::user()->id;
+            $accReporte->id_entidad_asignada = $validated['id_entidad'];
+            $accReporte->id_usuario_supervisor = $validated['id_empleado_supervisor'];
+            $accReporte->comentario = $validated['comentario'] ?? '';
+            $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
+            $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
+            $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
+            $accReporte->save();
+            // Registro en HISTORIAL_ACCIONES_REPORTES
+            $histAccReporte = new HistorialAccionesReporte();
+            $histAccReporte->id_acciones_reporte = $accReporte->id;
+            $histAccReporte->id_empleado_puesto = Auth::user()->empleadosPuestos->first()->id;
+            $histAccReporte->id_estado = 1;
+            $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
+            $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
+            $histAccReporte->save();
+            // Registro en EMPLEADOS_ACCIONES
+            foreach ($validated['id_empleados_puestos'] as $emp) {
+                $empAcciones = new EmpleadoAccion();
+                $empAcciones->id_empleado_puesto = $emp;
+                $empAcciones->id_reporte = $id_reporte;
+                $empAcciones->save();
+            }
+        });
+        $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+        return view('reportes.detail', $infoReporte);
     }
 
-    public function actualizarEstadoReporte(Request $request, $id_reporte): JsonResponse
+    public function actualizarEstadoReporte(Request $request, $id_reporte): View
     {
         $request->validate(
             [
@@ -275,25 +251,26 @@ class ReporteController extends Controller
             ]
         );
         $reporte = Reporte::find($id_reporte);
-        if (!isset($reporte)) {
-            return response()->json([
-                'message' => 'Reporte no encontrado',
-            ], 404);
-        }
         $accionReporte = $reporte->accionesReporte;
         if (!isset($accionReporte)) {
-            return response()->json([
-                'message' => 'El reporte no tiene ninguna asignación',
-            ], 404);
+            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'El reporte especificado no existe'
+            ]);
+            return view('reportes.detail', $infoReporte);
         }
         $empleadoAcciones = $reporte->empleadosAcciones;
         $puestosEmpleado = Auth::user()->empleadosPuestos;
         $puestosEmpleadoIds = $puestosEmpleado->pluck('id')->toArray();
         $empleadoPuestoAccion = $empleadoAcciones->firstWhere(fn($accion) => in_array($accion->id_empleado_puesto, $puestosEmpleadoIds));
         if (!isset($empleadoPuestoAccion)) {
-            return response()->json([
-                'message' => 'No tienes permiso para actualizar este reporte',
-            ], 403);
+            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'No tienes permiso para actualizar este reporte'
+            ]);
+            return view('reportes.detail', $infoReporte);
         }
 
         DB::transaction(function () use ($request, $empleadoPuestoAccion, $accionReporte) {
@@ -311,23 +288,25 @@ class ReporteController extends Controller
             }
             $newHistorialAccionesReportes->save();
             // Guardar recursos
-            //            if (isset($request->recursos)) {
-            //                foreach ($request->recursos as $recurso) {
-            //                    RecursoReporte::create([
-            //                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
-            //                        'nombre' => $recurso['nombre'],
-            //                        'costo' => $recurso['costo'],
-            //                    ]);
-            //                }
-            //            }
+            if (isset($request->recursos)) {
+                foreach ($request->input('recursos', []) as $recurso) {
+                    RecursoReporte::create([
+                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+                        'nombre' => $recurso['nombre'],
+                        'costo' => $recurso['costo'],
+                    ]);
+                }
+            }
         });
-
-        return response()->json([
-            'message' => 'Seguimiento de reporte actualizado con exito',
-        ], 200);
+        $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+        Session::flash('message', [
+            'type' => 'success',
+            'content' => 'Seguimiento de reporte actualizado con exito'
+        ]);
+        return view('reportes.detail', $infoReporte);
     }
 
-    public function filtrosGenerales(Request $request, \Illuminate\Database\Eloquent\Builder $query): void
+    public function filtrosGenerales(Request $request, Builder $query): void
     {
         if ($request->has('filter-radio')) {
             $filtro = $request->input('filter-radio');
@@ -355,6 +334,45 @@ class ReporteController extends Controller
         if ($request->has('titulo')) {
             $titulo = $request->input('titulo');
             $query->where('titulo', 'like', '%' . $titulo . '%');
+        }
+    }
+
+    public function infoDetalleReporte(Request $request, $id_reporte)
+    {
+        $reporte = Reporte::with(
+            'aula',
+            'actividad',
+            'accionesReporte',
+            'accionesReporte.entidadAsignada',
+            'accionesReporte.usuarioSupervisor',
+            'accionesReporte.usuarioSupervisor.persona',
+            'accionesReporte.historialAccionesReporte',
+            'accionesReporte.historialAccionesReporte.estado',
+            'usuarioReporta',
+            'usuarioReporta.persona',
+            'empleadosAcciones',
+            'empleadosAcciones.empleadoPuesto',
+            'empleadosAcciones.empleadoPuesto.usuario',
+            'empleadosAcciones.empleadoPuesto.usuario.persona'
+        )->find($id_reporte);
+        if (isset($reporte)) {
+            $entidades = Entidades::all();
+            $empPuesto = new EmpleadoPuestoController();
+            $empleadosPorEntidad = $empPuesto->listadoEmpleadosPorUnidad($request->query('entidad'));
+            $supervisores = $empPuesto->listadoSupervisores();
+            return [
+                'reporte' => $reporte,
+                'entidades' => $entidades,
+                'empleadosPorEntidad' => $empleadosPorEntidad,
+                'supervisores' => $supervisores,
+            ];
+        } else {
+            return [
+                'reporte' => null,
+                'entidades' => [],
+                'empleadosPorEntidad' => [],
+                'supervisores' => [],
+            ];
         }
     }
 }

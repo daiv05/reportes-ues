@@ -12,38 +12,15 @@ use Illuminate\Support\Facades\Validator;
 
 class EmpleadoPuestoController extends Controller
 {
-    public function buscarPorNombre(Request $request, $idEntidad)
+    public function listadoEmpleadosPorUnidad($idEntidad)
     {
         try {
-            // NO BORRAR xd
-            // $validator = Validator::make(
-            //     $request->all(),
-            //     [
-            //         'id_entidad' => 'integer|exists:entidades,id',
-            //     ],
-            //     [
-            //         'id_entidad.exists' => 'La entidad específicada no existe',
-            //         'id_entidad.integer' => 'El ID de la entidad debe ser de tipo entero',
-            //     ]
-            // );
-            // if ($validator->fails()) {
-            //     error_log('aaass');
-            //     return response()->json([
-            //         'message' => $validator->errors()->all(),
-            //     ], 422);
-            // }
             $entidad = Entidades::find($idEntidad);
             if (!isset($entidad)) {
-                return response()->json([
-                    'message' => 'Entidad no encontrada',
-                ], 404);
+                return [];
             }
-            $busqueda = $request->input('nombre_empleado');
             $empleadosPuestos = EmpleadoPuesto::whereHas('puesto.entidad', function ($query) use ($idEntidad) {
                 $query->where('id', '=', $idEntidad);
-            })->whereHas('usuario.persona', function ($query) use ($busqueda) {
-                $query->where('nombre', 'like', "%{$busqueda}%")
-                    ->orWhere('apellido', 'like', "%{$busqueda}%");
             })->with('puesto', 'usuario', 'usuario.persona')->get();
 
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
@@ -58,26 +35,17 @@ class EmpleadoPuestoController extends Controller
                     'apellido_empleado' => $empleado['usuario']['persona']['apellido'],
                 ];
             })->toArray();
-            return response()->json([
-                'status' => 200,
-                'lista_empleados' => $mappedEmpleados,
-            ], 200);
+            return $mappedEmpleados;
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => [$e->getMessage()],
-            ], 500);
+            return [];
         }
     }
 
-    public function buscarSupervisorPorNombre(Request $request)
+    public function listadoSupervisores()
     {
         try {
-            $busqueda = $request->input('nombre_empleado');
             $empleadosPuestos = EmpleadoPuesto::whereHas('usuario.roles', function ($query) {
                 $query->where('name', RolesEnum::SUPERVISOR_REPORTE->value);
-            })->whereHas('usuario.persona', function ($query) use ($busqueda) {
-                $query->where('nombre', 'like', "%{$busqueda}%")
-                    ->orWhere('apellido', 'like', "%{$busqueda}%");
             })->with('puesto', 'usuario', 'usuario.persona')->get();
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
                 return [
@@ -91,14 +59,9 @@ class EmpleadoPuestoController extends Controller
                     'apellido_empleado' => $empleado['usuario']['persona']['apellido'],
                 ];
             })->toArray();
-            return response()->json([
-                'status' => 200,
-                'lista_supervisores' => $mappedEmpleados,
-            ], 200);
+            return $mappedEmpleados;
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => [$e->getMessage()],
-            ], 500);
+            return [];
         }
     }
 }

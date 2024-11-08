@@ -62,7 +62,7 @@
                             Estado
                         </p></div>
                     <div>
-                        <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'No asignado'"
+                        <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
                                         class="mb-2"/>
                     </div>
                     <div><p class="text-gray-500 font-semibold">
