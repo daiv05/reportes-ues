@@ -111,3 +111,8 @@
         </div>
     </div>
 </x-app-layout>
+
+
+<script>
+    console.log(@json($actividad));
+</script>

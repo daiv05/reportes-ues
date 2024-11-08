@@ -82,18 +82,26 @@ class ReporteController extends Controller
 
     public function create(Request $request): View
     {
-        $validated = $request->validate(
-            [
-                'actividad' => 'integer|exists:actividades,id',
-            ],
-            [
-                'actividad.exists' => 'La actividad seleccionada no existe'
-            ]
-        );
-        $idActividad = $request->query('actividad');
+        // $validated = $request->validate(
+        //     [
+        //         'actividad' => 'integer|exists:actividades,id',
+        //     ],
+        //     [
+        //         'actividad.exists' => 'La actividad seleccionada no existe'
+        //     ]
+        // );
+        $idActividad = $request['actividad'];
+        error_log($idActividad);
         $actividad = null;
         if ($idActividad) {
-            $actividad = Actividad::findOrFail($idActividad);
+            $actividad = Actividad::find($idActividad);
+            if (!isset($actividad)) {
+                Session::flash('message', [
+                    'type' => 'error',
+                    'content' => 'La actividad seleccionada no existe'
+                ]);
+            }
+            error_log($actividad);
         }
         $aulas = Aulas::all(); // Obtener todas las aulas
         return view('reportes.create', compact('actividad', 'aulas'));
