@@ -134,7 +134,7 @@ class ReporteController extends Controller
     {
         $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
         if (isset($infoReporte['reporte'])) {
-            return view('reportes.detail', $infoReporte);
+            return view('reportes.detail', array_merge($infoReporte));
         } else {
             Session::flash('message', [
                 'type' => 'error',
@@ -356,15 +356,20 @@ class ReporteController extends Controller
             'empleadosAcciones.empleadoPuesto.usuario.persona'
         )->find($id_reporte);
         if (isset($reporte)) {
+            // Necesario para asignacion
             $entidades = Entidades::all();
             $empPuesto = new EmpleadoPuestoController();
             $empleadosPorEntidad = $empPuesto->listadoEmpleadosPorUnidad($request->query('entidad'));
             $supervisores = $empPuesto->listadoSupervisores();
+            // Necesarios para actualizacion y seguimiento de reporte
+            $estController = new EstadoController();
+            $estadosHabilitados = $estController->estadosReporte($reporte);
             return [
                 'reporte' => $reporte,
                 'entidades' => $entidades,
                 'empleadosPorEntidad' => $empleadosPorEntidad,
                 'supervisores' => $supervisores,
+                'estadosPermitidos' => $estadosHabilitados
             ];
         } else {
             return [
@@ -372,6 +377,7 @@ class ReporteController extends Controller
                 'entidades' => [],
                 'empleadosPorEntidad' => [],
                 'supervisores' => [],
+                'estadosPermitidos' => []
             ];
         }
     }

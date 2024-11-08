@@ -78,7 +78,7 @@ class Reporte extends Model
         $relaciones = [
             "creador" => false,
             "supervisor" => false,
-            "trabajador" => false,
+            "empleado" => false,
         ];
         if ($this->id_usuario_reporta == $idUsuario) {
             $relaciones["creador"] = true;
@@ -92,7 +92,7 @@ class Reporte extends Model
             ->get()
             ->pluck('empleadoPuesto.usuario.id');
         if ($empAcciones->contains($idUsuario)) {
-            $relaciones["trabajador"] = true;
+            $relaciones["empleado"] = true;
         }
         return $relaciones;
     }

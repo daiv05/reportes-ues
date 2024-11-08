@@ -63,8 +63,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/actualizar-estado/{id}', [ReporteController::class, 'actualizarEstadoReporte'])->name('reportes.actualizarEstado');
         Route::get('/mis-reportes', [ReporteController::class, 'indexMisReportes'])->name('reportes.misReportes');
         Route::get('/mis-asignaciones', [ReporteController::class, 'misAsignaciones'])->name('reportes.misAsignaciones');
-        // Estados
-        Route::get('/estados/{id_reporte}', [EstadoController::class, 'estadosReporte'])->name('reportes.estadosReporte');
     });
 
     /* ****************************************** */
