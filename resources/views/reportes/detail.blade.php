@@ -5,7 +5,7 @@
         </div>
     </x-slot>
 
-    <div class="mt-12">
+    <div class="mt-12 mb-8">
         <div class="flex flex-col lg:flex-row w-full">
             <!-- Columna izquierda (70%) -->
             <div class="w-full lg:w-[60%] px-8">
@@ -56,8 +56,8 @@
             </div>
 
             <!-- Columna derecha (30%) -->
-            <div class="w-full lg:w-[25%]">
-                <div class="grid grid-cols-1 lg:grid-cols-2 grid-rows-8 lg:grid-rows-4 gap-4 p-4">
+            <div class="w-full lg:w-[30%]">
+                <div class="grid grid-cols-1 lg:grid-cols-2 grid-rows-8 lg:grid-rows-4 p-4">
                     <div><p class="text-gray-500 font-semibold">
                             Estado
                         </p></div>
@@ -78,7 +78,7 @@
                             {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}
                         </p></div>
                     <div><p class="text-gray-500 font-semibold">
-                            Encargado
+                            Reportado <br/> por
                         </p></div>
                     <div><p class="text-black font-semibold">
                             {{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}
@@ -90,7 +90,7 @@
         <x-general.divider />
 
         @if((!$reporte->estado_ultimo_historial?->nombre) && $reporte->no_procede == 0)
-            <div class="flex flex-col lg:flex-row w-full mt-8">
+            <div class="flex flex-col lg:flex-row w-full mt-4">
                 <!-- Columna izquierda (70%) -->
                 <div class="w-full lg:w-[60%] px-8">
                     <div class="mb-4">

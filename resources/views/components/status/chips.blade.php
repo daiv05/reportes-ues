@@ -14,6 +14,6 @@
     };
 @endphp
 
-<div class="{{ $colorClass }} rounded-full h-8 w-40 px-4 py-1.5 text-center text-sm overflow-visible">
+<div class="{{ $colorClass }} rounded-full h-8 w-36 px-4 py-1.5 text-center text-sm overflow-visible">
     <span class="font-medium justify-center text-center ">{{ $text }}</span>
 </div>
