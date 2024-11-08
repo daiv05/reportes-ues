@@ -16,10 +16,6 @@ class EscuelaController extends Controller
     {
         $escuelas = Escuela::paginate(10);
         $facultades = Facultades::all();
-        Session::flash('message', [
-            'type' => 'success',
-            'content' => 'El aula se ha creado exitosamente.'
-        ]);
         return view('mantenimientos.escuela.index', compact('escuelas', 'facultades'))->with('message', [
             'type' => 'success',
             'content' => 'El aula se ha creado exitosamente.'

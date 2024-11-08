@@ -104,9 +104,6 @@
     </x-form-modal>
 </x-app-layout>
 <script>
-
-noty('Aaajksjkjfskj', 'warning');
-
     document.getElementById('add-escuela-form').addEventListener('submit', function(event) {
         let hasErrors = false;
         let errorMessage = '';
