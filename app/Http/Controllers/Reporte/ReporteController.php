@@ -109,8 +109,8 @@ class ReporteController extends Controller
             ],
             [
                 'id_aula.exists' => 'El aula no existe',
-                'descripcion.required' => 'Debe ingresar la descripción del reporte',
-                'titulo.required' => 'Debe ingresar el titulo del reporte',
+                'descripcion.required' => 'La descripción es obligatoria',
+                'titulo.required' => 'Debe ingresar un titulo para el reporte',
             ]
         );
 

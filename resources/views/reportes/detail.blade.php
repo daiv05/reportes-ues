@@ -5,7 +5,7 @@
         </div>
     </x-slot>
 
-    <div>
+    <div class="mt-12">
         <div class="flex flex-col lg:flex-row w-full">
             <!-- Columna izquierda (70%) -->
             <div class="w-full lg:w-[60%] px-8">
@@ -86,6 +86,8 @@
                 </div>
             </div>
         </div>
+
+        <x-general.divider />
 
         @if((!$reporte->estado_ultimo_historial?->nombre) && $reporte->no_procede == 0)
             <div class="flex flex-col lg:flex-row w-full mt-8">
