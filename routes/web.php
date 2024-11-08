@@ -9,6 +9,7 @@ use App\Http\Controllers\rhu\EntidadesController;
 use App\Http\Controllers\rhu\PuestoController;
 use App\Http\Controllers\Seguridad\ProfileController;
 use App\Http\Controllers\Reporte\ReporteController;
+use App\Http\Controllers\Reporte\EstadoController;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     /*   ************* REPORTES *************    */
     /* ***************************************** */
     Route::prefix('reportes')->group(function () {
+        // Reportes
         Route::get('/listado-general', [ReporteController::class, 'index'])->name('reportes-generales');
         Route::get('/registrar', [ReporteController::class, 'create'])->name('crear-reporte');
         Route::post('/store', [ReporteController::class, 'store'])->name('reportes.store');
@@ -59,8 +61,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->name('reportes.noProcede');
         Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->name('reportes.realizarAsignacion');
         Route::post('/actualizar-estado/{id}', [ReporteController::class, 'actualizarEstadoReporte'])->name('reportes.actualizarEstado');
+        Route::get('/mis-reportes', [ReporteController::class, 'indexMisReportes'])->name('reportes.misReportes');
         Route::get('/mis-asignaciones', [ReporteController::class, 'misAsignaciones'])->name('reportes.misAsignaciones');
-
     });
 
     /* ****************************************** */
@@ -102,7 +104,7 @@ Route::middleware('auth')->group(function () {
         });
         Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
 
-         // Rutas de Ciclos
+        // Rutas de Ciclos
         Route::prefix('ciclos')->group(function () {
             Route::get('/', [CicloController::class, 'index'])->name('ciclos.index');
             Route::post('/', [CicloController::class, 'store'])->name('ciclos.store');
@@ -139,8 +141,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('puestos', PuestoController::class)->except(['destroy']);
         Route::patch('puestos/{puesto}/toggle', [PuestoController::class, 'toggleActivo'])->name('puestos.toggleActivo');
         /*Empleados Puestos*/
-        Route::get('/busqueda-por-nombre/{id_entidad}', [EmpleadoPuestoController::class, 'buscarPorNombre'])->name('empleadosPuestos.buscarPorNombre');
-        Route::get('/busqueda-supervisor-por-nombre', [EmpleadoPuestoController::class, 'buscarSupervisorPorNombre'])->name('empleadosPuestos.buscarSupervisorPorNombre');
+        // Route::get('/busqueda-por-nombre/{id_entidad}', [EmpleadoPuestoController::class, 'buscarPorNombre'])->name('empleadosPuestos.buscarPorNombre');
+        // Route::get('/busqueda-supervisor-por-nombre', [EmpleadoPuestoController::class, 'buscarSupervisorPorNombre'])->name('empleadosPuestos.buscarSupervisorPorNombre');
     });
 
 

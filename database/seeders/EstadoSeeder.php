@@ -15,11 +15,11 @@ class EstadoSeeder extends Seeder
     {
         $estados = [
             ['nombre' => 'ASIGNADO'],
-            ['nombre' => 'INICIADO'],
             ['nombre' => 'EN PROCESO'],
             ['nombre' => 'EN PAUSA'],
             ['nombre' => 'COMPLETADO'],
-            ['nombre' => 'FINALIZADO']
+            ['nombre' => 'FINALIZADO'],
+            ['nombre' => 'INCOMPLETO']
         ];
 
         foreach($estados as $estado) {

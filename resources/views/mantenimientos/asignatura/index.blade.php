@@ -1,9 +1,4 @@
 <x-app-layout>
-    <!-- Mensaje de éxito -->
-    @if (session('message'))
-        <x-alert :type="session('message')['type']" :message="session('message')['content']" />
-    @endif
-
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Asignaturas" />
     </x-slot>
@@ -197,7 +192,8 @@
     });
 </script>
 <script>
-    function editarDepartamento(depa) {
-        document.getElementById('static-modal-update');
+    const toastData2 = @json(session('message'));
+    if (toastData2) {
+        fireToastDV(toastData2)
     }
 </script>

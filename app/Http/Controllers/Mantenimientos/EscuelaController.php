@@ -7,6 +7,7 @@ use App\Models\General\Facultades;
 use App\Models\Mantenimientos\Escuela;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class EscuelaController extends Controller
