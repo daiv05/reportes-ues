@@ -235,7 +235,7 @@ class ReporteController extends Controller
         }
     }
 
-    public function actualizarEstadoReporte(Request $request, $id_reporte) : JsonResponse
+    public function actualizarEstadoReporte(Request $request, $id_reporte): JsonResponse
     {
         $request->validate(
             [
