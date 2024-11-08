@@ -36,7 +36,6 @@ class EstadoController extends Controller
                 $esEmpleado ? $estadosAllowed = [2, 3, 4] : null;
                 break;
             default:
-                $estadosAllowed = [2, 3, 4];
                 break;
         }
         $estados = DB::table('estados')->whereIn('id', $estadosAllowed)->get();

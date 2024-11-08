@@ -611,5 +611,5 @@
     console.log(@json($entidades))
     console.log(@json($empleadosPorEntidad))
     console.log(@json($supervisores))
-    console.log(@json($estados))
+    console.log(@json($estadosPermitidos))
 </script>
