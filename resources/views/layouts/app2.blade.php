@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Vite;
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -7,10 +11,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-    @notifyCss
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -53,39 +59,67 @@
         </div>
 
     </div>
-    @include('notify::components.notify')
-    @notifyJs
+    <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 
-    @if (session('message'))
-        @switch(session('message')['type'])
-            @case('success')
-                @php
-                    notify()->success(session('message')['content'], 'Exito');
-                @endphp
-                @break
-            @case('error')
-                @php
-                    notify()->error(session('message')['content'], 'Error');
-                @endphp
-                @break
-            @case('warning')
-                @php
-                    notify()->warning(session('message')['content'], 'Advertencia');
-                @endphp
-                @break
-            @default
-                @php
-                    notify()->info(session('message')['content'], 'Info');
-                @endphp
-        @endswitch
-    @endif
+    <script>
+        var notyf = new Notyf({
+            types: [{
+                    type: 'success',
+                    background: 'green',
+                    icon: {
+                        className: 'material-icons',
+                        tagName: 'i',
+                        text: 'check',
+                        color: 'white'
+                    }
+                },
+                {
+                    type: 'info',
+                    background: 'blue',
+                    icon: {
+                        className: 'material-icons',
+                        tagName: 'i',
+                        text: 'info',
+                        color: 'white'
+                    }
+                },
+                {
+                    type: 'warning',
+                    background: 'orange',
+                    icon: {
+                        className: 'material-icons',
+                        tagName: 'i',
+                        text: 'warning',
+                        color: 'white'
+                    }
+                },
+                {
+                    type: 'error',
+                    background: 'red',
+                    icon: {
+                        className: 'material-icons',
+                        tagName: 'i',
+                        text: 'error',
+                        color: 'white'
+                    }
+                },
+            ]
+        });
+
+        let noty = (content, type = 'info') => {
+            notyf.open({
+                type: type,
+                message: content,
+                duration: 5000,
+                dismissible: true
+            });
+        }
+        @if (!empty(session()->has('message')))
+            noty(@json(session('message')['content']), @json(session('message')['type']) ?? 'success');
+        @endif
+    </script>
+
 </body>
 
 </html>
-
-<style lang="css">
-    .notify {
-        top: 50px !important;
-        z-index: 9999 !important;
-    }
-</style>

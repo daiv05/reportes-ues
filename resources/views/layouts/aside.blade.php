@@ -28,11 +28,28 @@
             ],
         ],
         [
-            'type' => 1,
-            'to' => 'reportes-generales',
+            'type' => 2,
+            'id' => 'reportes-dropdown',
             'active' => request()->is('reportes/*'),
             'icon' => 'heroicon-s-document-chart-bar',
             'label' => 'Reportes',
+            'items' => [
+                [
+                    'to' => 'reportes-generales',
+                    'active' => request()->is('reportes/listado-general'),
+                    'label' => 'Listado',
+                ],
+                [
+                    'to' => 'reportes.misReportes',
+                    'active' => request()->is('reportes/mis-reportes'),
+                    'label' => 'Mis reportes',
+                ],
+                [
+                    'to' => 'reportes.misAsignaciones',
+                    'active' => request()->is('reportes/mis-asignaciones'),
+                    'label' => 'Mis asignaciones',
+                ],
+            ],
         ],
         [
             'type' => 2,
@@ -62,7 +79,7 @@
             'type' => 2,
             'id' => 'rhu-dropdown',
             'active' => request()->is('rhu/*'),
-           'icon' => 'heroicon-s-user-group',
+            'icon' => 'heroicon-s-user-group',
             'label' => 'Recursos humanos',
             'items' => [
                 [
@@ -129,8 +146,7 @@
 @endphp
 
 <aside id="logo-sidebar"
-    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0"
-    aria-label="Sidebar">
+    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0">
     <div class="h-full overflow-y-auto bg-white px-3 pb-4 dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
             @foreach ($sidebarItems as $sit)
