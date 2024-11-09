@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Actividades;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportActividadClaseRequest;
+use App\Http\Requests\ImportActividadEventoRequest;
 use App\Imports\CalendarioImport;
 use App\Imports\HorarioImport;
-use App\Models\General\Dia;
-use App\Models\General\Modalidad;
-use App\Models\General\TipoClase;
+use App\Models\Actividades\Actividad;
+use App\Models\Actividades\Clase;
+use App\Models\Mantenimientos\Asignatura;
+use App\Models\Mantenimientos\Aulas;
+use App\Models\Mantenimientos\Ciclo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ActividadController extends Controller
@@ -35,6 +39,7 @@ class ActividadController extends Controller
 
         // Guardamos los datos en la sesión para que se mantengan en caso de errores
         session(['excelData' => $data]);
+        session(['tipoActividad' => $request->input('tipo_actividad')]);
 
         // Regresamos los datos a la vista
         return view('actividades.importacion-actividades.importacion-actividades', [
@@ -45,14 +50,71 @@ class ActividadController extends Controller
 
     public function storeClases(ImportActividadClaseRequest $request)
     {
-        // Procesar los datos y guardarlos en la base de datos
-        // $request->all() obtendrá todos los datos enviados por el formulario
-        // Este método lo debes crear
-
         $data = $request->all();
+        $errors = [];
 
-        // Guardar los datos en la base de datos
-        // Este método lo debes crear
-        dd($data);
+        // Recorre cada índice de `materia` para verificar que exista un array de días en `diasActividad`
+        foreach ($data['materia'] as $key => $materia) {
+            if (!isset($data['diasActividad'][$key]) || empty($data['diasActividad'][$key])) {
+                // Agrega un mensaje de error específico al array
+                $errors["diasActividad.$key"] = "Los días de la actividad en el registro " . ($key + 1) . " son requeridos.";
+            }
+        }
+
+        // Si existen errores, redirige con los mensajes correspondientes
+        if (!empty($errors)) {
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
+        $data['materia'] = Asignatura::whereIn('nombre', $data['materia'])->pluck('id')->toArray();
+        $data['local'] = Aulas::whereIn('nombre', $data['local'])->pluck('id')->toArray();
+
+        $cicloActivo = Ciclo::where('activo', 1)->first();
+
+        try{
+            DB::beginTransaction();
+
+            foreach ($data['modalidad'] as $key => $materia) {
+                $actividad = new Actividad();
+                $actividad->id_ciclo = $cicloActivo->id;
+                $actividad->id_modalidad = $data['modalidad'][$key];
+                $actividad->hora_inicio = $data['hora_inicio'][$key];
+                $actividad->hora_fin = $data['hora_fin'][$key];
+                $actividad->save();
+
+                $actividad->asignaturas()->attach($materia);
+                $actividad->aulas()->attach($data['local'][$key]);
+
+                $clase = new Clase();
+                $clase->id_actividad = $actividad->id;
+                $clase->id_tipo_clase = $data['tipo'][$key];
+                $clase->numero_grupo = $data['grupo'][$key];
+                $clase->dias_actividad = json_encode($data['diasActividad'][$key]);
+                $clase->save();
+
+            }
+
+            DB::commit();
+
+            session()->forget('excelData');
+            session()->forget('tipoActividad');
+
+            return redirect()->back()->with('success', 'Actividades guardadas correctamente');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back()->with('error', 'Ocurrió un error al guardar las actividades. Detalles: ' . $e->getMessage());
+        }
+    }
+
+    public function storeEventos(ImportActividadEventoRequest $request)
+    {
+        $data = $request->all();
+        $errors = [];
+
+        $data['materia'] = Asignatura::whereIn('nombre', $data['materia'])->pluck('id')->toArray();
+
+        dd($request->all());
     }
 }
