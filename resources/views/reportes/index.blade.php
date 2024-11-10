@@ -146,7 +146,7 @@
             @foreach($reportes as $reporte)
                 <x-table.tr>
                     <x-table.td>{{ $reporte->titulo }}</x-table.td>
-                    <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y')  }} {{  \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</x-table.td>
+                    <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte . ' ' . $reporte->hora_reporte)->format('d/m/Y, h:i A') }}</x-table.td>
                     <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
                     <x-table.td>{{ $reporte->aula?->nombre }}</x-table.td>
                     <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
