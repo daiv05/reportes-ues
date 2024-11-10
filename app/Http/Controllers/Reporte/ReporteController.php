@@ -148,7 +148,23 @@ class ReporteController extends Controller
                 'type' => 'error',
                 'content' => 'El reporte especificado no existe'
             ]);
-            return redirect()->route('reportes.index');
+            return redirect()->route('reportes-generales');
+        }
+    }
+
+    public function detalleTimeline(Request $request)
+    {
+        error_log('kjyjjtjt');
+        $infoReporte = $this->infoDetalleReporte($request, 1);
+        error_log($infoReporte['reporte']);
+        if (isset($infoReporte['reporte'])) {
+            return view('reportes.detail-timeline', array_merge($infoReporte));
+        } else {
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'El reporte especificado no existe'
+            ]);
+            return redirect()->route('reportes-generales');
         }
     }
 
@@ -356,6 +372,9 @@ class ReporteController extends Controller
             'accionesReporte.usuarioSupervisor.persona',
             'accionesReporte.historialAccionesReporte',
             'accionesReporte.historialAccionesReporte.estado',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario.persona',
             'usuarioReporta',
             'usuarioReporta.persona',
             'empleadosAcciones',
@@ -374,6 +393,7 @@ class ReporteController extends Controller
             $estadosHabilitados = $estController->estadosReporte($reporte);
             return [
                 'reporte' => $reporte,
+                'accionesReporte' => $reporte->accionesReporte,
                 'entidades' => $entidades,
                 'empleadosPorEntidad' => $empleadosPorEntidad,
                 'supervisores' => $supervisores,
