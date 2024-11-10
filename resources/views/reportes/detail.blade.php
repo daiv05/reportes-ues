@@ -622,11 +622,12 @@
                 <div class="mb-4">
                     <!-- Fila 1 -->
                     <div class="text-xl font-bold ml-12 mb-8">
-                        <p>Historial</p>
+                        <p>Seguimiento</p>
                     </div>
                 </div>
-                @foreach ($reporte->accionesReporte->historialAccionesReporte as $historial)
-                <ol class="relative mx-2 border-gray-200 dark:border-gray-700">
+                <ol class="relative mx-2 border-s border-gray-200 dark:border-gray-700">
+                    @foreach ($reporte->accionesReporte->historialAccionesReporte as $historial)
+
                     <li class="mb-10 ms-4">
                         <div
                             class="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700"
@@ -682,8 +683,9 @@
                             </div>
                         </div>
                     </li>
+                    @endforeach
+
                 </ol>
-            @endforeach
 
                 
             </div>
