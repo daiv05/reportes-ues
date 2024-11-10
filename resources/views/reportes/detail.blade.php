@@ -611,6 +611,8 @@
                 </div>
             </form>
         @endif
+        @if ($reporte->accionesReporte)
+
         <x-general.divider/>
         <div class="flex flex-col lg:flex-row w-full">
             <!-- Columna izquierda (80%) -->
@@ -624,64 +626,66 @@
                     </div>
                 </div>
                 @foreach ($reporte->accionesReporte->historialAccionesReporte as $historial)
-                    <ol class="relative mx-2 border-gray-200 dark:border-gray-700">
-                        <li class="mb-10 ms-4">
-                            <div
-                                class="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700"
-                            ></div>
-                            <div class="mb-2">
-                                <x-status.chips :text="$historial->estado->nombre" class="mb-2" />
-                            </div>
-                            <div class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                                {{ \Carbon\Carbon::parse($historial->fecha_actualizacion)->format('d/m/Y') . '  ' . \Carbon\Carbon::parse($historial->hora_actualizacion)->format('h:i A') }}
-                            </div>
-                            @if ($historial->comentario)
-                                <h3 class="text-lg font-semibold text-red-900 dark:text-white">Comentarios</h3>
-                                <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
-                                    {{ $historial->comentario }}
-                                </p>
-                            @endif
-        
-                            @if ($historial->foto_evidencia)
-                                <a
-                                    href="#"
-                                    class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+                <ol class="relative mx-2 border-gray-200 dark:border-gray-700">
+                    <li class="mb-10 ms-4">
+                        <div
+                            class="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700"
+                        ></div>
+                        <div class="mb-2">
+                            <x-status.chips :text="$historial->estado->nombre" class="mb-2" />
+                        </div>
+                        <div class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                            {{ \Carbon\Carbon::parse($historial->fecha_actualizacion)->format('d/m/Y') . '  ' . \Carbon\Carbon::parse($historial->hora_actualizacion)->format('h:i A') }}
+                        </div>
+                        @if ($historial->comentario)
+                            <h3 class="text-lg font-semibold text-red-900 dark:text-white">Comentarios</h3>
+                            <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                                {{ $historial->comentario }}
+                            </p>
+                        @endif
+    
+                        @if ($historial->foto_evidencia)
+                            <a
+                                href="#"
+                                class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+                            >
+                                Evidencia
+                                <svg
+                                    class="ms-2 h-3 w-3 rtl:rotate-180"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 14 10"
                                 >
-                                    Evidencia
-                                    <svg
-                                        class="ms-2 h-3 w-3 rtl:rotate-180"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 14 10"
-                                    >
-                                        <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M1 5h12m0 0L9 1m4 4L9 9"
-                                        />
-                                    </svg>
-                                </a>
-                            @endif
-        
-                            <div class="block items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:flex">
-                                <img
-                                    class="mb-3 me-3 h-8 w-8 rounded-full sm:mb-0"
-                                    src="/storage/reportes/evidencia/uo274RP1t9Rth2VkWYatbMB8Qmz2oHkNzOkcqIkr.jpg"
-                                    alt="Jese Leos image"
-                                />
-                                <div class="text-gray-600 dark:text-gray-400">
-                                    @php
-                                        $persona = $historial->empleadoPuesto->usuario->persona;
-                                    @endphp
-                                    <div class="text-sm font-normal">{{ $persona->nombre . ' ' . $persona->apellido }}</div>
-                                </div>
+                                    <path
+                                        stroke="currentColor"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M1 5h12m0 0L9 1m4 4L9 9"
+                                    />
+                                </svg>
+                            </a>
+                        @endif
+    
+                        <div class="block items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:flex">
+                            <img
+                                class="mb-3 me-3 h-8 w-8 rounded-full sm:mb-0"
+                                src="/storage/reportes/evidencia/uo274RP1t9Rth2VkWYatbMB8Qmz2oHkNzOkcqIkr.jpg"
+                                alt="Jese Leos image"
+                            />
+                            <div class="text-gray-600 dark:text-gray-400">
+                                @php
+                                    $persona = $historial->empleadoPuesto->usuario->persona;
+                                @endphp
+                                <div class="text-sm font-normal">{{ $persona->nombre . ' ' . $persona->apellido }}</div>
                             </div>
-                        </li>
-                    </ol>
-                @endforeach
+                        </div>
+                    </li>
+                </ol>
+            @endforeach
+
+                
             </div>
             <div class="w-full lg:w-[20%] px-8">
                 <button id="abrirActualizarSeguimiento"
@@ -695,6 +699,8 @@
                               d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"/>
                     </svg>
                 </button>
+
+
 
                 <x-modal name="actualizar-seguimiento-modal" :show="false" maxWidth="xl">
                     <form method="POST"
@@ -746,6 +752,7 @@
                 </x-modal>
             </div>
         </div>
+        @endif
     </div>
 
 
