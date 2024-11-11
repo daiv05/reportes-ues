@@ -314,7 +314,7 @@ class ReporteController extends Controller
             return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
         // Guardar empleado en historial segun si es supervisor o empleado
-        $idEmpleado = $esSupervisor ? Auth::user()->empleadosPuestos->first()->id : $empleadoPuestoAccion->id_empleado_puesto;
+        $idEmpleado = ($esSupervisor && $request['id_estado'] === 4) ? Auth::user()->empleadosPuestos->first()->id : $empleadoPuestoAccion->id_empleado_puesto;
         DB::transaction(function () use ($request, $idEmpleado, $accionReporte) {
             $newHistorialAccionesReportes = new HistorialAccionesReporte();
             $newHistorialAccionesReportes->id_acciones_reporte = $accionReporte->id;
