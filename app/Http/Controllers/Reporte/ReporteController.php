@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Reporte;
 
+use App\Enums\EstadosEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Models\Actividades\Actividad;
@@ -309,7 +310,7 @@ class ReporteController extends Controller
         $esSupervisor = $accionReporte->id_usuario_supervisor === Auth::user()->id;
         $idEmpleado = null;
         if (isset($empleadoPuestoAccion)) {
-            if (in_array($request['id_estado'], [5, 6])) {
+            if (in_array($request['id_estado'], [EstadosEnum::FINALIZADO->value, EstadosEnum::INCOMPLETO->value])) {
                 if ($esSupervisor) {
                     $idEmpleado = Auth::user()->empleadosPuestos->first()->id;
                 } else {
@@ -323,7 +324,7 @@ class ReporteController extends Controller
                 $idEmpleado = $empleadoPuestoAccion->id_empleado_puesto;
             }
         } else if ($esSupervisor) {
-            if (in_array($request['id_estado'], [5, 6])) {
+            if (in_array($request['id_estado'], [EstadosEnum::FINALIZADO->value, EstadosEnum::INCOMPLETO->value])) {
                 $idEmpleado = Auth::user()->empleadosPuestos->first()->id;
             } else {
                 Session::flash('message', [
@@ -369,8 +370,13 @@ class ReporteController extends Controller
                     ]);
                 }
             }
+            // Verificar si el reporte ya se marcó como FINALIZADO
+            if ($request['id_estado'] === EstadosEnum::FINALIZADO->value) {
+                $accionReporte->fecha_finalizacion = Carbon::now()->format('Y-m-d');
+                $accionReporte->hora_finalizacion = Carbon::now()->format('H:i:s');
+                $accionReporte->save();
+            }
         });
-        $reporte = Reporte::find($id_reporte);
         Session::flash('message', [
             'type' => 'success',
             'content' => 'Seguimiento de reporte actualizado con éxito'
