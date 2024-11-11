@@ -14,7 +14,9 @@ use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
 use App\Http\Controllers\Mantenimientos\CicloController;
+use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +32,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+/*Route::get('/contactos', function () {
+    Mail::to('bryan@ues.edu.sv')->send(new EnvioMailable);
+    return "mensaje enviado";
+})->name('contactos');*/
+
 
 Route::get('/inicio', function () {
     return view('dashboard');
