@@ -53,6 +53,43 @@
 
                     </div>
                 </div>
+                @if (isset($reporte->actividad))
+                    <div class="mb-4">
+                        <div class="font-semibold">
+                            <div class="flex flex-row gap-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                     stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+                                </svg>
+                                Actividad seleccionada
+                            </div>
+                            <div class="ml-12 mt-2">
+                                <table class="text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+                                    <thead
+                                        class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">Asignaturas</th>
+                                            <th scope="col" class="px-6 py-3">Aulas</th>
+                                            <th scope="col" class="px-6 py-3">No. de grupo</th>
+                                            <th scope="col" class="px-6 py-3">Escuela</th>
+                                            <th scope="col" class="px-6 py-3">Horario</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <x-table.tr>
+                                            <x-table.td>{{ $reporte->actividad->asignaturas[0]->nombre }}</x-table.td>
+                                            <x-table.td>{{ $reporte->actividad->aulas[0]->nombre }}</x-table.td>
+                                            <x-table.td>{{ $reporte->actividad->clase->numero_grupo }}</x-table.td>
+                                            <x-table.td>{{ $reporte->actividad->asignaturas[0]->escuela->nombre }}</x-table.td>
+                                            <x-table.td>{{ $reporte->actividad->hora_inicio . ' - ' . $reporte->actividad->hora_fin }}</x-table.td>
+                                        </x-table.tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Columna derecha (30%) -->

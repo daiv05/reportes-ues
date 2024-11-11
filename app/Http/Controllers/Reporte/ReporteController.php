@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Reporte;
 use App\Enums\EstadosEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
-use App\Models\Actividades\Actividad;
+use App\Models\Actividades\Clase;
+use App\Models\Actividades\Evento;
 use App\Models\Reportes\AccionesReporte;
 use App\Models\Reportes\EmpleadoAccion;
 use App\Models\Reportes\HistorialAccionesReporte;
@@ -81,31 +82,24 @@ class ReporteController extends Controller
         return view('reportes.my-assignments', compact('reportes'));
     }
 
-    public function create(Request $request): View
+    public function create(Request $request)
     {
-        // $validated = $request->validate(
-        //     [
-        //         'actividad' => 'integer|exists:actividades,id',
-        //     ],
-        //     [
-        //         'actividad.exists' => 'La actividad seleccionada no existe'
-        //     ]
-        // );
         $idActividad = $request['actividad'];
-        error_log($idActividad);
-        $actividad = null;
+        $clase = null;
+        $evento = null;
         if ($idActividad) {
-            $actividad = Actividad::find($idActividad);
-            if (!isset($actividad)) {
+            $clase = Clase::where('id_actividad', $idActividad)->first();
+            $evento = Evento::where('id_actividad', $idActividad)->first();
+            if (!isset($clase) && !isset($evento)) {
                 Session::flash('message', [
                     'type' => 'error',
                     'content' => 'La actividad seleccionada no existe'
                 ]);
+                return redirect()->action([ReporteController::class, 'index']);
             }
-            error_log($actividad);
         }
         $aulas = Aulas::all(); // Obtener todas las aulas
-        return view('reportes.create', compact('actividad', 'aulas'));
+        return view('reportes.create', compact('clase', 'evento', 'aulas'));
     }
 
     public function store(Request $request)
@@ -113,11 +107,13 @@ class ReporteController extends Controller
         $validated = $request->validate(
             [
                 'id_aula' => 'nullable|integer|exists:aulas,id',
+                'id_actividad' => 'nullable|integer|exists:actividades,id',
                 'descripcion' => 'required|string',
                 'titulo' => 'required|string|max:50',
             ],
             [
                 'id_aula.exists' => 'El aula no existe',
+                'id_actividad.exists' => 'La actividad no existe',
                 'descripcion.required' => 'La descripción es obligatoria',
                 'titulo.required' => 'Debe ingresar un titulo para el reporte',
             ]
@@ -130,6 +126,7 @@ class ReporteController extends Controller
         $reporte->titulo = $validated['titulo'];
         $reporte->descripcion = $validated['descripcion'];
         $reporte->id_aula = $validated['id_aula'] ?? null; // Asignar null si no se seleccionó aula
+        $reporte->id_actividad = $validated['id_actividad'] ?? null; // Asignar null si no se seleccionó aula
 
         $reporte->save();
 
