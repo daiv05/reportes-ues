@@ -12,17 +12,12 @@ use Illuminate\Support\Facades\Mail;
 
 class CicloController extends Controller
 {
-    public function pruebaCorreo()
-    {
-        $vistaCorreo = 'emails.contactanos';  // Por defecto, usa 'contactanos'
-        // Enviar el correo con la vista dinámica
-        Mail::to('dc19019@ues.edu.sv')->send(new EnvioMailable($vistaCorreo));
-    }
+
     public function index()
     {
         $vistaCorreo = 'emails.contactanos';  // Por defecto, usa 'contactanos'
         // Enviar el correo con la vista dinámica
-        Mail::to('dc19019@ues.edu.sv')->send(new EnvioMailable($vistaCorreo));
+        Mail::to('me19027@ues.edu.sv')->send(new EnvioMailable($vistaCorreo));
         // Obtener los ciclos con su tipo de ciclo relacionado
         $ciclos = Ciclo::with('tipoCiclo')->paginate(10); // Usa paginación para mostrar la lista
         $tiposCiclos = TipoCiclo::all(); // Para el selector de tipos de ciclos en el modal
