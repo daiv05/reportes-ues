@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reporte;
 use App\Enums\EstadosEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
+use App\Mail\EnvioMailable;
 use App\Models\Actividades\Clase;
 use App\Models\Actividades\Evento;
 use App\Models\Reportes\AccionesReporte;
@@ -14,6 +15,8 @@ use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
 use App\Models\Reportes\RecursoReporte;
+use App\Models\rhu\EmpleadoPuesto;
+use App\Models\Seguridad\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -22,6 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class ReporteController extends Controller
@@ -255,7 +259,17 @@ class ReporteController extends Controller
                 $empAcciones->save();
             }
         });
+
         $reporte = Reporte::find($id_reporte);
+
+        // Envio de correos
+        foreach ($validated['id_empleados_puestos'] as $emp) {
+            $empPuesto = EmpleadoPuesto::find($emp)->usuario->email;
+            Mail::to($empPuesto)->send(new EnvioMailable('emails.asignacion', $reporte));
+        }
+        $empSupervisor = User::find($validated['id_empleado_supervisor'])->email;
+        Mail::to($empSupervisor)->send(new EnvioMailable('emails.asignacion', $reporte));
+        
         Session::flash('message', [
             'type' => 'success',
             'content' => 'Requerimiento asignado exitosamente'
