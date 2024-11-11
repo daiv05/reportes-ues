@@ -305,18 +305,20 @@ class ReporteController extends Controller
         $puestosEmpleado = Auth::user()->empleadosPuestos;
         $puestosEmpleadoIds = $puestosEmpleado->pluck('id')->toArray();
         $empleadoPuestoAccion = $empleadoAcciones->firstWhere(fn($accion) => in_array($accion->id_empleado_puesto, $puestosEmpleadoIds));
-        if (!isset($empleadoPuestoAccion)) {
+        $esSupervisor = $accionReporte->id_usuario_supervisor === Auth::user()->id;
+        if (!isset($empleadoPuestoAccion) && $accionReporte->id_usuario_supervisor !== Auth::user()->id) {
             Session::flash('message', [
                 'type' => 'error',
                 'content' => 'No tienes permiso para actualizar este reporte'
             ]);
             return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
-
-        DB::transaction(function () use ($request, $empleadoPuestoAccion, $accionReporte) {
+        // Guardar empleado en historial segun si es supervisor o empleado
+        $idEmpleado = $esSupervisor ? Auth::user()->empleadosPuestos->first()->id : $empleadoPuestoAccion->id_empleado_puesto;
+        DB::transaction(function () use ($request, $idEmpleado, $accionReporte) {
             $newHistorialAccionesReportes = new HistorialAccionesReporte();
             $newHistorialAccionesReportes->id_acciones_reporte = $accionReporte->id;
-            $newHistorialAccionesReportes->id_empleado_puesto = $empleadoPuestoAccion->id_empleado_puesto;
+            $newHistorialAccionesReportes->id_empleado_puesto = $idEmpleado;
             $newHistorialAccionesReportes->id_estado = $request['id_estado'];
             $newHistorialAccionesReportes->fecha_actualizacion = Carbon::now()->format('Y-m-d');
             $newHistorialAccionesReportes->hora_actualizacion = Carbon::now()->format('H:i:s');
