@@ -64,9 +64,7 @@ Route::middleware('auth')->group(function () {
     /*   ************* ACTIVIDADES ************   */
     /* ****************************************** */
     Route::prefix('actividades')->group(function () {
-        Route::get('/clases', function () {
-            return view('actividades.listado-actividades.listado-clases');
-        })->name('listado-clases');
+        Route::get('/clases', [ActividadController::class, 'listadoClases'])->name('listado-clases');
         Route::get('/eventos-y-evaluaciones', function () {
             return view('actividades.listado-actividades.listado-eventos-evaluaciones');
         })->name('listado-eventos-evaluaciones');
