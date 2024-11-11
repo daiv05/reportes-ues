@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 
 class ReporteController extends Controller
 {
@@ -306,15 +307,39 @@ class ReporteController extends Controller
         $puestosEmpleadoIds = $puestosEmpleado->pluck('id')->toArray();
         $empleadoPuestoAccion = $empleadoAcciones->firstWhere(fn($accion) => in_array($accion->id_empleado_puesto, $puestosEmpleadoIds));
         $esSupervisor = $accionReporte->id_usuario_supervisor === Auth::user()->id;
-        if (!isset($empleadoPuestoAccion) && $accionReporte->id_usuario_supervisor !== Auth::user()->id) {
+        $idEmpleado = null;
+        if (isset($empleadoPuestoAccion)) {
+            if (in_array($request['id_estado'], [5, 6])) {
+                if ($esSupervisor) {
+                    $idEmpleado = Auth::user()->empleadosPuestos->first()->id;
+                } else {
+                    Session::flash('message', [
+                        'type' => 'error',
+                        'content' => 'No tienes permiso para actualizar a este estado'
+                    ]);
+                    return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
+                }
+            } else {
+                $idEmpleado = $empleadoPuestoAccion->id_empleado_puesto;
+            }
+        } else if ($esSupervisor) {
+            if (in_array($request['id_estado'], [5, 6])) {
+                $idEmpleado = Auth::user()->empleadosPuestos->first()->id;
+            } else {
+                Session::flash('message', [
+                    'type' => 'error',
+                    'content' => 'No tienes permiso para actualizar a este estado'
+                ]);
+                return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
+            }
+        } else {
             Session::flash('message', [
                 'type' => 'error',
-                'content' => 'No tienes permiso para actualizar este reporte'
+                'content' => 'No tienes permiso para actualizar a este estado'
             ]);
             return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
         // Guardar empleado en historial segun si es supervisor o empleado
-        $idEmpleado = ($esSupervisor && $request['id_estado'] === 4) ? Auth::user()->empleadosPuestos->first()->id : $empleadoPuestoAccion->id_empleado_puesto;
         DB::transaction(function () use ($request, $idEmpleado, $accionReporte) {
             $newHistorialAccionesReportes = new HistorialAccionesReporte();
             $newHistorialAccionesReportes->id_acciones_reporte = $accionReporte->id;
@@ -325,7 +350,12 @@ class ReporteController extends Controller
             $newHistorialAccionesReportes->comentario = $request['comentario'];
             // Guardar evidencia en el storage
             if ($request->file('evidencia')) {
-                $path = $request->file('evidencia')->store('public/reportes/evidencia');
+                $fileName = Str::random(40);
+                $path = $request->file('evidencia')->storeAs(
+                    "reportes/evidencia",
+                    $fileName . "." . $request->file('evidencia')->getClientOriginalExtension(),
+                    'public'
+                );
                 $newHistorialAccionesReportes->foto_evidencia = $path;
             }
             $newHistorialAccionesReportes->save();
