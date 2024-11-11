@@ -15,12 +15,14 @@ class EnvioMailable extends Mailable
     use Queueable, SerializesModels;
 
     public $viewName;  // Variable para la vista
+    public $tableData; // Para almacenar los datos de la tabla
     /**
      * Create a new message instance.
      */
-    public function __construct($viewName)
+    public function __construct($viewName,$tableData)
     {
         $this->viewName = $viewName;  // Asigna la vista recibida
+        $this->tableData = $tableData; // Asigna los datos de la tabla recibidos
     }
 
        /**
@@ -41,7 +43,8 @@ class EnvioMailable extends Mailable
     {
         // Usa la vista dinámica que se pasó al constructor
         return new Content(
-            view: $this->viewName  // Usa la propiedad viewName que contiene el nombre de la vista
+            view: $this->viewName,  // Usa la propiedad viewName que contiene el nombre de la vista
+            with: ['tableData' => $this->tableData]  // Pasa los datos de la tabla a la vista
         );
     }
 
