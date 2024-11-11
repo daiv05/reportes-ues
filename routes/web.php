@@ -69,9 +69,7 @@ Route::middleware('auth')->group(function () {
     /*   ************* ACTIVIDADES ************   */
     /* ****************************************** */
     Route::prefix('actividades')->group(function () {
-        Route::get('/clases', function () {
-            return view('actividades.listado-actividades.listado-clases');
-        })->name('listado-clases');
+        Route::get('/clases', [ActividadController::class, 'listadoClases'])->name('listado-clases');
         Route::get('/eventos-y-evaluaciones', function () {
             return view('actividades.listado-actividades.listado-eventos-evaluaciones');
         })->name('listado-eventos-evaluaciones');
@@ -80,6 +78,7 @@ Route::middleware('auth')->group(function () {
         })->name('importar-actividades');
         Route::post('/importar-actividades', [ActividadController::class, 'importarExcel'])->name('importar-actividades-post');
         Route::post('/importar-actividades/clases', [ActividadController::class, 'storeClases'])->name('importar-clases');
+        Route::post('/importar-actividades/eventos', [ActividadController::class, 'storeEventos'])->name('importar-eventos');
     });
     /* ********************************************* */
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */

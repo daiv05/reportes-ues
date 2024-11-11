@@ -30,7 +30,7 @@ class HorarioImport implements ToModel, WithHeadingRow
         ];
 
         // Validar que no todas las celdas estén vacías
-        if (!$row['materia'] && !$row['tipo'] && !$row['modalidad'] && !$row[3] &&
+        if (!$row['materia'] && !$row['tipo'] && !$row['modalidad'] && !$row['local'] &&
             (!$row['lunes'] || !$row['martes'] || !$row['miercoles'] || !$row['jueves'] || !$row['viernes'] || !$row['sabado'] || !$row['domingo'])) {
             return null;
         }
@@ -74,9 +74,10 @@ class HorarioImport implements ToModel, WithHeadingRow
             'tipo' => $row['tipo'],
             'modalidad' => $modalidad,
             'grupo' => $row['grupo'],
+            'local' => $row['local'],
             'hora_inicio' => $horaInicio,
             'hora_fin' => $horaFin,
-            'dias' => $dayKeys,
+            'diasActividad' => $dayKeys,
         ];
     }
 
