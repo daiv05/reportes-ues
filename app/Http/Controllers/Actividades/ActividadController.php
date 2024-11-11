@@ -117,4 +117,21 @@ class ActividadController extends Controller
 
         dd($request->all());
     }
+
+    public function listadoClases(Request $request)
+    {
+        $search = $request->input('table-search');
+        $clases = Clase::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas', 'tipoClase')
+            ->whereHas('actividad', function ($query) {
+                $query->where('id_ciclo', Ciclo::where('activo', 1)->first()->id);
+            })
+            ->when($search, function ($query, $search) {
+                $query->whereHas('actividad.asignaturas', function ($query) use ($search) {
+                    $query->where('nombre', 'like', "%$search%");
+                });
+            })
+            ->paginate(3);
+
+        return view('actividades.listado-actividades.listado-clases', compact('clases'));
+    }
 }
