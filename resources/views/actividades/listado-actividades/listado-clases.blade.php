@@ -1,8 +1,9 @@
 @php
     $headers = [
-        ['text' => 'Asignaturas', 'align' => 'left'],
-        ['text' => 'Aulas', 'align' => 'left'],
-        ['text' => 'Responsable', 'align' => 'left'],
+        ['text' => 'Asignatura', 'align' => 'left'],
+        ['text' => 'Aula', 'align' => 'left'],
+        ['text' => 'Modalidad', 'align' => 'left'],
+        ['text' => 'Numero de grupo', 'align' => 'left'],
         ['text' => 'Escuela', 'align' => 'left'],
         ['text' => 'Horario', 'align' => 'left'],
         ['text' => 'Acciones', 'align' => 'left'],
