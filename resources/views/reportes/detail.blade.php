@@ -6,7 +6,6 @@
     </x-slot>
 
     <div class="mt-12 mb-8">
-        <p>{{$reporte}}</p>
         <div class="flex flex-col lg:flex-row w-full">
             <!-- Columna izquierda (70%) -->
             <div class="w-full lg:w-[60%] px-8">
@@ -300,7 +299,7 @@
                                 <div class="block items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:flex">
                                     <img
                                             class="mb-3 me-3 h-8 w-8 rounded-full sm:mb-0"
-                                            src="/storage/reportes/evidencia/uo274RP1t9Rth2VkWYatbMB8Qmz2oHkNzOkcqIkr.jpg"
+                                            src="/assets/img/profile_1.png"
                                             alt="Jese Leos image"
                                     />
                                     <div class="text-gray-600 dark:text-gray-400">

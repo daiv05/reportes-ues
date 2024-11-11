@@ -14,13 +14,12 @@ use App\Models\Mantenimientos\Aulas;
 use App\Models\Reportes\RecursoReporte;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 
 class ReporteController extends Controller
 {
@@ -190,7 +189,7 @@ class ReporteController extends Controller
         }
     }
 
-    public function realizarAsignacion(Request $request, $id_reporte): View
+    public function realizarAsignacion(Request $request, $id_reporte): RedirectResponse
     {
         // Convertir la cadena de texto separada por comas en un arreglo solo si no está vacía
         $idEmpleadosPuestos = $request->input('id_empleados_puestos');
@@ -257,12 +256,15 @@ class ReporteController extends Controller
                 $empAcciones->save();
             }
         });
-
-        $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
-        return view('reportes.detail', $infoReporte);
+        $reporte = Reporte::find($id_reporte);
+        Session::flash('message', [
+            'type' => 'success',
+            'content' => 'Requerimiento asignado exitosamente'
+        ]);
+        return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
     }
 
-    public function actualizarEstadoReporte(Request $request, $id_reporte): View
+    public function actualizarEstadoReporte(Request $request, $id_reporte): RedirectResponse
     {
         $request->validate(
             [
@@ -293,24 +295,22 @@ class ReporteController extends Controller
         $reporte = Reporte::find($id_reporte);
         $accionReporte = $reporte->accionesReporte;
         if (!isset($accionReporte)) {
-            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
             Session::flash('message', [
                 'type' => 'error',
                 'content' => 'El reporte especificado no existe'
             ]);
-            return view('reportes.detail', $infoReporte);
+            return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
         $empleadoAcciones = $reporte->empleadosAcciones;
         $puestosEmpleado = Auth::user()->empleadosPuestos;
         $puestosEmpleadoIds = $puestosEmpleado->pluck('id')->toArray();
         $empleadoPuestoAccion = $empleadoAcciones->firstWhere(fn($accion) => in_array($accion->id_empleado_puesto, $puestosEmpleadoIds));
         if (!isset($empleadoPuestoAccion)) {
-            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
             Session::flash('message', [
                 'type' => 'error',
                 'content' => 'No tienes permiso para actualizar este reporte'
             ]);
-            return view('reportes.detail', $infoReporte);
+            return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
 
         DB::transaction(function () use ($request, $empleadoPuestoAccion, $accionReporte) {
@@ -338,12 +338,12 @@ class ReporteController extends Controller
                 }
             }
         });
-        $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+        $reporte = Reporte::find($id_reporte);
         Session::flash('message', [
             'type' => 'success',
-            'content' => 'Seguimiento de reporte actualizado con exito'
+            'content' => 'Seguimiento de reporte actualizado con éxito'
         ]);
-        return view('reportes.detail', $infoReporte);
+        return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
     }
 
     public function filtrosGenerales(Request $request, Builder $query): void
