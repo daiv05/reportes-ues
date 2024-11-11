@@ -2,21 +2,18 @@
     $headers = [
       ['text' => 'Título', 'align' => 'left'],
       ['text' => 'Fecha y Hora', 'align' => 'left'],
-      ['text' => 'Reportado por', 'align' => 'left'],
-      ['text' => 'Salón', 'align' => 'left'],
-      ['text' => 'Entidades', 'align' => 'left'],
-      ['text' => 'Actividad', 'align' => 'left'],
+      ['text' => 'Tipo', 'align' => 'left'],
       ['text' => 'Estado', 'align' => 'center'],
-      ['text' => 'Acciones', 'align' => 'left'],
+      ['text' => 'Acciones', 'align' => 'center'],
     ];
 @endphp
 
 <x-app-layout>
     <x-slot name="header">
         <x-header.main
-            tituloMenor="Últimos reportes de"
-            tituloMayor="INCIDENCIAS EN LA FACULTAD"
-            subtitulo="Mantente pendiente de los últimos reportes notificados de tu facultad"
+            tituloMenor="Tus últimos"
+            tituloMayor="REPORTES EN LA FACULTAD"
+            subtitulo="Dale seguimiento a todos tus reportes"
         >
             <x-slot name="acciones">
                 <x-button-redirect to="crear-reporte" label="Reportar"/>
@@ -28,7 +25,7 @@
         <div class="flex flex-col space-y-4 pb-4 sm:flex-row sm:space-y-0 sm:space-x-4">
             <form method="GET" action="{{ route('reportes-generales') }}"
                   class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-                <div class="relative">
+                <div>
                     <button
                         id="dropdownRadioButton"
                         data-dropdown-toggle="dropdownRadio"
@@ -147,15 +144,12 @@
                 <x-table.tr>
                     <x-table.td>{{ $reporte->titulo }}</x-table.td>
                     <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y')  }} {{  \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</x-table.td>
-                    <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
-                    <x-table.td>{{ $reporte->aula?->nombre }}</x-table.td>
-                    <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
-                    <x-table.td>{{ $reporte->actividad?->descripcion }}</x-table.td>
-                    <x-table.td>
+                    <x-table.td>{{ $reporte->actividad ? 'Actividad' : 'General'  }}</x-table.td>
+                    <x-table.td justify="center">
                         <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
                                         class="mb-2"/>
                     </x-table.td>
-                    <x-table.td>
+                    <x-table.td justify="center">
                         <a href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
                            class="font-medium text-gray-700 hover:underline">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"

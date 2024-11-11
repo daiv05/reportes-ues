@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="p-6 text-2xl font-bold text-red-900 dark:text-gray-100">
-            {{ __('Realizar reporte sobre actividad') }}
+            {{ __('Reportar un problema') }}
         </div>
     </x-slot>
 
@@ -17,7 +17,7 @@
                     <!-- Titulo -->
                     <div class="mb-5">
                         <label for="titulo" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                            Titulo del reporte
+                            Titulo del reporte <x-forms.input-required />
                         </label>
                         <div class="relative">
                             <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
@@ -32,21 +32,22 @@
                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                    placeholder="Aula sin cuidado..."/>
                         </div>
-                        <span id="tituloError" class="text-red-500 text-sm"></span>
+                        @include('components.forms.input-error', ['messages' => $errors->get('titulo')])
                     </div>
                     <!-- Descripción -->
                     <div class="mb-5">
                         <label for="descripcion" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                            Descripción
+                            Descripción <x-forms.input-required />
                         </label>
                         <textarea id="descripcion" name="descripcion" rows="4"
                                   class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                   placeholder="Se ha observado..."></textarea>
-                        <span id="descripcionError" class="text-red-500 text-sm"></span>
+                        @include('components.forms.input-error', ['messages' => $errors->get('descripcion')])
                         <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="descripcion_hint">
                             Recuerda ser claro y conciso
                         </div>
                     </div>
+
                     <!-- Actividad a reportar -->
                     {{--                    <div class="mb-5">--}}
                     {{--                        <label for="titulo" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">--}}
@@ -84,16 +85,19 @@
                     <!-- Selección de Aula -->
                     <div class="mb-5">
                         <label for="id_aula" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                            Seleccionar Aula
+                            Lugar
                         </label>
                         <select id="id_aula" name="id_aula"
                                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
-                            <option value="">Seleccione una aula</option>
+                            <option value="">Seleccionar instalación</option>
                             @foreach($aulas as $aula)
                                 <option value="{{ $aula->id }}">{{ $aula->nombre }}</option>
                             @endforeach
                         </select>
-                        <span id="idAulaError" class="text-red-500 text-sm"></span>
+                        @include('components.forms.input-error', ['messages' => $errors->get('id_aula')])
+                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="descripcion_hint">
+                            Para incidencias internas
+                        </div>
                     </div>
 
                     <div class="flex justify-center pt-4">
@@ -106,44 +110,9 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('reporteForm').addEventListener('submit', function (event) {
-            let isValid = true;
-            const titulo = document.getElementById('titulo');
-            const descripcion = document.getElementById('descripcion');
-            const idAula = document.getElementById('id_aula');
-
-            const tituloError = document.getElementById('tituloError');
-            const descripcionError = document.getElementById('descripcionError');
-            const idAulaError = document.getElementById('idAulaError');
-
-            // Clear previous error messages
-            tituloError.textContent = '';
-            descripcionError.textContent = '';
-            idAulaError.textContent = '';
-
-            // Validate titulo
-            if (titulo.value.trim() === '' || titulo.value.length > 50) {
-                isValid = false;
-                tituloError.textContent = 'El título es obligatorio y no debe exceder los 50 caracteres.';
-            }
-
-            // Validate descripcion
-            if (descripcion.value.trim() === '') {
-                isValid = false;
-                descripcionError.textContent = 'La descripción es obligatoria.';
-            }
-
-            // Validate id_aula (optional)
-            if (idAula.value !== '' && isNaN(idAula.value)) {
-                isValid = false;
-                idAulaError.textContent = 'El aula seleccionada no es válida.';
-            }
-
-            if (!isValid) {
-                event.preventDefault();
-            }
-        });
-    </script>
 </x-app-layout>
+
+
+<script>
+    console.log(@json($actividad));
+</script>

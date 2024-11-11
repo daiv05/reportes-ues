@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Vite;
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -11,6 +15,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -44,13 +50,75 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </main>
         <div class="p-4 sm:ml-64">
             <div class="rounded-lg">
                 @include('layouts.footer')
             </div>
         </div>
+
     </div>
+    <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
+    <script>
+        var notyf = new Notyf({
+            types: [{
+                    type: 'success',
+                    background: 'green',
+                    icon: {
+                        className: 'material-icons',
+                        tagName: 'i',
+                        text: 'check',
+                        color: 'white'
+                    }
+                },
+                {
+                    type: 'info',
+                    background: 'blue',
+                    icon: {
+                        className: 'material-icons',
+                        tagName: 'i',
+                        text: 'info',
+                        color: 'white'
+                    }
+                },
+                {
+                    type: 'warning',
+                    background: 'orange',
+                    icon: {
+                        className: 'material-icons',
+                        tagName: 'i',
+                        text: 'warning',
+                        color: 'white'
+                    }
+                },
+                {
+                    type: 'error',
+                    background: 'red',
+                    icon: {
+                        className: 'material-icons',
+                        tagName: 'i',
+                        text: 'error',
+                        color: 'white'
+                    }
+                },
+            ]
+        });
+
+        let noty = (content, type = 'info') => {
+            notyf.open({
+                type: type,
+                message: content,
+                duration: 5000,
+                dismissible: true
+            });
+        }
+        @if (!empty(session()->has('message')))
+            noty(@json(session('message')['content']), @json(session('message')['type']) ?? 'success');
+        @endif
+    </script>
 
 </body>
 

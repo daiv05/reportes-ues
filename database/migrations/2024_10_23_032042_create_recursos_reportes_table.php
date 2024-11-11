@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_historial_acciones_reporte');
             $table->string('nombre', 100);
-            $table->decimal('precio');
-            $table->foreign('id_historial_acciones_reporte')->references('id')->on('reportes')->onDelete('restrict');
+            $table->decimal('costo');
+            $table->foreign('id_historial_acciones_reporte')->references('id')->on('historial_acciones_reportes')->onDelete('restrict');
         });
     }
 

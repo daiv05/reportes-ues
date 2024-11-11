@@ -5,7 +5,7 @@
         </div>
     </x-slot>
 
-    <div>
+    <div class="mt-12 mb-8">
         <div class="flex flex-col lg:flex-row w-full">
             <!-- Columna izquierda (70%) -->
             <div class="w-full lg:w-[60%] px-8">
@@ -56,13 +56,13 @@
             </div>
 
             <!-- Columna derecha (30%) -->
-            <div class="w-full lg:w-[25%]">
-                <div class="grid grid-cols-1 lg:grid-cols-2 grid-rows-8 lg:grid-rows-4 gap-4 p-4">
+            <div class="w-full lg:w-[30%]">
+                <div class="grid grid-cols-1 lg:grid-cols-2 grid-rows-8 lg:grid-rows-4 p-4">
                     <div><p class="text-gray-500 font-semibold">
                             Estado
                         </p></div>
                     <div>
-                        <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'No asignado'"
+                        <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
                                         class="mb-2"/>
                     </div>
                     <div><p class="text-gray-500 font-semibold">
@@ -78,7 +78,7 @@
                             {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}
                         </p></div>
                     <div><p class="text-gray-500 font-semibold">
-                            Encargado
+                            Reportado <br/> por
                         </p></div>
                     <div><p class="text-black font-semibold">
                             {{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}
@@ -87,8 +87,10 @@
             </div>
         </div>
 
+        <x-general.divider />
+
         @if((!$reporte->estado_ultimo_historial?->nombre) && $reporte->no_procede == 0)
-            <div class="flex flex-col lg:flex-row w-full mt-8">
+            <div class="flex flex-col lg:flex-row w-full mt-4">
                 <!-- Columna izquierda (70%) -->
                 <div class="w-full lg:w-[60%] px-8">
                     <div class="mb-4">
@@ -493,25 +495,48 @@
                 <!-- Columna derecha (30%) -->
                 <div class="w-full lg:w-[25%]">
                     <button id="marcarNoProcede"
-                            class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500">
+                            class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500"
+                            x-data
+                            x-on:click="$dispatch('open-modal', 'confirm-modal')">
                         Marcar como No procede
                     </button>
 
+                    <x-modal name="confirm-modal" :show="false" maxWidth="md">
+                        <div class="p-6">
+                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                Confirmación
+                            </h2>
+                            <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                                ¿Estás seguro de que deseas marcar este reporte como "No procede"?
+                            </p>
+                        </div>
+                        <div class="flex justify-end px-6 py-4 bg-gray-100 dark:bg-gray-800 text-right">
+                            <button
+                                class="bg-gray-500 text-white px-4 py-2 rounded"
+                                x-on:click="$dispatch('close-modal', 'confirm-modal')">
+                                Cancelar
+                            </button>
+                            <button
+                                id="confirmMarcarNoProcede"
+                                class="bg-red-700 text-white px-4 py-2 rounded ml-2">
+                                Confirmar
+                            </button>
+                        </div>
+                    </x-modal>
+
                     <script>
-                        document.getElementById('marcarNoProcede').addEventListener('click', function () {
+                        document.getElementById('confirmMarcarNoProcede').addEventListener('click', function () {
                             const idReporte = window.location.pathname.split('/').pop(); // Obtener el ID del reporte desde la URL
 
-                            fetch(`/reportes/marcar-no-procede/${idReporte}`, {
-                                method: 'PUT',
+                            axios.put(`/reportes/marcar-no-procede/${idReporte}`, {}, {
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                                 }
                             })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.message) {
-                                        alert(data.message);
+                                .then(response => {
+                                    if (response.data.message) {
+                                        alert(response.data.message);
                                     }
                                     window.location.reload();
                                 })
@@ -577,4 +602,14 @@
             </div>
         @endif
     </div>
+
+
 </x-app-layout>
+
+<script>
+    console.log(@json($reporte))
+    console.log(@json($entidades))
+    console.log(@json($empleadosPorEntidad))
+    console.log(@json($supervisores))
+    console.log(@json($estadosPermitidos))
+</script>
