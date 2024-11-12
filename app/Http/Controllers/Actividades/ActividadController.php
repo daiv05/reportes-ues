@@ -123,7 +123,7 @@ class ActividadController extends Controller
         $search = $request->input('table-search');
         $clases = Clase::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas', 'tipoClase')
             ->whereHas('actividad', function ($query) {
-                $query->where('id_ciclo', Ciclo::where('activo', 1)->first()->id);
+                $query->where('id_ciclo', Ciclo::where('activo', 1)->first());
             })
             ->when($search, function ($query, $search) {
                 $query->whereHas('actividad.asignaturas', function ($query) use ($search) {
