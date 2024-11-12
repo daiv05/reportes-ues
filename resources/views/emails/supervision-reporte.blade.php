@@ -1,21 +1,15 @@
 <x-emails.email-container>
-    @php
-        error_log($tableData['reporte']);
-    @endphp
-
     <x-emails.email-body>
         <x-emails.email-header
             logoSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3JjWq5hKtAVSofTTo72ynt7SlCxi2G6WXmA&s"
         />
-
         <!-- Mensaje -->
         <p>
-            Estimado usuario, ha sido asignado {{ $tableData['esSupervisor'] ? 'como SUPERVISOR' : '' }} para darle
-            seguimiento al reporte
+            Estimado usuario, el reporte al que fue asignado, con codigo:
             <strong>#{{ $tableData['reporte']->id }}</strong>
-            para realizar el seguimiento correspondiente:
+            ha sido actualizado a:
         </p>
-
+        <x-status.chips :text="$reporte->estado_ultimo_historial->nombre" class="mb-2" />
         <table style="width: 100%; border-collapse: collapse; table-layout: fixed">
             <tr>
                 <th style="padding: 10px; text-align: left; width: 30%">Reporte</th>
