@@ -39,17 +39,18 @@
                         <!-- Fila 3 -->
                         <div class="font-semibold">
                             <div class="flex flex-row gap-6">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" class="size-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5"
+                                     stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+                                          d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
                                 </svg>
                                 Lugar
                             </div>
                             <div class="ml-12 mt-2">
                                 <input type="text"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="Aula de ejemplo" value="{{ $reporte->aula?->nombre }}" disabled/>
+                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                                       placeholder="Aula de ejemplo" value="{{ $reporte->aula?->nombre }}" disabled/>
                             </div>
                         </div>
                     </div>
@@ -58,7 +59,8 @@
                     <div class="mb-4">
                         <div class="font-semibold">
                             <div class="flex flex-row gap-6">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5"
                                      stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                           d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
@@ -69,22 +71,22 @@
                                 <table class="text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
                                     <thead
                                         class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3">Asignaturas</th>
-                                            <th scope="col" class="px-6 py-3">Aulas</th>
-                                            <th scope="col" class="px-6 py-3">No. de grupo</th>
-                                            <th scope="col" class="px-6 py-3">Escuela</th>
-                                            <th scope="col" class="px-6 py-3">Horario</th>
-                                        </tr>
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Asignaturas</th>
+                                        <th scope="col" class="px-6 py-3">Aulas</th>
+                                        <th scope="col" class="px-6 py-3">No. de grupo</th>
+                                        <th scope="col" class="px-6 py-3">Escuela</th>
+                                        <th scope="col" class="px-6 py-3">Horario</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        <x-table.tr>
-                                            <x-table.td>{{ $reporte->actividad->asignaturas[0]->nombre }}</x-table.td>
-                                            <x-table.td>{{ $reporte->actividad->aulas[0]->nombre }}</x-table.td>
-                                            <x-table.td>{{ $reporte->actividad->clase->numero_grupo }}</x-table.td>
-                                            <x-table.td>{{ $reporte->actividad->asignaturas[0]->escuela->nombre }}</x-table.td>
-                                            <x-table.td>{{ $reporte->actividad->hora_inicio . ' - ' . $reporte->actividad->hora_fin }}</x-table.td>
-                                        </x-table.tr>
+                                    <x-table.tr>
+                                        <x-table.td>{{ $reporte->actividad->asignaturas[0]->nombre }}</x-table.td>
+                                        <x-table.td>{{ $reporte->actividad->aulas[0]->nombre }}</x-table.td>
+                                        <x-table.td>{{ $reporte->actividad->clase->numero_grupo }}</x-table.td>
+                                        <x-table.td>{{ $reporte->actividad->asignaturas[0]->escuela->nombre }}</x-table.td>
+                                        <x-table.td>{{ $reporte->actividad->hora_inicio . ' - ' . $reporte->actividad->hora_fin }}</x-table.td>
+                                    </x-table.tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -437,19 +439,23 @@
 
                 </div>
                 <div class="w-full lg:w-[20%] px-8">
-                    <button id="abrirActualizarSeguimiento"
-                            class="bg-escarlata-ues text-white text-sm py-2 px-4 rounded hover:bg-red-500 flex items-center"
-                            x-data
-                            x-on:click="$dispatch('open-modal', 'actualizar-seguimiento-modal')">
-                        <p class="mr-2">Actualizar</p>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"/>
-                        </svg>
-                    </button>
-
-
+                    @if (
+    (in_array($reporte->estado_ultimo_historial?->id, [1, 2, 3, 6]) && $reporte->relacion_usuario['empleado']) ||
+    ($reporte->estado_ultimo_historial?->id === 4 && $reporte->relacion_usuario['supervisor'])
+)
+                        <button id="abrirActualizarSeguimiento"
+                                class="bg-escarlata-ues text-white text-sm py-2 px-4 rounded hover:bg-red-500 flex items-center"
+                                x-data
+                                x-on:click="$dispatch('open-modal', 'actualizar-seguimiento-modal')">
+                            <p class="mr-2">Actualizar</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"/>
+                            </svg>
+                        </button>
+                    @endif
+                    {{-- Modal actualizar seguimiento --}}
                     <x-modal name="actualizar-seguimiento-modal" :show="false" maxWidth="xl">
                         <form method="POST"
                               action="{{ route('reportes.actualizarEstado', ['id' => $reporte->id]) }}"
@@ -487,7 +493,8 @@
                                     @include('components.forms.input-error', ['messages' => $errors->get('evidencia')])
                                 </div>
                             </div>
-                            <div class="flex justify-center px-6 py-4 bg-gray-100 dark:bg-gray-800 text-right w-full">
+                            <div
+                                class="flex justify-center px-6 py-4 bg-gray-100 dark:bg-gray-800 text-right w-full">
                                 <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded"
                                         x-on:click="$dispatch('close-modal', 'actualizar-seguimiento-modal')">
                                     Cerrar
