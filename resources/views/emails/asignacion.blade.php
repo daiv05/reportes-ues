@@ -1,6 +1,6 @@
 <x-emails.email-container>
     @php
-        
+        error_log($tableData['reporte']);
     @endphp
     <x-emails.email-body>
         <x-emails.email-header
@@ -36,15 +36,17 @@
             </tr>
             <tr>
                 <th style="padding: 10px; text-align: left;">Hora Asignada</th>
-                <td style="padding: 10px;">{{ $tableData['reporte']->accionesReporte->hora_asignacion }}</td>
+                <td style="padding: 10px;">{{ $tableData['reporte']->accionesReporte->hora_inicio }}</td>
             </tr>
             <tr>
                 <th style="padding: 10px; text-align: left;">Supervisor</th>
-                {{
-                    $tableData['reporte']->accionesReporte->usuarioSupervisor->persona->nombre
-                    . ' ' . 
-                    $tableData['reporte']->accionesReporte->usuarioSupervisor->persona->apellido
-                }}
+                <td style="padding: 10px;">
+                    {{
+                        $tableData['reporte']->accionesReporte->usuarioSupervisor->persona->nombre
+                        . ' ' . 
+                        $tableData['reporte']->accionesReporte->usuarioSupervisor->persona->apellido
+                    }}
+                </td>
             </tr>
         </table>
 

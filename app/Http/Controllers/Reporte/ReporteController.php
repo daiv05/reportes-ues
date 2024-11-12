@@ -156,9 +156,7 @@ class ReporteController extends Controller
 
     public function detalleTimeline(Request $request)
     {
-        error_log('kjyjjtjt');
         $infoReporte = $this->infoDetalleReporte($request, 1);
-        error_log($infoReporte['reporte']);
         if (isset($infoReporte['reporte'])) {
             return view('reportes.detail-timeline', array_merge($infoReporte));
         } else {
@@ -261,14 +259,21 @@ class ReporteController extends Controller
         });
 
         $reporte = Reporte::find($id_reporte);
-
+        $tableData = [
+            'reporte' => $reporte,
+            'esSupervisor' => false,
+        ];
         // Envio de correos
         foreach ($validated['id_empleados_puestos'] as $emp) {
             $empPuesto = EmpleadoPuesto::find($emp)->usuario->email;
-            Mail::to($empPuesto)->send(new EnvioMailable('emails.asignacion', $reporte));
+            Mail::to($empPuesto)->send(new EnvioMailable('emails.asignacion', $tableData));
         }
+        $tableData = [
+            'reporte' => $reporte,
+            'esSupervisor' => true,
+        ];
         $empSupervisor = User::find($validated['id_empleado_supervisor'])->email;
-        Mail::to($empSupervisor)->send(new EnvioMailable('emails.asignacion', $reporte));
+        Mail::to($empSupervisor)->send(new EnvioMailable('emails.asignacion', $tableData));
         
         Session::flash('message', [
             'type' => 'success',
