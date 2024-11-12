@@ -64,6 +64,11 @@
             </div>
             {{-- TABLA --}}
             <x-table.base :headers="$headers" id="table-content">
+                @if($clases->isEmpty())
+                    <x-table.td colspan="{{ count($headers) }}" justify="center">
+                        <span class="text-gray-500">No se encontraron registros</span>
+                    </x-table.td>
+                @endif
                 @foreach ($clases as $clase)
                     <x-table.tr>
                         <x-table.td>{{ $clase->actividad->asignaturas[0]->nombre }}</x-table.td>
