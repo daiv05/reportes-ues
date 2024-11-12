@@ -10,6 +10,7 @@ use App\Models\Reportes\Reporte;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Actividad extends Model
 {
@@ -43,5 +44,15 @@ class Actividad extends Model
     public function asignaturas()
     {
         return $this->belongsToMany(Asignatura::class, 'asignatura_actividades', 'id_actividad', 'id_asignatura');
+    }
+
+    public function clase() : HasOne
+    {
+        return $this->hasOne(Clase::class, 'id_actividad');
+    }
+
+    public function evento() : HasOne
+    {
+        return $this->hasOne(Evento::class, 'id_actividad');
     }
 }

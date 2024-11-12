@@ -49,6 +49,11 @@
                     'active' => request()->is('reportes/mis-asignaciones'),
                     'label' => 'Mis asignaciones',
                 ],
+                [
+                    'to' => 'detalle-timeline',
+                    'active' => request()->is('reportes/timeline'),
+                    'label' => 'Timeline Test',
+                ],
             ],
         ],
         [

@@ -57,6 +57,7 @@ class EstadoController extends Controller
                 break;
         }
         $estados = DB::table('estados')->whereIn('id', $estadosAllowed)->get();
-        return $estados;
+        $estadosAll = Estado::all();
+        return $estadosAll;
     }
 }
