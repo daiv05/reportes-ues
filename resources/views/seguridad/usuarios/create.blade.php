@@ -4,7 +4,6 @@
     </x-slot>
 
     <x-container>
-        {{ $errors }}
         <form action="{{ route('usuarios.store') }}" method="POST">
             @csrf
             <x-forms.row :columns="2">
