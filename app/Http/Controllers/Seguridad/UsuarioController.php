@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
+use OwenIt\Auditing\Models\Audit;
 
 class UsuarioController extends Controller
 {
@@ -99,25 +100,39 @@ class UsuarioController extends Controller
             'roles' => 'nullable|string', // Validar los roles (cadena separada por comas)
         ]);
 
-
+        // Guardar los datos actualizados del usuario
         $user->update([
             'email' => $request->email,
             'carnet' => $request->carnet,
             'activo' => $request->has('activo'),
         ]);
 
-       // dd($request->roles);
-        // Convertir IDs de roles a nombres de roles
-        $roles = Role::whereIn('id', explode(',', $request->roles))->pluck('name')->toArray();
+        // Obtener los roles actuales y los nuevos roles
+        $currentRoles = $user->roles->pluck('name')->toArray(); // Roles actuales antes de la sincronización
+        $newRoles = Role::whereIn('id', explode(',', $request->roles))->pluck('name')->toArray(); // Nuevos roles a asignar
 
         // Sincronizar roles
-        $user->syncRoles($roles);
+        $user->syncRoles($newRoles);
+
+        // Registrar la auditoría de los cambios en los roles
+        Audit::create([
+            'user_id' => auth()->id(), // ID del usuario que realizó la actualización
+            'event' => 'updated_roles',
+            'auditable_type' => 'App\Models\User',  // Tipo de entidad auditada (User)
+            'auditable_id' => $user->id,  // ID del usuario que se actualiza
+            'old_values' => ['roles' => $currentRoles],  // Roles anteriores
+            'new_values' => ['roles' => $newRoles],  // Nuevos roles
+            'url' => request()->url(),
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->header('User-Agent'),
+        ]);
 
         return redirect()->route('usuarios.index')->with('message', [
             'type' => 'success',
-            'content' => 'Usuario actulizado y roles asignados correctamente.',
+            'content' => 'Usuario actualizado y roles asignados correctamente.',
         ]);
     }
+
 
 
 
