@@ -314,7 +314,7 @@
                                         <!-- Dropdown de días -->
                                         <div
                                             id="dropdownDays{{ $loop->iteration }}"
-                                            class="hidden z-20 w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+                                            class="hidden z-20 w-full max-h-[180px] overflow-auto bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
                                             data-popper-reference-hidden
                                             data-popper-escaped
                                             data-popper-placement="top">
