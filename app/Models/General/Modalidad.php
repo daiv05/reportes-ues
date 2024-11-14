@@ -5,11 +5,12 @@ namespace App\Models\General;
 use App\Models\Actividades\Actividad;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Modalidad extends Model
+class Modalidad extends Model  implements Auditable
 {
-    use HasFactory;
-    
+    use HasFactory,\OwenIt\Auditing\Auditable;
+
     protected $table = 'modalidades';
 
     protected $fillable = [

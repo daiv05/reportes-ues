@@ -7,13 +7,14 @@ use App\Models\Reportes\Reporte;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Aulas extends Model
+class Aulas extends Model  implements Auditable
 {
-    use HasFactory;
+    use HasFactory,\OwenIt\Auditing\Auditable;
 
     protected $table = 'aulas';
-    
+
     protected $fillable = ['nombre', 'activo', 'id_facultad'];
 
     public function facultades()
