@@ -6,10 +6,11 @@ use App\Models\Actividades\Actividad;
 use App\Models\General\TipoClase;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Clase extends Model
+class Clase extends Model  implements Auditable
 {
-    use HasFactory;
+    use HasFactory,\OwenIt\Auditing\Auditable;
 
     protected $table = 'clases';
 

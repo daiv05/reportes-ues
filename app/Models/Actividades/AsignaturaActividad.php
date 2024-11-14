@@ -6,10 +6,14 @@ use App\Models\Actividades\Actividad;
 use App\Models\Mantenimientos\Asignatura;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AsignaturaActividad extends Model
+
+class AsignaturaActividad extends Model  implements Auditable
 {
-    use HasFactory;
+    use HasFactory,\OwenIt\Auditing\Auditable;
 
     protected $table = 'asignatura_actividades';
 

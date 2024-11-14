@@ -5,13 +5,14 @@ namespace App\Models\General;
 use App\Models\Mantenimientos\Escuela;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Facultades extends Model
+class Facultades extends Model  implements Auditable
 {
-    use HasFactory;
+    use HasFactory,\OwenIt\Auditing\Auditable;
 
     protected $table = 'facultades';
-    
+
     protected $fillable = ['nombre', 'activo', 'id_sede'];
 
     public function sedes()

@@ -6,6 +6,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Auth\Events\PasswordReset;
+use App\Listeners\LogPasswordResetEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,15 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        Login::class => [
+            LogAuthenticationEvents::class,
+        ],
+        Login::class => [
+            LogLoginEvent::class, // Registra el listener para Login
+        ],
+        PasswordReset::class => [
+            LogPasswordResetEvent::class, // Registra el listener para PasswordReset
         ],
     ];
 
