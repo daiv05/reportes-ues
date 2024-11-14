@@ -18,7 +18,7 @@
                 <x-forms.field
                     label="Nombre completo"
                     name="nombre"
-                    :value="$user->persona->nombre"
+                    :value="old('nombre', $user->persona->nombre)"
                     type="text"
                     :readonly="true"
                     class="bg-gray-100"

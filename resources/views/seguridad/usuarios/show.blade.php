@@ -22,8 +22,20 @@
                 {{ $user->email }}
             </x-view.description-list-item>
 
+            <x-view.description-list-item label="Entidad relacionada">
+                {{ $user->empleadosPuestos[0]->puesto->entidad->nombre }}
+            </x-view.description-list-item>
+
+            <x-view.description-list-item label="Puesto">
+                {{ $user->empleadosPuestos[0]->puesto->nombre }}
+            </x-view.description-list-item>
+
             <x-view.description-list-item label="Carnet">
                 {{ $user->carnet }}
+            </x-view.description-list-item>
+
+            <x-view.description-list-item label="Estado">
+                {{ $user->activo ? 'Activo' : 'Inactivo' }}
             </x-view.description-list-item>
 
             <x-view.description-list-item label="Fecha de creación">
