@@ -16,9 +16,11 @@ use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
 
 
+
 class User extends Authenticatable implements Auditable
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable,\OwenIt\Auditing\Auditable;
+
 
     protected $fillable = [
         'carnet',
