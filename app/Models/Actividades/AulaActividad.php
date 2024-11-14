@@ -7,9 +7,9 @@ use App\Models\Mantenimientos\Aulas;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AulaActividad extends Model
+class AulaActividad extends Model  implements Auditable
 {
-    use HasFactory;
+    use HasFactory,\OwenIt\Auditing\Auditable;
 
     protected $table = 'aula_actividades';
 

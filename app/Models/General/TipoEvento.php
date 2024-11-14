@@ -2,13 +2,15 @@
 
 namespace App\Models\General;
 
-use App\Models\Evento;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use App\Models\Actividades\Evento;
 
-class TipoEvento extends Model
+class TipoEvento extends Model  implements Auditable
 {
-    use HasFactory;
+    use HasFactory,\OwenIt\Auditing\Auditable;
 
     protected $table = 'tipo_eventos';
 

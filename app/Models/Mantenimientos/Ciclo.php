@@ -5,10 +5,11 @@ namespace App\Models\Mantenimientos;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\General\TipoCiclo;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Ciclo extends Model
+class Ciclo extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory,\OwenIt\Auditing\Auditable;
 
     protected $table = 'ciclos';
 

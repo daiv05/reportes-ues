@@ -6,10 +6,11 @@ use App\Models\rhu\EmpleadoPuesto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class EmpleadoAccion extends Model
+class EmpleadoAccion extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory,\OwenIt\Auditing\Auditable;
 
     protected $table = 'empleados_acciones';
 
