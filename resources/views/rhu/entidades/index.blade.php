@@ -71,12 +71,12 @@
                 <div class="mb-4">
                     <x-forms.input-label for="descripcion" :value="__('Descripcion')" />
                     <textarea id="descripcion" name="descripcion" rows="4"
-                        class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                        class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                         placeholder="Describa brevemente las funciones..."></textarea>
                     <x-forms.input-error :messages="$errors->get('descripcion')" class="mt-2" />
                 </div>
                 <div class="mb-4">
-                    <x-forms.input-label for="id_entidad" :value="__('Entidadesa Padre')" />
+                    <x-forms.input-label for="id_entidad" :value="__('Entidad Padre')" />
                     <select id="id_entidad" name="id_entidad"
                         class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
                         <option value="">Ninguno (Raíz)</option>

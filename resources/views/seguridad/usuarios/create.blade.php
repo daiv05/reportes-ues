@@ -39,15 +39,17 @@
                     tituloAsignados="Roles asignados" placeholderDisponibles="Buscar roles..."
                     placeholderAsignados="Buscar roles asignados..." inputName="roles" />
             </x-forms.row>
-            <x-forms.button-group>
-                <x-forms.cancel-button href="{{ route('usuarios.index') }}">
-                    Cancelar
-                </x-forms.cancel-button>
+            <div class="flex justify-center">
+                <x-forms.button-group>
+                    <x-forms.cancel-button href="{{ route('usuarios.index') }}">
+                        Cancelar
+                    </x-forms.cancel-button>
 
-                <x-forms.primary-button class="ml-3">
-                    Guardar Cambios
-                </x-forms.primary-button>
-            </x-forms.button-group>
+                    <x-forms.primary-button class="ml-3">
+                        Guardar Cambios
+                    </x-forms.primary-button>
+                </x-forms.button-group>
+            </div>
         </form>
     </x-container>
     <script>

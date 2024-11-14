@@ -1,7 +1,7 @@
 @php
     $headers = [
-        ['text' => 'Nombre', 'align' => 'left'],
-        ['text' => 'Entidadesa Padre', 'align' => 'left'], // Nueva columna
+        ['text' => 'Puesto', 'align' => 'left'],
+        ['text' => 'Entidad', 'align' => 'left'], // Nueva columna
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
@@ -186,9 +186,8 @@
                 modalInstance.show();
             });
         });
-
         // Cerrar modal al presionar "Cancelar"
-        document.getElementById('close-modal').addEventListener('click', function() {
+        document.getElementById('static-modal').addEventListener('click', function() {
             modalInstance.hide();
         });
     });
