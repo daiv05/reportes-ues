@@ -17,6 +17,7 @@ use App\Http\Controllers\Mantenimientos\CicloController;
 use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\UserAuditController;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,6 +162,12 @@ Route::middleware('auth')->group(function () {
         // Rutas de general
 
     });
+
+
+
+
+Route::get('/audits', [UserAuditController::class, 'index'])->name('audits.index');
+
 });
 
 
