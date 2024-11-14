@@ -12,7 +12,7 @@
     </div>
     <div class="border-t border-gray-200">
         <!-- Aplicamos la clase grid-cols-* de forma dinámica -->
-        <dl class="grid grid-cols-1 md:grid-cols-{{ $columns }} gap-x-4 gap-y-8 px-6 py-4">
+        <dl class="grid grid-cols-1 md:grid-cols-{{ $columns }} gap-x-4 gap-y-8 px-6 py-8">
             {{ $slot }}
         </dl>
     </div>

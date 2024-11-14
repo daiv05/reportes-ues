@@ -17,7 +17,7 @@ class RoleController extends Controller
     public function index(): View
     {
 
-        $roles = Role::paginate(5);
+        $roles = Role::paginate(2);
         // Retornar la vista y pasar los datos
         return view('seguridad.roles.index', compact('roles'));
     }

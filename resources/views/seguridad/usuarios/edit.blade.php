@@ -5,8 +5,9 @@
 
     <x-container>
         <!-- Título con el nombre del usuario -->
-        <x-header.simple titulo="Usuario : {{ $user->persona->nombre }}" />
-
+        <div class="pt-4 pb-8 text-2xl font-bold text-red-900 dark:text-gray-100">
+            Usuario : {{ $user->persona->nombre }}
+        </div>
         <!-- Formulario para editar usuario -->
         <form action="{{ route('usuarios.update', $user->id) }}" method="POST">
             @csrf
@@ -65,15 +66,17 @@
             </x-forms.row>
 
             <!-- Botones para guardar o cancelar -->
-            <x-forms.button-group>
-                <x-forms.cancel-button href="{{ route('usuarios.index') }}">
-                    Cancelar
-                </x-forms.cancel-button>
-
-                <x-forms.primary-button class="ml-3">
-                    Guardar Cambios
-                </x-forms.primary-button>
-            </x-forms.button-group>
+            <div class="flex justify-center">
+                <x-forms.button-group>
+                    <x-forms.cancel-button href="{{ route('usuarios.index') }}">
+                        Cancelar
+                    </x-forms.cancel-button>
+    
+                    <x-forms.primary-button class="ml-3">
+                        Guardar Cambios
+                    </x-forms.primary-button>
+                </x-forms.button-group>
+            </div>
 
         </form>
     </x-container>

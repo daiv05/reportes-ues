@@ -2,7 +2,7 @@
     $headers = [
         ['text' => 'Rol', 'align' => 'left'],
         ['text' => 'Tipo', 'align' => 'left'],
-        ['text' => 'Estado', 'align' => 'left'],
+        ['text' => 'Estado', 'align' => 'center'],
     ];
 @endphp
 
@@ -48,7 +48,7 @@
                         <x-table.tr>
                             <x-table.td>{{ $role->name }}</x-table.td>
                             <x-table.td>{{ $role->guard_name }}</x-table.td>
-                            <x-table.td>
+                            <x-table.td justify="center">
                                 <x-status.is-active :active="$role->activo" />
                             </x-table.td>
                         </x-table.tr>
