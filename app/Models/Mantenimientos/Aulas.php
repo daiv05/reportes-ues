@@ -7,10 +7,13 @@ use App\Models\Reportes\Reporte;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Aulas extends Model
+class Aulas extends Model implements Auditable
 {
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
+
 
     protected $table = 'aulas';
     
@@ -25,4 +28,12 @@ class Aulas extends Model
     {
         return $this->hasMany(Reporte::class, 'id_aula');
     }
+
+    public function generateTags(): array
+    {
+        return [
+            'aulas'
+        ];
+    }
+
 }

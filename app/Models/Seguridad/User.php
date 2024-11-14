@@ -13,10 +13,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Auditable
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
         'carnet',
@@ -48,5 +50,12 @@ class User extends Authenticatable
     public function reportes() : HasMany
     {
         return $this->hasMany(Reporte::class, 'id_usuario_reporta');
+    }
+
+    public function generateTags(): array
+    {
+        return [
+            'usuarios'
+        ];
     }
 }
