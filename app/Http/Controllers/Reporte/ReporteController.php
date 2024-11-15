@@ -352,7 +352,7 @@ class ReporteController extends Controller
         } else {
             Session::flash('message', [
                 'type' => 'error',
-                'content' => 'No tienes permiso para actualizar a este estado'
+                'content' => 'No tienes permiso para actualizar este reporte'
             ]);
             return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
