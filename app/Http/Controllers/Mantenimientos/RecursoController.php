@@ -15,7 +15,7 @@ class RecursoController extends Controller
         $query = Recurso::query();
         if ($request->has('nombre')) {
             $filtro = $request->input('nombre');
-            $query->where('nombre', '%like%', $filtro);
+            $query->where('nombre', 'like', '%' . $filtro . '%');
         }
         $recursos = $query->paginate(10);
         return view('recursos.index', compact('recursos'));

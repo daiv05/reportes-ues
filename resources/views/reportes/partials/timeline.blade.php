@@ -1,12 +1,13 @@
 <ol class="relative mx-2 border-s border-gray-200 dark:border-gray-700">
     @foreach ($reporte->accionesReporte->historialAccionesReporte as $historial)
+    <div class="mb-2">
+        <x-status.chips :text="$historial->estado->nombre" class="mb-2" />
+    </div>
         <li class="mb-10 ms-4">
             <div
                 class="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
             </div>
-            <div class="mb-2">
-                <x-status.chips :text="$historial->estado->nombre" class="mb-2" />
-            </div>
+            
             <div class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                 {{ \Carbon\Carbon::parse($historial->fecha_actualizacion)->format('d/m/Y') . '  ' . \Carbon\Carbon::parse($historial->hora_actualizacion)->format('h:i A') }}
             </div>

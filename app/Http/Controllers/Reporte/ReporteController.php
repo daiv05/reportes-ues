@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Reporte;
 use App\Enums\EstadosEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
-use App\Mail\EnvioMailable;
+use App\Mail\ReporteMailable;
 use App\Models\Actividades\Clase;
 use App\Models\Actividades\Evento;
 use App\Models\Reportes\AccionesReporte;
@@ -33,41 +33,24 @@ class ReporteController extends Controller
     public function index(Request $request)
     {
         $query = Reporte::query();
-
         $this->filtrosGenerales($request, $query);
-
         $reportes = $query->paginate(10);
-        //         return response()->json([
-        //             'status' => 200,
-        //             'data' => $reportes
-        //         ], 200);
         return view('reportes.index', compact('reportes'));
     }
 
     public function indexMisReportes(Request $request)
     {
         $query = Reporte::query();
-
-        // Para listar solo los creados por un usuario en específico
         $query->where('id_usuario_reporta', Auth::user()->id);
-
         $this->filtrosGenerales($request, $query);
-
         $reportes = $query->paginate(10);
-        //         return response()->json([
-        //             'status' => 200,
-        //             'data' => $reportes
-        //         ], 200);
         return view('reportes.my-reports', compact('reportes'));
     }
 
     public function misAsignaciones(Request $request)
     {
         $idUsuario = Auth::user()->id;
-        //        $idUsuario = $request->input('id_usuario');
-
         $query = Reporte::query();
-
         $query->whereHas('accionesReporte.usuarioSupervisor', function ($query) use ($idUsuario) {
             $query->where('id', $idUsuario);
         })->orWhereHas('empleadosAcciones', function ($query) use ($idUsuario) {
@@ -75,14 +58,8 @@ class ReporteController extends Controller
                 $query->where('id', $idUsuario);
             });
         });
-
         $this->filtrosGenerales($request, $query);
-
         $reportes = $query->paginate(10);
-        //        return response()->json([
-        //            'status' => 200,
-        //            'data' => $reportes
-        //        ], 200);
         return view('reportes.my-assignments', compact('reportes'));
     }
 
@@ -145,20 +122,6 @@ class ReporteController extends Controller
         $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
         if (isset($infoReporte['reporte'])) {
             return view('reportes.detail', array_merge($infoReporte));
-        } else {
-            Session::flash('message', [
-                'type' => 'error',
-                'content' => 'El reporte especificado no existe'
-            ]);
-            return redirect()->route('reportes-generales');
-        }
-    }
-
-    public function detalleTimeline(Request $request)
-    {
-        $infoReporte = $this->infoDetalleReporte($request, 1);
-        if (isset($infoReporte['reporte'])) {
-            return view('reportes.detail-timeline', array_merge($infoReporte));
         } else {
             Session::flash('message', [
                 'type' => 'error',
@@ -258,22 +221,22 @@ class ReporteController extends Controller
             }
         });
 
+        // Envio de correos a subalternos y supervisor
         $reporte = Reporte::find($id_reporte);
         $tableData = [
             'reporte' => $reporte,
             'esSupervisor' => false,
         ];
-        // Envio de correos
         foreach ($validated['id_empleados_puestos'] as $emp) {
             $empPuesto = EmpleadoPuesto::find($emp)->usuario->email;
-            Mail::to($empPuesto)->send(new EnvioMailable('emails.asignacion', $tableData));
+            Mail::to($empPuesto)->send(new ReporteMailable('emails.asignacion', $tableData, 'Asignación de reporte'));
         }
         $tableData = [
             'reporte' => $reporte,
             'esSupervisor' => true,
         ];
         $empSupervisor = User::find($validated['id_empleado_supervisor'])->email;
-        Mail::to($empSupervisor)->send(new EnvioMailable('emails.asignacion', $tableData));
+        Mail::to($empSupervisor)->send(new ReporteMailable('emails.asignacion', $tableData, 'Asignación de reporte'));
 
         Session::flash('message', [
             'type' => 'success',
@@ -284,23 +247,38 @@ class ReporteController extends Controller
 
     public function actualizarEstadoReporte(Request $request, $id_reporte): RedirectResponse
     {
+        $requestRecursos = $request->input('recursos');
+        if (!empty($requestRecursos)) {
+            $request->merge([
+                'recursos' => json_decode($requestRecursos)
+            ]);
+        } else {
+            $request->merge([
+                'recursos' => []
+            ]);
+        }
+
         $request->validate(
             [
-                'comentario' => 'required|string',
+                'comentario' => 'required|string|max:100',
                 'id_estado' => 'required|integer|exists:estados,id',
                 'evidencia' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
                 'recursos' => 'nullable|array',
-                'recursos.*.nombre' => 'required|string|max:100',
-                'recursos.*.costo' => 'required|numeric|min:0',
+                'recursos.*.cantidad' => 'required|integer|max:100',
+                'recursos.*.id_fondo' => 'required|integer|exists:fondos,id',
+                'recursos.*.id_recurso' => 'required|integer|exists:recursos,id',
             ],
             [
                 'recursos.array' => 'Estructura de recursos utilizados inválida.',
-                'recursos.*.nombre.required' => 'Debe especificar un nombre de recurso válido.',
-                'recursos.*.nombre.string' => 'Debe especificar un nombre de recurso válido.',
-                'recursos.*.nombre.max' => 'El nombre del recurso no debe exceder los 50 caracteres',
-                'recursos.*.costo.required' => 'Debe especificar un nombre de recurso válido.',
-                'recursos.*.costo.numeric' => 'Debe especificar un nombre de recurso válido.',
-                'recursos.*.costo.min' => 'El costo del recurso no puede ser menor a cero.',
+                'recursos.*.cantidad.required' => 'Debe especificar la cantidad de recurso utilizado',
+                'recursos.*.cantidad.integer' => 'La cantidad de recurso debe ser un número entero.',
+                'recursos.*.cantidad.max' => 'La cantidad de recurso no puede ser mayor a 100.',
+                'recursos.*.id_fondo.required' => 'Debe especificar de que fondo proviene el recurso',
+                'recursos.*.id_fondo.integer' => 'El identificador del fondo debe ser un número entero',
+                'recursos.*.id_fondo.exists' => 'Fondo no encontrado',
+                'recursos.*.id_recurso.required' => 'Debe especificar el recurso utilizado',
+                'recursos.*.id_recurso.integer' => 'El identificador del recurso debe ser un número entero',
+                'recursos.*.id_recurso.exists' => 'Recurso no encontrado',
                 'comentario.required' => 'Debe especificar las acciones realizadas.',
                 'comentario.string' => 'El comentario debe ser un texto válido.',
                 'evidencia.image' => 'La evidencia debe ser un archivo de imagen.',
@@ -356,59 +334,82 @@ class ReporteController extends Controller
             ]);
             return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
-        // Guardar empleado en historial segun si es supervisor o empleado
-        DB::transaction(function () use ($request, $idEmpleado, $accionReporte) {
-            $newHistorialAccionesReportes = new HistorialAccionesReporte();
-            $newHistorialAccionesReportes->id_acciones_reporte = $accionReporte->id;
-            $newHistorialAccionesReportes->id_empleado_puesto = $idEmpleado;
-            $newHistorialAccionesReportes->id_estado = $request['id_estado'];
-            $newHistorialAccionesReportes->fecha_actualizacion = Carbon::now()->format('Y-m-d');
-            $newHistorialAccionesReportes->hora_actualizacion = Carbon::now()->format('H:i:s');
-            $newHistorialAccionesReportes->comentario = $request['comentario'];
-            // Guardar evidencia en el storage
-            if ($request->file('evidencia')) {
-                $fileName = Str::random(40);
-                $path = $request->file('evidencia')->storeAs(
-                    "reportes/evidencia",
-                    $fileName . "." . $request->file('evidencia')->getClientOriginalExtension(),
-                    'public'
-                );
-                $newHistorialAccionesReportes->foto_evidencia = $path;
-            }
-            $newHistorialAccionesReportes->save();
-            // Guardar recursos
-            if (isset($request->recursos)) {
-                foreach ($request->input('recursos', []) as $recurso) {
-                    RecursoReporte::create([
-                        'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
-                        'nombre' => $recurso['nombre'],
-                        'costo' => $recurso['costo'],
-                    ]);
-                }
-            }
-            // Verificar si el reporte ya se marcó como FINALIZADO
-            if ($request['id_estado'] === EstadosEnum::FINALIZADO->value) {
-                $accionReporte->fecha_finalizacion = Carbon::now()->format('Y-m-d');
-                $accionReporte->hora_finalizacion = Carbon::now()->format('H:i:s');
-                $accionReporte->save();
-            }
-        });
 
-        $reporte = Reporte::find($id_reporte);
-        if ($request['id_estado'] === EstadosEnum::FINALIZADO->value || $request['id_estado'] === EstadosEnum::INCOMPLETO->value) {
+        try {
+            $esFinalizado = $request['id_estado'] == EstadosEnum::FINALIZADO->value;
+            $esIncompleto = $request['id_estado'] == EstadosEnum::INCOMPLETO->value;
+            // Guardar empleado en historial segun si es supervisor o empleado
+            DB::transaction(function () use ($request, $idEmpleado, $accionReporte, $esFinalizado) {
+                $newHistorialAccionesReportes = new HistorialAccionesReporte();
+                $newHistorialAccionesReportes->id_acciones_reporte = $accionReporte->id;
+                $newHistorialAccionesReportes->id_empleado_puesto = $idEmpleado;
+                $newHistorialAccionesReportes->id_estado = $request['id_estado'];
+                $newHistorialAccionesReportes->fecha_actualizacion = Carbon::now()->format('Y-m-d');
+                $newHistorialAccionesReportes->hora_actualizacion = Carbon::now()->format('H:i:s');
+                $newHistorialAccionesReportes->comentario = $request['comentario'];
+                // Guardar evidencia en el storage
+                if ($request->file('evidencia')) {
+                    $fileName = Str::random(40);
+                    $path = $request->file('evidencia')->storeAs(
+                        "reportes/evidencia",
+                        $fileName . "." . $request->file('evidencia')->getClientOriginalExtension(),
+                        'public'
+                    );
+                    $newHistorialAccionesReportes->foto_evidencia = $path;
+                }
+                $newHistorialAccionesReportes->save();
+                // Guardar recursos
+                if (isset($request->recursos)) {
+                    foreach ($request->input('recursos', []) as $recurso) {
+                        RecursoReporte::create([
+                            'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+                            'cantidad' => $recurso['cantidad'],
+                            'id_fondo' => $recurso['id_fondo'],
+                            'id_recurso' => $recurso['id_recurso'],
+                        ]);
+                    }
+                }
+                // Verificar si el reporte ya se marcó como FINALIZADO
+                if ($esFinalizado) {
+                    $accionReporte->fecha_finalizacion = Carbon::now()->format('Y-m-d');
+                    $accionReporte->hora_finalizacion = Carbon::now()->format('H:i:s');
+                    $accionReporte->save();
+                }
+            });
+
+            $reporte = Reporte::find($id_reporte);
             $tableData = [
                 'reporte' => $reporte
             ];
-            foreach ($puestosEmpleadoIds as $emp) {
-                $empPuesto = EmpleadoPuesto::find($emp)->usuario->email;
-                Mail::to($empPuesto)->send(new EnvioMailable('emails.supervision-reporte', $tableData));
+            if ($esFinalizado || $esIncompleto) {
+                // Envio de correos a SUBALTERNOS cuando SUPERVISOR envie resolucion (FINALIZADO o INCOMPLETO)
+                error_log(json_encode($puestosEmpleadoIds));
+                foreach ($puestosEmpleadoIds as $emp) {
+                    error_log($emp);
+                    $empPuesto = EmpleadoPuesto::find($emp)->usuario->email;
+                    error_log($empPuesto);
+                    $subject = '';
+                    $esFinalizado ? $subject = 'Reporte FINALIZADO' : $subject = 'Reporte INCOMPLETO';
+                    Mail::to($empPuesto)->send(new ReporteMailable('emails.supervisor-revision', $tableData, $subject));
+                }
+            } else if ($request['id_estado'] == EstadosEnum::COMPLETADO->value) {
+                // Envio de correo a SUPERVISOR cuando SUBALTERNO marque como COMPLETADO
+                $empSupervisor = User::find($accionReporte->id_usuario_supervisor)->email;
+                Mail::to($empSupervisor)->send(new ReporteMailable('emails.aviso-supervisor', $tableData, 'Revisión disponible'));
             }
-        }
+            Session::flash('message', [
+                'type' => 'success',
+                'content' => 'Seguimiento de reporte actualizado con éxito'
+            ]);
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'Ocurrió un error inesperado'
+            ]);
+            return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
 
-        Session::flash('message', [
-            'type' => 'success',
-            'content' => 'Seguimiento de reporte actualizado con éxito'
-        ]);
+        }
         return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
     }
 
