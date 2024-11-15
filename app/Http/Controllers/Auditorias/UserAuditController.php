@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auditorias;
 use OwenIt\Auditing\Models\Audit;
-
+use App\Models\Seguridad\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -28,6 +28,15 @@ class UserAuditController extends Controller
             $query->where('event', $request->event);
         }
 
+        // Filtrar por usuario (si se especifica)
+        if ($request->has('user_id') && $request->user_id) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        // Filtrar por fecha de creación (si se especifica)
+        if ($request->has('start_date') && $request->start_date) {
+            $query->where('created_at', '>=', $request->start_date);
+        }
         // Realizar la consulta paginada
         $audits = $query->paginate(10);
 
@@ -43,8 +52,11 @@ class UserAuditController extends Controller
                 ->get();
         }
 
-        // Pasar los filtros disponibles y la lista de auditorías a la vista
-        return view('audits.index', compact('audits', 'models', 'events'));
+          // Obtener los usuarios únicos para el filtro de usuario
+          $users = User::all(); // Cargar todos los usuarios, puedes optimizarlo según tus necesidades.
+
+          // Pasar los filtros disponibles y la lista de auditorías a la vista
+          return view('audits.index', compact('audits', 'models', 'events', 'users'));
     }
 
     /**
