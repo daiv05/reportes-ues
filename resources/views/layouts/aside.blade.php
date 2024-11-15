@@ -48,12 +48,7 @@
                     'to' => 'reportes.misAsignaciones',
                     'active' => request()->is('reportes/mis-asignaciones'),
                     'label' => 'Mis asignaciones',
-                ],
-                [
-                    'to' => 'detalle-timeline',
-                    'active' => request()->is('reportes/timeline'),
-                    'label' => 'Timeline Test',
-                ],
+                ]
             ],
         ],
         [
@@ -151,7 +146,7 @@
 @endphp
 
 <aside id="logo-sidebar"
-    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0">
+    class="fixed left-0 top-0 z-20 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0">
     <div class="h-full overflow-y-auto bg-white px-3 pb-4 dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
             @foreach ($sidebarItems as $sit)

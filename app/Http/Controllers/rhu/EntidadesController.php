@@ -14,7 +14,7 @@ class EntidadesController extends Controller
     public function index(): View
     {
         // entidades paginados
-        $entidades = Entidades::paginate(5);
+        $entidades = Entidades::paginate(10);
 
         // Lista jerárquica de entidades para el select
         $entidadesLista = $this->getHierarchicalEntidades();
@@ -70,7 +70,10 @@ class EntidadesController extends Controller
         Entidades::create($validatedData);
 
         // Redirección a la vista de departamentos con un mensaje de éxito (opcional)
-        return redirect()->route('entidades.index')->with('success', 'Entidades creado exitosamente');
+        return redirect()->route('entidades.index')->with('message', [
+            'type' => 'success',
+            'content' => 'Entidad creada exitosamente'
+        ]);
     }
 
 
@@ -104,7 +107,7 @@ class EntidadesController extends Controller
 
         return redirect()->route('entidades.index')->with('message', [
             'type' => 'success',
-            'content' => 'Entidades actualizado exitosamente.'
+            'content' => 'Entidad actualizada exitosamente'
         ]);
     }
 

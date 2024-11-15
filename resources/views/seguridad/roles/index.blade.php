@@ -18,14 +18,14 @@
                 Añadir Rol
             </x-forms.primary-button>
         </div>
-        <div class="mx-auto mb-8 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
+        <div class="mx-auto mb-8">
             <x-table.base :headers="$headers">
                 @foreach ($roles as $rol)
                     <x-table.tr>
                         <x-table.td>
                             {{ $rol->name }}
                         </x-table.td>
-                        <x-table.td>
+                        <x-table.td justify="center">
                             <x-status.is-active :active="$rol->activo" />
                         </x-table.td>
                         <x-table.td>
@@ -38,7 +38,7 @@
                     </x-table.tr>
                 @endforeach
             </x-table.base>
-            <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
+            <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
                 aria-label="Table navigation">
                 {{ $roles->links() }}
             </nav>
@@ -65,12 +65,12 @@
                 </div>
                 <div class="mb-4">
                     <label for="activo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Activo
+                        Estado
                     </label>
                     <select id="activo" name="activo"
                         class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        <option value="1">Sí</option>
-                        <option value="0">No</option>
+                        <option value="1">ACTIVO</option>
+                        <option value="0">INACTIVO</option>
                     </select>
                     @error('activo')
                         <div class="mt-1 text-sm text-red-500">{{ $message }}</div>

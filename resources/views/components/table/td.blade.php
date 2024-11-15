@@ -1,5 +1,6 @@
 @props([
     'justify' => 'start',
+    'colspan' => 1,
 ])
 
 @php
@@ -11,4 +12,4 @@
     };
 @endphp
 
-<td class="px-6 py-4"><div class="{{ $justifyClass }}">{{ $slot }}</div></td>
+<td colspan="{{ $colspan }}" class="px-6 py-4"><div class="{{ $justifyClass }}">{{ $slot }}</div></td>
