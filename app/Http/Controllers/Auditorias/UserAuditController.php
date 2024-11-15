@@ -8,10 +8,7 @@ use App\Http\Controllers\Controller;
 
 class UserAuditController extends Controller
 {
-    /**
-     * Mostrar todos los registros de auditoría para el modelo User.
-     */
-    public function index(Request $request)
+       public function index(Request $request)
     {
         $query = Audit::query();
 
@@ -48,9 +45,7 @@ class UserAuditController extends Controller
         return view('audits.index', compact('audits', 'models', 'events', 'users'));
     }
 
-    /**
-     * Obtener los eventos según el modelo seleccionado.
-     */
+   
     public function getEvents(Request $request)
     {
         if ($request->has('model')) {
