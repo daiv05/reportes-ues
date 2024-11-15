@@ -17,7 +17,7 @@ use App\Http\Controllers\Mantenimientos\CicloController;
 use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Controllers\UserAuditController;
+use App\Http\Controllers\Auditorias\UserAuditController;
 
 /*
 |--------------------------------------------------------------------------
@@ -166,7 +166,8 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::get('/audits', [UserAuditController::class, 'index'])->name('audits.index');
+    Route::get('/auditorias', [UserAuditController::class, 'index'])->name('adUser.index');
+    Route::get('/auditorias/get-events', [UserAuditController::class, 'getEvents']); // Ruta AJAX
 
 });
 

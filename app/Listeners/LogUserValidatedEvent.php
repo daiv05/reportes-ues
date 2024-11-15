@@ -20,8 +20,8 @@ class LogUserValidatedEvent
         // Registrar la auditoría para el evento de validación
         Audit::create([
             'user_id' => $user->id, // ID del usuario validado
-            'event' => 'user_validated', // Tipo de evento
-            'auditable_type' => 'App\Models\User', // Tipo de modelo (Usuario)
+            'event' => 'Validacion de usuario', // Tipo de evento
+            'auditable_type' => 'App\Models\Seguridad\User', // Tipo de modelo (Usuario)
             'auditable_id' => $user->id, // ID del usuario
             'old_values' => [], // No hay valores anteriores para este evento
             'new_values' => [
