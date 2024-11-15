@@ -11,7 +11,6 @@
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Puestos" />
     </x-slot>
-
     <div>
         <div class="p-6">
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"

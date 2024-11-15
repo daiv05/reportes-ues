@@ -57,44 +57,13 @@
         <x-slot name="body">
             <form id="add-ciclo-form" method="POST" action="{{ route('ciclos.store') }}">
                 @csrf
-                <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
-                <div class="mb-4">
-                    <label for="anio" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Año
-                    </label>
-                    <input type="number" id="anio" name="anio"
-                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm" />
-                    @error('anio')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <label for="id_tipo_ciclo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Tipo de Ciclo
-                    </label>
-                    <select id="id_tipo_ciclo" name="id_tipo_ciclo"
-                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        @foreach ($tiposCiclos as $tipoCiclo)
-                            <option value="{{ $tipoCiclo->id }}">{{ $tipoCiclo->nombre }}</option>
-                        @endforeach
-                    </select>
-                    @error('id_tipo_ciclo')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <label for="activo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Activo
-                    </label>
-                    <select id="activo" name="activo"
-                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                    @error('activo')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
+                <x-forms.row :columns="1">
+                    <x-forms.field label="Año" name="anio" :value="old('anio')" :error="$errors->get('anio')" />
+                    <x-forms.select label="Tipo de Ciclo" id="id_tipo_ciclo" name="id_tipo_ciclo" :options="$tiposCiclos->pluck('nombre', 'id')->toArray()"
+                        :value="old('id_tipo_ciclo')" :error="$errors->get('id_tipo_ciclo')" />
+                    <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
+                        :error="$errors->get('activo')" />
+                </x-forms.row>
             </form>
         </x-slot>
         <x-slot name="footer">
