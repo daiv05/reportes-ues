@@ -191,8 +191,9 @@
 
         <!-- Paginación -->
         <div class="mt-4">
-            {{ $audits->links() }}
+            {{ $audits->appends(request()->query())->links() }}
         </div>
+
 
     </x-container>
 
