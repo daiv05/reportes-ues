@@ -78,7 +78,7 @@
                         <x-table.td>{{ $clase->actividad->asignaturas[0]->escuela->nombre }}</x-table.td>
                         <x-table.td>{{ $clase->actividad->hora_inicio. ' - '. $clase->actividad->hora_fin }}</x-table.td>
                         <x-table.td>
-                            <a href="{{ route('crear-reporte') }}" class="font-medium text-gray-700 hover:underline">
+                            <a href="{{ route('crear-reporte', ['actividad' => $clase->id]) }}" class="font-medium text-gray-700 hover:underline">
                                 <x-heroicon-s-flag class="mx-2 h-4" />
                             </a>
                         </x-table.td>

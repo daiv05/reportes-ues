@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Reporte;
 
+use App\Enums\EstadosEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
-use App\Models\Actividades\Actividad;
+use App\Mail\EnvioMailable;
+use App\Models\Actividades\Clase;
+use App\Models\Actividades\Evento;
 use App\Models\Reportes\AccionesReporte;
 use App\Models\Reportes\EmpleadoAccion;
 use App\Models\Reportes\HistorialAccionesReporte;
@@ -12,15 +15,18 @@ use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
 use App\Models\Reportes\RecursoReporte;
+use App\Models\rhu\EmpleadoPuesto;
+use App\Models\Seguridad\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ReporteController extends Controller
 {
@@ -80,31 +86,24 @@ class ReporteController extends Controller
         return view('reportes.my-assignments', compact('reportes'));
     }
 
-    public function create(Request $request): View
+    public function create(Request $request)
     {
-        // $validated = $request->validate(
-        //     [
-        //         'actividad' => 'integer|exists:actividades,id',
-        //     ],
-        //     [
-        //         'actividad.exists' => 'La actividad seleccionada no existe'
-        //     ]
-        // );
         $idActividad = $request['actividad'];
-        error_log($idActividad);
-        $actividad = null;
+        $clase = null;
+        $evento = null;
         if ($idActividad) {
-            $actividad = Actividad::find($idActividad);
-            if (!isset($actividad)) {
+            $clase = Clase::where('id_actividad', $idActividad)->first();
+            $evento = Evento::where('id_actividad', $idActividad)->first();
+            if (!isset($clase) && !isset($evento)) {
                 Session::flash('message', [
                     'type' => 'error',
                     'content' => 'La actividad seleccionada no existe'
                 ]);
+                return redirect()->action([ReporteController::class, 'index']);
             }
-            error_log($actividad);
         }
         $aulas = Aulas::all(); // Obtener todas las aulas
-        return view('reportes.create', compact('actividad', 'aulas'));
+        return view('reportes.create', compact('clase', 'evento', 'aulas'));
     }
 
     public function store(Request $request)
@@ -112,11 +111,13 @@ class ReporteController extends Controller
         $validated = $request->validate(
             [
                 'id_aula' => 'nullable|integer|exists:aulas,id',
+                'id_actividad' => 'nullable|integer|exists:actividades,id',
                 'descripcion' => 'required|string',
                 'titulo' => 'required|string|max:50',
             ],
             [
                 'id_aula.exists' => 'El aula no existe',
+                'id_actividad.exists' => 'La actividad no existe',
                 'descripcion.required' => 'La descripción es obligatoria',
                 'titulo.required' => 'Debe ingresar un titulo para el reporte',
             ]
@@ -129,6 +130,7 @@ class ReporteController extends Controller
         $reporte->titulo = $validated['titulo'];
         $reporte->descripcion = $validated['descripcion'];
         $reporte->id_aula = $validated['id_aula'] ?? null; // Asignar null si no se seleccionó aula
+        $reporte->id_actividad = $validated['id_actividad'] ?? null; // Asignar null si no se seleccionó aula
 
         $reporte->save();
 
@@ -148,7 +150,21 @@ class ReporteController extends Controller
                 'type' => 'error',
                 'content' => 'El reporte especificado no existe'
             ]);
-            return redirect()->route('reportes.index');
+            return redirect()->route('reportes-generales');
+        }
+    }
+
+    public function detalleTimeline(Request $request)
+    {
+        $infoReporte = $this->infoDetalleReporte($request, 1);
+        if (isset($infoReporte['reporte'])) {
+            return view('reportes.detail-timeline', array_merge($infoReporte));
+        } else {
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'El reporte especificado no existe'
+            ]);
+            return redirect()->route('reportes-generales');
         }
     }
 
@@ -174,8 +190,20 @@ class ReporteController extends Controller
         }
     }
 
-    public function realizarAsignacion(Request $request, $id_reporte): View
+    public function realizarAsignacion(Request $request, $id_reporte): RedirectResponse
     {
+        // Convertir la cadena de texto separada por comas en un arreglo solo si no está vacía
+        $idEmpleadosPuestos = $request->input('id_empleados_puestos');
+        if (!empty($idEmpleadosPuestos)) {
+            $request->merge([
+                'id_empleados_puestos' => explode(',', $idEmpleadosPuestos)
+            ]);
+        } else {
+            $request->merge([
+                'id_empleados_puestos' => []
+            ]);
+        }
+
         $validated = $request->validate(
             [
                 'id_empleados_puestos' => 'required|array',
@@ -198,6 +226,7 @@ class ReporteController extends Controller
                 'id_empleado_supervisor.exists' => 'El empleado supervisor seleccionado no existe.',
             ]
         );
+
         DB::transaction(function () use ($id_reporte, $validated) {
             // Registro en ACCIONES_REPORTE
             $accReporte = new AccionesReporte();
@@ -210,6 +239,7 @@ class ReporteController extends Controller
             $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
             $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
             $accReporte->save();
+
             // Registro en HISTORIAL_ACCIONES_REPORTES
             $histAccReporte = new HistorialAccionesReporte();
             $histAccReporte->id_acciones_reporte = $accReporte->id;
@@ -218,6 +248,7 @@ class ReporteController extends Controller
             $histAccReporte->fecha_actualizacion = Carbon::now()->format('Y-m-d');
             $histAccReporte->hora_actualizacion = Carbon::now()->format('H:i:s');
             $histAccReporte->save();
+
             // Registro en EMPLEADOS_ACCIONES
             foreach ($validated['id_empleados_puestos'] as $emp) {
                 $empAcciones = new EmpleadoAccion();
@@ -226,11 +257,32 @@ class ReporteController extends Controller
                 $empAcciones->save();
             }
         });
-        $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
-        return view('reportes.detail', $infoReporte);
+
+        $reporte = Reporte::find($id_reporte);
+        $tableData = [
+            'reporte' => $reporte,
+            'esSupervisor' => false,
+        ];
+        // Envio de correos
+        foreach ($validated['id_empleados_puestos'] as $emp) {
+            $empPuesto = EmpleadoPuesto::find($emp)->usuario->email;
+            Mail::to($empPuesto)->send(new EnvioMailable('emails.asignacion', $tableData));
+        }
+        $tableData = [
+            'reporte' => $reporte,
+            'esSupervisor' => true,
+        ];
+        $empSupervisor = User::find($validated['id_empleado_supervisor'])->email;
+        Mail::to($empSupervisor)->send(new EnvioMailable('emails.asignacion', $tableData));
+        
+        Session::flash('message', [
+            'type' => 'success',
+            'content' => 'Requerimiento asignado exitosamente'
+        ]);
+        return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
     }
 
-    public function actualizarEstadoReporte(Request $request, $id_reporte): View
+    public function actualizarEstadoReporte(Request $request, $id_reporte): RedirectResponse
     {
         $request->validate(
             [
@@ -261,37 +313,66 @@ class ReporteController extends Controller
         $reporte = Reporte::find($id_reporte);
         $accionReporte = $reporte->accionesReporte;
         if (!isset($accionReporte)) {
-            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
             Session::flash('message', [
                 'type' => 'error',
                 'content' => 'El reporte especificado no existe'
             ]);
-            return view('reportes.detail', $infoReporte);
+            return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
         $empleadoAcciones = $reporte->empleadosAcciones;
         $puestosEmpleado = Auth::user()->empleadosPuestos;
         $puestosEmpleadoIds = $puestosEmpleado->pluck('id')->toArray();
         $empleadoPuestoAccion = $empleadoAcciones->firstWhere(fn($accion) => in_array($accion->id_empleado_puesto, $puestosEmpleadoIds));
-        if (!isset($empleadoPuestoAccion)) {
-            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
+        $esSupervisor = $accionReporte->id_usuario_supervisor === Auth::user()->id;
+        $idEmpleado = null;
+        if (isset($empleadoPuestoAccion)) {
+            if (in_array($request['id_estado'], [EstadosEnum::FINALIZADO->value, EstadosEnum::INCOMPLETO->value])) {
+                if ($esSupervisor) {
+                    $idEmpleado = Auth::user()->empleadosPuestos->first()->id;
+                } else {
+                    Session::flash('message', [
+                        'type' => 'error',
+                        'content' => 'No tienes permiso para actualizar a este estado'
+                    ]);
+                    return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
+                }
+            } else {
+                $idEmpleado = $empleadoPuestoAccion->id_empleado_puesto;
+            }
+        } else if ($esSupervisor) {
+            if (in_array($request['id_estado'], [EstadosEnum::FINALIZADO->value, EstadosEnum::INCOMPLETO->value])) {
+                $idEmpleado = Auth::user()->empleadosPuestos->first()->id;
+            } else {
+                Session::flash('message', [
+                    'type' => 'error',
+                    'content' => 'No tienes permiso para actualizar a este estado'
+                ]);
+                return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
+            }
+        } else {
             Session::flash('message', [
                 'type' => 'error',
-                'content' => 'No tienes permiso para actualizar este reporte'
+                'content' => 'No tienes permiso para actualizar a este estado'
             ]);
-            return view('reportes.detail', $infoReporte);
+            return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
-
-        DB::transaction(function () use ($request, $empleadoPuestoAccion, $accionReporte) {
+        // Guardar empleado en historial segun si es supervisor o empleado
+        DB::transaction(function () use ($request, $idEmpleado, $accionReporte) {
             $newHistorialAccionesReportes = new HistorialAccionesReporte();
             $newHistorialAccionesReportes->id_acciones_reporte = $accionReporte->id;
-            $newHistorialAccionesReportes->id_empleado_puesto = $empleadoPuestoAccion->id_empleado_puesto;
+            $newHistorialAccionesReportes->id_empleado_puesto = $idEmpleado;
             $newHistorialAccionesReportes->id_estado = $request['id_estado'];
             $newHistorialAccionesReportes->fecha_actualizacion = Carbon::now()->format('Y-m-d');
             $newHistorialAccionesReportes->hora_actualizacion = Carbon::now()->format('H:i:s');
             $newHistorialAccionesReportes->comentario = $request['comentario'];
             // Guardar evidencia en el storage
             if ($request->file('evidencia')) {
-                $path = $request->file('evidencia')->store('public/reportes/evidencia');
+                $fileName = Str::random(40);
+                $path = $request->file('evidencia')->storeAs(
+                    "reportes/evidencia",
+                    $fileName . "." . $request->file('evidencia')->getClientOriginalExtension(),
+                    'public'
+                );
                 $newHistorialAccionesReportes->foto_evidencia = $path;
             }
             $newHistorialAccionesReportes->save();
@@ -305,13 +386,18 @@ class ReporteController extends Controller
                     ]);
                 }
             }
+            // Verificar si el reporte ya se marcó como FINALIZADO
+            if ($request['id_estado'] === EstadosEnum::FINALIZADO->value) {
+                $accionReporte->fecha_finalizacion = Carbon::now()->format('Y-m-d');
+                $accionReporte->hora_finalizacion = Carbon::now()->format('H:i:s');
+                $accionReporte->save();
+            }
         });
-        $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
         Session::flash('message', [
             'type' => 'success',
-            'content' => 'Seguimiento de reporte actualizado con exito'
+            'content' => 'Seguimiento de reporte actualizado con éxito'
         ]);
-        return view('reportes.detail', $infoReporte);
+        return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
     }
 
     public function filtrosGenerales(Request $request, Builder $query): void
@@ -356,6 +442,9 @@ class ReporteController extends Controller
             'accionesReporte.usuarioSupervisor.persona',
             'accionesReporte.historialAccionesReporte',
             'accionesReporte.historialAccionesReporte.estado',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario.persona',
             'usuarioReporta',
             'usuarioReporta.persona',
             'empleadosAcciones',
@@ -368,12 +457,23 @@ class ReporteController extends Controller
             $entidades = Entidades::all();
             $empPuesto = new EmpleadoPuestoController();
             $empleadosPorEntidad = $empPuesto->listadoEmpleadosPorUnidad($request->query('entidad'));
-            $supervisores = $empPuesto->listadoSupervisores();
+            $empleadosPorEntidad = collect($empleadosPorEntidad)->map(function ($empleado) {
+                return json_decode(json_encode([
+                    'id' => $empleado['id_empleado_puesto'],
+                    'name' => $empleado['nombre_empleado'] . ' ' . $empleado['apellido_empleado'],
+                    'correo' => $empleado['email'],
+                    'puesto' => $empleado['nombre_puesto'],
+                ]));
+            })->toArray();
+            $supervisores = collect($empPuesto->listadoSupervisores())->map(function ($supervisor) {
+                return json_decode(json_encode($supervisor));
+            })->toArray();
             // Necesarios para actualizacion y seguimiento de reporte
             $estController = new EstadoController();
             $estadosHabilitados = $estController->estadosReporte($reporte);
             return [
                 'reporte' => $reporte,
+                'accionesReporte' => $reporte->accionesReporte,
                 'entidades' => $entidades,
                 'empleadosPorEntidad' => $empleadosPorEntidad,
                 'supervisores' => $supervisores,

@@ -3,9 +3,8 @@
       ['text' => 'Título', 'align' => 'left'],
       ['text' => 'Fecha y Hora', 'align' => 'left'],
       ['text' => 'Reportado por', 'align' => 'left'],
-      ['text' => 'Salón', 'align' => 'left'],
-      ['text' => 'Entidades', 'align' => 'left'],
-      ['text' => 'Actividad', 'align' => 'left'],
+      ['text' => 'Entidad', 'align' => 'left'],
+      ['text' => 'Tipo', 'align' => 'left'],
       ['text' => 'Estado', 'align' => 'center'],
       ['text' => 'Acciones', 'align' => 'left'],
     ];
@@ -146,16 +145,15 @@
             @foreach($reportes as $reporte)
                 <x-table.tr>
                     <x-table.td>{{ $reporte->titulo }}</x-table.td>
-                    <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y')  }} {{  \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</x-table.td>
+                    <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte . ' ' . $reporte->hora_reporte)->format('d/m/Y, h:i A') }}</x-table.td>
                     <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
-                    <x-table.td>{{ $reporte->aula?->nombre }}</x-table.td>
                     <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
-                    <x-table.td>{{ $reporte->actividad?->descripcion }}</x-table.td>
+                    <x-table.td>{{ $reporte->actividad ? 'Actividad' : 'General' }}</x-table.td>
                     <x-table.td>
                         <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
                                         class="mb-2"/>
                     </x-table.td>
-                    <x-table.td>
+                    <x-table.td justify="center">
                         <a href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
                            class="font-medium text-gray-700 hover:underline">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
