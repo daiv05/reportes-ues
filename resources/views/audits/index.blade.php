@@ -57,26 +57,20 @@
                 <!-- Filtro por Fecha Inicial -->
                 <div>
                     <x-forms.input-label for="start_date" :value="__('Fecha Inicial')" />
-                    <input type="date"
-                        name="start_date"
-                        id="start_date"
+                    <input type="date" name="start_date" id="start_date"
                         value="{{ old('start_date', request('start_date')) }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Seleccione una fecha"
-                    />
+                        placeholder="Seleccione una fecha" />
                     <x-forms.input-error :messages="$errors->get('start_date')" class="mt-2" />
                 </div>
 
                 <!-- Filtro por Fecha Final -->
                 <div>
                     <x-forms.input-label for="end_date" :value="__('Fecha Final')" />
-                    <input type="date"
-                        name="end_date"
-                        id="end_date"
+                    <input type="date" name="end_date" id="end_date"
                         value="{{ old('end_date', request('end_date')) }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Seleccione una fecha"
-                    />
+                        placeholder="Seleccione una fecha" />
                     <x-forms.input-error :messages="$errors->get('end_date')" class="mt-2" />
                 </div>
             </x-forms.row>
