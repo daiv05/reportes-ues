@@ -101,8 +101,6 @@ class EmpleadoPuestoController extends Controller
             'estado' => 'required|boolean',
         ]);
 
-        dd($request->all());
-
         try {
             $empleadoPuesto = EmpleadoPuesto::find($id);
             $empleadoPuesto->activo = $request->input('estado');
