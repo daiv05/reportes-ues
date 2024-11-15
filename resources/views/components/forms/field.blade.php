@@ -1,5 +1,6 @@
 <!-- resources/views/components/forms/field.blade.php -->
 @props([
+    'required' => false,
     'label' => '',
     'name' => '',
     'type' => 'text',
@@ -9,7 +10,7 @@
 ])
 
 <div class="mb-4">
-    <x-forms.input-label :for="$name" :value="$label" />
+    <x-forms.input-label :for="$name" :value="$label" :required="$required" />
     <input
         type="{{ $type }}"
         name="{{ $name }}"

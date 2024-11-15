@@ -69,7 +69,6 @@
                     $tipoClases = \App\Models\General\TipoClase::all();
                     $modalidades = \App\Models\General\Modalidad::all();
                     $dias = \App\Models\General\Dia::all();
-                    $cicloActivo = \App\Models\General\Ciclo::where('activo', 1)->first();
                 @endphp
 
                 <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Vista previa de la información</h1>
@@ -301,24 +300,25 @@
                                 </div>
 
                                 {{-- Selección de días --}}
-                                <div class="space-y-2">
+                                <div class="space-y-1">
                                     <label class="block text-sm font-medium text-gray-700">Días de la Semana</label>
                                     <div class="relative">
                                         <button
-                                            id="dropdownDaysButton"
+                                            id="dropdownDaysButton{{ $loop->iteration }}"
                                             data-dropdown-toggle="dropdownDays{{ $loop->iteration }}"
-                                            class="w-full px-4 py-2 border rounded-lg text-left focus:outline-none focus:ring"
+                                            class="w-full px-4 py-2 border-2 rounded-lg text-left focus:outline-none focus:ring text-sm"
                                             type="button">
                                             Seleccionar días
                                         </button>
 
+                                        <!-- Dropdown de días -->
                                         <div
                                             id="dropdownDays{{ $loop->iteration }}"
-                                            class="hidden z-20 w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+                                            class="hidden z-20 w-full max-h-[180px] overflow-auto bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
                                             data-popper-reference-hidden
                                             data-popper-escaped
                                             data-popper-placement="top">
-                                            <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDaysButton">
+                                            <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDaysButton{{ $loop->iteration }}">
                                                 @foreach($dias as $dia)
                                                     <li class="flex items-center">
                                                         <input
@@ -331,7 +331,8 @@
                                                             @elseif(in_array($dia->id, $row['diasActividad']))
                                                                 checked
                                                             @endif
-                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                            onclick="updateSelectedDays({{ $loop->parent->iteration }})">
                                                         <label for="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                             {{ $dia->nombre }}
                                                         </label>
@@ -358,4 +359,25 @@
         const fileName = input.files[0] ? input.files[0].name : "Selecciona un archivo";
         document.getElementById('file-name').textContent = fileName;
     }
+
+    function updateSelectedDays(index) {
+        const checkboxes = document.querySelectorAll(`#dropdownDays${index} input[type="checkbox"]`);
+        const selected = [];
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selected.push(checkbox.nextElementSibling.textContent.trim());
+            }
+        });
+
+        const button = document.getElementById(`dropdownDaysButton${index}`);
+        button.textContent = selected.length ? selected.join(', ') : 'Seleccionar días';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize the button text with the initially selected values
+        @foreach ($dias as $index => $actividad)
+            updateSelectedDays({{ $loop->iteration }});
+        @endforeach
+    });
 </script>

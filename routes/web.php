@@ -152,6 +152,9 @@ Route::middleware('auth')->group(function () {
         /*Empleados Puestos*/
         Route::get('/busqueda-por-nombre/{id_entidad}', [EmpleadoPuestoController::class, 'buscarPorNombre'])->name('empleadosPuestos.buscarPorNombre');
         Route::get('/busqueda-supervisor-por-nombre', [EmpleadoPuestoController::class, 'buscarSupervisorPorNombre'])->name('empleadosPuestos.buscarSupervisorPorNombre');
+        Route::get('/empleados-puestos', [EmpleadoPuestoController::class, 'index'])->name('empleadosPuestos.index');
+        Route::post('/empleados-puestos', [EmpleadoPuestoController::class, 'store'])->name('empleadosPuestos.store');
+        Route::put('/empleados-puestos/{id}', [EmpleadoPuestoController::class, 'update'])->name('empleadosPuestos.update');
     });
 
 
