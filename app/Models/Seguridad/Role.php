@@ -12,6 +12,7 @@ class Role extends Model  implements Auditable
 
     // Definir los campos que pueden ser asignados en masa
     protected $fillable = ['name', 'activo'];
+    protected $table = 'roles';
 
     // Puedes agregar relaciones si el rol tiene alguna
 }

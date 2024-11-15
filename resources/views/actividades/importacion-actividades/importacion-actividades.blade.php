@@ -9,45 +9,51 @@
 
     <div>
         <div class="max-w-7xl mx-auto sm:px-1 lg:px-3">
-
+            @php
+                $cicloActivo = \App\Models\Mantenimientos\Ciclo::with('tipoCiclo')->where('activo', 1)->first();
+            @endphp
             <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
-
-                <div class="grid grid-cols-1">
-                    <div class="col-span-1">
-                        <h2 class="text-lg font-semibold text-gray-700">Instrucciones</h2>
-                        <p class="text-sm text-gray-600">Utiliza la plantilla de actividades, llena la información y sube el archivo.</p>
+                @if(isset($cicloActivo))
+                    <h1 class="text-xl font-bold text-orange-900 mb-2">Ciclo activo: {{ $cicloActivo->anio.'-'. $cicloActivo->tipoCiclo->nombre }}</h1>
+                    <div class="grid grid-cols-1">
+                        <div class="col-span-1">
+                            <h2 class="text-lg font-semibold text-gray-700">Instrucciones</h2>
+                            <p class="text-sm text-gray-600">Utiliza la plantilla de actividades, llena la información y sube el archivo.</p>
+                        </div>
+                        <div class="col-span-1">
+                            <form action="{{ route('importar-actividades-post') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @csrf
+                                <div class="mt-4">
+                                    <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo de actividad</label>
+                                    <select id="tipo_actividad" name="tipo_actividad" class="mt-1 block
+                                        w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                        <option value="evento">Evento</option>
+                                        <option value="clase">Clase</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-center w-full">
+                                    <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white">
+                                        <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
+                                        <span id="file-name" class="mt-2 text-base leading-normal">
+                                            Selecciona un archivo
+                                        </span>
+                                        <input type="file" name="excel_file" id="file" class="hidden" onchange="updateFileName(this)" />
+                                        @if ($errors->has('excel_file'))
+                                            <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
+                                        @endif
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-center w-full mt-4 md:col-span-2">
+                                    <button type="submit" class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
+                                        Subir archivo
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="col-span-1">
-                        <form action="{{ route('importar-actividades-post') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @csrf
-                            <div class="mt-4">
-                                <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo de actividad</label>
-                                <select id="tipo_actividad" name="tipo_actividad" class="mt-1 block
-                                    w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    <option value="evento">Evento</option>
-                                    <option value="clase">Clase</option>
-                                </select>
-                            </div>
-                            <div class="flex items-center justify-center w-full">
-                                <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white">
-                                    <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
-                                    <span id="file-name" class="mt-2 text-base leading-normal">
-                                        Selecciona un archivo
-                                    </span>
-                                    <input type="file" name="excel_file" id="file" class="hidden" onchange="updateFileName(this)" />
-                                    @if ($errors->has('excel_file'))
-                                        <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
-                                    @endif
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-center w-full mt-4 md:col-span-2">
-                                <button type="submit" class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
-                                    Subir archivo
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                @else
+                    <h1 class="text-xl font-bold text-orange-900">No hay un ciclo activo</h1>
+                @endif
             </div>
 
             @if(session()->has('success'))
@@ -294,24 +300,25 @@
                                 </div>
 
                                 {{-- Selección de días --}}
-                                <div class="space-y-2">
+                                <div class="space-y-1">
                                     <label class="block text-sm font-medium text-gray-700">Días de la Semana</label>
                                     <div class="relative">
                                         <button
-                                            id="dropdownDaysButton"
+                                            id="dropdownDaysButton{{ $loop->iteration }}"
                                             data-dropdown-toggle="dropdownDays{{ $loop->iteration }}"
-                                            class="w-full px-4 py-2 border rounded-lg text-left focus:outline-none focus:ring"
+                                            class="w-full px-4 py-2 border-2 rounded-lg text-left focus:outline-none focus:ring text-sm"
                                             type="button">
                                             Seleccionar días
                                         </button>
 
+                                        <!-- Dropdown de días -->
                                         <div
                                             id="dropdownDays{{ $loop->iteration }}"
-                                            class="hidden z-20 w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+                                            class="hidden z-20 w-full max-h-[180px] overflow-auto bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
                                             data-popper-reference-hidden
                                             data-popper-escaped
                                             data-popper-placement="top">
-                                            <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDaysButton">
+                                            <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDaysButton{{ $loop->iteration }}">
                                                 @foreach($dias as $dia)
                                                     <li class="flex items-center">
                                                         <input
@@ -324,7 +331,8 @@
                                                             @elseif(in_array($dia->id, $row['diasActividad']))
                                                                 checked
                                                             @endif
-                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                            onclick="updateSelectedDays({{ $loop->parent->iteration }})">
                                                         <label for="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                             {{ $dia->nombre }}
                                                         </label>
@@ -351,4 +359,25 @@
         const fileName = input.files[0] ? input.files[0].name : "Selecciona un archivo";
         document.getElementById('file-name').textContent = fileName;
     }
+
+    function updateSelectedDays(index) {
+        const checkboxes = document.querySelectorAll(`#dropdownDays${index} input[type="checkbox"]`);
+        const selected = [];
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selected.push(checkbox.nextElementSibling.textContent.trim());
+            }
+        });
+
+        const button = document.getElementById(`dropdownDaysButton${index}`);
+        button.textContent = selected.length ? selected.join(', ') : 'Seleccionar días';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize the button text with the initially selected values
+        @foreach ($dias as $index => $actividad)
+            updateSelectedDays({{ $loop->iteration }});
+        @endforeach
+    });
 </script>

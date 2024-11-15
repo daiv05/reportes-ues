@@ -18,27 +18,28 @@
                 Añadir Rol
             </x-forms.primary-button>
         </div>
-        <div class="mx-auto mb-8 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
+        <div class="mx-auto mb-8">
             <x-table.base :headers="$headers">
                 @foreach ($roles as $rol)
                     <x-table.tr>
                         <x-table.td>
                             {{ $rol->name }}
                         </x-table.td>
-                        <x-table.td>
+                        <x-table.td justify="center">
                             <x-status.is-active :active="$rol->activo" />
                         </x-table.td>
                         <x-table.td>
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                data-id="{{ $rol->id }}" data-name="{{ $rol->name }}" data-activo="{{ $rol->activo }}">
+                                data-id="{{ $rol->id }}" data-name="{{ $rol->name }}"
+                                data-activo="{{ $rol->activo }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
                         </x-table.td>
                     </x-table.tr>
                 @endforeach
             </x-table.base>
-            <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
+            <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
                 aria-label="Table navigation">
                 {{ $roles->links() }}
             </nav>
@@ -52,30 +53,12 @@
         <x-slot name="body">
             <form id="add-role-form" method="POST" action="{{ route('roles.store') }}">
                 @csrf
-                <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
-                <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Nombre
-                    </label>
-                    <input type="text" id="name" name="name"
-                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm" />
-                    @error('name')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <label for="activo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Activo
-                    </label>
-                    <select id="activo" name="activo"
-                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        <option value="1">Sí</option>
-                        <option value="0">No</option>
-                    </select>
-                    @error('activo')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
+                <x-forms.row :columns="1">
+                    <x-forms.field label="Nombre" name="nombre" type="text" :value="old('nombre')" :error="$errors->get('nombre')" />
+
+                    <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
+                        :error="$errors->get('activo')" />
+                </x-forms.row>
             </form>
         </x-slot>
         <x-slot name="footer">

@@ -1,8 +1,9 @@
 @php
     $headers = [
-        ['text' => 'Persona', 'align' => 'left'],
+        ['text' => 'Nombre', 'align' => 'left'],
         ['text' => 'Usuario', 'align' => 'left'],
         ['text' => 'Email', 'align' => 'left'],
+        ['text' => 'Roles', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
@@ -26,7 +27,7 @@
                 @foreach ($usuarios as $usuario)
                     <x-table.tr>
                         <x-table.td>
-                            {{ $usuario->persona->nombre }}
+                            {{ $usuario->persona->nombre . ' ' . $usuario->persona->apellido }}
                         </x-table.td>
                         <x-table.td>
                             {{ $usuario->carnet }}
@@ -35,11 +36,11 @@
                             {{ $usuario->email }}
                         </x-table.td>
                         <x-table.td>
+                            {{ implode(', ', $usuario->roles->pluck('name')->toArray()) }}
+                        </x-table.td>
+                        <x-table.td justify="center">
                             <x-status.is-active :active="$usuario->activo" />
                         </x-table.td>
-                        <!--  <x-table.td>
-                            {{ implode(', ', $usuario->roles->pluck('name')->toArray()) }}
-                        </x-table.td>-->
                         <x-table.td>
                             <div class="flex space-x-2"> <!-- Flexbox para alinear los íconos -->
                                 <!-- Botón para editar (con ícono de lápiz) -->

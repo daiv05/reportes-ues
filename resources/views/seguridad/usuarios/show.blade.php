@@ -2,7 +2,7 @@
     $headers = [
         ['text' => 'Rol', 'align' => 'left'],
         ['text' => 'Tipo', 'align' => 'left'],
-        ['text' => 'Estado', 'align' => 'left'],
+        ['text' => 'Estado', 'align' => 'center'],
     ];
 @endphp
 
@@ -22,8 +22,20 @@
                 {{ $user->email }}
             </x-view.description-list-item>
 
+            <x-view.description-list-item label="Entidad relacionada">
+                {{ $user->empleadosPuestos[0]->puesto->entidad->nombre }}
+            </x-view.description-list-item>
+
+            <x-view.description-list-item label="Puesto">
+                {{ $user->empleadosPuestos[0]->puesto->nombre }}
+            </x-view.description-list-item>
+
             <x-view.description-list-item label="Carnet">
                 {{ $user->carnet }}
+            </x-view.description-list-item>
+
+            <x-view.description-list-item label="Estado">
+                {{ $user->activo ? 'Activo' : 'Inactivo' }}
             </x-view.description-list-item>
 
             <x-view.description-list-item label="Fecha de creación">
@@ -48,7 +60,7 @@
                         <x-table.tr>
                             <x-table.td>{{ $role->name }}</x-table.td>
                             <x-table.td>{{ $role->guard_name }}</x-table.td>
-                            <x-table.td>
+                            <x-table.td justify="center">
                                 <x-status.is-active :active="$role->activo" />
                             </x-table.td>
                         </x-table.tr>

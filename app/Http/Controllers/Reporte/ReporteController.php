@@ -274,7 +274,7 @@ class ReporteController extends Controller
         ];
         $empSupervisor = User::find($validated['id_empleado_supervisor'])->email;
         Mail::to($empSupervisor)->send(new EnvioMailable('emails.asignacion', $tableData));
-        
+
         Session::flash('message', [
             'type' => 'success',
             'content' => 'Requerimiento asignado exitosamente'
@@ -393,6 +393,18 @@ class ReporteController extends Controller
                 $accionReporte->save();
             }
         });
+
+        $reporte = Reporte::find($id_reporte);
+        if ($request['id_estado'] === EstadosEnum::FINALIZADO->value || $request['id_estado'] === EstadosEnum::INCOMPLETO->value) {
+            $tableData = [
+                'reporte' => $reporte
+            ];
+            foreach ($puestosEmpleadoIds as $emp) {
+                $empPuesto = EmpleadoPuesto::find($emp)->usuario->email;
+                Mail::to($empPuesto)->send(new EnvioMailable('emails.supervision-reporte', $tableData));
+            }
+        }
+
         Session::flash('message', [
             'type' => 'success',
             'content' => 'Seguimiento de reporte actualizado con éxito'

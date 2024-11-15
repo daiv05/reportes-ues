@@ -62,41 +62,20 @@
         <x-slot name="body">
             <form id="add-entidades-form" method="POST" action="{{ route('entidades.store') }}">
                 @csrf
-                <div class="mb-4">
-                    <x-forms.input-label for="nombre" :value="__('Nombre')" />
-                    <input type="text" id="nombre" name="nombre"
-                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm" />
-                    <x-forms.input-error :messages="$errors->get('nombre')" class="mt-2" />
-                </div>
-                <div class="mb-4">
-                    <x-forms.input-label for="descripcion" :value="__('Descripcion')" />
-                    <textarea id="descripcion" name="descripcion" rows="4"
-                        class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                        placeholder="Describa brevemente las funciones..."></textarea>
-                    <x-forms.input-error :messages="$errors->get('descripcion')" class="mt-2" />
-                </div>
-                <div class="mb-4">
-                    <x-forms.input-label for="id_entidad" :value="__('Entidadesa Padre')" />
-                    <select id="id_entidad" name="id_entidad"
-                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        <option value="">Ninguno (Raíz)</option>
-                        @foreach ($entidadesLista as $entidad)
-                            <option value="{{ $entidad->id }}">
-                                {{ $entidad->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <x-forms.input-error :messages="$errors->get('id_entidad')" class="mt-2" />
-                </div>
-                <div class="mb-4">
-                    <x-forms.input-label for="activo" :value="__('Estado')" />
-                    <select id="activo" name="activo"
-                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        <option value="1">ACTIVO</option>
-                        <option value="0">INACTIVO</option>
-                    </select>
-                    <x-forms.input-error :messages="$errors->get('activo')" class="mt-2" />
-                </div>
+                <x-forms.row :columns="1">
+                    <x-forms.field label="Nombre" name="nombre" type="text" :value="old('nombre')" :error="$errors->get('nombre')" />
+                    <div>
+                        <x-forms.input-label for="descripcion" :value="__('Descripcion')" />
+                        <textarea id="descripcion" name="descripcion" rows="4"
+                            class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                            placeholder="Describa brevemente las funciones..."></textarea>
+                        <x-forms.input-error :messages="$errors->get('descripcion')" class="mt-2" />
+                    </div>
+                    <x-forms.select label="Entidad Padre" id="id_entidad" name="id_entidad" :options="['' => 'Ninguno (Raíz)'] + $entidadesLista->pluck('nombre', 'id')->toArray()"
+                        :value="old('id_entidad')" :error="$errors->get('id_entidad')" />
+                    <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
+                        :error="$errors->get('activo')" />
+                </x-forms.row>
             </form>
         </x-slot>
         <x-slot name="footer">

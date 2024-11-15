@@ -17,6 +17,7 @@ use App\Http\Controllers\Mantenimientos\CicloController;
 use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Auditorias\UserAuditController;
 
 /*
 |--------------------------------------------------------------------------
@@ -151,6 +152,9 @@ Route::middleware('auth')->group(function () {
         /*Empleados Puestos*/
         Route::get('/busqueda-por-nombre/{id_entidad}', [EmpleadoPuestoController::class, 'buscarPorNombre'])->name('empleadosPuestos.buscarPorNombre');
         Route::get('/busqueda-supervisor-por-nombre', [EmpleadoPuestoController::class, 'buscarSupervisorPorNombre'])->name('empleadosPuestos.buscarSupervisorPorNombre');
+        Route::get('/empleados-puestos', [EmpleadoPuestoController::class, 'index'])->name('empleadosPuestos.index');
+        Route::post('/empleados-puestos', [EmpleadoPuestoController::class, 'store'])->name('empleadosPuestos.store');
+        Route::put('/empleados-puestos/{id}', [EmpleadoPuestoController::class, 'update'])->name('empleadosPuestos.update');
     });
 
 
@@ -161,6 +165,13 @@ Route::middleware('auth')->group(function () {
         // Rutas de general
 
     });
+
+
+
+
+    Route::get('/auditorias', [UserAuditController::class, 'index'])->name('adUser.index');
+    Route::get('/auditorias/get-events', [UserAuditController::class, 'getEvents']); // Ruta AJAX
+
 });
 
 
