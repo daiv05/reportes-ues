@@ -101,6 +101,8 @@
             document.getElementById('add-ciclo-form').reset();
             document.getElementById('general-errors').innerHTML = '';
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
+
+                    // Limpiar los atributos data-* de los botones o elementos relacionado
         });
     });
 
