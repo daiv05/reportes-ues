@@ -60,8 +60,8 @@
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.select label="Facultad" id="facultad" name="facultad" :options="$facultades->pluck('nombre', 'id')->toArray()"
-                            :value="old('facultad')" :error="$errors->get('facultad')" />
+                        <x-forms.select label="Facultad" id="id_facultad" name="id_facultad" :options="$facultades->pluck('nombre', 'id')->toArray()"
+                            :value="old('id_facultad')" :error="$errors->get('id_facultad')" />
                         <div id="facultad-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
@@ -70,7 +70,7 @@
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.select label="Estado" id="estado" name="estado" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
+                        <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
                             :error="$errors->get('activo')" />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
@@ -95,8 +95,8 @@
     // Validación del formulario
     document.getElementById('asignacion-form').addEventListener('submit', function(event) {
         const nombreField = document.getElementById('nombre');
-        const facultadField = document.getElementById('facultad');
-        const estadoField = document.getElementById('estado');
+        const facultadField = document.getElementById('id_facultad');
+        const estadoField = document.getElementById('activo');
 
         let hasErrors = false;
 
@@ -162,8 +162,8 @@
 
             // Rellenar campos con los valores actuales
             document.getElementById('nombre').value = nombre;
-            document.getElementById('facultad').value = facultad;
-            document.getElementById('estado').value = activo;
+            document.getElementById('id_facultad').value = facultad;
+            document.getElementById('activo').value = activo;
 
             // Abrir el modal
             document.querySelector('[data-modal-target="static-modal"]').click();
