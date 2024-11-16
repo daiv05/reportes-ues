@@ -120,6 +120,7 @@
             });
         });
 
+        
         // Configuración del formulario al editar
         document.querySelectorAll('.edit-button').forEach((button) => {
             button.addEventListener('click', function() {
