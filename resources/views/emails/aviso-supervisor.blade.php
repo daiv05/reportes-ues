@@ -3,10 +3,17 @@
         <x-emails.email-header
             logoSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3JjWq5hKtAVSofTTo72ynt7SlCxi2G6WXmA&s" />
         <p>
-            Estimado usuario, ha sido asignado {{ $tableData['esSupervisor'] ? 'como SUPERVISOR' : '' }} para darle
-            seguimiento al reporte
+            Estimado usuario, el reporte al que fue asignado, con codigo:
             <strong>#{{ $tableData['reporte']->id }}</strong>
-            :
+            ha sido marcado como:
+        </p>
+        <div class="container-estado">
+            <div class="estado-badge color-completado">
+                <span class="estado-text">COMPLETADO</span>
+            </div>
+        </div>
+        <p style="margin-top: 8px; margin-bottom: 16px;">
+            Ya puedes enviar una revisión y marcarlo como FINALIZADO o INCOMPLETO
         </p>
         <table style="width: 100%; border-collapse: collapse; table-layout: fixed">
             <tr>

@@ -41,7 +41,10 @@ class AulasController extends Controller
         ]);
 
         Aulas::create($request->all());
-        return redirect()->route('aulas.index');
+        return redirect()->route('aulas.index') ->with('message', [
+            'type' => 'success',
+            'content' => 'Aula creada exitosamente'
+        ]);
     }
 
     /**
@@ -75,7 +78,10 @@ class AulasController extends Controller
 
         $aula = Aulas::findOrFail($id);
         $aula->update($request->all());
-        return redirect()->route('aulas.index');
+        return redirect()->route('aulas.index') ->with('message', [
+            'type' => 'success',
+            'content' => 'Aula actualizado exitosamente'
+        ]);
     }
 
     /**

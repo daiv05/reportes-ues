@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('recursos_reportes', function (Blueprint $table) {
+        Schema::create('recursos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_historial_acciones_reporte');
             $table->string('nombre', 100);
-            $table->decimal('costo');
-            $table->foreign('id_historial_acciones_reporte')->references('id')->on('historial_acciones_reportes')->onDelete('restrict');
+            $table->boolean('activo')->default(1);
+            $table->timestamps();
         });
     }
 
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('recursos_reportes');
+        Schema::dropIfExists('recursos');
     }
 };
