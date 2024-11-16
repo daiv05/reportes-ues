@@ -103,7 +103,6 @@ class ActividadController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             return redirect()->back()->with('error', 'Ocurrió un error al guardar las actividades. Detalles: ' . $e->getMessage());
         }
     }
@@ -123,14 +122,14 @@ class ActividadController extends Controller
         $search = $request->input('table-search');
         $clases = Clase::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas', 'tipoClase')
             ->whereHas('actividad', function ($query) {
-                $query->where('id_ciclo', Ciclo::where('activo', 1)->first());
+                $query->where('id_ciclo', Ciclo::where('activo', 1)->first()->id);
             })
             ->when($search, function ($query, $search) {
                 $query->whereHas('actividad.asignaturas', function ($query) use ($search) {
                     $query->where('nombre', 'like', "%$search%");
                 });
             })
-            ->paginate(3);
+            ->paginate(10);
 
         return view('actividades.listado-actividades.listado-clases', compact('clases'));
     }

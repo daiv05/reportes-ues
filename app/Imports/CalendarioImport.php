@@ -3,6 +3,8 @@
 namespace App\Imports;
 
 use App\Models\Mantenimientos\Asignatura;
+use Illuminate\Support\Str;
+use App\Models\Mantenimientos\Aulas;
 use Maatwebsite\Excel\Concerns\ToModel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
@@ -17,6 +19,8 @@ class CalendarioImport implements ToModel
     public function model(array $row)
     {
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $aulasCatalog = Aulas::all();
+        $aulas = [];
         $modalidad = null;
         if(count($row) < 12){
             return null;
@@ -48,16 +52,30 @@ class CalendarioImport implements ToModel
             $row[4] = substr($row[4], 0, 6);
         }
 
-
-        if(!$row[12]){
-            $row[12] = 'No se requiere aula';
-        }
-
-
         if(strtolower($row[7]) == 'virtual' || strtolower($row[7]) == 'distancia' || strtolower($row[7]) == 'en línea' || strtolower($row[7]) == 'en linea'){
             $modalidad = 1;
         } elseif(strtolower($row[7]) == 'presencial' || !$row[7]){
             $modalidad = 2;
+        }
+
+        if($row[12]){
+            $aulasExcel = explode(',', $row[12]);
+            foreach($aulasExcel as $aula){
+                $aula = trim($aula);
+                $aula = strtoupper($aula);
+                $aula = str_replace('-', '', $aula);
+                $aula = str_replace(' ', '', $aula);
+                if(Str::contains($aula, 'AUDITORIO') || Str::contains($aula, 'A340') || Str::contains($aula, 'MARMOL')){
+                    $aula = 'AUDITORIOMARMOL';
+                }
+                // verifica si coincide con los nombres de las aulas en la base de datos
+                foreach($aulasCatalog as $aulaCatalog){
+                    if($aula == $aulaCatalog->nombre){
+                        $aulas[] = $aulaCatalog->id;
+                    }
+                }
+            }
+            $out->writeln('Aulas: ' . json_encode($aulas));
         }
 
         if(!$row[4] && !$row[6] && !$row[7] && !$row[8] && !$row[11]){
@@ -81,6 +99,7 @@ class CalendarioImport implements ToModel
         //     'local'         => $row[12] ?? null,
         // ]);
         $this->importedData[] = [
+            'index' => $this->index++,
             'semana' => $row[0] ?? $this->week,
             'fecha' => Date::excelToDateTimeObject($row[2] ?? $this->date)->format('d/m/Y'),
             'materia' => $row[4] ?? null,
@@ -91,7 +110,7 @@ class CalendarioImport implements ToModel
             'horario' => $row[11] ?? null,
             'hora_inicio' => $horario[0] ?? null,
             'hora_fin' => $horario[1] ?? null,
-            'local' => $row[12] ?? 'No se requiere aula',
+            'aulas' => $aulas
         ];
     }
 
