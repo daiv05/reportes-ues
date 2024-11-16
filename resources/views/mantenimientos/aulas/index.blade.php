@@ -90,7 +90,6 @@
     </x-form-modal>
 </x-app-layout>
 <script>
-    // Validación al enviar el formulario
     document.getElementById('asignacion-form').addEventListener('submit', function(event) {
         const nombreField = document.getElementById('nombre');
         const facultadField = document.getElementById('id_facultad');
@@ -122,25 +121,20 @@
         }
     });
 
-    // Manejo de la acción de cancelar
     document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
         button.addEventListener('click', function() {
             updateModalTitle('Añadir Aula');
 
-            // Resetear el formulario
             resetForm();
 
-            // Establecer la acción y método del formulario para "Añadir"
             document.getElementById('asignacion-form').method = 'POST';
             document.getElementById('asignacion-form').action = "{{ route('aulas.store') }}";
 
-            // Eliminar el campo _method (para PUT) si existe
             document.querySelectorAll('input[name="_method"]').forEach((input) => input.remove());
 
         });
     });
 
-    // Manejo de la acción de editar
     document.querySelectorAll('.edit-button').forEach((button) => {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
@@ -150,17 +144,14 @@
 
             updateModalTitle('Editar Aula');
 
-            // Establecer la acción y método del formulario para "Editar"
             document.getElementById('asignacion-form').action = `/mantenimientos/aulas/${id}`;
             document.getElementById('asignacion-form').method = 'POST';
 
-            // Añadir el campo _method con valor PUT (para indicar que es una edición)
             if (!document.querySelector('input[name="_method"]')) {
                 document.getElementById('asignacion-form').innerHTML +=
                     '<input type="hidden" name="_method" value="PUT">';
             }
 
-            // Rellenar los campos con los valores de la aula a editar
             document.getElementById('nombre').value = nombre;
             document.getElementById('id_facultad').value = facultad;
             document.getElementById('activo').value = activo;
