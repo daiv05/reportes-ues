@@ -102,9 +102,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('/escuela', EscuelaController::class)->except(['destroy']);
 
         // Rutas de Aulas
-        Route::get('/aulas', [AulasController::class, 'index'])->name('aulas.index');
+        Route::prefix('aulas')->group(function () {
+            Route::get('/', [AulasController::class, 'index'])->name('aulas.index');
+            Route::patch('/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
+        });
         Route::resource('aulas', AulasController::class)->except(['destroy']);
-        Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
 
         // Rutas de Asignaturas
         Route::prefix('asignaturas')->group(function () {
