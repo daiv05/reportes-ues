@@ -465,6 +465,7 @@ class ReporteController extends Controller
             'empleadosAcciones.empleadoPuesto.usuario',
             'empleadosAcciones.empleadoPuesto.usuario.persona'
         )->find($id_reporte);
+
         if (isset($reporte)) {
             // Necesario para asignacion
             $entidades = Entidades::all();
@@ -484,13 +485,20 @@ class ReporteController extends Controller
             // Necesarios para actualizacion y seguimiento de reporte
             $estController = new EstadoController();
             $estadosHabilitados = $estController->estadosReporte($reporte);
+
+            // Obtener fondos y recursos
+            $fondos = DB::table('fondos')->get();
+            $recursos = DB::table('recursos')->get();
+
             return [
                 'reporte' => $reporte,
                 'accionesReporte' => $reporte->accionesReporte,
                 'entidades' => $entidades,
                 'empleadosPorEntidad' => $empleadosPorEntidad,
                 'supervisores' => $supervisores,
-                'estadosPermitidos' => $estadosHabilitados
+                'estadosPermitidos' => $estadosHabilitados,
+                'fondos' => $fondos,
+                'recursos' => $recursos
             ];
         } else {
             return [
@@ -498,7 +506,9 @@ class ReporteController extends Controller
                 'entidades' => [],
                 'empleadosPorEntidad' => [],
                 'supervisores' => [],
-                'estadosPermitidos' => []
+                'estadosPermitidos' => [],
+                'fondos' => [],
+                'recursos' => []
             ];
         }
     }
