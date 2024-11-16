@@ -72,10 +72,7 @@ class AsignaturaController extends Controller
     public function edit(string $id): View
     {
         $asignatura = Asignatura::findOrFail($id);
-        return view('asignatura.edit', compact('asignatura'))->with('message', [
-            'type' => 'success',
-            'content' => 'El asignatura se ha editado exitosamente.'
-        ]);
+        return view('asignatura.edit', compact('asignatura'));
     }
     /**
      * Update the specified resource in storage.
@@ -104,7 +101,7 @@ class AsignaturaController extends Controller
         $asignatura->delete();
         return redirect()->route('asignatura.index')->with('message', [
             'type' => 'success',
-            'content' => 'La asignatura se ha creado exitosamente.'
+            'content' => 'La asignatura se ha eliminado exitosamente.'
         ]);
     }
 
@@ -112,9 +109,6 @@ class AsignaturaController extends Controller
     {
         $asignatura->activo = !$asignatura->activo;
         $asignatura->save();
-        return redirect()->route('asignatura.index')->with('message', [
-            'type' => 'success',
-            'content' => 'La asignatura se ha creado exitosamente.'
-        ]);
+        return redirect()->route('asignatura.index');
     }
 }

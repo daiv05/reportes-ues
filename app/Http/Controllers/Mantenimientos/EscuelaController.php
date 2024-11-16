@@ -61,10 +61,7 @@ class EscuelaController extends Controller
     public function show(string $id): View
     {
         $escuela = Escuela::findOrFail($id);
-        return view('escuela.show', compact('escuela'))->with('message', [
-            'type' => 'success',
-            'content' => 'El aula se ha creado exitosamente.'
-        ]);
+        return view('escuela.show', compact('escuela'));
     }
 
     /**
@@ -73,10 +70,7 @@ class EscuelaController extends Controller
     public function edit(string $id): View
     {
         $escuela = Escuela::findOrFail($id);
-        return view('escuela.edit', compact('escuela'))->with('message', [
-            'type' => 'success',
-            'content' => 'El aula se ha editado exitosamente.'
-        ]);
+        return view('escuela.edit', compact('escuela'));
     }
     /**
      * Update the specified resource in storage.
@@ -103,19 +97,13 @@ class EscuelaController extends Controller
     {
         $escuela = Escuela::findOrFail($id);
         $escuela->delete();
-        return redirect()->route('escuela.index')->with('message', [
-            'type' => 'success',
-            'content' => 'El aula se ha creado exitosamente.'
-        ]);
+        return redirect()->route('escuela.index');
     }
 
     public function toggleActivo(Escuela $escuela): RedirectResponse
     {
         $escuela->activo = !$escuela->activo;
         $escuela->save();
-        return redirect()->route('escuela.index')->with('message', [
-            'type' => 'success',
-            'content' => 'El aula se ha creado exitosamente.'
-        ]);
+        return redirect()->route('escuela.index');
     }
 }
