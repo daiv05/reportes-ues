@@ -54,7 +54,7 @@
                 <x-forms.row :columns="1">
                     <x-forms.select label="Facultad" id="id_facultad" name="id_facultad" :options="$facultades->pluck('nombre', 'id')->toArray()"
                         :value="old('id_facultad')" :error="$errors->get('id_facultad')" />
-                    <x-forms.field label="Nombre" name="nombre" type="text" :value="old('nombre')" :error="$errors->get('nombre')" />
+                    <x-forms.field label="Nombre" name="name" type="text" :value="old('name')" :error="$errors->get('name')" />
                     <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
                         :error="$errors->get('activo')" />
                 </x-forms.row>
@@ -77,7 +77,7 @@
         let hasErrors = false;
         let errorMessage = '';
 
-        const nombre = document.getElementById('nombre').value.trim();
+        const nombre = document.getElementById('name').value.trim();
         if (nombre === '') {
             hasErrors = true;
             errorMessage += 'El campo Nombre es obligatorio<br>';
