@@ -16,9 +16,8 @@
             </x-forms.primary-button>
         </div>
     </x-slot>
-
-
-    <div class="mx-auto flex min-w-full flex-col items-center justify-center overflow-x-auto shadow-md sm:rounded-lg">
+    <div id="prueba"
+        class="mx-auto flex min-w-full flex-col items-center justify-center overflow-x-auto shadow-md sm:rounded-lg">
         <x-table.base :headers="$headers">
             @foreach ($aulas as $aula)
                 <x-table.tr>
@@ -48,7 +47,6 @@
             {{ $aulas->links() }}
         </nav>
     </div>
-
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
@@ -92,7 +90,7 @@
     </x-form-modal>
 </x-app-layout>
 <script>
-    // Validación del formulario
+    // Validación al enviar el formulario
     document.getElementById('asignacion-form').addEventListener('submit', function(event) {
         const nombreField = document.getElementById('nombre');
         const facultadField = document.getElementById('id_facultad');
@@ -100,49 +98,49 @@
 
         let hasErrors = false;
 
-        // Limpiar mensajes de error previos
         document.getElementById('general-errors').innerHTML = '';
         document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
 
-        // Validar campo Nombre
         if (!nombreField.value.trim()) {
             hasErrors = true;
             document.getElementById('nombre-error').innerHTML = 'El campo Nombre es obligatorio';
         }
 
-        // Validar campo Facultad
         if (!facultadField.value.trim()) {
             hasErrors = true;
             document.getElementById('facultad-error').innerHTML = 'El campo Facultad es obligatorio';
         }
 
-        // Validar campo Estado
         if (!estadoField.value.trim()) {
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo Estado es obligatorio';
         }
 
-        // Prevenir envío si hay errores
         if (hasErrors) {
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
         }
     });
 
-    // Resetear el formulario y limpiar errores al cerrar el modal
+    // Manejo de la acción de cancelar
     document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
         button.addEventListener('click', function() {
             updateModalTitle('Añadir Aula');
-            document.getElementById('asignacion-form').reset();
-            document.getElementById('general-errors').innerHTML = '';
-            document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
 
-            // Elimina cualquier campo `input` extra agregado dinámicamente
+            // Resetear el formulario
+            resetForm();
+
+            // Establecer la acción y método del formulario para "Añadir"
+            document.getElementById('asignacion-form').method = 'POST';
+            document.getElementById('asignacion-form').action = "{{ route('aulas.store') }}";
+
+            // Eliminar el campo _method (para PUT) si existe
             document.querySelectorAll('input[name="_method"]').forEach((input) => input.remove());
+
         });
     });
 
-    // Configuración del formulario al editar
+    // Manejo de la acción de editar
     document.querySelectorAll('.edit-button').forEach((button) => {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
@@ -152,15 +150,17 @@
 
             updateModalTitle('Editar Aula');
 
-            // Actualizar acción y método del formulario
+            // Establecer la acción y método del formulario para "Editar"
             document.getElementById('asignacion-form').action = `/mantenimientos/aulas/${id}`;
             document.getElementById('asignacion-form').method = 'POST';
+
+            // Añadir el campo _method con valor PUT (para indicar que es una edición)
             if (!document.querySelector('input[name="_method"]')) {
                 document.getElementById('asignacion-form').innerHTML +=
                     '<input type="hidden" name="_method" value="PUT">';
             }
 
-            // Rellenar campos con los valores actuales
+            // Rellenar los campos con los valores de la aula a editar
             document.getElementById('nombre').value = nombre;
             document.getElementById('id_facultad').value = facultad;
             document.getElementById('activo').value = activo;
@@ -170,9 +170,21 @@
         });
     });
 
-    // Actualizar el título del modal dinámicamente
+
     function updateModalTitle(title) {
         document.getElementById('modal-title').textContent = title;
     }
-</script>
+    // Función para resetear el formulario y limpiar los errores
+    function resetForm() {
+        document.getElementById('asignacion-form').reset(); // Limpiar el formulario
+        document.getElementById('general-errors').innerHTML = ''; // Limpiar errores generales
 
+        document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML =
+            '')); // Limpiar errores específicos de campo
+
+        // Limpiar los valores de los select
+        document.querySelectorAll('select').forEach((select) => {
+            select.selectedIndex = 0; // Restablecer el primer valor (vacío o predeterminado)
+        });
+    }
+</script>
