@@ -152,14 +152,6 @@
 
             updateModalTitle('Editar Aula');
 
-            // Actualizar acción y método del formulario
-            document.getElementById('asignacion-form').action = `/mantenimientos/aulas/${id}`;
-            document.getElementById('asignacion-form').method = 'POST';
-            if (!document.querySelector('input[name="_method"]')) {
-                document.getElementById('asignacion-form').innerHTML +=
-                    '<input type="hidden" name="_method" value="PUT">';
-            }
-
             // Rellenar campos con los valores actuales
             document.getElementById('nombre').value = nombre;
             document.getElementById('id_facultad').value = facultad;
