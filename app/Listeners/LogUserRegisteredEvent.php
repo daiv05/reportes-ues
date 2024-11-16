@@ -20,8 +20,8 @@ class LogUserRegisteredEvent
         // Registrar la auditoría para el evento de registro
         Audit::create([
             'user_id' => $user->id, // ID del usuario registrado
-            'event' => 'user_registered', // Tipo de evento
-            'auditable_type' => 'App\Models\User', // Tipo de modelo (usuario)
+            'event' => 'Registro', // Tipo de evento
+            'auditable_type' => 'App\Models\Seguridad\User', // Tipo de modelo (usuario)
             'auditable_id' => $user->id, // ID del usuario
             'old_values' => [], // No hay valores previos para este evento
             'new_values' => [

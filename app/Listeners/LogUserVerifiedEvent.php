@@ -20,8 +20,8 @@ class LogUserVerifiedEvent
         // Registrar la auditoría para el evento de verificación de correo electrónico
         Audit::create([
             'user_id' => $user->id, // ID del usuario verificado
-            'event' => 'email_verified', // Tipo de evento
-            'auditable_type' => 'App\Models\User', // Tipo de modelo (Usuario)
+            'event' => 'Vericar correo', // Tipo de evento
+            'auditable_type' => 'App\Models\Seguridad\User', // Tipo de modelo (Usuario)
             'auditable_id' => $user->id, // ID del usuario
             'old_values' => [], // No hay valores anteriores para este evento
             'new_values' => [

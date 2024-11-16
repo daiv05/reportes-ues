@@ -92,6 +92,11 @@
                     'active' => request()->is('rhu/puestos'),
                     'label' => 'Puestos',
                 ],
+                [
+                    'to' => 'empleadosPuestos.index',
+                    'active' => request()->is('rhu/empleado-puesto'),
+                    'label' => 'Empleados - Puestos',
+                ]
             ],
         ],
         [

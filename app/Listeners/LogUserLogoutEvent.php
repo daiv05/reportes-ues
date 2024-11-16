@@ -21,8 +21,8 @@ class LogUserLogoutEvent
         // Registrar la auditoría para el evento de cierre de sesión
         Audit::create([
             'user_id' => $user->id, // ID del usuario que cerró sesión
-            'event' => 'user_logged_out', // Tipo de evento
-            'auditable_type' => 'App\Models\User', // Tipo de modelo (usuario)
+            'event' => 'Cerrar session', // Tipo de evento
+            'auditable_type' => 'App\Models\Seguridad\User', // Tipo de modelo (usuario)
             'auditable_id' => $user->id, // ID del usuario
             'old_values' => [], // No hay valores previos para este evento
             'new_values' => [

@@ -120,8 +120,8 @@ class UsuarioController extends Controller
             'event' => 'updated_roles',
             'auditable_type' => 'App\Models\User',  // Tipo de entidad auditada (User)
             'auditable_id' => $user->id,  // ID del usuario que se actualiza
-            'old_values' => ['roles' => $currentRoles],  // Roles anteriores
-            'new_values' => ['roles' => $newRoles],  // Nuevos roles
+            'old_values' =>  $currentRoles,  // Roles anteriores
+            'new_values' => $newRoles,  // Nuevos roles
             'url' => request()->url(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->header('User-Agent'),

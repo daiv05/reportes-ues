@@ -51,44 +51,13 @@
         <x-slot name="body">
             <form id="add-escuela-form" method="POST" action="{{ route('escuela.store') }}">
                 @csrf
-                <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
-                <div class="mb-4">
-                    <label for="id_facultad" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Facultad
-                    </label>
-                    <select id="id_facultad" name="id_facultad"
-                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        @foreach ($facultades as $facultad)
-                            <option value="{{ $facultad->id }}">{{ $facultad->nombre }}</option>
-                        @endforeach
-                    </select>
-                    @error('id_facultad')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Nombre
-                    </label>
-                    <input type="text" id="nombre" name="nombre"
-                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm" />
-                    @error('nombre')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <label for="activo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Activo
-                    </label>
-                    <select id="activo" name="activo"
-                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-escarlata-ues focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm">
-                        <option value="1">Sí</option>
-                        <option value="0">No</option>
-                    </select>
-                    @error('activo')
-                        <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
+                <x-forms.row :columns="1">
+                    <x-forms.select label="Facultad" id="id_facultad" name="id_facultad" :options="$facultades->pluck('nombre', 'id')->toArray()"
+                        :value="old('id_facultad')" :error="$errors->get('id_facultad')" />
+                    <x-forms.field label="Nombre" name="nombre" type="text" :value="old('nombre')" :error="$errors->get('nombre')" />
+                    <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
+                        :error="$errors->get('activo')" />
+                </x-forms.row>
             </form>
         </x-slot>
         <x-slot name="footer">
