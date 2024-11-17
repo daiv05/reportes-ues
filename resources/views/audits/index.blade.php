@@ -6,7 +6,7 @@
     </x-slot>
 
     <x-container>
-        <form action="{{ route('adUser.index') }}" method="GET">
+        <form action="{{ route('general.index') }}" method="GET">
             <x-forms.button-group>
                 <x-forms.primary-button class="ml-3">
                     Filtrar

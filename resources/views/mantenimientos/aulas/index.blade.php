@@ -2,7 +2,7 @@
     $headers = [
         ['text' => 'Nombre', 'align' => 'left'],
         ['text' => 'Facultad', 'align' => 'left'],
-        ['text' => 'Estado', 'align' => 'center'],
+        ['text' => 'Estado', 'align' => 'left'],
         ['text' => 'Acción', 'align' => 'left'],
     ];
 @endphp
