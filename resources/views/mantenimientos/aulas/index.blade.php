@@ -16,8 +16,7 @@
             </x-forms.primary-button>
         </div>
     </x-slot>
-    <div id="prueba"
-        class="mx-auto flex min-w-full flex-col items-center justify-center overflow-x-auto shadow-md sm:rounded-lg">
+    <x-container>
         <x-table.base :headers="$headers">
             @foreach ($aulas as $aula)
                 <x-table.tr>
@@ -42,12 +41,12 @@
             @endforeach
         </x-table.base>
         </table>
-        <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
+        <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $aulas->links() }}
         </nav>
-    </div>
 
+    </x-container>
     <x-form-modal id="static-modal">
         <x-slot name="header">
             <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Añadir Aula</h3>
@@ -57,23 +56,21 @@
                 @csrf
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
-                    <div>
-                        <x-forms.select label="Facultad" id="id_facultad" name="id_facultad" :options="$facultades->pluck('nombre', 'id')->toArray()"
-                            :value="old('id_facultad')" :error="$errors->get('id_facultad')" />
-                        <div id="facultad-error" class="text-sm text-red-500"></div>
-                    </div>
+                    <x-forms.select label="Facultad" id="id_facultad" name="id_facultad" :options="$facultades->pluck('nombre', 'id')->toArray()"
+                        :value="old('id_facultad')" :error="$errors->get('id_facultad')" />
+                    <div id="facultad-error" class="text-sm text-red-500"></div>
+                </x-forms.row>
+                <x-forms.row :columns="2">
                     <div>
                         <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')"
                             :error="$errors->get('nombre')" />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
-                            :error="$errors->get('activo')" />
+                        <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']"
+                            :value="old('activo', '1')" :error="$errors->get('activo')" />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
-
-
                 </x-forms.row>
             </form>
         </x-slot>
