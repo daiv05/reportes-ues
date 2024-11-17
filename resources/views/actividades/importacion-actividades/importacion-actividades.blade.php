@@ -11,6 +11,8 @@
         <div class="max-w-7xl mx-auto sm:px-1 lg:px-3">
             @php
                 $cicloActivo = \App\Models\Mantenimientos\Ciclo::with('tipoCiclo')->where('activo', 1)->first();
+                $dias = \App\Models\General\Dia::all();
+                $aulas = \App\Models\Mantenimientos\Aulas::all();
             @endphp
             <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
                 @if(isset($cicloActivo))
@@ -68,7 +70,6 @@
                     $tipoActividad = session('tipoActividad');
                     $tipoClases = \App\Models\General\TipoClase::all();
                     $modalidades = \App\Models\General\Modalidad::all();
-                    $dias = \App\Models\General\Dia::all();
                 @endphp
 
                 <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Vista previa de la información</h1>
@@ -88,8 +89,8 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
 
                                 {{-- Fecha --}}
-                                <div class="space-y-2">
-                                    <x-forms.input-label for="fecha[]" :value="__('Fecha')" />
+                                <div class="space-y-1">
+                                    <x-forms.input-label for="fecha[]" :value="__('Fecha')" required />
                                     <x-forms.date-input
                                         type="date"
                                         name="fecha[]"
@@ -102,7 +103,7 @@
 
                                 {{-- Materia --}}
                                 <div class="space-y-1">
-                                    <x-forms.input-label for="materia[]" :value="__('Materia')" />
+                                    <x-forms.input-label for="materia[]" :value="__('Materia')" required/>
                                     <x-forms.text-input
                                         name="materia[]"
                                         :value="old('materia.' . $loop->index, $row['materia'])"
@@ -113,7 +114,7 @@
 
                                 {{-- Hora Inicio --}}
                                 <div class="space-y-2">
-                                    <x-forms.input-label for="hora_inicio[]" :value="__('Hora Inicio')" />
+                                    <x-forms.input-label for="hora_inicio[]" :value="__('Hora Inicio')" required />
                                     <x-forms.text-input
                                         type="time"
                                         name="hora_inicio[]"
@@ -125,7 +126,7 @@
 
                                 {{-- Hora Fin --}}
                                 <div class="space-y-2">
-                                    <x-forms.input-label for="hora_fin[]" :value="__('Hora Fin')" />
+                                    <x-forms.input-label for="hora_fin[]" :value="__('Hora Fin')" required />
                                     <x-forms.text-input
                                         type="time"
                                         name="hora_fin[]"
@@ -137,7 +138,7 @@
 
                                 {{-- Evaluación --}}
                                 <div class="space-y-1">
-                                    <x-forms.input-label for="evaluacion[]" :value="__('Evaluación')" />
+                                    <x-forms.input-label for="evaluacion[]" :value="__('Evaluación')" required />
                                     <x-forms.text-input
                                         name="evaluacion[]"
                                         :value="old('evaluacion.' . $loop->index, $row['evaluacion'])"
@@ -148,7 +149,7 @@
 
                                 {{-- Cantidad de estudiantes --}}
                                 <div class="space-y-1">
-                                    <x-forms.input-label for="cantidad_estudiantes[]" :value="__('Cantidad de estudiantes')" />
+                                    <x-forms.input-label for="cantidad_estudiantes[]" :value="__('Cantidad de estudiantes')" required />
                                     <x-forms.text-input
                                         type="number"
                                         name="cantidad_estudiantes[]"
@@ -160,8 +161,8 @@
 
                                 {{-- Modalidad --}}
                                 <div class="space-y-2">
-                                    <x-forms.input-label for="modalidad[]" :value="__('Modalidad')" />
-                                    <select id="modalidad" name="modalidad[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    <x-forms.input-label for="modalidad[]" :value="__('Modalidad')" required />
+                                    <select id="modalidad" name="modalidad[]" class="w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                         @foreach($modalidades as $modalidad)
                                             <option value="{{ $modalidad->id }}" {{ $modalidad->id == $row['modalidad'] ? 'selected' : '' }}>
                                                 {{ $modalidad->nombre }}
@@ -171,15 +172,47 @@
                                     <x-forms.input-error :messages="$errors->get('modalidad')" class="mt-2" />
                                 </div>
 
-                                {{-- Locales --}}
+                                {{-- Selección de locales --}}
                                 <div class="space-y-1">
-                                    <x-forms.input-label for="local[]" :value="__('Locales')" />
-                                    <x-forms.text-input
-                                        name="local[]"
-                                        :value="old('local.' . $loop->index, $row['local'])"
-                                        class="w-full mt-1"
-                                    />
-                                    <x-forms.input-error :messages="$errors->get('local.' . $loop->index)"/>
+                                    <x-forms.input-label for="aulas[]" :value="__('Locales')" />
+                                    <div class="relative">
+                                        <button
+                                            id="dropdownAulasButton{{ $loop->iteration }}"
+                                            data-dropdown-toggle="dropdownAulas{{ $loop->iteration }}"
+                                            class="w-full px-4 py-2 border-2 rounded-lg text-left focus:outline-none focus:ring text-sm"
+                                            type="button">
+                                            Seleccionar aulas
+                                        </button>
+
+                                        <!-- Dropdown de aulas -->
+                                        <div
+                                            id="dropdownAulas{{ $loop->iteration }}"
+                                            class="hidden z-20 w-full max-h-[180px] overflow-auto bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+                                            data-popper-reference-hidden
+                                            data-popper-escaped
+                                            data-popper-placement="top">
+                                            <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownAulasButton{{ $loop->iteration }}">
+                                                @foreach($aulas as $aula)
+                                                    <li class="flex items-center">
+                                                        <input
+                                                            id="checkbox-{{ $aula->nombre }}-{{ $loop->parent->iteration }}"
+                                                            type="checkbox"
+                                                            value="{{ $aula->id }}"
+                                                            name="aulas[{{ $row['index'] }}][]"
+                                                            @if(is_array(old('aulas.' . $loop->parent->index, $row['aulas'])) && in_array($aula->id, old('aulas.' . $loop->parent->index, $row['aulas'])))
+                                                                checked
+                                                            @endif
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                            onclick="updateSelectedAulas({{ $loop->parent->iteration }})">
+                                                        <label for="checkbox-{{ $aula->nombre }}-{{ $loop->parent->iteration }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                            {{ $aula->nombre }}
+                                                        </label>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <x-forms.input-error :messages="$errors->get('aulas.' . $loop->index)" class="mt-2" />
                                 </div>
 
                                 {{-- Comentarios--}}
@@ -215,7 +248,7 @@
 
                                 {{-- Materia --}}
                                 <div class="space-y-1">
-                                    <x-forms.input-label for="materia[]" :value="__('Materia')" />
+                                    <x-forms.input-label for="materia[]" :value="__('Materia')" required />
                                     <x-forms.text-input
                                         name="materia[]"
                                         :value="old('materia.' . $loop->index, $row['materia'])"
@@ -226,7 +259,7 @@
 
                                 {{-- Tipo de clase --}}
                                 <div class="space-y-2">
-                                    <x-forms.input-label for="tipo[]" :value="__('Tipo de clase')" />
+                                    <x-forms.input-label for="tipo[]" :value="__('Tipo de clase')" required />
                                     <select id="tipo" name="tipo[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                         @foreach($tipoClases as $tipoClase)
                                             <option value="{{ $tipoClase->id }}" {{ $tipoClase->id == $row['tipo'] ? 'selected' : '' }}>
@@ -239,7 +272,7 @@
 
                                 {{-- Numero de grupo --}}
                                 <div class="space-y-1">
-                                    <x-forms.input-label for="grupo[]" :value="__('Grupo')" />
+                                    <x-forms.input-label for="grupo[]" :value="__('Grupo')" required />
                                     <x-forms.text-input
                                         type="number"
                                         name="grupo[]"
@@ -251,7 +284,7 @@
 
                                 {{-- Hora Inicio --}}
                                 <div class="space-y-2">
-                                    <x-forms.input-label for="hora_inicio[]" :value="__('Hora Inicio')" />
+                                    <x-forms.input-label for="hora_inicio[]" :value="__('Hora Inicio')" required />
                                     <x-forms.text-input
                                         type="time"
                                         name="hora_inicio[]"
@@ -264,7 +297,7 @@
 
                                 {{-- Hora Fin --}}
                                 <div class="space-y-2">
-                                    <x-forms.input-label for="hora_fin[]" :value="__('Hora Fin')" />
+                                    <x-forms.input-label for="hora_fin[]" :value="__('Hora Fin')" required />
                                     <x-forms.text-input
                                         type="time"
                                         name="hora_fin[]"
@@ -277,7 +310,7 @@
 
                                 {{-- Modalidad --}}
                                 <div class="space-y-2">
-                                    <x-forms.input-label for="modalidad[]" :value="__('Modalidad')" />
+                                    <x-forms.input-label for="modalidad[]" :value="__('Modalidad')" required />
                                     <select id="modalidad" name="modalidad[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                         @foreach($modalidades as $modalidad)
                                             <option value="{{ $modalidad->id }}" {{ $modalidad->id == $row['modalidad'] ? 'selected' : '' }}>
@@ -290,7 +323,7 @@
 
                                 {{-- Locales --}}
                                 <div class="space-y-1">
-                                    <x-forms.input-label for="local[]" :value="__('Local')" />
+                                    <x-forms.input-label for="local[]" :value="__('Local')" required />
                                     <x-forms.text-input
                                         name="local[]"
                                         :value="old('local.' . $loop->index, $row['local'])"
@@ -301,7 +334,7 @@
 
                                 {{-- Selección de días --}}
                                 <div class="space-y-1">
-                                    <label class="block text-sm font-medium text-gray-700">Días de la Semana</label>
+                                    <x-forms.input-label for="diasActividad[]" :value="__('Días de actividad')" required />
                                     <div class="relative">
                                         <button
                                             id="dropdownDaysButton{{ $loop->iteration }}"
@@ -326,9 +359,7 @@
                                                             type="checkbox"
                                                             value="{{ $dia->id }}"
                                                             name="diasActividad[{{ $row['index'] }}][]"
-                                                            @if(is_array(old('diasActividad.' . $loop->parent->index)) && in_array($dia->id, old('diasActividad.' . $loop->parent->index)))
-                                                                checked
-                                                            @elseif(in_array($dia->id, $row['diasActividad']))
+                                                            @if(is_array(old('diasActividad.' . $loop->parent->index, $row['diasActividad'])) && in_array($dia->id, old('diasActividad.' . $loop->parent->index, $row['diasActividad'])))
                                                                 checked
                                                             @endif
                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
@@ -374,10 +405,32 @@
         button.textContent = selected.length ? selected.join(', ') : 'Seleccionar días';
     }
 
+    function updateSelectedAulas(index) {
+        const checkboxes = document.querySelectorAll(`#dropdownAulas${index} input[type="checkbox"]`);
+        const selected = [];
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selected.push(checkbox.nextElementSibling.textContent.trim());
+            }
+        });
+
+        const button = document.getElementById(`dropdownAulasButton${index}`);
+        button.textContent = selected.length ? selected.join(', ') : 'Seleccionar locales';
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         // Initialize the button text with the initially selected values
         @foreach ($dias as $index => $actividad)
             updateSelectedDays({{ $loop->iteration }});
+        @endforeach
+
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize the button text with the initially selected values
+        @foreach ($aulas as $index => $aula)
+            updateSelectedAulas({{ $loop->iteration }});
         @endforeach
     });
 </script>

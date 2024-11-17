@@ -41,7 +41,7 @@ class AulaSeeder extends Seeder
             ['nombre' => 'D41', 'activo' => true, 'id_facultad' => 3],
             ['nombre' => 'D42', 'activo' => true, 'id_facultad' => 3],
             ['nombre' => 'D43', 'activo' => true, 'id_facultad' => 3],
-            ['nombre' => 'Auditorio', 'activo' => true, 'id_facultad' => 3],
+            ['nombre' => 'AUDITORIOMARMOL', 'activo' => true, 'id_facultad' => 3],
             ['nombre'=> 'LCOMP1', 'activo'=> true, 'id_facultad'=> 3],
             ['nombre'=> 'LCOMP2', 'activo'=> true, 'id_facultad'=> 3],
             ['nombre'=> 'LCOMP3', 'activo'=> true, 'id_facultad'=> 3],

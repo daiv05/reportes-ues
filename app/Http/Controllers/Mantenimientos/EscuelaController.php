@@ -16,10 +16,7 @@ class EscuelaController extends Controller
     {
         $escuelas = Escuela::paginate(10);
         $facultades = Facultades::all();
-        return view('mantenimientos.escuela.index', compact('escuelas', 'facultades'))->with('message', [
-            'type' => 'success',
-            'content' => 'El aula se ha creado exitosamente.'
-        ]);
+        return view('mantenimientos.escuela.index', compact('escuelas', 'facultades'));
     }
 
       /**
@@ -30,10 +27,7 @@ class EscuelaController extends Controller
      */
     public function create(): View
     {
-        return view('escuela.create')->with('message', [
-            'type' => 'info',
-            'content' => 'Bienvenido al mantenimiento de aulas.'
-        ]);
+        return view('escuela.create');
     }
 
     /**
