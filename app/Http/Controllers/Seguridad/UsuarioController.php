@@ -118,7 +118,7 @@ class UsuarioController extends Controller
         Audit::create([
             'user_id' => auth()->id(), // ID del usuario que realizó la actualización
             'event' => 'updated_roles',
-            'auditable_type' => 'App\Models\User',  // Tipo de entidad auditada (User)
+            'auditable_type' => 'App\Models\Seguridad\User',  // Tipo de entidad auditada (User)
             'auditable_id' => $user->id,  // ID del usuario que se actualiza
             'old_values' =>  $currentRoles,  // Roles anteriores
             'new_values' => $newRoles,  // Nuevos roles

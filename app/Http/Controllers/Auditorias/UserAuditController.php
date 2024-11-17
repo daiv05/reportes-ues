@@ -28,7 +28,7 @@ class UserAuditController extends Controller
             $query->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$request->start_date, $request->end_date]);
         }
 
-        $audits = $query->paginate(2);
+        $audits = $query->paginate(5);
 
         $models = Audit::select('auditable_type')->distinct()->get();
 
@@ -45,7 +45,7 @@ class UserAuditController extends Controller
         return view('audits.index', compact('audits', 'models', 'events', 'users'));
     }
 
-   
+
     public function getEvents(Request $request)
     {
         if ($request->has('model')) {

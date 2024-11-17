@@ -45,7 +45,7 @@ class PasswordResetLinkController extends Controller
             Audit::create([
                 'user_id' => $user->id,  // ID del usuario que realizó la acción (si corresponde)
                 'event' => 'password_reset_request',
-                'auditable_type' => 'App\Models\User',  // Tipo de entidad que está siendo auditada (User)
+                'auditable_type' => 'App\Models\Seguridad\User',  // Tipo de entidad que está siendo auditada (User)
                 'auditable_id' => $user->id,  // ID del usuario
                 'old_values' => [],
                 'new_values' => ['email' => $request->email],

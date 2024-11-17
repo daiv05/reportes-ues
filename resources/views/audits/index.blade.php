@@ -152,7 +152,7 @@
                                     {{ $user ? $user->persona->nombre : 'Usuario no disponible' }}
                                 </td>
                                 <td class="px-6 py-4 text-gray-700">
-                                    {{ $user ? $Auiditado->persona->nombre : 'Usuario no disponible' }}
+                                    {{ $Auiditado ? $Auiditado->persona->nombre : 'Usuario no disponible' }}
                                 </td>
                                 <td class="px-6 py-4 text-gray-700">{{ $audit->created_at->format('Y-m-d H:i:s') }}
                                 </td>
