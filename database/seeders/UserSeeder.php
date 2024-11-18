@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             [
                 "id_persona" => 3,
                 "carnet" => "ss11001",
-                "email" => "ss11001@yopmail.com",
+                "email" => "dc19019@ues.edu.sv",
                 "password" => bcrypt("pass123"),
                 "role" => "ROLE_USUARIO_SUPERVISOR_REPORTE"
             ],

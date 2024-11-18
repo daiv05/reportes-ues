@@ -15,24 +15,6 @@ class CicloController extends Controller
 
     public function index()
     {
-        // Nombre de la vista
-        $vistaCorreo = 'emails.contactanos';  // Por defecto, usa 'contactanos'
-
-        // Datos de la tabla (ejemplo con los ciclos)
-        $tableData = [
-            [
-                'reporte' => 'Reporte #12345',
-                'asignadoPor' => 'Juan Pérez',
-                'departamento' => 'Innovación y Tecnología',
-                'fechaAsignacion' => '10 de noviembre de 2024',
-                'horaAsignada' => '10:00 AM',
-                'supervisor' => 'Maria Rodríguez'
-            ],
-            // Puedes agregar más elementos en el arreglo según lo necesites
-        ];
-
-        // Enviar el correo con la vista dinámica y los datos de la tabla
-        Mail::to('me19027@ues.edu.sv')->send(new EnvioMailable($vistaCorreo, $tableData));
         // Obtener los ciclos con su tipo de ciclo relacionado
         $ciclos = Ciclo::with('tipoCiclo')->paginate(10); // Usa paginación para mostrar la lista
         $tiposCiclos = TipoCiclo::all(); // Para el selector de tipos de ciclos en el modal

@@ -10,19 +10,21 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EnvioMailable extends Mailable
+class ReporteMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $viewName;  // Variable para la vista
-    public $tableData; // Para almacenar los datos de la tabla
+    public $viewName;
+    public $subjectText = 'ReportFIA';
+    public $tableData;
     /**
      * Create a new message instance.
      */
-    public function __construct($viewName,$tableData)
+    public function __construct($viewName, $tableData, $subjectText = 'ReportFIA')
     {
-        $this->viewName = $viewName;  // Asigna la vista recibida
-        $this->tableData = $tableData; // Asigna los datos de la tabla recibidos
+        $this->viewName = $viewName;
+        $this->subjectText = $subjectText;
+        $this->tableData = $tableData;
     }
 
        /**
@@ -31,8 +33,8 @@ class EnvioMailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('reportefiaues@gmail.com', 'Reportes'),
-            subject: 'Reportes fia'
+            from: new Address('reportefiaues@gmail.com', 'ReportFIA'),
+            subject: $this->subjectText
         );
     }
 

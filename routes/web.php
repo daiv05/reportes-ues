@@ -67,7 +67,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/registrar', [ReporteController::class, 'create'])->name('crear-reporte');
         Route::post('/store', [ReporteController::class, 'store'])->name('reportes.store');
         Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->name('detalle-reporte');
-        Route::get('/timeline', [ReporteController::class, 'detalleTimeline'])->name('detalle-timeline');
         Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->name('reportes.noProcede');
         Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->name('reportes.realizarAsignacion');
         Route::post('/actualizar-estado/{id}', [ReporteController::class, 'actualizarEstadoReporte'])->name('reportes.actualizarEstado');
@@ -102,9 +101,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('/escuela', EscuelaController::class)->except(['destroy']);
 
         // Rutas de Aulas
-        Route::get('/aulas', [AulasController::class, 'index'])->name('aulas.index');
+        Route::prefix('aulas')->group(function () {
+            Route::get('/', [AulasController::class, 'index'])->name('aulas.index');
+            Route::patch('/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
+        });
         Route::resource('aulas', AulasController::class)->except(['destroy']);
-        Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
 
         // Rutas de Asignaturas
         Route::prefix('asignaturas')->group(function () {

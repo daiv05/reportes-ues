@@ -2,11 +2,12 @@
 <!-- resources/views/components/container.blade.php -->
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Correo Electrónico - Asignación de Reporte</title>
+    <title>ReportFIA - UES</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,7 +33,8 @@
         }
 
         .header img {
-            height: 80px; /* Ajustar según el tamaño que desees */
+            height: 80px;
+            /* Ajustar según el tamaño que desees */
         }
 
         h2 {
@@ -49,8 +51,12 @@
         }
 
         a {
-            color: #d32f2f; /* Rojo de la UES */
+            color: #771D1D;
             text-decoration: none;
+        }
+
+        .text-red-ues {
+            color: #771D1D;
         }
 
         .table-container {
@@ -61,10 +67,12 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para el cuadro */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            /* Sombra para el cuadro */
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px 15px;
             text-align: left;
             vertical-align: middle;
@@ -72,19 +80,24 @@
 
         th {
             font-weight: bold;
-            color: #d32f2f; /* Rojo de la UES */
-            border-bottom: 2px solid #ddd; /* Línea abajo de los encabezados */
-            text-transform: uppercase; /* Todo en mayúsculas para mayor formalidad */
+            color: #d32f2f;
+            /* Rojo de la UES */
+            border-bottom: 2px solid #ddd;
+            /* Línea abajo de los encabezados */
+            text-transform: uppercase;
+            /* Todo en mayúsculas para mayor formalidad */
         }
 
         td {
             font-weight: normal;
             color: #555;
-            border-bottom: 1px solid #ddd; /* Línea abajo de las celdas */
+            border-bottom: 1px solid #ddd;
+            /* Línea abajo de las celdas */
         }
 
         td:first-child {
-            font-weight: bold; /* Negrita solo para las celdas de la izquierda */
+            font-weight: bold;
+            /* Negrita solo para las celdas de la izquierda */
         }
 
         /* Fila alternada para mayor legibilidad */
@@ -100,7 +113,8 @@
         }
 
         .footer a {
-            color: #d32f2f; /* Rojo de la UES */
+            color: #d32f2f;
+            /* Rojo de la UES */
             margin: 0 10px;
             text-decoration: none;
         }
@@ -109,6 +123,46 @@
             text-decoration: underline;
         }
 
+        .container-estado {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .estado-badge {
+            border-radius: 9999px;
+            width: auto;
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-top: 6px;
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .color-completado {
+            background-color: #3F6212;
+            color: #fbfff6;
+        }
+
+        .color-finalizado {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .color-incompleto {
+            background-color: #ffedd5;
+            color: #9a3412;
+        }
+
+        .estado-text {
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 
