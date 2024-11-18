@@ -30,7 +30,7 @@
     <div class="mt-12 mb-8">
         <div class="flex flex-col lg:flex-row w-full">
             <!-- Columna izquierda (70%) -->
-            <div class="w-full lg:w-[60%] px-8">
+            <div class="w-full lg:w-[60%] pl-8 pr-2">
                 <div class="mb-4">
                     <!-- Fila 1 -->
                     <div
@@ -40,8 +40,8 @@
                 </div>
                 <div class="mb-4">
                     <!-- Fila 2 -->
-                    <div class="font-semibold">
-                        <div class="flex flex-row gap-6">
+                    <div>
+                        <div class="flex flex-row gap-6 font-semibold">
                             <x-heroicon-o-clipboard-document class="w-6 h-6" />
                             Descripción
                         </div>
@@ -77,74 +77,83 @@
                                 Actividad reportada
                             </div>
                             <div class="ml-12 mt-2 overflow-auto">
-                                <table class="text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-                                    <thead
-                                        class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3">Asignaturas</th>
-                                            <th scope="col" class="px-6 py-3">Aulas</th>
-                                            <th scope="col" class="px-6 py-3">No. de grupo</th>
-                                            <th scope="col" class="px-6 py-3">Escuela</th>
-                                            <th scope="col" class="px-6 py-3">Horario</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <x-table.tr>
-                                            <x-table.td>{{ $reporte->actividad->asignaturas[0]->nombre }}</x-table.td>
-                                            <x-table.td>{{ $reporte->actividad->aulas[0]->nombre }}</x-table.td>
-                                            <x-table.td>{{ $reporte->actividad->clase->numero_grupo }}</x-table.td>
-                                            <x-table.td>{{ $reporte->actividad->asignaturas[0]->escuela->nombre }}</x-table.td>
-                                            <x-table.td>{{ $reporte->actividad->hora_inicio . ' - ' . $reporte->actividad->hora_fin }}</x-table.td>
-                                        </x-table.tr>
-                                    </tbody>
-                                </table>
+                                <div>
+                                    <table class="text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+                                        <thead
+                                            class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3">Asignaturas</th>
+                                                <th scope="col" class="px-6 py-3">Aulas</th>
+                                                <th scope="col" class="px-6 py-3">No. de grupo</th>
+                                                <th scope="col" class="px-6 py-3">Escuela</th>
+                                                <th scope="col" class="px-6 py-3">Horario</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <x-table.tr>
+                                                <x-table.td>{{ $reporte->actividad->asignaturas[0]->nombre }}</x-table.td>
+                                                <x-table.td>{{ $reporte->actividad->aulas[0]->nombre }}</x-table.td>
+                                                <x-table.td>{{ $reporte->actividad->clase->numero_grupo }}</x-table.td>
+                                                <x-table.td>{{ $reporte->actividad->asignaturas[0]->escuela->nombre }}</x-table.td>
+                                                <x-table.td>{{ $reporte->actividad->hora_inicio . ' - ' . $reporte->actividad->hora_fin }}</x-table.td>
+                                            </x-table.tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 @endif
             </div>
-
-            <!-- Columna derecha (30%) -->
-            <div class="w-full mx-auto lg:w-[30%] justify-center sm:justify-start">
-                <div class="grid grid-cols-1 sm:grid-cols-2 mx-0 sm:mx-16 lg:mx-0 p-4">
-                    <div class="my-2">
-                        <p class="text-gray-500 font-semibold">
-                            Estado
-                        </p>
+            <!-- Columna derecha (40%) -->
+            <div class="w-full lg:w-[40%] flex sm:px-8 lg:pt-24 pt-16 pb-8 justify-center lg:justify-start text-start">
+                <div class="flex flex-col ml-16 lg:ml-2 w-full">
+                    <div class="flex flex-row mb-4">
+                        <div class="basis-1/3">
+                            <p class="text-gray-500 font-semibold">
+                                Estado
+                            </p>
+                        </div>
+                        <div class="basis-2/3">
+                            <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'" class="mb-2" />
+                        </div>
                     </div>
-                    <div class="my-2">
-                        <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'" class="mb-2" />
+                    <div class="flex flex-row mb-4">
+                        <div class="basis-1/3">
+                            <p class="text-gray-500 font-semibold">
+                                Fecha
+                            </p>
+                        </div>
+                        <div class="basis-2/3">
+                            <p class="text-black font-semibold">
+                                {{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y') }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="my-2">
-                        <p class="text-gray-500 font-semibold">
-                            Fecha
-                        </p>
+                    <div class="flex flex-row mb-4">
+                        <div class="basis-1/3">
+                            <p class="text-gray-500 font-semibold">
+                                Hora
+                            </p>
+                        </div>
+                        <div class="basis-2/3">
+                            <p class="text-black font-semibold">
+                                {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="my-2">
-                        <p class="text-black font-semibold">
-                            {{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y') }}
-                        </p>
-                    </div>
-                    <div class="my-2">
-                        <p class="text-gray-500 font-semibold">
-                            Hora
-                        </p>
-                    </div>
-                    <div class="my-2">
-                        <p class="text-black font-semibold">
-                            {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}
-                        </p>
-                    </div>
-                    <div class="my-2">
-                        <p class="text-gray-500 font-semibold">
-                            Reportado <br /> por
-                        </p>
-                    </div>
-                    <div class="my-2">
-                        <p class="text-black font-semibold">
-                            {{ $reporte->usuarioReporta?->persona?->nombre }}
-                            {{ $reporte->usuarioReporta?->persona?->apellido }}
-                        </p>
+                    <div class="flex flex-row mb-4">
+                        <div class="basis-1/3">
+                            <p class="text-gray-500 font-semibold">
+                                Usuario
+                            </p>
+                        </div>
+                        <div class="basis-2/3">
+                            <p class="text-black font-semibold">
+                                {{ $reporte->usuarioReporta?->persona?->nombre }}
+                                {{ $reporte->usuarioReporta?->persona?->apellido }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -157,16 +166,16 @@
             @csrf
             <x-reportes.detail.container>
                 <x-reportes.detail.header title="Asignación">
-                    {{-- @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0) --}}
-                    <div>
-                        <button id="marcarNoProcede"
-                            class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500" x-data
-                            x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')">
-                            No Procede
-                        </button>
-                    </div>
-                    @include('reportes.partials.modal-not-valid-report')
-                    {{-- @endif --}}
+                    @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                        <div>
+                            <button id="marcarNoProcede"
+                                class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500" x-data
+                                x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')">
+                                No Procede
+                            </button>
+                        </div>
+                        @include('reportes.partials.modal-not-valid-report')
+                    @endif
                 </x-reportes.detail.header>
                 <x-reportes.detail.block>
                     <x-reportes.detail.subheader subtitle="Entidad" icon="heroicon-o-briefcase" />

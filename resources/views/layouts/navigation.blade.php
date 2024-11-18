@@ -4,7 +4,7 @@
             <div class="flex items-center justify-start rtl:justify-end">
                 <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar"
                     type="button"
-                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
                     <span class="sr-only">Abrir panel lateral</span>
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg">
@@ -13,7 +13,7 @@
                         </path>
                     </svg>
                 </button>
-                <a href="{{ route('dashboard') }}" class="flex ms-2 md:me-24">
+                <a href="{{ route('dashboard') }}" class="flex ms-2 lg:me-24">
                     <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" class="h-8 me-3" alt="Reportfia Logo" />
                     <span
                         class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-white">Reportfia</span>
