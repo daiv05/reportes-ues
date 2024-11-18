@@ -28,19 +28,19 @@
         @include('layouts.aside')
         <!-- Page Content -->
         <main class="min-h-screen">
-            <div class="py-4 sm:ml-64">
+            <div class="py-4 md:ml-64">
                 <div class="py-4 rounded-lg mt-6">
                     <!-- Page Heading -->
                     @if (isset($header))
                         <div class="pb-6 pt-12">
-                            <div class="mx-auto max-w-[90%] sm:px-2 lg:px-4">
+                            <div class="mx-auto max-w-[90%] md:px-2 lg:px-4">
                                 <div class="overflow-hidden bg-white py-4 shadow-sm dark:bg-gray-800 sm:rounded-lg">
                                     {{ $header }}
                                 </div>
                             </div>
                         </div>
                     @endif
-                    <div class="mx-auto max-w-[90%] sm:px-2 lg:px-4">
+                    <div class="mx-auto max-w-[90%] md:px-2 lg:px-4">
                         <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                             <div class="p-6">
                                 <div class="overflow-auto">
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </main>
-        <div class="p-4 sm:ml-64">
+        <div class="p-4 md:ml-64">
             <div class="rounded-lg">
                 @include('layouts.footer')
             </div>
