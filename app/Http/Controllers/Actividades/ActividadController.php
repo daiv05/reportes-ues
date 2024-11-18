@@ -37,6 +37,13 @@ class ActividadController extends Controller
         // $import->getData() obtendrá los datos procesados, este método lo debes crear
         $data = $import->getData();
 
+        if(empty($data)){
+            return redirect()->back()->with('message', [
+                'type' => 'warning',
+                'content' => 'El archivo no contiene datos para importar o no cumple con el formato.'
+            ]);
+        }
+
         // Guardamos los datos en la sesión para que se mantengan en caso de errores
         session(['excelData' => $data]);
         session(['tipoActividad' => $request->input('tipo_actividad')]);
@@ -99,11 +106,17 @@ class ActividadController extends Controller
             session()->forget('excelData');
             session()->forget('tipoActividad');
 
-            return redirect()->back()->with('success', 'Actividades guardadas correctamente');
+            return redirect()->back()->with('message', [
+                'type' => 'success',
+                'content' => 'Las actividades se han guardado correctamente.'
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error al guardar las actividades. Detalles: ' . $e->getMessage());
+            return redirect()->back()->with('message', [
+                'type' => 'error',
+                'content' => 'Ocurrió un error al guardar las actividades. Detalles: ' . $e->getMessage()
+            ]);
         }
     }
 
