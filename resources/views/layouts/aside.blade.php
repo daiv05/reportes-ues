@@ -147,6 +147,25 @@
                 // ],
             ],
         ],
+        [
+            'type' => 2,
+            'id' => 'auditorias-dropdown',
+            'active' => request()->is('auditorias/*'),
+           'icon' => 'heroicon-s-book-open',
+            'label' => 'Auditorias',
+            'items' => [
+                [
+                    'to' => 'general.index',
+                    'active' => request()->is('auditorias/general'),
+                    'label' => 'General',
+                ],
+                // [
+                //     'to' => 'detalle-reporte',
+                //     'active' => request()->is('reportes/detalle'),
+                //     'label' => 'Detalle de reporte',
+                // ],
+            ],
+        ],
     ];
 @endphp
 

@@ -6,7 +6,7 @@
     </x-slot>
 
     <x-container>
-        <form action="{{ route('adUser.index') }}" method="GET">
+        <form action="{{ route('general.index') }}" method="GET">
             <x-forms.button-group>
                 <x-forms.primary-button class="ml-3">
                     Filtrar
@@ -152,7 +152,7 @@
                                     {{ $user ? $user->persona->nombre : 'Usuario no disponible' }}
                                 </td>
                                 <td class="px-6 py-4 text-gray-700">
-                                    {{ $user ? $Auiditado->persona->nombre : 'Usuario no disponible' }}
+                                    {{ $Auiditado ? $Auiditado->persona->nombre : 'Usuario no disponible' }}
                                 </td>
                                 <td class="px-6 py-4 text-gray-700">{{ $audit->created_at->format('Y-m-d H:i:s') }}
                                 </td>

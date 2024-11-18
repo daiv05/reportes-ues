@@ -170,7 +170,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::get('/auditorias', [UserAuditController::class, 'index'])->name('adUser.index');
+    Route::get('/auditorias', [UserAuditController::class, 'index'])->name('general.index');
     Route::get('/auditorias/get-events', [UserAuditController::class, 'getEvents']); // Ruta AJAX
 
 });
