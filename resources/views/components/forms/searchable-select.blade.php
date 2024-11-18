@@ -44,45 +44,56 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('search-{{ $id }}');
-        const dropdown = document.getElementById('dropdown-{{ $id }}');
-        const hiddenInput = document.getElementById('{{ $id }}');
-        const options = Array.from(dropdown.querySelectorAll('li'));
+        const initSearchableDropdown = (id) => {
+            const searchInput = document.getElementById(`search-${id}`);
+            const dropdown = document.getElementById(`dropdown-${id}`);
+            const hiddenInput = document.getElementById(id);
+            const options = Array.from(dropdown.querySelectorAll('li'));
 
-        // Mostrar el dropdown al hacer clic en el campo de búsqueda
-        searchInput.addEventListener('focus', function () {
-            dropdown.classList.remove('hidden');
-        });
+            // Mostrar el dropdown al hacer clic en el campo de búsqueda
+            searchInput.addEventListener('focus', function () {
+                dropdown.classList.remove('hidden');
+            });
 
-        // Filtrar opciones al escribir
-        searchInput.addEventListener('input', function () {
-            const searchValue = this.value.toLowerCase().trim();
+            // Filtrar opciones al escribir
+            searchInput.addEventListener('input', function () {
+                const searchValue = this.value.toLowerCase().trim();
+                options.forEach(option => {
+                    const text = option.textContent.toLowerCase().trim();
+                    option.style.display = text.includes(searchValue) ? 'block' : 'none';
+                });
+            });
+
+            // Seleccionar una opción
             options.forEach(option => {
-                const text = option.textContent.toLowerCase().trim();
-                option.style.display = text.includes(searchValue) ? 'block' : 'none';
+                option.addEventListener('click', function () {
+                    const value = this.getAttribute('data-value');
+                    const text = this.textContent.trim();
+
+                    // Actualizar el campo oculto y el input
+                    hiddenInput.value = value;
+                    searchInput.value = text;
+
+                    // Ocultar el dropdown
+                    dropdown.classList.add('hidden');
+                });
             });
-        });
 
-        // Seleccionar una opción
-        options.forEach(option => {
-            option.addEventListener('click', function () {
-                const value = this.getAttribute('data-value');
-                const text = this.textContent.trim(); // Eliminar espacios en blanco alrededor del texto
-
-                // Actualizar el campo oculto y el input
-                hiddenInput.value = value;
-                searchInput.value = text;
-
-                // Ocultar el dropdown
-                dropdown.classList.add('hidden');
+            // Ocultar el dropdown al hacer clic fuera
+            document.addEventListener('click', function (event) {
+                if (!dropdown.contains(event.target) && event.target !== searchInput) {
+                    dropdown.classList.add('hidden');
+                } else if(event.target.id === searchInput.id) {
+                    dropdown.classList.remove('hidden');
+                }
             });
-        });
+        };
 
-        // Ocultar el dropdown al hacer clic fuera
-        document.addEventListener('click', function (event) {
-            if (!dropdown.contains(event.target) && event.target !== searchInput) {
-                dropdown.classList.add('hidden');
-            }
+        // Inicializar el dropdown al cargar
+        const id = '{{ $id }}';
+        initSearchableDropdown(id);
+        document.addEventListener('modal:open', () => {
+            initSearchableDropdown(id);
         });
     });
 </script>

@@ -86,7 +86,7 @@
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.searchable-select id="empleado" label="Empleado" name="empleado" :options="$empleados" onchange="filtrarPuestos()" searchable required readonly/>
+                        <x-forms.searchable-select id="empleado" label="Empleado" name="empleado" :options="$empleados" onchange="filtrarPuestos()" searchable required />
                         <div id="empleado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
@@ -166,7 +166,15 @@
     document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
         button.addEventListener('click', function() {
             updateTitle('Asignar puesto');
-            document.getElementById('empleado').disabled = false;
+            document.dispatchEvent(new Event('modal:open'));
+            document.getElementById('asignacion-form').action = '{{ route('empleadosPuestos.store') }}';
+            document.getElementById('asignacion-form').method = 'POST';
+            method = document.querySelector('[name="_method"]')
+            if(method) document.getElementById('asignacion-form').removeChild(method);
+            document.getElementById('search-empleado').disabled = false;
+            document.getElementById('search-empleado').classList.remove('!bg-gray-300');
+            document.getElementById('search-empleado').value = null;
+            document.getElementById('empleado').value = null;
             document.getElementById('entidad').disabled = false;
             document.getElementById('puesto').disabled = false;
             document.getElementById('asignacion-form').reset();
@@ -192,7 +200,9 @@
 
             document.getElementById('empleado').value = empleado;
             document.getElementById('search-empleado').value = empleados[empleado];
-            document.getElementById('empleado').disabled = true;
+            document.getElementById('search-empleado').disabled = true;
+            document.getElementById('search-empleado').readonly = true;
+            document.getElementById('search-empleado').classList.add('!bg-gray-300');
             document.getElementById('entidad').value = entidad;
             document.getElementById('entidad').disabled = true;
             filtrarPuestos();
