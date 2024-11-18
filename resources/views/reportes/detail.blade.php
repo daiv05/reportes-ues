@@ -107,8 +107,8 @@
             </div>
             <!-- Columna derecha (40%) -->
             <div class="w-full lg:w-[40%] flex sm:px-8 lg:pt-24 pt-16 pb-8 justify-center lg:justify-start text-start">
-                <div class="flex flex-col ml-16 lg:ml-2 w-full">
-                    <div class="flex flex-row mb-4">
+                <div class="flex flex-col ml-16 lg:ml-2 w-full text-sm">
+                    <div class="flex flex-row mb-3">
                         <div class="basis-1/3">
                             <p class="text-gray-500 font-semibold">
                                 Estado
