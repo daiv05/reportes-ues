@@ -101,6 +101,13 @@
         if (!anio) {
             hasErrors = true;
             document.getElementById('anio-error').innerHTML = 'El campo año es obligatorio';
+        } else {
+            const anioActual = new Date().getFullYear();
+            // Validar que el año se pueda registrar al menos un año antes del valor del input
+            if (anio < anioActual - 1) {
+                hasErrors = true;
+                document.getElementById('anio-error').innerHTML = 'El año no puede ser menor a ' + (anioActual - 1);
+            }
         }
 
         if (!tipoCiclo) {
