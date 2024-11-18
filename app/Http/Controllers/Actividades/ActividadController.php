@@ -120,9 +120,12 @@ class ActividadController extends Controller
     public function listadoClases(Request $request)
     {
         $search = $request->input('table-search');
+        $cicloActivo = Ciclo::where('activo', 1)->first();
         $clases = Clase::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas', 'tipoClase')
-            ->whereHas('actividad', function ($query) {
-                $query->where('id_ciclo', Ciclo::where('activo', 1)->first()->id);
+            ->whereHas('actividad', function ($query) use ($cicloActivo) {
+                if($cicloActivo){
+                    $query->where('id_ciclo', $cicloActivo->id);
+                }
             })
             ->when($search, function ($query, $search) {
                 $query->whereHas('actividad.asignaturas', function ($query) use ($search) {
