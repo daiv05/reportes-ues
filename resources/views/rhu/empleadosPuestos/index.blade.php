@@ -103,7 +103,7 @@
                     </x-forms.row>
                 </div>
                 <div class="mb-4">
-                    <x-forms.select label="Estado" id="estado" name="estado" :options="$estados" :value="old('estado')" :error="$errors->get('estado')" required />
+                    <x-forms.select label="Estado" id="estado" name="estado" :options="$estados" :selected="1" :error="$errors->get('estado')" required />
                     <div id="estado-error" class="mb-4 text-sm text-red-500"></div>
                     @error('estado')
                         <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
@@ -178,6 +178,7 @@
             document.getElementById('entidad').disabled = false;
             document.getElementById('puesto').disabled = false;
             document.getElementById('asignacion-form').reset();
+            document.getElementById('estado').value = 1;
             document.getElementById('general-errors').innerHTML = '';
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
         });
