@@ -157,7 +157,6 @@
         }
 
         if (hasErrors) {
-            console.log('entro');
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
         }
