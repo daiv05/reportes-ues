@@ -9,7 +9,7 @@
     'readonly' => false,
 ])
 
-<div class="mb-4">
+<div>
     <x-forms.input-label :for="$name" :value="$label" :required="$required" />
     <input
         type="{{ $type }}"
