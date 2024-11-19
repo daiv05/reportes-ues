@@ -105,7 +105,7 @@
             ]
         });
 
-        let noty = (content, type = 'info') => {
+        const noty = (content, type = 'info') => {
             notyf.open({
                 type: type,
                 message: content,
@@ -113,9 +113,18 @@
                 dismissible: true
             });
         }
+
         @if (!empty(session()->has('message')))
             noty(@json(session('message')['content']), @json(session('message')['type']) ?? 'success');
         @endif
+    </script>
+
+    <script>
+        const hasRole = (rol) => {
+            const roles = @json(Auth::user()->roles);
+            return roles.some((item) => item.name === rol);
+        }
+        // hasRole('ROLE_USUARIO_SUPERVISOR_REPORTE')
     </script>
 
 </body>
