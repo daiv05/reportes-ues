@@ -147,11 +147,30 @@
                 // ],
             ],
         ],
+        [
+            'type' => 2,
+            'id' => 'auditorias-dropdown',
+            'active' => request()->is('auditorias/*'),
+           'icon' => 'heroicon-s-book-open',
+            'label' => 'Auditorias',
+            'items' => [
+                [
+                    'to' => 'general.index',
+                    'active' => request()->is('auditorias/general'),
+                    'label' => 'General',
+                ],
+                // [
+                //     'to' => 'detalle-reporte',
+                //     'active' => request()->is('reportes/detalle'),
+                //     'label' => 'Detalle de reporte',
+                // ],
+            ],
+        ],
     ];
 @endphp
 
 <aside id="logo-sidebar"
-    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 sm:translate-x-0">
+    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 lg:translate-x-0">
     <div class="h-full overflow-y-auto bg-white px-3 pb-4 dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
             @foreach ($sidebarItems as $sit)

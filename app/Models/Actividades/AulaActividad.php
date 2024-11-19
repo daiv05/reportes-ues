@@ -6,6 +6,7 @@ use App\Models\Actividades\Actividad;
 use App\Models\Mantenimientos\Aulas;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class AulaActividad extends Model  implements Auditable
 {

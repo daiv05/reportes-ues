@@ -28,6 +28,7 @@ class EstadoController extends Controller
                 break;
             case 2: // EN PROCESO
                 $esEmpleado ? $estadosAllowed = [
+                    EstadosEnum::EN_PROCESO->value,
                     EstadosEnum::EN_PAUSA->value,
                     EstadosEnum::COMPLETADO->value
                 ] : null;
