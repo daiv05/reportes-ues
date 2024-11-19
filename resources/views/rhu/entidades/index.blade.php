@@ -64,7 +64,6 @@
                 @csrf
                 <x-forms.row :columns="1">
                     <input type="hidden" name="id" id="id">
-                    <input type="hidden" id="_method" name="_method" value="PUT">
                     <div>
                         <x-forms.field label="Nombre" name="nombre" type="text" :value="old('nombre')" :error="$errors->get('nombre')" />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
@@ -99,7 +98,7 @@
             </form>
         </x-slot>
         <x-slot name="footer">
-            <button data-modal-hide="static-modal" type="button"
+            <button data-modal-hide="static-modal" type="button" onclick="buttonCloseModal()"
                 class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                 Cancelar
             </button>
@@ -117,14 +116,6 @@
         const descripcion = document.getElementById('descripcion').value.trim();
         const nombre = document.getElementById('nombre').value.trim();
         const estado = document.getElementById('activo').value.trim();
-
-        console.log({
-            id,
-            entidadPadre,
-            descripcion,
-            nombre,
-            estado
-        });
 
         let hasErrors = false;
 
@@ -163,11 +154,13 @@
             });
 
             console.log('click');
-
             document.getElementById('add-entidades-form').action = '{{ route('entidades.store') }}';
             document.getElementById('add-entidades-form').method = 'POST';
-            method = document.querySelector('[name="_method"]')
-            if(method) method.value = 'POST';
+            let method = document.querySelector('[name="_method"]')
+            if(method) document.getElementById('add-entidades-form').removeChild(method);
+
+            document.querySelectorAll('_method').forEach((input) => input.remove());
+
             document.getElementById('add-entidades-form').reset();
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
         });
@@ -188,7 +181,10 @@
             // Ajustar el formulario para la edición
             document.getElementById('add-entidades-form').action = `/rhu/entidades/${id}`;
             document.getElementById('add-entidades-form').method = 'POST';
-            document.getElementById('_method').value = 'PUT';
+            if (!document.querySelector('input[name="_method"]')) {
+                document.getElementById('add-entidades-form').innerHTML +=
+                    '<input type="hidden" name="_method" value="PUT">';
+            }
 
             // Asignar los valores al formulario
             document.getElementById('nombre').value = nombre;
@@ -205,7 +201,6 @@
 
             // Deshabilitar la opción del mismo entidad en el select para evitar seleccionar a sí mismo como padre
             const selectEntidad = document.getElementById('id_entidad');
-            console.log(selectEntidad.options);
             Array.from(selectEntidad.options).forEach((option) => {
                 if(option.value === id){
                     option.disabled = true;
@@ -218,5 +213,9 @@
     });
     function updateTitle(title) {
         document.getElementById('modal-title').textContent = title;
+    }
+
+    function buttonCloseModal() {
+        document.querySelector('[data-modal-target="static-modal"]').click();
     }
 </script>
