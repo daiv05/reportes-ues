@@ -94,9 +94,9 @@ class EntidadesController extends Controller
         $entidad->activo = $request->activo;
 
         // Ajustar jerarquía y entidad padre si se selecciona uno
-        if ($request->filled('id_departamento')) {
-            $entidadPadre = Entidades::findOrFail($request->id_entidad);
-            $entidad->id_entidad = $request->id_entidad;
+        if ($request->filled('id_entidad')) {
+            $entidadPadre = Entidades::findOrFail($request->input('id_entidad'));
+            $entidad->id_entidad = $request->input('id_entidad');
             $entidad->jerarquia = $entidadPadre->jerarquia + 1;
         } else {
             $entidad->id_entidad = null;

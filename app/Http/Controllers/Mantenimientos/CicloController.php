@@ -19,8 +19,15 @@ class CicloController extends Controller
         $ciclos = Ciclo::with('tipoCiclo')->paginate(10); // Usa paginación para mostrar la lista
         $tiposCiclos = TipoCiclo::all(); // Para el selector de tipos de ciclos en el modal
 
+        $tiposCiclos = $tiposCiclos->pluck('nombre', 'id')->toArray();
 
-        return view('mantenimientos.ciclos.index', compact('ciclos', 'tiposCiclos'));
+        $estados = [
+            1 => 'ACTIVO',
+            0 => 'INACTIVO',
+        ];
+
+
+        return view('mantenimientos.ciclos.index', compact('ciclos', 'tiposCiclos', 'estados'));
     }
 
     public function store(CicloRequest $request)

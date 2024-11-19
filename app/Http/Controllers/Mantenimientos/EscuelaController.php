@@ -45,7 +45,7 @@ class EscuelaController extends Controller
         Escuela::create($request->all());
         return redirect()->route('escuela.index')->with('message', [
             'type' => 'success',
-            'content' => 'El aula se ha creado exitosamente.'
+            'content' => 'El escuela se ha creado exitosamente.'
         ]);
     }
 
@@ -81,7 +81,7 @@ class EscuelaController extends Controller
         $escuela->update($request->all());
         return redirect()->route('escuela.index')->with('message', [
             'type' => 'success',
-            'content' => 'El aula se ha actualizado exitosamente.'
+            'content' => 'La escuela se ha actualizado exitosamente.'
         ]);
     }
   /**
