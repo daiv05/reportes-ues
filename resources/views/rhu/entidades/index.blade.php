@@ -65,13 +65,13 @@
                 <x-forms.row :columns="1">
                     <input type="hidden" name="id" id="id">
                     <div>
-                        <x-forms.field label="Nombre" name="nombre" type="text" :value="old('nombre')" :error="$errors->get('nombre')" />
+                        <x-forms.field label="Nombre" name="nombre" type="text" :value="old('nombre')" :error="$errors->get('nombre')" required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.input-label for="descripcion" :value="__('Descripcion')" />
+                        <x-forms.input-label for="descripcion" :value="__('Descripcion')" required />
                         <textarea id="descripcion" name="descripcion" rows="4"
                             class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                             placeholder="Describa brevemente las funciones..."></textarea>
@@ -91,7 +91,7 @@
                 <x-forms.row :columns="1">
                     <div>
                         <x-forms.select label="Estado" id="activo" name="activo" :options="[1 => 'ACTIVO', 0 => 'INACTIVO']" :selected="1"
-                            :error="$errors->get('activo')" />
+                            :error="$errors->get('activo')" required />
                         <div id="estado-error" class="text-sm text-red-500">
                     </div>
                 </x-forms.row>
