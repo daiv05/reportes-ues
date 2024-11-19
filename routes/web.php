@@ -156,6 +156,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/empleados-puestos', [EmpleadoPuestoController::class, 'index'])->name('empleadosPuestos.index');
         Route::post('/empleados-puestos', [EmpleadoPuestoController::class, 'store'])->name('empleadosPuestos.store');
         Route::put('/empleados-puestos/{id}', [EmpleadoPuestoController::class, 'update'])->name('empleadosPuestos.update');
+        Route::get('/empleados-puestos/{id}', [EmpleadoPuestoController::class, 'show'])->name('empleadosPuestos.show');
     });
 
 

@@ -59,12 +59,19 @@
                             <x-status.is-active :active="$empPuesto->activo" />
                         </x-table.td>
                         <x-table.td>
-                            <a href="#"
-                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                data-id="{{ $empPuesto->id }}" data-empleado="{{ $empPuesto->usuario->id }}"
-                                data-entidad="{{ $empPuesto->puesto->id_entidad }}" data-puesto="{{ $empPuesto->id_puesto }}" data-estado="{{ $empPuesto->activo }}">
-                                <x-heroicon-o-pencil class="h-5 w-5" />
-                            </a>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                <a href="#"
+                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                    data-id="{{ $empPuesto->id }}" data-empleado="{{ $empPuesto->usuario->id }}"
+                                    data-entidad="{{ $empPuesto->puesto->id_entidad }}" data-puesto="{{ $empPuesto->id_puesto }}" data-estado="{{ $empPuesto->activo }}">
+                                    <x-heroicon-o-pencil class="h-5 w-5" />
+                                </a>
+
+                                <a href="{{ url('rhu/empleados-puestos/' . $empPuesto->id) }}"
+                                    class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
+                                    <x-heroicon-o-eye class="h-5 w-5" />
+                                </a>
+                            </div>
                         </x-table.td>
                     </x-table.tr>
                 @endforeach
