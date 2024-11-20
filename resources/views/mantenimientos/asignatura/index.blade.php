@@ -6,7 +6,6 @@
         ['text' => 'Acción', 'align' => 'left'],
     ];
 @endphp
-
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Asignaturas" />
@@ -41,14 +40,14 @@
                 </x-table.tr>
             @endforeach
         </x-table.base>
-        <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
+        <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $asignaturas->links() }}
         </nav>
     </x-container>
 
     <!-- Modal agregar-->
-    <x-form-modal id="static-modal">
+    <x-form-modal id="static-modal" class="hidden">
         <x-slot name="header">
             <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Añadir asignatura</h3>
         </x-slot>
@@ -59,12 +58,12 @@
                 <x-forms.row :columns="1">
                     <div>
                         <x-forms.select label="Escuela" id="id_escuela" name="id_escuela" :options="$escuelas->pluck('nombre', 'id')->toArray()"
-                            :value="old('id_escuela')" :error="$errors->get('id_escuela')" required/>
+                            :value="old('id_escuela')" :error="$errors->get('id_escuela')" required />
                         <div id="escuela-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')"
-                            :error="$errors->get('nombre')" required/>
+                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')" :error="$errors->get('nombre')"
+                            required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
@@ -87,7 +86,42 @@
         </x-slot>
     </x-form-modal>
 </x-app-layout>
+
 <script>
+    function centerModal(modal) {
+        const modalContent = modal.querySelector('.relative');
+        if (!modalContent) return;
+
+        const modalRect = modalContent.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        const windowWidth = window.innerWidth;
+
+
+        const offsetTop = (windowHeight - modalRect.height) / 2;
+        const offsetLeft = (windowWidth - modalRect.width) / 2;
+
+
+        modalContent.style.position = 'absolute';
+        modalContent.style.top = `${offsetTop}px`;
+        modalContent.style.left = `${offsetLeft}px`;
+    }
+    @if ($errors->any())
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('static-modal');
+            if (modal) {
+                updateModalTitle('Editar Asignatura');
+
+                modal.classList.remove('hidden');
+
+                setTimeout(function() {
+                    centerModal(
+                        modal);
+                }, 0);
+            }
+        });
+    @endif
+
+
     document.getElementById('add-asignatura-form').addEventListener('submit', function(event) {
 
         const nombre = document.getElementById('nombre').value.trim();
@@ -99,17 +133,17 @@
         document.getElementById('general-errors').innerHTML = '';
         document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
 
-        if (!nombre) { // Cambiado: no usar .value ya que es un valor ya extraído
+        if (!nombre) {
             hasErrors = true;
             document.getElementById('nombre-error').innerHTML = 'El campo Nombre es obligatorio';
         }
 
-        if (!escuela) { // Cambiado: no usar .value ya que es un valor ya extraído
+        if (!escuela) {
             hasErrors = true;
             document.getElementById('escuela-error').innerHTML = 'El campo Escuela es obligatorio';
         }
 
-        if (!estado) { // Cambiado: no usar .value ya que es un valor ya extraído
+        if (!estado) {
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo Estado es obligatorio';
         }
@@ -166,15 +200,15 @@
 
 
     function resetForm() {
-        document.getElementById('add-asignatura-form').reset(); // Limpiar el formulario
-        document.getElementById('general-errors').innerHTML = ''; // Limpiar errores generales
+        document.getElementById('add-asignatura-form').reset();
+        document.getElementById('general-errors').innerHTML = '';
 
         document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML =
-            '')); // Limpiar errores específicos de campo
+            ''));
 
-        // Limpiar los valores de los select
+
         document.querySelectorAll('select').forEach((select) => {
-            select.selectedIndex = 0; // Restablecer el primer valor (vacío o predeterminado)
+            select.selectedIndex = 0;
         });
     }
 </script>
