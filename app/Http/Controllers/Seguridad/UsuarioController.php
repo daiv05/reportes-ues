@@ -166,7 +166,7 @@ class UsuarioController extends Controller
     public function show(string $id)
     {
 
-        $user = User::with('empleadosPuestos.puesto.entidad')->findOrFail($id);
+        $user = User::with('empleadosPuestos.puesto.entidad', 'empleadosPuestos.empleadosAcciones.reporte')->findOrFail($id);
         return view('seguridad.usuarios.show', compact('user'));
     }
 
