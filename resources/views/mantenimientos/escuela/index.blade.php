@@ -10,16 +10,15 @@
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Escuelas" />
-    </x-slot>
-
-    <!-- Boton agregar -->
-    <div>
-        <div class="flex flex-col space-y-4 pb-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+        <div class="p-6">
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button">
                 Añadir
             </x-forms.primary-button>
         </div>
+    </x-slot>
+
+    <x-container>
         <x-table.base :headers="$headers">
             @foreach ($escuelas as $escuela)
                 <x-table.tr>
@@ -40,9 +39,8 @@
         <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $escuelas->links() }}
-            {{ $errors}}
         </nav>
-    </div>
+    </x-container>
 
     <!-- Modal agregar-->
     <x-form-modal id="static-modal">

@@ -10,16 +10,21 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <x-header.simple titulo="Gestión de puestos de los empleados" />
-        <div class="p-6">
-            <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
-            type="button" id="add-button">
-                Asignar puesto
-            </x-forms.primary-button>
-        </div>
+        <x-header.main
+            tituloMenor="Gestión de"
+            tituloMayor="PUESTOS DE LOS EMPLEADOS"
+            subtitulo="Gestiona de los puestos asignados a los empleados de la universidad"
+        >
+            <x-slot name="acciones">
+                <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
+                type="button" id="add-button">
+                    Asignar puesto
+                </x-forms.primary-button>
+            </x-slot>
+        </x-header.main>
     </x-slot>
 
-    <div>
+    <x-container>
         <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0">
             <form action="{{ route('empleadosPuestos.index') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4">
                 <div class="flex md:w-1/2 gap-4">
@@ -81,7 +86,7 @@
                 {{ $empleadosPuestos->links() }}
             </nav>
         </div>
-    </div>
+    </x-container>
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
