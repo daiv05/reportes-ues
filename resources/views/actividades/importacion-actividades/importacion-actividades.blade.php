@@ -14,8 +14,8 @@
                 $dias = \App\Models\General\Dia::all();
                 $aulas = \App\Models\Mantenimientos\Aulas::all();
             @endphp
-            <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
-                @if(isset($cicloActivo))
+            @if(isset($cicloActivo))
+                <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
                     <h1 class="text-xl font-bold text-orange-900 mb-2">Ciclo activo: {{ $cicloActivo->anio.'-'. $cicloActivo->tipoCiclo->nombre }}</h1>
                     <div class="grid grid-cols-1">
                         <div class="col-span-1">
@@ -53,10 +53,37 @@
                             </form>
                         </div>
                     </div>
-                @else
-                    <h1 class="text-xl font-bold text-orange-900">No hay un ciclo activo</h1>
-                @endif
-            </div>
+                </div>
+            @else
+                <div class="flex items-center justify-center min-h-[20rem] bg-gray-100">
+                    <div class="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                            <svg class="h-8 w-8 text-escarlata-ues" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            </div>
+                            <div class="ml-3 w-0 flex-1">
+                            <h3 class="text-lg font-medium text-escarlata-ues">
+                                No hay ciclo activo
+                            </h3>
+                            <div class="mt-2 text-sm text-gray-500">
+                                <p>
+                                Actualmente no hay ningún ciclo en curso. Por favor, inicia un nuevo ciclo para comenzar.
+                                </p>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="flex justify-center bg-gray-50 px-4 py-4 sm:px-6">
+                            <a href={{ route('ciclos.index') }} class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-orange-900 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-900">
+                                Iniciar nuevo ciclo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             @if(session()->has('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-5" role="alert">
