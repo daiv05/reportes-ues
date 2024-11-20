@@ -40,7 +40,7 @@
                 </x-table.tr>
             @endforeach
         </x-table.base>
-        </table>
+
         <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $aulas->links() }}
