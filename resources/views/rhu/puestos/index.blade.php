@@ -59,18 +59,18 @@
                 <x-forms.row :columns="1">
                     <div>
                         <x-forms.select label="Entidad" id="id_entidad" name="id_entidad" :options="$entidades->pluck('nombre', 'id')->toArray()"
-                            :value="old('id_entidad')" :error="$errors->get('id_entidad')" />
+                            :value="old('id_entidad')" :error="$errors->get('id_entidad')" required/>
                         <div id="entidad-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
                         <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')"
-                            :error="$errors->get('nombre')" />
+                            :error="$errors->get('nombre')" required/>
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
 
                     <div>
                         <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
-                            :error="$errors->get('activo')" />
+                            :error="$errors->get('activo')" required/>
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>

@@ -56,12 +56,12 @@
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.field id="name" label="Nombre" name="name" type="text" :value="old('nombre')" />
+                        <x-forms.field id="name" label="Nombre" name="name" type="text" :value="old('nombre')" required/>
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
                         <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']"
-                            :value="old('activo', '1')" />
+                            :value="old('activo', '1')" required/>
                             <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
