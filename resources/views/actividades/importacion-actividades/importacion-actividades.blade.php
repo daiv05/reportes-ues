@@ -1,3 +1,9 @@
+@php
+    // Si se presiona el botón "Limpiar datos", olvidar la sesión.
+    if (request()->has('clear_session')) {
+        session()->forget('excelData');
+    }
+@endphp
 <x-app-layout>
     <x-slot name="header">
         <x-header.main
@@ -7,7 +13,7 @@
         />
     </x-slot>
 
-    <div>
+    <x-container>
         <div class="max-w-7xl mx-auto sm:px-1 lg:px-3">
             @php
                 $cicloActivo = \App\Models\Mantenimientos\Ciclo::with('tipoCiclo')->where('activo', 1)->first();
@@ -15,45 +21,58 @@
                 $aulas = \App\Models\Mantenimientos\Aulas::all();
             @endphp
             @if(isset($cicloActivo))
-                <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
-                    <h1 class="text-xl font-bold text-orange-900 mb-2">Ciclo activo: {{ $cicloActivo->anio.'-'. $cicloActivo->tipoCiclo->nombre }}</h1>
-                    <div class="grid grid-cols-1">
-                        <div class="col-span-1">
-                            <h2 class="text-lg font-semibold text-gray-700">Instrucciones</h2>
-                            <p class="text-sm text-gray-600">Utiliza la plantilla de actividades, llena la información y sube el archivo.</p>
-                        </div>
-                        <div class="col-span-1">
-                            <form action="{{ route('importar-actividades-post') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
+                <h1 class="text-xl font-bold text-orange-900 mb-2">
+                    Ciclo activo: {{ $cicloActivo->anio . '-' . $cicloActivo->tipoCiclo->nombre }}
+                </h1>
+                <div class="grid grid-cols-1">
+                    <div class="col-span-1">
+                        <h2 class="text-lg font-semibold text-gray-700">Instrucciones</h2>
+                        <p class="text-sm text-gray-600">
+                            Utiliza la plantilla de actividades, llena la información y sube el archivo.
+                        </p>
+                    </div>
+                    <div class="col-span-1">
+                        <form id="import-excel" action="{{ route('importar-actividades-post') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @csrf
+                            <div class="mt-4">
+                                <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo de actividad</label>
+                                <select id="tipo_actividad" name="tipo_actividad" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    <option value="evento">Evento</option>
+                                    <option value="clase">Clase</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center justify-center w-full">
+                                <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white">
+                                    <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
+                                    <span id="file-name" class="mt-2 text-base leading-normal">Selecciona un archivo</span>
+                                    <input type="file" name="excel_file" id="file" class="hidden" onchange="updateFileName(this)" />
+                                    @if ($errors->has('excel_file'))
+                                        <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
+                                    @endif
+                                </label>
+                            </div>
+                            <div class="flex items-center py-2 gap-2 md:gap-4 justify-center w-full mt-4 md:col-span-2">
+                                <x-forms.primary-button>
+                                    Subir archivo
+                                </x-forms.primary-button>
+                            </div>
+                        </form>
+
+                        {{-- Formulario para limpiar sesión --}}
+                        @if(session()->has('excelData'))
+                            <form id="forget-session-form" action="{{ route('importar-actividades') }}" method="GET" class="mt-4 flex justify-center">
                                 @csrf
-                                <div class="mt-4">
-                                    <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo de actividad</label>
-                                    <select id="tipo_actividad" name="tipo_actividad" class="mt-1 block
-                                        w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                        <option value="evento">Evento</option>
-                                        <option value="clase">Clase</option>
-                                    </select>
-                                </div>
-                                <div class="flex items-center justify-center w-full">
-                                    <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white">
-                                        <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
-                                        <span id="file-name" class="mt-2 text-base leading-normal">
-                                            Selecciona un archivo
-                                        </span>
-                                        <input type="file" name="excel_file" id="file" class="hidden" onchange="updateFileName(this)" />
-                                        @if ($errors->has('excel_file'))
-                                            <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
-                                        @endif
-                                    </label>
-                                </div>
-                                <div class="flex items-center justify-center w-full mt-4 md:col-span-2">
-                                    <button type="submit" class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
-                                        Subir archivo
-                                    </button>
-                                </div>
+                                <input type="hidden" name="clear_session" value="true">
+                                <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Limpiar datos
+                                </button>
                             </form>
-                        </div>
+                        @endif
                     </div>
                 </div>
+            </div>
+
             @else
                 <div class="flex items-center justify-center min-h-[20rem] bg-gray-100">
                     <div class="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden">
@@ -85,12 +104,7 @@
                 </div>
             @endif
 
-            @if(session()->has('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-5" role="alert">
-                    <strong class="font-bold">¡Éxito!</strong>
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
+            {{-- Vista previa de la información --}}
             @if(session()->has('excelData') || isset($excelData))
                 @php
                     $excelData = session('excelData', $excelData ?? []);
@@ -263,153 +277,174 @@
                     {{-- Caso para clases --}}
                     <form class="p-5" method="POST" action="{{ route('importar-clases') }}">
                         @csrf
+                        @method('POST')
                         <div class="flex items-center justify-center w-full mt-4 md:col-span-2">
                             <button type="submit" class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
                                 Guardar clases
                             </button>
                         </div>
 
-                        @foreach($excelData as $row)
-                            <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Registro de actividad {{ $loop->iteration }}</h1>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                        {{ $errors }}
 
-                                {{-- Materia --}}
-                                <div class="space-y-1">
-                                    <x-forms.input-label for="materia[]" :value="__('Materia')" required />
-                                    <x-forms.text-input
-                                        name="materia[]"
-                                        :value="old('materia.' . $loop->index, $row['materia'])"
-                                        class="w-full mt-1"
-                                    />
-                                    <x-forms.input-error :messages="$errors->get('materia.' . $loop->index)"/>
-                                </div>
 
-                                {{-- Tipo de clase --}}
-                                <div class="space-y-2">
-                                    <x-forms.input-label for="tipo[]" :value="__('Tipo de clase')" required />
-                                    <select id="tipo" name="tipo[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                        @foreach($tipoClases as $tipoClase)
-                                            <option value="{{ $tipoClase->id }}" {{ $tipoClase->id == $row['tipo'] ? 'selected' : '' }}>
-                                                {{ $tipoClase->nombre }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-forms.input-error :messages="$errors->get('modalidad')" class="mt-2" />
-                                </div>
-
-                                {{-- Numero de grupo --}}
-                                <div class="space-y-1">
-                                    <x-forms.input-label for="grupo[]" :value="__('Grupo')" required />
-                                    <x-forms.text-input
-                                        type="number"
-                                        name="grupo[]"
-                                        :value="old('grupo.' . $loop->index, $row['grupo'])"
-                                        class="w-full mt-1"
-                                    />
-                                    <x-forms.input-error :messages="$errors->get('grupo.' . $loop->index)"/>
-                                </div>
-
-                                {{-- Hora Inicio --}}
-                                <div class="space-y-2">
-                                    <x-forms.input-label for="hora_inicio[]" :value="__('Hora Inicio')" required />
-                                    <x-forms.text-input
-                                        type="time"
-                                        name="hora_inicio[]"
-                                        :value="old('hora_inicio.' . $loop->index, $row['hora_inicio'])"
-                                        required
-                                        class="w-full mt-1"
-                                    />
-                                    <x-forms.input-error :messages="$errors->get('hora_inicio')" class="mt-2" />
-                                </div>
-
-                                {{-- Hora Fin --}}
-                                <div class="space-y-2">
-                                    <x-forms.input-label for="hora_fin[]" :value="__('Hora Fin')" required />
-                                    <x-forms.text-input
-                                        type="time"
-                                        name="hora_fin[]"
-                                        :value="$row['hora_fin']"
-                                        required
-                                        class="w-full mt-1"
-                                    />
-                                    <x-forms.input-error :messages="$errors->get('hora_fin')" class="mt-2" />
-                                </div>
-
-                                {{-- Modalidad --}}
-                                <div class="space-y-2">
-                                    <x-forms.input-label for="modalidad[]" :value="__('Modalidad')" required />
-                                    <select id="modalidad" name="modalidad[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                        @foreach($modalidades as $modalidad)
-                                            <option value="{{ $modalidad->id }}" {{ $modalidad->id == $row['modalidad'] ? 'selected' : '' }}>
-                                                {{ $modalidad->nombre }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-forms.input-error :messages="$errors->get('modalidad')" class="mt-2" />
-                                </div>
-
-                                {{-- Locales --}}
-                                <div class="space-y-1">
-                                    <x-forms.input-label for="local[]" :value="__('Local')" required />
-                                    <x-forms.text-input
-                                        name="local[]"
-                                        :value="old('local.' . $loop->index, $row['local'])"
-                                        class="w-full mt-1"
-                                    />
-                                    <x-forms.input-error :messages="$errors->get('local.' . $loop->index)"/>
-                                </div>
-
-                                {{-- Selección de días --}}
-                                <div class="space-y-1">
-                                    <x-forms.input-label for="diasActividad[]" :value="__('Días de actividad')" required />
-                                    <div class="relative">
-                                        <button
-                                            id="dropdownDaysButton{{ $loop->iteration }}"
-                                            data-dropdown-toggle="dropdownDays{{ $loop->iteration }}"
-                                            class="w-full px-4 py-2 border-2 rounded-lg text-left focus:outline-none focus:ring text-sm"
-                                            type="button">
-                                            Seleccionar días
-                                        </button>
-
-                                        <!-- Dropdown de días -->
-                                        <div
-                                            id="dropdownDays{{ $loop->iteration }}"
-                                            class="hidden z-20 w-full max-h-[180px] overflow-auto bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
-                                            data-popper-reference-hidden
-                                            data-popper-escaped
-                                            data-popper-placement="top">
-                                            <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDaysButton{{ $loop->iteration }}">
-                                                @foreach($dias as $dia)
-                                                    <li class="flex items-center">
-                                                        <input
-                                                            id="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}"
-                                                            type="checkbox"
-                                                            value="{{ $dia->id }}"
-                                                            name="diasActividad[{{ $row['index'] }}][]"
-                                                            @if(is_array(old('diasActividad.' . $loop->parent->index, $row['diasActividad'])) && in_array($dia->id, old('diasActividad.' . $loop->parent->index, $row['diasActividad'])))
-                                                                checked
-                                                            @endif
-                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                                            onclick="updateSelectedDays({{ $loop->parent->iteration }})">
-                                                        <label for="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                            {{ $dia->nombre }}
-                                                        </label>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
+                        <div id="records-container">
+                            @foreach($excelData as $row)
+                                <div class="record-block shadow-sm p-5 rounded-lg border-b border-gray-300 mb-5" data-index="{{ $loop->index }}">
+                                    <div class="flex flex-wrap gap-3 items-center my-4">
+                                        <h1 class="text-xl font-bold text-orange-900">Registro de actividad {{ $loop->iteration }}</h1>
+                                        {{-- Botón para eliminar --}}
+                                        <form method="POST" action="{{ route('eliminar-evento-sesion', $loop->index) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="flex gap-2 text-sm h-fit text-gray-500 hover:text-red-500 hover:bg-red-100 p-2 rounded-full transition-colors duration-200 border-2 hover:border-red-100 border-gray-300">
+                                                <x-heroicon-o-trash class="h-5 w-5" />
+                                                Eliminar registro
+                                            </button>
+                                        </form>
                                     </div>
-                                    <x-forms.input-error :messages="$errors->get('diasActividad.' . $loop->index)" class="mt-2" />
-                                </div>
+                                    @method('POST')
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
 
-                            </div>
-                        @endforeach
+                                        {{-- Materia --}}
+                                        <div class="space-y-1">
+                                            <x-forms.input-label for="materia[]" :value="__('Materia')" required />
+                                            <x-forms.text-input
+                                                name="materia[]"
+                                                :value="old('materia.' . $loop->index, $row['materia'])"
+                                                class="w-full mt-1"
+                                            />
+                                            <x-forms.input-error :messages="$errors->get('materia.' . $loop->index)"/>
+                                        </div>
+
+                                        {{-- Tipo de clase --}}
+                                        <div class="space-y-2">
+                                            <x-forms.input-label for="tipo[]" :value="__('Tipo de clase')" required />
+                                            <select id="tipo" name="tipo[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                                @foreach($tipoClases as $tipoClase)
+                                                    <option value="{{ $tipoClase->id }}" {{ $tipoClase->id == $row['tipo'] ? 'selected' : '' }}>
+                                                        {{ $tipoClase->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <x-forms.input-error :messages="$errors->get('modalidad' . $loop->index)" class="mt-2" />
+                                        </div>
+
+                                        {{-- Numero de grupo --}}
+                                        <div class="space-y-1">
+                                            <x-forms.input-label for="grupo[]" :value="__('Grupo')" required />
+                                            <x-forms.text-input
+                                                type="number"
+                                                name="grupo[]"
+                                                :value="old('grupo.' . $loop->index, $row['grupo'])"
+                                                class="w-full mt-1"
+                                            />
+                                            <x-forms.input-error :messages="$errors->get('grupo.' . $loop->index)"/>
+                                        </div>
+
+                                        {{-- Hora Inicio --}}
+                                        <div class="space-y-2">
+                                            <x-forms.input-label for="hora_inicio[]" :value="__('Hora Inicio')" required />
+                                            <x-forms.text-input
+                                                type="time"
+                                                name="hora_inicio[]"
+                                                :value="old('hora_inicio.' . $loop->index, $row['hora_inicio'])"
+                                                required
+                                                class="w-full mt-1"
+                                            />
+                                            <x-forms.input-error :messages="$errors->get('hora_inicio.' . $loop->index)" class="mt-2" />
+                                        </div>
+
+                                        {{-- Hora Fin --}}
+                                        <div class="space-y-2">
+                                            <x-forms.input-label for="hora_fin[]" :value="__('Hora Fin')" required />
+                                            <x-forms.text-input
+                                                type="time"
+                                                name="hora_fin[]"
+                                                :value="$row['hora_fin']"
+                                                required
+                                                class="w-full mt-1"
+                                            />
+                                            <x-forms.input-error :messages="$errors->get('hora_fin.' . $loop->index)" class="mt-2" />
+                                        </div>
+
+                                        {{-- Modalidad --}}
+                                        <div class="space-y-2">
+                                            <x-forms.input-label for="modalidad[]" :value="__('Modalidad')" required />
+                                            <select id="modalidad" name="modalidad[]" class="mt-1 w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                                @foreach($modalidades as $modalidad)
+                                                    <option value="{{ $modalidad->id }}" {{ $modalidad->id == $row['modalidad'] ? 'selected' : '' }}>
+                                                        {{ $modalidad->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <x-forms.input-error :messages="$errors->get('modalidad' . $loop->index)" class="mt-2" />
+                                        </div>
+
+                                        {{-- Locales --}}
+                                        <div class="space-y-1">
+                                            <x-forms.input-label for="local[]" :value="__('Local')" required />
+                                            <x-forms.text-input
+                                                name="local[]"
+                                                :value="old('local.' . $loop->index, $row['local'])"
+                                                class="w-full mt-1"
+                                            />
+                                            <x-forms.input-error :messages="$errors->get('local.' . $loop->index)"/>
+                                        </div>
+
+                                        {{-- Selección de días --}}
+                                        <div class="space-y-1">
+                                            <x-forms.input-label for="diasActividad[]" :value="__('Días de actividad')" required />
+                                            <div class="relative">
+                                                <button
+                                                    id="dropdownDaysButton{{ $loop->iteration }}"
+                                                    data-dropdown-toggle="dropdownDays{{ $loop->iteration }}"
+                                                    class="w-full px-4 py-2 border-2 rounded-lg text-left focus:outline-none focus:ring text-sm"
+                                                    type="button">
+                                                    Seleccionar días
+                                                </button>
+
+                                                <!-- Dropdown de días -->
+                                                <div
+                                                    id="dropdownDays{{ $loop->iteration }}"
+                                                    class="hidden z-20 w-full max-h-[180px] overflow-auto bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+                                                    data-popper-reference-hidden
+                                                    data-popper-escaped
+                                                    data-popper-placement="top">
+                                                    <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDaysButton{{ $loop->iteration }}">
+                                                        @foreach($dias as $dia)
+                                                            <li class="flex items-center">
+                                                                <input
+                                                                    id="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}"
+                                                                    type="checkbox"
+                                                                    value="{{ $dia->id }}"
+                                                                    name="diasActividad[{{ $row['index'] }}][]"
+                                                                    @if(is_array(old('diasActividad.' . $loop->parent->index, $row['diasActividad'])) && in_array($dia->id, old('diasActividad.' . $loop->parent->index, $row['diasActividad'])))
+                                                                        checked
+                                                                    @endif
+                                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                                    onclick="updateSelectedDays({{ $loop->parent->iteration }})">
+                                                                <label for="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                                    {{ $dia->nombre }}
+                                                                </label>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <x-forms.input-error :messages="$errors->get('diasActividad.' . $loop->index)" class="mt-2" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </form>
                 @endif
             @endif
 
         </div>
-    </div>
+    </x-container>
 </x-app-layout>
 
 <script>
@@ -460,4 +495,22 @@
             updateSelectedAulas({{ $loop->iteration }});
         @endforeach
     });
+
+    function deleteRecord(index) {
+    fetch(`/eliminar-evento-sesion/${index}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remueve el registro del DOM
+                document.querySelector(`[data-index="${index}"]`).remove();
+            }
+        })
+        .catch(error => console.error('Error al eliminar el registro:', error));
+    }
+
 </script>
