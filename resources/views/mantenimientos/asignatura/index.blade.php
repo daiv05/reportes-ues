@@ -104,6 +104,8 @@
         modalContent.style.position = 'absolute';
         modalContent.style.top = `${offsetTop}px`;
         modalContent.style.left = `${offsetLeft}px`;
+        modalContent.style.zIndex = '1000';
+
     }
     @if ($errors->any())
         document.addEventListener('DOMContentLoaded', function() {
@@ -112,14 +114,16 @@
                 updateModalTitle('Editar Asignatura');
 
                 modal.classList.remove('hidden');
+                modal.classList.add('bg-black', 'bg-opacity-50');
+
 
                 setTimeout(function() {
-                    centerModal(
-                        modal);
+                    centerModal(modal);
                 }, 0);
             }
         });
     @endif
+
 
 
     document.getElementById('add-asignatura-form').addEventListener('submit', function(event) {
@@ -203,12 +207,48 @@
         document.getElementById('add-asignatura-form').reset();
         document.getElementById('general-errors').innerHTML = '';
 
-        document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML =
-            ''));
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+
+            document.querySelectorAll('.text-red-500').forEach(errorElement => {
+                errorElement.textContent = '';
+            });
+        });
+
 
 
         document.querySelectorAll('select').forEach((select) => {
             select.selectedIndex = 0;
         });
+
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('focus', function() {
+                const errorElement = document.getElementById(input.name + '-error');
+                if (errorElement) {
+                    errorElement.innerHTML = '';
+                }
+            });
+
+            input.addEventListener('input', function() {
+                const errorElement = document.getElementById(input.name + '-error');
+                if (errorElement) {
+                    errorElement.innerHTML = ''; 
+                }
+            });
+        });
+
+        document.querySelectorAll('input').forEach((input) => {
+            if (input.type === 'text' || input.type === 'password' || input.type === 'email' || input.type ===
+                'tel' || input.type === 'search') {
+                input.value = '';
+            } else if (input.type === 'checkbox' || input.type === 'radio') {
+                input.checked = false;
+            } else if (input.type === 'number') {
+                input.value = '';
+            } else if (input.type === 'date') {
+                input.value = '';
+            }
+        });
+
     }
 </script>
