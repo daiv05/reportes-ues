@@ -30,7 +30,7 @@
                 {{ $user->empleadosPuestos[0]->puesto->nombre }}
             </x-view.description-list-item>
 
-            <x-view.description-list-item label="Carnet">
+            <x-view.description-list-item label="Username">
                 {{ $user->carnet }}
             </x-view.description-list-item>
 

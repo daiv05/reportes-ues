@@ -7,7 +7,7 @@
 
         <!-- Carnet -->
         <div>
-            <x-forms.input-label for="carnet" :value="__('Carnet')" />
+            <x-forms.input-label for="username" :value="__('Username')" />
             <x-forms.text-input
                 id="carnet"
                 class="mt-1 block w-full"

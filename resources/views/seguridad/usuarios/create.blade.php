@@ -21,7 +21,7 @@
             <x-forms.row :columns="2">
                 <x-forms.field label="Correo electrónico" name="email" type="email" :value="old('email')"
                     :error="$errors->get('email')" />
-                <x-forms.field label="Carnet / Nombre de usuario" name="carnet" :value="old('carnet')"
+                <x-forms.field label="username / Nombre de usuario" name="carnet" :value="old('carnet')"
                     :error="$errors->get('carnet')" />
             </x-forms.row>
             <x-forms.row :columns="1">

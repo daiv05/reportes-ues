@@ -34,7 +34,7 @@
                 />
 
                 <x-forms.field
-                    label="Carnet"
+                    label="Username"
                     name="carnet"
                     :value="$user->carnet"
                     type="text"
@@ -71,7 +71,7 @@
                     <x-forms.cancel-button href="{{ route('usuarios.index') }}">
                         Cancelar
                     </x-forms.cancel-button>
-    
+
                     <x-forms.primary-button class="ml-3">
                         Guardar Cambios
                     </x-forms.primary-button>
