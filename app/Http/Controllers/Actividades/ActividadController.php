@@ -9,9 +9,12 @@ use App\Imports\CalendarioImport;
 use App\Imports\HorarioImport;
 use App\Models\Actividades\Actividad;
 use App\Models\Actividades\Clase;
+use App\Models\General\Modalidad;
+use App\Models\General\TipoClase;
 use App\Models\Mantenimientos\Asignatura;
 use App\Models\Mantenimientos\Aulas;
 use App\Models\Mantenimientos\Ciclo;
+use App\Models\Mantenimientos\Escuela;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -165,7 +168,16 @@ class ActividadController extends Controller
 
     public function listadoClases(Request $request)
     {
-        $search = $request->input('table-search');
+        $materia = $request->input('materia');
+        $escuela = $request->input('escuela');
+        $modalidad = $request->input('modalidad');
+        $tipoClase = $request->input('tipo');
+        $aula = $request->input('aula');
+
+        $escuelas = Escuela::all()->pluck('nombre', 'id');
+        $modalidades = Modalidad::all()->pluck('nombre', 'id');
+        $tiposClase = TipoClase::all()->pluck('nombre', 'id');
+
         $cicloActivo = Ciclo::where('activo', 1)->first();
         $clases = Clase::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas', 'tipoClase')
             ->whereHas('actividad', function ($query) use ($cicloActivo) {
@@ -173,13 +185,31 @@ class ActividadController extends Controller
                     $query->where('id_ciclo', $cicloActivo->id);
                 }
             })
-            ->when($search, function ($query, $search) {
-                $query->whereHas('actividad.asignaturas', function ($query) use ($search) {
-                    $query->where('nombre', 'like', "%$search%");
+            ->when($materia, function ($query, $materia) {
+                $query->whereHas('actividad.asignaturas', function ($query) use ($materia) {
+                    $query->where('nombre', 'like', "%$materia%");
+                });
+            })
+            ->when($escuela, function ($query, $escuela) {
+                $query->whereHas('actividad.asignaturas', function ($query) use ($escuela) {
+                    $query->where('id_escuela', $escuela);
+                });
+            })
+            ->when($modalidad, function ($query, $modalidad) {
+                $query->whereHas('actividad', function ($query) use ($modalidad) {
+                    $query->where('id_modalidad', $modalidad);
+                });
+            })
+            ->when($tipoClase, function ($query, $tipoClase) {
+                $query->where('id_tipo_clase', $tipoClase);
+            })
+            ->when($aula, function ($query, $aula) {
+                $query->whereHas('actividad.aulas', function ($query) use ($aula) {
+                    $query->where('nombre', 'like', "%$aula%");
                 });
             })
             ->paginate(10);
 
-        return view('actividades.listado-actividades.listado-clases', compact('clases'));
+        return view('actividades.listado-actividades.listado-clases', compact('clases', 'escuelas', 'modalidades', 'tiposClase'));
     }
 }

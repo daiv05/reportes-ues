@@ -284,21 +284,18 @@
                             </button>
                         </div>
 
-                        {{ $errors }}
-
-
                         <div id="records-container">
                             @foreach($excelData as $row)
                                 <div class="record-block shadow-sm p-5 rounded-lg border-b border-gray-300 mb-5" data-index="{{ $loop->index }}">
-                                    <div class="flex flex-wrap gap-3 items-center my-4">
+                                    <div class="flex flex-wrap gap-3 md:gap-8 items-center my-4">
                                         <h1 class="text-xl font-bold text-orange-900">Registro de actividad {{ $loop->iteration }}</h1>
                                         {{-- Botón para eliminar --}}
                                         <form method="POST" action="{{ route('eliminar-evento-sesion', $loop->index) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                    class="flex gap-2 text-sm h-fit text-gray-500 hover:text-red-500 hover:bg-red-100 p-2 rounded-full transition-colors duration-200 border-2 hover:border-red-100 border-gray-300">
-                                                <x-heroicon-o-trash class="h-5 w-5" />
+                                                    class="flex gap-2 text-sm h-fit text-gray-500 hover:text-red-500 hover:bg-red-100 p-3 rounded-full transition-colors duration-200 border-2 hover:border-red-100 border-gray-300">
+                                                <x-heroicon-o-trash class="h-[20px]" />
                                                 Eliminar registro
                                             </button>
                                         </form>
