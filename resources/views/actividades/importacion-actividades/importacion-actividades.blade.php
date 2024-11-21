@@ -46,7 +46,7 @@
                                 <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white">
                                     <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
                                     <span id="file-name" class="mt-2 text-base leading-normal">Selecciona un archivo</span>
-                                    <input type="file" name="excel_file" id="file" class="hidden" onchange="updateFileName(this)" />
+                                    <input type="file" name="excel_file" accept=".xls,.xlsx,.csv" id="file" class="hidden" onchange="updateFileName(this)" />
                                     @if ($errors->has('excel_file'))
                                         <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
                                     @endif
@@ -162,7 +162,7 @@
                                         :value="old('hora_inicio.' . $loop->index, $row['hora_inicio'])"
                                         class="w-full mt-1"
                                     />
-                                    <x-forms.input-error :messages="$errors->get('hora_inicio')" class="mt-2" />
+                                    <x-forms.input-error :messages="$errors->get('hora_inicio.' . $loop->index)" class="mt-2" />
                                 </div>
 
                                 {{-- Hora Fin --}}
@@ -174,7 +174,7 @@
                                         :value="$row['hora_fin']"
                                         class="w-full mt-1"
                                     />
-                                    <x-forms.input-error :messages="$errors->get('hora_fin')" class="mt-2" />
+                                    <x-forms.input-error :messages="$errors->get('hora_fin.' . $loop->index)" class="mt-2" />
                                 </div>
 
                                 {{-- Evaluación --}}
