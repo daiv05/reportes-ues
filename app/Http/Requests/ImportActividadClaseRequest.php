@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ImportActividadClaseRequest extends FormRequest
 {
@@ -25,7 +27,7 @@ class ImportActividadClaseRequest extends FormRequest
             'materia' => 'required|array|min:1',
             'materia.*' => 'exists:asignaturas,nombre',
             'tipo' => 'required|array|min:1',
-            'tipo*' => 'exists:tipo_clases,id',
+            'tipo.*' => 'exists:tipo_clases,id',
             'grupo' => 'required|array|min:1',
             'grupo.*' => 'integer|min:1',
             'modalidad' => 'required|array|min:1',
@@ -47,7 +49,6 @@ class ImportActividadClaseRequest extends FormRequest
      *
      * @return array<string, string>
      */
-
     public function messages(): array
     {
         return [
@@ -60,5 +61,28 @@ class ImportActividadClaseRequest extends FormRequest
             'diasActividad.*.*.exists' => 'El día seleccionado no existe',
             'local.*.exists' => 'El local ingresado no existe',
         ];
+    }
+
+    /**
+     * Override the validator to add custom validation.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $hora_inicio = $this->input('hora_inicio');
+            $hora_fin = $this->input('hora_fin');
+
+            foreach ($hora_inicio as $index => $hora_inicio_value) {
+                // Verificar que la hora de fin sea mayor que la hora de inicio
+                $hora_inicio_timestamp = strtotime($hora_inicio[$index]);
+                $hora_fin_timestamp = strtotime($hora_fin[$index]);
+
+                if ($hora_fin_timestamp <= $hora_inicio_timestamp) {
+                    $validator->errors()->add('hora_fin.' . $index, 'La hora de fin debe ser mayor que la hora de inicio.');
+                }
+            }
+        });
     }
 }

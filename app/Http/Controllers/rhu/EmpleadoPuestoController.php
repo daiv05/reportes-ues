@@ -120,6 +120,13 @@ class EmpleadoPuestoController extends Controller
         }
     }
 
+    public function show(string $id)
+    {
+        $empPuesto = EmpleadoPuesto::with('puesto.entidad', 'usuario', 'usuario.persona', 'empleadosAcciones.reporte')->find($id);
+
+        return view('rhu.empleadosPuestos.show', compact('empPuesto'));
+    }
+
     public function listadoEmpleadosPorUnidad($idEntidad)
     {
         try {

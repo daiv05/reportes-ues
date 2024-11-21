@@ -14,7 +14,7 @@ class EntidadesController extends Controller
     public function index(): View
     {
         // entidades paginados
-        $entidades = Entidades::paginate(2);
+        $entidades = Entidades::paginate(10);
 
         // Lista jerárquica de entidades para el select
         $entidadesLista = $this->getHierarchicalEntidades();
