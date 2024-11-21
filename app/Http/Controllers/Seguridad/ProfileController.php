@@ -19,7 +19,7 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $persona = $request->user()->persona;
-        $persona->fecha_nacimiento = \Carbon\Carbon::createFromFormat('Y-m-d', $persona->fecha_nacimiento)->format('m/d/Y');
+        $persona->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $persona->fecha_nacimiento)->format('m/d/Y');
         return view('seguridad.profile.edit', [
             'user' => $request->user(),
             'persona' => $request->user()->persona
