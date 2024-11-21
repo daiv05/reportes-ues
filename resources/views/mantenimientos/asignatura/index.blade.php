@@ -232,7 +232,7 @@
             input.addEventListener('input', function() {
                 const errorElement = document.getElementById(input.name + '-error');
                 if (errorElement) {
-                    errorElement.innerHTML = ''; 
+                    errorElement.innerHTML = '';
                 }
             });
         });
