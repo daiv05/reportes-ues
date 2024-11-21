@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
     {
         // Convertir la fecha antes de la validación
         $request->merge([
-            'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
+            'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
         ]);
 
         $request->validate([
