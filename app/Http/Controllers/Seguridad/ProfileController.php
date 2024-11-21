@@ -31,12 +31,11 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-         // Convertir la fecha antes de la validación
          $request->merge([
             'fecha_nacimiento' => Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
         ]);
         $user = $request->user();
-        $persona = $user->persona; // Relación con `personas`
+        $persona = $user->persona;
 
         $user->fill($request->only(['carnet', 'email']));
         if ($user->isDirty('email')) {
