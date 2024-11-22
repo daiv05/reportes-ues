@@ -13,7 +13,7 @@ class AsignaturaController extends Controller
 {
     public function index(): View
     {
-        $asignaturas = Asignatura::paginate(2);
+        $asignaturas = Asignatura::paginate(10);
         $escuelas = Escuela::all();
         return view('mantenimientos.asignatura.index', compact('asignaturas', 'escuelas'))->with('message', [
             'type' => 'success',

@@ -86,46 +86,7 @@
         </x-slot>
     </x-form-modal>
 </x-app-layout>
-
 <script>
-    function centerModal(modal) {
-        const modalContent = modal.querySelector('.relative');
-        if (!modalContent) return;
-
-        const modalRect = modalContent.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        const windowWidth = window.innerWidth;
-
-
-        const offsetTop = (windowHeight - modalRect.height) / 2;
-        const offsetLeft = (windowWidth - modalRect.width) / 2;
-
-
-        modalContent.style.position = 'absolute';
-        modalContent.style.top = `${offsetTop}px`;
-        modalContent.style.left = `${offsetLeft}px`;
-        modalContent.style.zIndex = '1000';
-
-    }
-    @if ($errors->any())
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('static-modal');
-            if (modal) {
-                updateModalTitle('Editar Asignatura');
-
-                modal.classList.remove('hidden');
-                modal.classList.add('bg-black', 'bg-opacity-50');
-
-
-                setTimeout(function() {
-                    centerModal(modal);
-                }, 0);
-            }
-        });
-    @endif
-
-
-
     document.getElementById('add-asignatura-form').addEventListener('submit', function(event) {
 
         const nombre = document.getElementById('nombre').value.trim();
@@ -137,17 +98,17 @@
         document.getElementById('general-errors').innerHTML = '';
         document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
 
-        if (!nombre) {
+        if (!nombre) { // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('nombre-error').innerHTML = 'El campo Nombre es obligatorio';
         }
 
-        if (!escuela) {
+        if (!escuela) { // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('escuela-error').innerHTML = 'El campo Escuela es obligatorio';
         }
 
-        if (!estado) {
+        if (!estado) { // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo Estado es obligatorio';
         }
@@ -204,51 +165,15 @@
 
 
     function resetForm() {
-        document.getElementById('add-asignatura-form').reset();
-        document.getElementById('general-errors').innerHTML = '';
+        document.getElementById('add-asignatura-form').reset(); // Limpiar el formulario
+        document.getElementById('general-errors').innerHTML = ''; // Limpiar errores generales
 
+        document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML =
+            '')); // Limpiar errores específicos de campo
 
-        document.querySelector('form').addEventListener('submit', function(event) {
-
-            document.querySelectorAll('.text-red-500').forEach(errorElement => {
-                errorElement.textContent = '';
-            });
-        });
-
-
-
+        // Limpiar los valores de los select
         document.querySelectorAll('select').forEach((select) => {
-            select.selectedIndex = 0;
+            select.selectedIndex = 0; // Restablecer el primer valor (vacío o predeterminado)
         });
-
-        document.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('focus', function() {
-                const errorElement = document.getElementById(input.name + '-error');
-                if (errorElement) {
-                    errorElement.innerHTML = '';
-                }
-            });
-
-            input.addEventListener('input', function() {
-                const errorElement = document.getElementById(input.name + '-error');
-                if (errorElement) {
-                    errorElement.innerHTML = '';
-                }
-            });
-        });
-
-        document.querySelectorAll('input').forEach((input) => {
-            if (input.type === 'text' || input.type === 'password' || input.type === 'email' || input.type ===
-                'tel' || input.type === 'search') {
-                input.value = '';
-            } else if (input.type === 'checkbox' || input.type === 'radio') {
-                input.checked = false;
-            } else if (input.type === 'number') {
-                input.value = '';
-            } else if (input.type === 'date') {
-                input.value = '';
-            }
-        });
-
     }
 </script>
