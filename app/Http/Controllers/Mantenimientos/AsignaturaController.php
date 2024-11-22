@@ -21,12 +21,6 @@ class AsignaturaController extends Controller
         ]);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         return view('asignatura.create')->with('message', [
@@ -35,32 +29,32 @@ class AsignaturaController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request): RedirectResponse
     {
-        // Validar la solicitud
-        // Validar la solicitud con un mensaje personalizado en caso de error
         $request->validate([
             'id_escuela' => 'required|exists:escuelas,id',
-            'nombre' => 'required|max:50|unique:asignaturas,nombre', // Validación de nombre único
+            'nombre' => 'required|max:50|unique:asignaturas,nombre',
             'activo' => 'required|boolean',
         ], [
+            'id_escuela.required' => 'El campo de escuela es obligatorio.',
+            'id_escuela.exists' => 'La escuela seleccionada no existe en nuestra base de datos.',
+            'nombre.required' => 'El nombre de la asignatura es obligatorio.',
+            'nombre.max' => 'El nombre de la asignatura no debe exceder los 50 caracteres.',
             'nombre.unique' => 'El nombre de la asignatura ya existe. Por favor, elige otro nombre.',
+            'activo.required' => 'El campo de estado activo es obligatorio.',
+            'activo.boolean' => 'El campo de estado activo debe ser verdadero o falso.',
         ]);
 
         Asignatura::create($request->all());
         return redirect()->route('asignatura.index')
-        ->with('message', [
-            'type' => 'success',
-            'content' => 'La asignatura se ha creado exitosamente.'
-        ]);
+            ->with('message', [
+                'type' => 'success',
+                'content' => 'La asignatura se ha creado exitosamente.'
+            ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id): View
     {
         $asignatura = Asignatura::findOrFail($id);
@@ -70,35 +64,47 @@ class AsignaturaController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id): View
     {
         $asignatura = Asignatura::findOrFail($id);
         return view('asignatura.edit', compact('asignatura'));
     }
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id): RedirectResponse
     {
+        $asignatura = Asignatura::findOrFail($id);
+
+             $nombreRule = 'required|max:50';
+        if ($asignatura->nombre !== $request->nombre) {
+            $nombreRule .= '|unique:asignaturas,nombre';
+        }
+
+        // Validamos los datos
         $request->validate([
             'id_escuela' => 'required|exists:escuelas,id',
-            'nombre' => 'required|max:50',
+            'nombre' => $nombreRule,
             'activo' => 'required|boolean',
+        ], [
+            'id_escuela.required' => 'El campo de escuela es obligatorio.',
+            'id_escuela.exists' => 'La escuela seleccionada no existe en nuestra base de datos.',
+            'nombre.required' => 'El nombre de la asignatura es obligatorio.',
+            'nombre.max' => 'El nombre de la asignatura no debe exceder los 50 caracteres.',
+            'nombre.unique' => 'El nombre de la asignatura ya existe. Por favor, elige otro nombre.',
+            'activo.required' => 'El campo de estado activo es obligatorio.',
+            'activo.boolean' => 'El campo de estado activo debe ser verdadero o falso.',
         ]);
 
-        $asignatura = Asignatura::findOrFail($id);
+
         $asignatura->update($request->all());
+
         return redirect()->route('asignatura.index')->with('message', [
             'type' => 'success',
-            'content' => 'El asignatura se ha actualizado exitosamente.'
+            'content' => 'La asignatura se ha actualizado exitosamente.'
         ]);
     }
-    /**
-     * Remove the specified resource from storage.
-     */
+
+
     public function destroy(string $id): RedirectResponse
     {
         $asignatura = Asignatura::findOrFail($id);
