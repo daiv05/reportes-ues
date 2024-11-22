@@ -94,14 +94,15 @@
                         @php
                             $user = \App\Models\Seguridad\User::find($audi->user_id);
                         @endphp
-                        {{ $user->persona->nombre}} {{ $user->persona->apellido}}
+                        {{ $user->persona->nombre }} {{ $user->persona->apellido }}
                     </x-table.td>
                     <x-table.td>{{ $audi->event }}</x-table.td>
                     <x-table.td justify="center">{{ class_basename($audi->auditable_type) }}</x-table.td>
                     <x-table.td justify="center">{{ $audi->auditable_id }}</x-table.td>
                     <x-table.td justify="center">
                         @if ($audi->new_values)
-                            <button type="button" data-toggle="modal" data-target="#modalNuevo-{{ $audi->id }}">
+                            <button type="button" data-modal-target="#modalNuevo-{{ $audi->id }}"
+                                data-modal-toggle="modalNuevo-{{ $audi->id }}">
                                 <x-heroicon-o-eye class="h-5 w-5" />
                             </button>
                         @else
@@ -110,15 +111,16 @@
                     </x-table.td>
                     <x-table.td justify="center">
                         @if ($audi->old_values)
-                            <button type="button" data-toggle="modal" data-target="#modalViejo-{{ $audi->id }}">
+                            <button type="button" data-modal-target="#modalViejo-{{ $audi->id }}"
+                                data-modal-toggle="modalViejo-{{ $audi->id }}">
                                 <x-heroicon-o-eye class="h-5 w-5" />
                             </button>
                         @else
-                           -
+                            -
                         @endif
                     </x-table.td>
                     <x-table.td>{{ $audi->url }}</x-table.td>
-                    <x-table.td >{{ $audi->ip_address }}</x-table.td>
+                    <x-table.td>{{ $audi->ip_address }}</x-table.td>
                     <x-table.td justify="center">
                         @php
                             $agent = new Jenssegers\Agent\Agent();
@@ -137,8 +139,43 @@
         <div class="mt-4">
             {{ $audits->appends(request()->query())->links() }}
         </div>
+        @foreach ($audits as $audi)
+            @if ($audi->new_values)
+            <x-form-modal id="modalNuevo-{{ $audi->id }}">
+                <x-slot name="header">
+                    <h3 class="text-2xl font-bold text-escarlata-ues">Detalles de los Nuevos Valores</h3>
+                </x-slot>
+                <x-slot name="body">
+                    <pre>{{ json_encode($audi->new_values, JSON_PRETTY_PRINT) }}</pre>
+                </x-slot>
+                <x-slot name="footer">
+                    <button data-modal-hide="modalNuevo-{{ $audi->id }}" type="button"
+                        class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
+                        Cerrar
+                    </button>
+                </x-slot>
+            </x-form-modal>
+            @endif
+        @endforeach
 
-
+        @foreach ($audits as $audi)
+            @if ($audi->old_values)
+                <x-form-modal id="modalViejo-{{ $audi->id }}">
+                    <x-slot name="header">
+                        <h3 class="text-2xl font-bold text-escarlata-ues">Detalles de los Valores Viejos</h3>
+                    </x-slot>
+                    <x-slot name="body">
+                        <pre>{{ json_encode($audi->old_values, JSON_PRETTY_PRINT) }}</pre>
+                    </x-slot>
+                    <x-slot name="footer">
+                        <button data-modal-hide="modalViejo-{{ $audi->id }}" type="button"
+                            class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
+                            Cerrar
+                        </button>
+                    </x-slot>
+                </x-form-modal>
+            @endif
+        @endforeach
     </x-container>
 
     <script>
@@ -165,3 +202,30 @@
         });
     </script>
 </x-app-layout>
+<script>
+    // Ensuring modals are initialized properly
+    document.querySelectorAll('[data-modal-target]').forEach(button => {
+        button.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal-target');
+            const modal = document.querySelector(modalId);
+
+            if (modal) {
+                modal.classList.remove('hidden'); // Show modal
+                modal.classList.add('block'); // Add active class
+            }
+        });
+    });
+
+    // Close modal event
+    document.querySelectorAll('[data-modal-hide]').forEach(button => {
+        button.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal-hide');
+            const modal = document.querySelector(modalId);
+
+            if (modal) {
+                modal.classList.add('hidden'); // Hide modal
+                modal.classList.remove('block'); // Remove active class
+            }
+        });
+    });
+</script>
