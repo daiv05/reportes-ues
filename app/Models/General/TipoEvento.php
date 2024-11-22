@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Actividades\Evento;
 
-class TipoEvento extends Model  implements Auditable
+class TipoEvento extends Model implements Auditable
 {
-    use HasFactory,\OwenIt\Auditing\Auditable;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $table = 'tipo_eventos';
 
@@ -19,6 +19,10 @@ class TipoEvento extends Model  implements Auditable
         'activo',
     ];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function eventos()
     {
         return $this->hasMany(Evento::class, 'id_tipo_evento');

@@ -8,12 +8,11 @@ use App\Models\Mantenimientos\Aulas;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Http\Requests\Mantenimiento\StoreAulaRequest;
+use App\Http\Requests\Mantenimiento\UpdateAulaRequest;
 
 class AulasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): View
     {
         $aulas = Aulas::paginate(10);
@@ -21,25 +20,13 @@ class AulasController extends Controller
         return view('mantenimientos.aulas.index', compact('aulas', 'facultades'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         return view('aulas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreAulaRequest  $request): RedirectResponse
     {
-        $request->validate([
-            'id_facultad' => 'required|exists:facultades,id',
-            'nombre' => 'required|max:50',
-            'activo' => 'required|boolean',
-        ]);
-
         Aulas::create($request->all());
         return redirect()->route('aulas.index') ->with('message', [
             'type' => 'success',
@@ -47,46 +34,30 @@ class AulasController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id): View
     {
         $aula = Aulas::findOrFail($id);
         return view('aulas.show', compact('aula'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id): View
     {
         $aula = Aulas::findOrFail($id);
         return view('aulas.edit', compact('aula'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(UpdateAulaRequest  $request, string $id): RedirectResponse
     {
-        $request->validate([
-            'id_facultad' => 'required|exists:facultades,id',
-            'nombre' => 'required|max:50',
-            'activo' => 'required|boolean',
-        ]);
-
         $aula = Aulas::findOrFail($id);
         $aula->update($request->all());
         return redirect()->route('aulas.index') ->with('message', [
             'type' => 'success',
-            'content' => 'Aula actualizado exitosamente'
+            'content' => 'Aula actualizada exitosamente'
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id): RedirectResponse
     {
         $aula = Aulas::findOrFail($id);

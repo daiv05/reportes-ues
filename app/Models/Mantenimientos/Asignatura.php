@@ -12,6 +12,10 @@ class Asignatura extends Model  implements Auditable
 
     protected $fillable = ['id_escuela', 'nombre', 'activo'];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function escuela()
     {
         return $this->belongsTo(Escuela::class, 'id_escuela');

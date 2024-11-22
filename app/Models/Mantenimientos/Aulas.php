@@ -17,6 +17,10 @@ class Aulas extends Model  implements Auditable
 
     protected $fillable = ['nombre', 'activo', 'id_facultad'];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function facultades()
     {
         return $this->belongsTo(Facultades::class, 'id_facultad');

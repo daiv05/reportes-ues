@@ -16,4 +16,9 @@ class Dia extends Model  implements Auditable
         'nombre',
         'activo',
     ];
+
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
 }

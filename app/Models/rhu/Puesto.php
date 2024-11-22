@@ -20,6 +20,11 @@ class Puesto extends Model implements Auditable
         'activo',
     ];
 
+
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     /**
      * Relación con el modelo Entidades.
      * Un puesto pertenece a una entidad.
