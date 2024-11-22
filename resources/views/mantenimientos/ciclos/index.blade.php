@@ -10,15 +10,15 @@
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Ciclos" />
-    </x-slot>
-
-    <div>
         <div class="p-6">
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button" id="add-button">
                 Añadir Ciclo
             </x-forms.primary-button>
         </div>
+    </x-slot>
+
+    <x-container>
         <div class="mx-auto mb-8 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
             <x-table.base :headers="$headers">
                 @foreach ($ciclos as $ciclo)
@@ -48,7 +48,7 @@
                 {{ $ciclos->links() }}
             </nav>
         </div>
-    </div>
+    </x-container>
 
     <x-form-modal id="static-modal">
         <x-slot name="header">

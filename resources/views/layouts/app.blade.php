@@ -28,6 +28,16 @@
         @include('layouts.aside')
         <!-- Page Content -->
         <main class="min-h-screen">
+            <div id="loader" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50 hidden">
+                <div class="flex flex-col items-center space-y-4">
+                    <!-- Spinner -->
+                    <div class="relative w-16 h-16">
+                        <div class="absolute inset-0 rounded-full border-4 border-gray-400 border-t-orange-900 animate-spin"></div>
+                    </div>
+                    <!-- Texto -->
+                    <p class="text-lg font-medium text-gray-100">Por favor, espera...</p>
+                </div>
+            </div>
             <div class="py-4 lg:ml-64 rounded-lg mt-6">
                 <!-- Page Heading -->
                 @if (isset($header))
@@ -125,6 +135,29 @@
             return roles.some((item) => item.name === rol);
         }
         // hasRole('ROLE_USUARIO_SUPERVISOR_REPORTE')
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('import-excel');
+            const loader = document.getElementById('loader');
+
+            window.addEventListener('beforeunload', function () {
+                // Mostrar el loader
+                loader.classList.remove('hidden');
+            });
+
+            document.addEventListener('submit', function () {
+                // Mostrar el loader
+                loader.classList.remove('hidden');
+            });
+        });
+
+
+        document.addEventListener('onload', function () {
+            const loader = document.getElementById('loader');
+            loader.classList.remove('hidden');
+        });
     </script>
 
 </body>

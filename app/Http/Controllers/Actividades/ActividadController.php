@@ -9,15 +9,27 @@ use App\Imports\CalendarioImport;
 use App\Imports\HorarioImport;
 use App\Models\Actividades\Actividad;
 use App\Models\Actividades\Clase;
+use App\Models\General\Modalidad;
+use App\Models\General\TipoClase;
 use App\Models\Mantenimientos\Asignatura;
 use App\Models\Mantenimientos\Aulas;
 use App\Models\Mantenimientos\Ciclo;
+use App\Models\Mantenimientos\Escuela;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ActividadController extends Controller
 {
+    public function importarActividadesView(Request $request)
+    {
+        // Si se presiona el botón "Limpiar datos", olvidar la sesión.
+        if (request()->has('clear_session')) {
+            session()->forget('excelData');
+        }
+        return view('actividades.importacion-actividades.importacion-actividades');
+    }
+
     public function importarExcel(Request $request)
     {
         $import = null;
@@ -38,6 +50,8 @@ class ActividadController extends Controller
         $data = $import->getData();
 
         if(empty($data)){
+            session()->forget('excelData');
+            session()->forget('tipoActividad');
             return redirect()->back()->with('message', [
                 'type' => 'warning',
                 'content' => 'El archivo no contiene datos para importar o no cumple con el formato.'
@@ -55,10 +69,30 @@ class ActividadController extends Controller
         ]);
     }
 
+    public function eliminarDeSesion($index)
+    {
+        $excelData = session('excelData', []);
+
+        // Elimina el registro por índice
+        unset($excelData[$index]);
+
+        // Reindexa el arreglo y guarda en la sesión
+        $excelData = array_values($excelData);
+        session(['excelData' => $excelData]);
+
+        // Redirige de regreso con los datos actualizados
+        return redirect()->back()->with('success', 'Registro eliminado correctamente.');
+    }
+
     public function storeClases(ImportActividadClaseRequest $request)
     {
         $data = $request->all();
         $errors = [];
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+
+        //verificar longitud del array de materias
+        $out->writeln(count($data['materia']));
+
 
         // Recorre cada índice de `materia` para verificar que exista un array de días en `diasActividad`
         foreach ($data['materia'] as $key => $materia) {
@@ -74,6 +108,8 @@ class ActividadController extends Controller
         }
 
         $data['materia'] = Asignatura::whereIn('nombre', $data['materia'])->pluck('id')->toArray();
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln(json_encode($data['materia']));
         $data['local'] = Aulas::whereIn('nombre', $data['local'])->pluck('id')->toArray();
 
         $cicloActivo = Ciclo::where('activo', 1)->first();
@@ -81,7 +117,7 @@ class ActividadController extends Controller
         try{
             DB::beginTransaction();
 
-            foreach ($data['modalidad'] as $key => $materia) {
+            foreach ($data['modalidad'] as $key => $modalidad) {
                 $actividad = new Actividad();
                 $actividad->id_ciclo = $cicloActivo->id;
                 $actividad->id_modalidad = $data['modalidad'][$key];
@@ -89,7 +125,7 @@ class ActividadController extends Controller
                 $actividad->hora_fin = $data['hora_fin'][$key];
                 $actividad->save();
 
-                $actividad->asignaturas()->attach($materia);
+                $actividad->asignaturas()->attach($data['materia'][$key]);
                 $actividad->aulas()->attach($data['local'][$key]);
 
                 $clase = new Clase();
@@ -132,7 +168,16 @@ class ActividadController extends Controller
 
     public function listadoClases(Request $request)
     {
-        $search = $request->input('table-search');
+        $materia = $request->input('materia');
+        $escuela = $request->input('escuela');
+        $modalidad = $request->input('modalidad');
+        $tipoClase = $request->input('tipo');
+        $aula = $request->input('aula');
+
+        $escuelas = Escuela::all()->pluck('nombre', 'id');
+        $modalidades = Modalidad::all()->pluck('nombre', 'id');
+        $tiposClase = TipoClase::all()->pluck('nombre', 'id');
+
         $cicloActivo = Ciclo::where('activo', 1)->first();
         $clases = Clase::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas', 'tipoClase')
             ->whereHas('actividad', function ($query) use ($cicloActivo) {
@@ -140,13 +185,31 @@ class ActividadController extends Controller
                     $query->where('id_ciclo', $cicloActivo->id);
                 }
             })
-            ->when($search, function ($query, $search) {
-                $query->whereHas('actividad.asignaturas', function ($query) use ($search) {
-                    $query->where('nombre', 'like', "%$search%");
+            ->when($materia, function ($query, $materia) {
+                $query->whereHas('actividad.asignaturas', function ($query) use ($materia) {
+                    $query->where('nombre', 'like', "%$materia%");
+                });
+            })
+            ->when($escuela, function ($query, $escuela) {
+                $query->whereHas('actividad.asignaturas', function ($query) use ($escuela) {
+                    $query->where('id_escuela', $escuela);
+                });
+            })
+            ->when($modalidad, function ($query, $modalidad) {
+                $query->whereHas('actividad', function ($query) use ($modalidad) {
+                    $query->where('id_modalidad', $modalidad);
+                });
+            })
+            ->when($tipoClase, function ($query, $tipoClase) {
+                $query->where('id_tipo_clase', $tipoClase);
+            })
+            ->when($aula, function ($query, $aula) {
+                $query->whereHas('actividad.aulas', function ($query) use ($aula) {
+                    $query->where('nombre', 'like', "%$aula%");
                 });
             })
             ->paginate(10);
 
-        return view('actividades.listado-actividades.listado-clases', compact('clases'));
+        return view('actividades.listado-actividades.listado-clases', compact('clases', 'escuelas', 'modalidades', 'tiposClase'));
     }
 }
