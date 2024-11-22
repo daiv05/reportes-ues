@@ -7,6 +7,7 @@
             'active' => request()->is('inicio'),
             'icon' => 'heroicon-s-chart-pie',
             'label' => 'Inicio',
+            'role' => 'ROLE_USUARIO_BASE',
         ],
         [
             'type' => 2,
@@ -19,13 +20,16 @@
                     'to' => 'roles.index',
                     'active' => request()->is('seguridad/roles'),
                     'label' => 'Roles',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
                 [
                     'to' => 'usuarios.index',
                     'active' => request()->is('seguridad/usuarios'),
                     'label' => 'Usuarios',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
             ],
+            'role' => 'ROLE_USUARIO_SUPER_ADMIN',
         ],
         [
             'type' => 2,
@@ -38,18 +42,22 @@
                     'to' => 'reportes-generales',
                     'active' => request()->is('reportes/listado-general'),
                     'label' => 'Listado',
+                    'role' => 'ROLE_USUARIO_BASE',
                 ],
                 [
                     'to' => 'reportes.misReportes',
                     'active' => request()->is('reportes/mis-reportes'),
                     'label' => 'Mis reportes',
+                    'role' => 'ROLE_USUARIO_BASE',
                 ],
                 [
                     'to' => 'reportes.misAsignaciones',
                     'active' => request()->is('reportes/mis-asignaciones'),
                     'label' => 'Mis asignaciones',
-                ]
+                    'role' => 'ROLE_USUARIO_EMPLEADO',
+                ],
             ],
+            'role' => 'ROLE_USUARIO_BASE',
         ],
         [
             'type' => 2,
@@ -62,18 +70,22 @@
                     'to' => 'listado-clases',
                     'active' => request()->is('actividades/clases'),
                     'label' => 'Clases',
+                    'role' => 'ROLE_USUARIO_BASE',
                 ],
                 [
                     'to' => 'listado-eventos-evaluaciones',
                     'active' => request()->is('actividades/eventos-y-evaluaciones'),
                     'label' => 'Eventos',
+                    'role' => 'ROLE_USUARIO_BASE',
                 ],
                 [
                     'to' => 'importar-actividades',
                     'active' => request()->is('actividades/importacion-actividades'),
                     'label' => 'Importación de actividades',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
             ],
+            'role' => 'ROLE_USUARIO_BASE',
         ],
         [
             'type' => 2,
@@ -86,18 +98,22 @@
                     'to' => 'entidades.index',
                     'active' => request()->is('rhu/entidades'),
                     'label' => 'Entidades',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
                 [
                     'to' => 'puestos.index',
                     'active' => request()->is('rhu/puestos'),
                     'label' => 'Puestos',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
                 [
                     'to' => 'empleadosPuestos.index',
                     'active' => request()->is('rhu/empleado-puesto'),
                     'label' => 'Empleados - Puestos',
-                ]
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                ],
             ],
+            'role' => 'ROLE_USUARIO_SUPER_ADMIN',
         ],
         [
             'type' => 2,
@@ -110,23 +126,28 @@
                     'to' => 'aulas.index',
                     'active' => request()->is('mantenimientos/aulas'),
                     'label' => 'Aulas',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
                 [
                     'to' => 'escuela.index',
                     'active' => request()->is('mantenimientos/escuelas'),
                     'label' => 'Escuelas',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
                 [
                     'to' => 'asignaturas.index',
                     'active' => request()->is('mantenimientos/asignaturas'),
                     'label' => 'Asignaturas',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
                 [
                     'to' => 'ciclos.index',
                     'active' => request()->is('mantenimientos/ciclos'),
                     'label' => 'Ciclos',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                 ],
             ],
+            'role' => 'ROLE_USUARIO_SUPER_ADMIN',
         ],
         [
             'type' => 2,
@@ -139,6 +160,7 @@
                     'to' => 'dashboard',
                     'active' => request()->is('maquetacion/general'),
                     'label' => 'Componentes globales',
+                    'role' => 'ROLE_USUARIO_BASE'
                 ],
                 // [
                 //     'to' => 'detalle-reporte',
@@ -146,18 +168,20 @@
                 //     'label' => 'Detalle de reporte',
                 // ],
             ],
+            'role' => 'ROLE_USUARIO_BASE'
         ],
         [
             'type' => 2,
             'id' => 'auditorias-dropdown',
             'active' => request()->is('auditorias/*'),
-           'icon' => 'heroicon-s-book-open',
+            'icon' => 'heroicon-s-book-open',
             'label' => 'Auditorias',
             'items' => [
                 [
                     'to' => 'general.index',
                     'active' => request()->is('auditorias/general'),
                     'label' => 'General',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN'
                 ],
                 // [
                 //     'to' => 'detalle-reporte',
@@ -165,6 +189,7 @@
                 //     'label' => 'Detalle de reporte',
                 // ],
             ],
+            'role' => 'ROLE_USUARIO_SUPER_ADMIN'
         ],
     ];
 @endphp
