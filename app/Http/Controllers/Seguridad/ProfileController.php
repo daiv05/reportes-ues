@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -18,7 +19,7 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $persona = $request->user()->persona;
-        $persona->fecha_nacimiento = \Carbon\Carbon::createFromFormat('Y-m-d', $persona->fecha_nacimiento)->format('m/d/Y');
+        $persona->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $persona->fecha_nacimiento)->format('m/d/Y');
         return view('seguridad.profile.edit', [
             'user' => $request->user(),
             'persona' => $request->user()->persona
@@ -30,16 +31,28 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+         $request->merge([
+            'fecha_nacimiento' => Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
+        ]);
+        $user = $request->user();
+        $persona = $user->persona;
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill($request->only(['carnet', 'email']));
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
+        $user->save();
 
-        $request->user()->save();
+        $persona->update($request->only(['nombre', 'apellido', 'fecha_nacimiento', 'telefono']));
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')
+            ->with('status', 'profile-updated')
+            ->with('message', [
+                'type' => 'success',
+                'content' => 'Perfil actualizado exitosamente.',
+            ]);
     }
+
 
     /**
      * Delete the user's account.

@@ -40,7 +40,7 @@
                 </x-table.tr>
             @endforeach
         </x-table.base>
-        </table>
+
         <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $aulas->links() }}
@@ -57,18 +57,18 @@
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
                     <x-forms.select label="Facultad" id="id_facultad" name="id_facultad" :options="$facultades->pluck('nombre', 'id')->toArray()"
-                        :value="old('id_facultad')" :error="$errors->get('id_facultad')" />
+                        :value="old('id_facultad')" :error="$errors->get('id_facultad')" required />
                     <div id="facultad-error" class="text-sm text-red-500"></div>
                 </x-forms.row>
                 <x-forms.row :columns="2">
                     <div>
                         <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')"
-                            :error="$errors->get('nombre')" />
+                            :error="$errors->get('nombre')" required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
                         <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']"
-                            :value="old('activo', '1')" :error="$errors->get('activo')" />
+                            :value="old('activo', '1')" :error="$errors->get('activo')" required/>
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>

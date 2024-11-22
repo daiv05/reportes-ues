@@ -6,7 +6,6 @@
         ['text' => 'Acción', 'align' => 'left'],
     ];
 @endphp
-
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Asignaturas" />
@@ -41,14 +40,14 @@
                 </x-table.tr>
             @endforeach
         </x-table.base>
-        <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
+        <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $asignaturas->links() }}
         </nav>
     </x-container>
 
     <!-- Modal agregar-->
-    <x-form-modal id="static-modal">
+    <x-form-modal id="static-modal" class="hidden">
         <x-slot name="header">
             <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Añadir asignatura</h3>
         </x-slot>
@@ -59,17 +58,17 @@
                 <x-forms.row :columns="1">
                     <div>
                         <x-forms.select label="Escuela" id="id_escuela" name="id_escuela" :options="$escuelas->pluck('nombre', 'id')->toArray()"
-                            :value="old('id_escuela')" :error="$errors->get('id_escuela')" />
+                            :value="old('id_escuela')" :error="$errors->get('id_escuela')" required />
                         <div id="escuela-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')"
-                            :error="$errors->get('nombre')" />
+                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')" :error="$errors->get('nombre')"
+                            required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
                         <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
-                            :error="$errors->get('activo')" />
+                            :error="$errors->get('activo')" required />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>

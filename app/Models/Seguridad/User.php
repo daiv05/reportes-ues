@@ -39,6 +39,10 @@ class User extends Authenticatable implements Auditable
         'email_verified_at' => 'datetime',
     ];
 
+    public function setCarnetAttribute($value)
+    {
+        $this->attributes['carnet'] = strtoupper($value);
+    }
     public function persona() : BelongsTo
     {
         return $this->belongsTo(Persona::class, 'id_persona');

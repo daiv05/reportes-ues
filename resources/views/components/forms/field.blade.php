@@ -1,4 +1,3 @@
-<!-- resources/views/components/forms/field.blade.php -->
 @props([
     'required' => false,
     'label' => '',
@@ -19,5 +18,9 @@
         {{ $readonly ? 'readonly' : '' }}
         class="mt-1 block w-full rounded-md border {{ $readonly ? 'bg-gray-100' : 'border-gray-300' }} py-2 pl-3 pr-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
     />
-    <x-forms.input-error :messages="$error" />
+
+
+    <div id="{{ $name }}-error" class="text-sm text-red-500">
+        <x-forms.input-error :messages="$error" />
+    </div>
 </div>

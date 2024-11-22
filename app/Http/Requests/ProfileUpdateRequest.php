@@ -13,11 +13,16 @@ class ProfileUpdateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+            'nombre' => 'required|string|max:50',
+            'apellido' => 'required|string|max:50',
+            'fecha_nacimiento' => 'required|date',
+            'telefono' => 'required|string|max:50',
+            'carnet' => 'required|string|max:50|unique:users,carnet,' . $this->user()->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $this->user()->id,
         ];
     }
+
 }

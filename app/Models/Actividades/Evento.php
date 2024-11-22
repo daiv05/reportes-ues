@@ -6,6 +6,7 @@ use App\Models\Actividades\Actividad;
 use App\Models\General\TipoEvento;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class Evento extends Model  implements Auditable
 {

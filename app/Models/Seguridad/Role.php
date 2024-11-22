@@ -14,5 +14,10 @@ class Role extends Model  implements Auditable
     protected $fillable = ['name', 'activo'];
     protected $table = 'roles';
 
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = strtoupper($value);
+    }
     // Puedes agregar relaciones si el rol tiene alguna
 }
