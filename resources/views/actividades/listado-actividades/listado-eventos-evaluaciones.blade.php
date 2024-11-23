@@ -29,7 +29,7 @@
         <div class="flex-column flex flex-wrap items-center gap-3 space-y-4 pb-4 sm:flex-row sm:space-y-0">
             <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 w-full">
                 <form action="{{ route('listado-eventos-evaluaciones') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
-                    <div class="flex w-full flex-col md:w-5/6">
+                    <div class="flex w-full flex-col md:w-5/6 px-4 md:px-0">
                         <x-forms.row :columns="2">
                             <x-forms.field
                                 id="materia"
@@ -37,11 +37,11 @@
                                 name="materia"
                                 :value="request('materia')"
                             />
-                            <x-forms.select
-                                name="escuela"
-                                label="Escuela"
-                                :options="$escuelas"
-                                selected="{{ request('escuela') }}"
+                            <x-forms.field
+                                id="descripcion"
+                                label="Actividad"
+                                name="descripcion"
+                                :value="request('descripcion')"
                             />
                         </x-forms.row>
                         <x-forms.row :columns="3">
@@ -52,12 +52,15 @@
                                 :value="request('aula')"
                             />
 
-                            <x-forms.select
-                                name="tipo"
-                                label="Tipo de clase"
-                                :options="$tiposClase"
-                                selected="{{ request('tipo') }}"
-                            />
+                            <div class="space-y-1">
+                                <x-forms.input-label for="fecha" :value="__('Fecha')" />
+                                <x-forms.date-input
+                                    type="date"
+                                    name="fecha"
+                                    :value="request('fecha')"
+                                    class="w-full mt-1"
+                                />
+                            </div>
 
                             <x-forms.select
                                 name="modalidad"
@@ -98,18 +101,21 @@
                         </x-table.td>
                     @endif
 
-                    {{ json_encode($eventos) }}
                     @foreach ($eventos as $evento)
                         <x-table.tr>
                             <x-table.td>{{ $evento->descripcion }}</x-table.td>
                             <x-table.td justify="center">{{ $evento->actividad->asignaturas[0]->nombre }}</x-table.td>
-                            <x-table.td justify="center">{{ $evento->actividad->aulas }}</x-table.td>
+                            <x-table.td justify="center">{{
+                                count($evento->actividad->aulas->pluck('nombre')) == 0
+                                ? 'Sin aula'
+                                : $evento->actividad->aulas->pluck('nombre')->implode(', ')
+                                }}</x-table.td>
                             <x-table.td justify="center">{{ $evento->actividad->modalidad->nombre }}</x-table.td>
                             <x-table.td justify="center">{{ $evento->cantidad_asistentes }}</x-table.td>
-                            <x-table.td>{{ $evento->fecha }}</x-table.td>
+                            <x-table.td>{{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}</x-table.td>
                             <x-table.td>
                                 @if($evento->actividad->hora_inicio && $evento->actividad->hora_fin)
-                                    {{ $evento->actividad->hora_inicio. ' - '. $evento->actividad->hora_fin }}
+                                    {{ \Carbon\Carbon::parse($evento->actividad->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($evento->actividad->hora_fin)->format('H:i') }}
                                 @else
                                     <span class="text-gray-500">Sin horario</span>
                                 @endif

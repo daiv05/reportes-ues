@@ -10,6 +10,7 @@ use App\Imports\HorarioImport;
 use App\Models\Actividades\Actividad;
 use App\Models\Actividades\Clase;
 use App\Models\Actividades\Evento;
+use App\Models\AulaActividad;
 use App\Models\General\Modalidad;
 use App\Models\General\TipoClase;
 use App\Models\Mantenimientos\Asignatura;
@@ -134,7 +135,12 @@ class ActividadController extends Controller
                 $actividad->save();
 
                 $actividad->asignaturas()->attach($data['materia'][$key]);
-                $actividad->aulas()->attach($data['local'][$key]);
+                foreach ($data['local'] as $aula) {
+                    AulaActividad::create([
+                        'id_actividad' => $actividad->id,
+                        'id_aula' => $aula
+                    ]);
+                }
 
                 $clase = new Clase();
                 $clase->id_actividad = $actividad->id;
@@ -266,7 +272,7 @@ class ActividadController extends Controller
                     $query->where('nombre', 'like', "%$aula%");
                 });
             })
-            ->paginate(10);
+            ->paginate(10)->appends($request->query());
 
         return view('actividades.listado-actividades.listado-clases', compact('clases', 'escuelas', 'modalidades', 'tiposClase'));
     }
@@ -284,14 +290,15 @@ class ActividadController extends Controller
                     $query->where('id_ciclo', $cicloActivo->id);
                 }
             })
+            ->when($request->input('descripcion'), function ($query) use ($request) {
+                $query->where('descripcion', 'like', "%{$request->input('descripcion')}%");
+            })
+            ->when($request->input('fecha'), function ($query) use ($request) {
+                $query->where('fecha', Carbon::createFromFormat('d/m/Y', $request->input('fecha'))->format('Y-m-d'));
+            })
             ->when($request->input('materia'), function ($query) use ($request) {
                 $query->whereHas('actividad.asignaturas', function ($query) use ($request) {
                     $query->where('nombre', 'like', "%{$request->input('materia')}%");
-                });
-            })
-            ->when($request->input('escuela'), function ($query) use ($request) {
-                $query->whereHas('actividad.asignaturas', function ($query) use ($request) {
-                    $query->where('id_escuela', $request->input('escuela'));
                 });
             })
             ->when($request->input('modalidad'), function ($query) use ($request) {
@@ -299,17 +306,12 @@ class ActividadController extends Controller
                     $query->where('id_modalidad', $request->input('modalidad'));
                 });
             })
-            ->when($request->input('tipo'), function ($query) use ($request) {
-                $query->whereHas('actividad', function ($query) use ($request) {
-                    $query->where('id_tipo_clase', $request->input('tipo'));
+            ->when($request->input('aula'), function ($query) use ($request) {
+                $query->whereHas('actividad.aulas', function ($query) use ($request) {
+                    $query->where('nombre', 'like', "%{$request->input('aula')}%");
                 });
             })
-            // ->when($request->input('aula'), function ($query) use ($request) {
-            //     $query->whereHas('actividad.aulas', function ($query) use ($request) {
-            //         $query->where('nombre', 'like', "%{$request->input('aula')}%");
-            //     });
-            // })
-            ->paginate(10);
+            ->paginate(10)->appends($request->query());
 
         return view('actividades.listado-actividades.listado-eventos-evaluaciones', compact('eventos', 'escuelas', 'modalidades', 'tiposClase'));
     }

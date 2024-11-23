@@ -240,7 +240,7 @@
                                                             id="checkbox-{{ $aula->nombre }}-{{ $loop->parent->iteration }}"
                                                             type="checkbox"
                                                             value="{{ $aula->id }}"
-                                                            name="aulas[{{ $loop->parent->iteration }}][]"
+                                                            name="aulas[{{ $loop->parent->index }}][]"
                                                             @if(is_array(old('aulas.' . $loop->parent->index, $row['aulas'])) && in_array($aula->id, old('aulas.' . $loop->parent->index, $row['aulas'])))
                                                                 checked
                                                             @endif
@@ -411,7 +411,7 @@
                                                                     id="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}"
                                                                     type="checkbox"
                                                                     value="{{ $dia->id }}"
-                                                                    name="diasActividad[{{ $loop->parent->iteration }}][]"
+                                                                    name="diasActividad[{{ $loop->parent->index }}][]"
                                                                     @if(is_array(old('diasActividad.' . $loop->parent->index, $row['diasActividad'])) && in_array($dia->id, old('diasActividad.' . $loop->parent->index, $row['diasActividad'])))
                                                                         checked
                                                                     @endif

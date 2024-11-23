@@ -29,7 +29,7 @@
         <div class="flex-column flex flex-wrap items-center gap-3 space-y-4 pb-4 sm:flex-row sm:space-y-0">
             <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 w-full">
                 <form action="{{ route('listado-clases') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
-                    <div class="flex w-full flex-col md:w-5/6">
+                    <div class="flex w-full flex-col md:w-5/6 px-4 md:px-0">
                         <x-forms.row :columns="2">
                             <x-forms.field
                                 id="materia"
