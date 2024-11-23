@@ -29,41 +29,30 @@
                 </x-forms.primary-button>
             </x-forms.button-group>
             <x-forms.row :columns="3">
+                <x-forms.select label="Filtrar por Modelo" id="model" name="model" :options="$models->mapWithKeys(
+                    fn($model) => [$model->auditable_type => class_basename($model->auditable_type)],
+                )"
+                    :selected="request('model')" :error="$errors->get('model')" />
                 <div>
-                    <label for="model" class="block text-sm font-medium text-gray-700">Filtrar por Modelo</label>
-                    <select name="model" id="model"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="">Seleccione un Modelo</option>
-                        @foreach ($models as $model)
-                            <option value="{{ $model->auditable_type }}"
-                                {{ request('model') == $model->auditable_type ? 'selected' : '' }}>
-                                {{ class_basename($model->auditable_type) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <x-forms.select
+                    label="Filtrar por Acción"
+                    id="event"
+                    name="event"
+                    :options="collect($events)->mapWithKeys(fn($event) => [
+                        $event['event'] => ucfirst($event['event'])
+                    ])"
+                    :value="old('event')" />
 
-                <div>
-                    <label for="event" class="block text-sm font-medium text-gray-700">Filtrar por Acción</label>
-                    <select name="event" id="event"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="">Seleccione una Acción</option>
-                        @foreach ($events as $event)
-                            <option value="{{ $event->event }}"
-                                {{ request('event') == $event->event ? 'selected' : '' }}>
-                                {{ ucfirst($event->event) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
 
+                </div>
                 <div>
                     <x-forms.select label="Filtrar por Usuario" id="user_id" name="user_id" :options="$users->mapWithKeys(
                         fn($user) => [
                             $user->id => ($user->persona->nombre ?? '') . ' ' . ($user->persona->apellido ?? ''),
                         ],
                     )"
-                        :value="old('user_id')" :error="$errors->get('user_id')" />
+                        :selected="old('user_id', request('user_id'))" :error="$errors->get('user_id')" />
+
                 </div>
             </x-forms.row>
             <x-forms.row :columns="2">
