@@ -21,9 +21,9 @@ class ImportActividadEventoRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'fecha' => 'required|array|min:1',
-            'fecha.*' => 'date',
+            'fecha.*' => 'date_format:d/m/Y',
             'materia' => 'required|array|min:1',
             'materia.*' => 'exists:asignaturas,nombre',
             'modalidad' => 'required|array|min:1',
@@ -37,6 +37,18 @@ class ImportActividadEventoRequest extends FormRequest
             'cantidad_estudiantes' => 'required|array|min:1',
             'cantidad_estudiantes.*' => 'integer|min:0',
         ];
+
+        foreach ($this->input('modalidad', []) as $key => $value) {
+            if ($value == 2) {
+                $rules["hora_inicio.$key"] = 'required|date_format:H:i';
+                $rules["hora_fin.$key"] = 'required|date_format:H:i';
+            } else {
+                $rules["hora_inicio.$key"] = 'nullable';
+                $rules["hora_fin.$key"] = 'nullable';
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -51,9 +63,30 @@ class ImportActividadEventoRequest extends FormRequest
             'modalidad.*.exists' => 'La modalidad ingresada no existe',
             'hora_inicio.*.date_format' => 'La hora de inicio debe tener el formato HH:MM',
             'hora_fin.*.date_format' => 'La hora de fin debe tener el formato HH:MM',
+            'hora_inicio.*.required' => 'La hora de inicio es requerida en modalidad presencial',
+            'hora_fin.*.required' => 'La hora de fin es requerida en modalidad presencial',
             'evaluacion.*.string' => 'La evaluación debe ser una cadena de texto',
             'cantidad_estudiantes.*.integer' => 'La cantidad de estudiantes debe ser un número entero',
             'cantidad_estudiantes.*.min' => 'La cantidad de estudiantes no puede ser negativa',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $hora_inicio = $this->input('hora_inicio');
+            $hora_fin = $this->input('hora_fin');
+            $modalidad = $this->input('modalidad');
+
+            foreach ($hora_inicio as $index => $hora_inicio_value) {
+                // Verificar que la hora de fin sea mayor que la hora de inicio
+                $hora_inicio_timestamp = strtotime($hora_inicio[$index]);
+                $hora_fin_timestamp = strtotime($hora_fin[$index]);
+
+                if ($hora_fin_timestamp <= $hora_inicio_timestamp && $modalidad[$index] == 2) {
+                    $validator->errors()->add('hora_fin.' . $index, 'La hora de fin debe ser mayor que la hora de inicio.');
+                }
+            }
+        });
     }
 }

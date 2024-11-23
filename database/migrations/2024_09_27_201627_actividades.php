@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('actividades', function (Blueprint $table) {
             $table->id();
-            $table->time('hora_inicio');
-            $table->time('hora_fin');
+            $table->time('hora_inicio')->nullable();
+            $table->time('hora_fin')->nullable();
             $table->foreignId('id_modalidad')->constrained('modalidades');
             $table->foreignId('id_ciclo')->constrained('ciclos');
             $table->boolean('activo')->default(true);

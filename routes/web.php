@@ -79,9 +79,7 @@ Route::middleware('auth')->group(function () {
     /* ****************************************** */
     Route::prefix('actividades')->group(function () {
         Route::get('/clases', [ActividadController::class, 'listadoClases'])->name('listado-clases');
-        Route::get('/eventos-y-evaluaciones', function () {
-            return view('actividades.listado-actividades.listado-eventos-evaluaciones');
-        })->name('listado-eventos-evaluaciones');
+        Route::get('/eventos-y-evaluaciones', [ActividadController::class, 'listadoEventos'])->name('listado-eventos-evaluaciones');
         Route::get('/importar-actividades', [ActividadController::class, 'importarActividadesView'])->name('importar-actividades');
         Route::delete('/eliminar-evento-sesion/{index}', [ActividadController::class, 'eliminarDeSesion'])->name('eliminar-evento-sesion');
         Route::post('/importar-actividades', [ActividadController::class, 'importarExcel'])->name('importar-actividades-post');
