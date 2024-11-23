@@ -1,3 +1,19 @@
+@php
+    $headers = [
+        ['text' => 'Usuario', 'align' => 'center'],
+        ['text' => 'Evento', 'align' => 'center'],
+        ['text' => 'Modelo', 'align' => 'center'],
+        ['text' => 'id Modelo', 'align' => 'center'],
+        ['text' => 'Nuevos datos', 'align' => 'center'],
+        ['text' => 'Datos viejos', 'align' => 'center'],
+        ['text' => 'URL', 'align' => 'center'],
+        ['text' => 'IP', 'align' => 'center'],
+        ['text' => 'Navegador', 'align' => 'center'],
+        ['text' => 'Creacion', 'align' => 'center'],
+        ['text' => 'Actualizacion', 'align' => 'center'],
+    ];
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <div class="p-6 text-2xl font-bold text-red-900 dark:text-gray-100">
@@ -12,49 +28,35 @@
                     Filtrar
                 </x-forms.primary-button>
             </x-forms.button-group>
-            <!-- Filtro por modelo -->
             <x-forms.row :columns="3">
+                <x-forms.select label="Filtrar por Modelo" id="model" name="model" :options="$models->mapWithKeys(
+                    fn($model) => [$model->auditable_type => class_basename($model->auditable_type)],
+                )"
+                    :selected="request('model')" :error="$errors->get('model')" />
                 <div>
-                    <label for="model" class="block text-sm font-medium text-gray-700">Filtrar por Modelo</label>
-                    <select name="model" id="model"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="">Seleccione un Modelo</option>
-                        @foreach ($models as $model)
-                            <option value="{{ $model->auditable_type }}"
-                                {{ request('model') == $model->auditable_type ? 'selected' : '' }}>
-                                {{ class_basename($model->auditable_type) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <x-forms.select
+                    label="Filtrar por Acción"
+                    id="event"
+                    name="event"
+                    :options="collect($events)->mapWithKeys(fn($event) => [
+                        $event['event'] => ucfirst($event['event'])
+                    ])"
+                    :value="old('event')" />
 
-                <!-- Filtro por acción -->
-                <div>
-                    <label for="event" class="block text-sm font-medium text-gray-700">Filtrar por Acción</label>
-                    <select name="event" id="event"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="">Seleccione una Acción</option>
-                        @foreach ($events as $event)
-                            <option value="{{ $event->event }}"
-                                {{ request('event') == $event->event ? 'selected' : '' }}>
-                                {{ ucfirst($event->event) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
 
-                <!-- Filtro por usuario -->
+                </div>
                 <div>
                     <x-forms.select label="Filtrar por Usuario" id="user_id" name="user_id" :options="$users->mapWithKeys(
                         fn($user) => [
                             $user->id => ($user->persona->nombre ?? '') . ' ' . ($user->persona->apellido ?? ''),
                         ],
                     )"
-                        :value="old('user_id')" :error="$errors->get('user_id')" />
+                        :selected="old('user_id', request('user_id'))" :error="$errors->get('user_id')" />
+
                 </div>
             </x-forms.row>
             <x-forms.row :columns="2">
-                <!-- Filtro por Fecha Inicial -->
+
                 <div>
                     <x-forms.input-label for="start_date" :value="__('Fecha Inicial')" />
                     <input type="date" name="start_date" id="start_date"
@@ -64,7 +66,6 @@
                     <x-forms.input-error :messages="$errors->get('start_date')" class="mt-2" />
                 </div>
 
-                <!-- Filtro por Fecha Final -->
                 <div>
                     <x-forms.input-label for="end_date" :value="__('Fecha Final')" />
                     <input type="date" name="end_date" id="end_date"
@@ -74,156 +75,148 @@
                     <x-forms.input-error :messages="$errors->get('end_date')" class="mt-2" />
                 </div>
             </x-forms.row>
-
-
-
         </form>
+        <x-table.base :headers="$headers">
+            @foreach ($audits as $audi)
+                <x-table.tr>
+                    <x-table.td>
+                        @php
+                            $user = \App\Models\Seguridad\User::find($audi->user_id);
+                        @endphp
+                        {{ $user->persona->nombre }} {{ $user->persona->apellido }}
+                    </x-table.td>
+                    <x-table.td>{{ $audi->event }}</x-table.td>
+                    <x-table.td justify="center">{{ class_basename($audi->auditable_type) }}</x-table.td>
+                    <x-table.td justify="center">{{ $audi->auditable_id }}</x-table.td>
+                    <x-table.td justify="center">
+                        @if ($audi->new_values && !empty($audi->new_values))
+                            <button data-modal-target="modalNuevo-{{ $audi->id }}"
+                                data-modal-toggle="modalNuevo-{{ $audi->id }}" type="button">
+                                <x-heroicon-o-eye class="h-5 w-5" />
+                            </button>
+                        @else
+                            -
+                        @endif
+                    </x-table.td>
+                    <x-table.td justify="center">
+                        @if ($audi->old_values && !empty($audi->old_values))
+                            <button data-modal-target="modalViejo-{{ $audi->id }}"
+                                data-modal-toggle="modalViejo-{{ $audi->id }}" type="button">
+                                <x-heroicon-o-eye class="h-5 w-5" />
+                            </button>
+                        @else
+                            -
+                        @endif
+                    </x-table.td>
 
-
-        <!-- Tabla de auditoría, agrupada por acción -->
-        <div class="overflow-x-auto">
-            @foreach ($events as $event)
-                @php
-                    // Filtramos las auditorías por la acción
-                    $filteredAudits = $audits->where('event', $event->event);
-                    if ($filteredAudits->isEmpty()) {
-                        continue;
-                    }
-                @endphp
-
-                <h3 class="text-lg font-semibold my-4">Acción: {{ ucfirst($event->event) }}</h3>
-
-                <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md mb-6">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Campo</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Modificador</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Modificado</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Fecha creacion</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Evento</th>
-
-                            <!-- Dinámicamente mostramos los campos de cada auditoría (valores antiguos y nuevos) -->
-                            @php
-                                // Unificar todos los campos para que no haya duplicados
-                                $fields = [];
-                                foreach ($filteredAudits as $audit) {
-                                    $old_values = is_string($audit->old_values)
-                                        ? json_decode($audit->old_values, true)
-                                        : $audit->old_values;
-                                    $new_values = is_string($audit->new_values)
-                                        ? json_decode($audit->new_values, true)
-                                        : $audit->new_values;
-                                    $old_values = $old_values ?? [];
-                                    $new_values = $new_values ?? [];
-                                    $fields = array_merge($fields, array_keys($old_values), array_keys($new_values));
-                                }
-                                // Eliminamos duplicados
-                                $fields = array_unique($fields);
-                            @endphp
-
-                            @foreach ($fields as $field)
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">{{ ucfirst($field) }}
-                                </th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm">
-                        <!-- Mostrar auditorías en filas separadas -->
-                        @foreach ($filteredAudits as $audit)
-                            @php
-                                $old_values = is_string($audit->old_values)
-                                    ? json_decode($audit->old_values, true)
-                                    : $audit->old_values;
-                                $new_values = is_string($audit->new_values)
-                                    ? json_decode($audit->new_values, true)
-                                    : $audit->new_values;
-                                $old_values = $old_values ?? [];
-                                $new_values = $new_values ?? [];
-
-                                // Obtener el usuario que realizó la acción
-                                $user = \App\Models\Seguridad\User::find($audit->user_id); // Suponiendo que 'user_id' es el campo en la auditoría
-                                $Auiditado = \App\Models\Seguridad\User::find($audit->auditable_id); // Suponiendo que 'user_id' es el campo en la auditoría
-                            @endphp
-
-                            <!-- Fila de Datos Viejos -->
-                            <tr>
-                                <td class="px-6 py-4 text-gray-700">Datos Viejos</td>
-                                <td class="px-6 py-4 text-gray-700">
-                                    {{ $user ? $user->persona->nombre : 'Usuario no disponible' }}
-                                </td>
-                                <td class="px-6 py-4 text-gray-700">
-                                    {{ $Auiditado ? $Auiditado->persona->nombre : 'Usuario no disponible' }}
-                                </td>
-                                <td class="px-6 py-4 text-gray-700">{{ $audit->created_at->format('Y-m-d H:i:s') }}
-                                </td>
-                                <td class="px-6 py-4 text-gray-700">{{ ucfirst($audit->event) }}</td>
-                                @foreach ($fields as $field)
-                                    <td class="px-6 py-4 text-gray-700">
-                                        {{ $old_values[$field] ?? 'Vacio' }}
-                                    </td>
-                                @endforeach
-                            </tr>
-
-                            <!-- Fila de Datos Nuevos -->
-                            <tr>
-                                <td class="px-6 py-4 text-gray-700">Datos Nuevos</td>
-                                <td class="px-6 py-4 text-gray-700">
-                                    {{ $user ? $user->persona->nombre : 'Usuario no disponible' }}
-                                </td>
-                                <td class="px-6 py-4 text-gray-700">
-                                    {{ $Auiditado ? $Auiditado->persona->nombre : 'Usuario no disponible' }}
-                                </td>
-                                <td class="px-6 py-4 text-gray-700">{{ $audit->created_at->format('Y-m-d H:i:s') }}
-                                </td>
-                                <td class="px-6 py-4 text-gray-700">{{ ucfirst($audit->event) }}</td>
-                                @foreach ($fields as $field)
-                                    <td class="px-6 py-4 text-gray-700">
-                                        {{ $new_values[$field] ?? 'Vavio' }}
-                                    </td>
-                                @endforeach
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                    <x-table.td>{{ $audi->url }}</x-table.td>
+                    <x-table.td>{{ $audi->ip_address }}</x-table.td>
+                    <x-table.td justify="center">
+                        @php
+                            $agent = new Jenssegers\Agent\Agent();
+                            $agent->setUserAgent($audi->user_agent);
+                            $browser = $agent->browser();
+                            $platform = $agent->platform();
+                        @endphp
+                        {{ $browser }} - {{ $platform }}
+                    </x-table.td>
+                    <x-table.td>{{ $audi->created_at }}</x-table.td>
+                    <x-table.td>{{ $audi->updated_at }}</x-table.td>
+                </x-table.tr>
             @endforeach
-        </div>
+        </x-table.base>
 
-
-        <!-- Paginación -->
         <div class="mt-4">
             {{ $audits->appends(request()->query())->links() }}
         </div>
+        @foreach ($audits as $audi)
+            <!-- Modal para Datos Nuevos -->
+            @isset($audi->new_values)
+                @if (!empty($audi->new_values))
+                    <x-form-modal id="modalNuevo-{{ $audi->id }}" class="hidden">
+                        <x-slot name="header">
+                            <h3 class="text-2xl font-bold text-escarlata-ues">Datos Nuevos</h3>
+                        </x-slot>
+                        <x-slot name="body">
+                            <pre>{{ json_encode($audi->new_values, JSON_PRETTY_PRINT) }}</pre>
+                        </x-slot>
+                        <x-slot name="footer">
+                            <button data-modal-hide="modalNuevo-{{ $audi->id }}" type="button"
+                                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:outline-none">
+                                Cerrar
+                            </button>
+                        </x-slot>
+                    </x-form-modal>
+                @endif
+            @endisset
+            <!-- Modal para Datos Viejos -->
+            @isset($audi->old_values)
+                @if (!empty($audi->old_values))
+                    <x-form-modal id="modalViejo-{{ $audi->id }}" class="hidden">
+                        <x-slot name="header">
+                            <h3 class="text-2xl font-bold text-escarlata-ues">Datos Viejos</h3>
+                        </x-slot>
+                        <x-slot name="body">
+                            <pre>{{ json_encode($audi->old_values, JSON_PRETTY_PRINT) }}</pre>
+                        </x-slot>
+                        <x-slot name="footer">
+                            <button data-modal-hide="modalViejo-{{ $audi->id }}" type="button"
+                                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:outline-none">
+                                Cerrar
+                            </button>
+                        </x-slot>
+                    </x-form-modal>
+                @endif
+            @endisset
+        @endforeach
+
 
 
     </x-container>
 
     <script>
-        // Usamos AJAX para actualizar el filtro de eventos según el modelo seleccionado
         document.getElementById('model').addEventListener('change', function() {
             var model = this.value;
-
             if (model) {
-                // Hacer la solicitud AJAX para obtener los eventos correspondientes
                 fetch(`/auditorias/get-events?model=${model}`)
                     .then(response => response.json())
                     .then(data => {
-                        // Actualizar el selector de eventos
                         var eventSelect = document.getElementById('event');
                         eventSelect.innerHTML =
-                            '<option value="">Seleccione una Acción</option>'; // Limpiar las opciones anteriores
-
+                            '<option value="">Seleccione una Acción</option>';
                         data.forEach(event => {
                             var option = document.createElement('option');
                             option.value = event.event;
                             option.textContent = event.event.charAt(0).toUpperCase() + event.event
-                                .slice(1); // Capitalizar el evento
+                                .slice(1);
                             eventSelect.appendChild(option);
                         });
                     });
             } else {
-                // Si no se selecciona modelo, limpiar las opciones de eventos
                 document.getElementById('event').innerHTML = '<option value="">Seleccione una Acción</option>';
             }
         });
     </script>
 </x-app-layout>
+<script>
+    document.querySelectorAll('[data-modal-toggle]').forEach(button => {
+        button.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal-target');
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        });
+    });
+
+
+    document.querySelectorAll('[data-modal-hide]').forEach(button => {
+        button.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal-hide');
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    });
+</script>

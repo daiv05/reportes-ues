@@ -6,6 +6,7 @@ use App\Models\Seguridad\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Jenssegers\Agent\Agent;
 
 class UserAuditController extends Controller
 {
@@ -55,8 +56,6 @@ class UserAuditController extends Controller
 
         return view('audits.index', compact('audits', 'models', 'events', 'users'));
     }
-
-
     public function getEvents(Request $request)
     {
         if ($request->has('model')) {
