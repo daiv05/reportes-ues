@@ -9,15 +9,19 @@ use App\Imports\CalendarioImport;
 use App\Imports\HorarioImport;
 use App\Models\Actividades\Actividad;
 use App\Models\Actividades\Clase;
+use App\Models\Actividades\Evento;
 use App\Models\General\Modalidad;
 use App\Models\General\TipoClase;
 use App\Models\Mantenimientos\Asignatura;
 use App\Models\Mantenimientos\Aulas;
 use App\Models\Mantenimientos\Ciclo;
 use App\Models\Mantenimientos\Escuela;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+
+use function PHPUnit\Framework\isEmpty;
 
 class ActividadController extends Controller
 {
@@ -72,27 +76,33 @@ class ActividadController extends Controller
     public function eliminarDeSesion($index)
     {
         $excelData = session('excelData', []);
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+
+        $indexNuevo = (int)$index;
+        $out->writeln(json_encode($indexNuevo));
 
         // Elimina el registro por índice
-        unset($excelData[$index]);
+        unset($excelData[$indexNuevo]);
 
         // Reindexa el arreglo y guarda en la sesión
         $excelData = array_values($excelData);
         session(['excelData' => $excelData]);
+        if (empty($excelData)) {
+            session()->forget('excelData');
+            session()->forget('tipoActividad');
+        }
 
         // Redirige de regreso con los datos actualizados
-        return redirect()->back()->with('success', 'Registro eliminado correctamente.');
+        return redirect()->back()->with('message', [
+            'type' => 'info',
+            'content' => 'El registro se ha eliminado correctamente.'
+        ]);
     }
 
     public function storeClases(ImportActividadClaseRequest $request)
     {
         $data = $request->all();
         $errors = [];
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-
-        //verificar longitud del array de materias
-        $out->writeln(count($data['materia']));
-
 
         // Recorre cada índice de `materia` para verificar que exista un array de días en `diasActividad`
         foreach ($data['materia'] as $key => $materia) {
@@ -108,8 +118,6 @@ class ActividadController extends Controller
         }
 
         $data['materia'] = Asignatura::whereIn('nombre', $data['materia'])->pluck('id')->toArray();
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln(json_encode($data['materia']));
         $data['local'] = Aulas::whereIn('nombre', $data['local'])->pluck('id')->toArray();
 
         $cicloActivo = Ciclo::where('activo', 1)->first();
@@ -159,11 +167,61 @@ class ActividadController extends Controller
     public function storeEventos(ImportActividadEventoRequest $request)
     {
         $data = $request->all();
-        $errors = [];
 
-        $data['materia'] = Asignatura::whereIn('nombre', $data['materia'])->pluck('id')->toArray();
+        $data['materia'] = array_map('trim', $data['materia']);
 
-        dd($request->all());
+        // transforma todas las materias a su correspondiente id de registro independientemente se repitan o no
+        foreach ($data['materia'] as $key => $materia) {
+            $data['materia'][$key] = Asignatura::where('nombre', $materia)->first()->id;
+        }
+
+        $cicloActivo = Ciclo::where('activo', 1)->first();
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($data['fecha'] as $key => $fecha) {
+                $actividad = new Actividad();
+                $actividad->id_ciclo = $cicloActivo->id;
+                $actividad->id_modalidad = $data['modalidad'][$key];
+                $actividad->hora_inicio = $data['hora_inicio'][$key];
+                $actividad->hora_fin = $data['hora_fin'][$key];
+                $actividad->save();
+
+                if($data['materia'][$key]) {
+                    $actividad->asignaturas()->attach($data['materia'][$key]);
+                }
+
+                if(isset($data['aulas'][$key])) {
+                    $actividad->aulas()->attach($data['aulas'][$key]);
+                }
+
+                $evento = new Evento();
+                $evento->id_actividad = $actividad->id;
+                $evento->descripcion = $data['evaluacion'][$key];
+                $evento->fecha = Carbon::createFromFormat('d/m/Y', $fecha)->format('Y-m-d');
+                $evento->cantidad_asistentes = $data['cantidad_estudiantes'][$key];
+                $evento->comentarios = $data['comentarios'][$key];
+                $evento->save();
+            }
+
+            DB::commit();
+
+            session()->forget('excelData');
+            session()->forget('tipoActividad');
+
+            return redirect()->back()->with('message', [
+                'type' => 'success',
+                'content' => 'Las actividades se han guardado correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error($e);
+            return redirect()->back()->with('message', [
+                'type' => 'error',
+                'content' => 'Ocurrió un error al guardar las actividades. Detalles: ' . $e->getMessage()
+            ]);
+        }
     }
 
     public function listadoClases(Request $request)
@@ -211,5 +269,48 @@ class ActividadController extends Controller
             ->paginate(10);
 
         return view('actividades.listado-actividades.listado-clases', compact('clases', 'escuelas', 'modalidades', 'tiposClase'));
+    }
+
+    public function listadoEventos(Request $request){
+        $escuelas = Escuela::all()->pluck('nombre', 'id');
+        $modalidades = Modalidad::all()->pluck('nombre', 'id');
+        $tiposClase = TipoClase::all()->pluck('nombre', 'id');
+
+        $cicloActivo = Ciclo::where('activo', 1)->first();
+
+        $eventos = Evento::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas',)
+            ->whereHas('actividad', function ($query) use ($cicloActivo) {
+                if($cicloActivo){
+                    $query->where('id_ciclo', $cicloActivo->id);
+                }
+            })
+            ->when($request->input('materia'), function ($query) use ($request) {
+                $query->whereHas('actividad.asignaturas', function ($query) use ($request) {
+                    $query->where('nombre', 'like', "%{$request->input('materia')}%");
+                });
+            })
+            ->when($request->input('escuela'), function ($query) use ($request) {
+                $query->whereHas('actividad.asignaturas', function ($query) use ($request) {
+                    $query->where('id_escuela', $request->input('escuela'));
+                });
+            })
+            ->when($request->input('modalidad'), function ($query) use ($request) {
+                $query->whereHas('actividad', function ($query) use ($request) {
+                    $query->where('id_modalidad', $request->input('modalidad'));
+                });
+            })
+            ->when($request->input('tipo'), function ($query) use ($request) {
+                $query->whereHas('actividad', function ($query) use ($request) {
+                    $query->where('id_tipo_clase', $request->input('tipo'));
+                });
+            })
+            // ->when($request->input('aula'), function ($query) use ($request) {
+            //     $query->whereHas('actividad.aulas', function ($query) use ($request) {
+            //         $query->where('nombre', 'like', "%{$request->input('aula')}%");
+            //     });
+            // })
+            ->paginate(10);
+
+        return view('actividades.listado-actividades.listado-eventos-evaluaciones', compact('eventos', 'escuelas', 'modalidades', 'tiposClase'));
     }
 }

@@ -125,6 +125,8 @@
                             </button>
                         </div>
 
+                        {{ $errors}}
+
                         @foreach($excelData as $row)
                             <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Registro de actividad {{ $loop->iteration }} - Semana {{ $row['semana'] }}</h1>
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
@@ -202,15 +204,14 @@
 
                                 {{-- Modalidad --}}
                                 <div class="space-y-2">
-                                    <x-forms.input-label for="modalidad[]" :value="__('Modalidad')" required />
-                                    <select id="modalidad" name="modalidad[]" class="w-full pl-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                        @foreach($modalidades as $modalidad)
-                                            <option value="{{ $modalidad->id }}" {{ $modalidad->id == $row['modalidad'] ? 'selected' : '' }}>
-                                                {{ $modalidad->nombre }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-forms.input-error :messages="$errors->get('modalidad')" class="mt-2" />
+                                    <x-forms.select
+                                        name="modalidad[]"
+                                        :errors="$errors->get('modalidad. ' . $loop->index)"
+                                        label="Modalidad"
+                                        :options="$modalidades->pluck('nombre', 'id')"
+                                        :selected="old('modalidad.' . $loop->index, $row['modalidad'])"
+                                        required
+                                    />
                                 </div>
 
                                 {{-- Selección de locales --}}
@@ -239,7 +240,7 @@
                                                             id="checkbox-{{ $aula->nombre }}-{{ $loop->parent->iteration }}"
                                                             type="checkbox"
                                                             value="{{ $aula->id }}"
-                                                            name="aulas[{{ $row['index'] }}][]"
+                                                            name="aulas[{{ $loop->parent->iteration }}][]"
                                                             @if(is_array(old('aulas.' . $loop->parent->index, $row['aulas'])) && in_array($aula->id, old('aulas.' . $loop->parent->index, $row['aulas'])))
                                                                 checked
                                                             @endif
@@ -290,17 +291,12 @@
                                     <div class="flex flex-wrap gap-3 md:gap-8 items-center my-4">
                                         <h1 class="text-xl font-bold text-orange-900">Registro de actividad {{ $loop->iteration }}</h1>
                                         {{-- Botón para eliminar --}}
-                                        <form method="POST" action="{{ route('eliminar-evento-sesion', $loop->index) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="flex gap-2 text-sm h-fit text-gray-500 hover:text-red-500 hover:bg-red-100 p-3 rounded-full transition-colors duration-200 border-2 hover:border-red-100 border-gray-300">
-                                                <x-heroicon-o-trash class="h-[20px]" />
-                                                Eliminar registro
-                                            </button>
-                                        </form>
+                                        <button type="button" onclick="deleteRecord({{ $loop->index }})"
+                                                class="flex gap-2 text-sm h-fit text-gray-500 hover:text-red-500 hover:bg-red-100 p-3 rounded-full transition-colors duration-200 border-2 hover:border-red-100 border-gray-300">
+                                            <x-heroicon-o-trash class="h-[20px]" />
+                                            Eliminar registro
+                                        </button>
                                     </div>
-                                    @method('POST')
                                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
 
                                         {{-- Materia --}}
@@ -415,7 +411,7 @@
                                                                     id="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}"
                                                                     type="checkbox"
                                                                     value="{{ $dia->id }}"
-                                                                    name="diasActividad[{{ $row['index'] }}][]"
+                                                                    name="diasActividad[{{ $loop->parent->iteration }}][]"
                                                                     @if(is_array(old('diasActividad.' . $loop->parent->index, $row['diasActividad'])) && in_array($dia->id, old('diasActividad.' . $loop->parent->index, $row['diasActividad'])))
                                                                         checked
                                                                     @endif
@@ -494,20 +490,18 @@
     });
 
     function deleteRecord(index) {
-    fetch(`/eliminar-evento-sesion/${index}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Remueve el registro del DOM
-                document.querySelector(`[data-index="${index}"]`).remove();
-            }
-        })
-        .catch(error => console.error('Error al eliminar el registro:', error));
+        // enviar formulario para eliminar
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route('eliminar-evento-sesion', '') }}' + '/' + index;
+        form.style.display = 'none';
+        form.innerHTML = `
+            @csrf
+            @method('DELETE')
+        `;
+        document.body.appendChild(form);
+        form.submit();
     }
+
 
 </script>

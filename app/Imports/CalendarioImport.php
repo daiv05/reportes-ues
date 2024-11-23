@@ -83,6 +83,10 @@ class CalendarioImport implements ToModel
             return null;
         }
 
+        if($row[3] !== 'Sistemas'){
+            return null;
+        }
+
         // return new Calendario([
         //     'semana'        => $this->week, // Asegúrate de que el encabezado coincida con el Excel
         //     'dia'           => $this->day, // Asegúrate de que el encabezado coincida con el Excel
