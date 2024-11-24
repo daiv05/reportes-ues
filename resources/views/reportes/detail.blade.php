@@ -28,6 +28,14 @@
     </x-slot>
 
     <div class="mt-12 mb-8">
+        @if ($reporte->estado_ultimo_historial?->nombre === 'FINALIZADO')
+            <div class="flex justify-center">
+                <a href="{{ route('reportes.verInforme', ['id' => $reporte->id]) }}"
+                   class="bg-green-500 text-white text-sm py-2 px-10 rounded hover:bg-green-700 cursor-pointer">
+                    Ver informe del reporte
+                </a>
+            </div>
+        @endif
         <div class="flex flex-col lg:flex-row w-full">
             <!-- Columna izquierda (70%) -->
             <div class="w-full lg:w-[60%] pl-8 pr-2">
@@ -50,7 +58,6 @@
                                 {{ $reporte->descripcion }}
                             </x-text-area>
                         </div>
-
                     </div>
                 </div>
                 @if ($reporte->aula)
