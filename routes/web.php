@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/registrar', [ReporteController::class, 'create'])->name('crear-reporte');
         Route::post('/store', [ReporteController::class, 'store'])->name('reportes.store');
         Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->name('detalle-reporte');
+        Route::get('/reportes/ver-informe/{id}', [ReporteController::class, 'verInforme'])->name('reportes.verInforme');
         Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->name('reportes.noProcede');
         Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->name('reportes.realizarAsignacion');
         Route::post('/actualizar-estado/{id}', [ReporteController::class, 'actualizarEstadoReporte'])->name('reportes.actualizarEstado');
@@ -164,8 +165,6 @@ Route::middleware('auth')->group(function () {
         // Rutas de general
 
     });
-
-
 
 
     Route::get('/auditorias', [UserAuditController::class, 'index'])->name('general.index');

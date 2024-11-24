@@ -131,6 +131,69 @@ class ReporteController extends Controller
         }
     }
 
+    public function verInforme($id_reporte)
+    {
+        $reporte = Reporte::with(
+            'aula',
+            'actividad',
+            'accionesReporte',
+            'accionesReporte.entidadAsignada',
+            'accionesReporte.usuarioSupervisor',
+            'accionesReporte.usuarioSupervisor.persona',
+            'accionesReporte.historialAccionesReporte',
+            'accionesReporte.historialAccionesReporte.estado',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario.persona',
+            'usuarioReporta',
+            'usuarioReporta.persona',
+            'empleadosAcciones',
+            'empleadosAcciones.empleadoPuesto',
+            'empleadosAcciones.empleadoPuesto.usuario',
+            'empleadosAcciones.empleadoPuesto.usuario.persona'
+        )->find($id_reporte);
+
+        if (isset($reporte)) {
+            // Obtener fondos y recursos
+            $fondos = DB::table('fondos')->get();
+            $recursos = DB::table('recursos')->get();
+
+            // Calcular la duración del reporte
+            $fechaCreacion = \Carbon\Carbon::parse($reporte->fecha_reporte);
+            $fechaFinalizacion = $reporte->accionesReporte->historialAccionesReporte
+                ->where('estado.nombre', 'FINALIZADO')
+                ->first()
+                ->created_at ?? null;
+
+            $duracion = $fechaFinalizacion ? $fechaCreacion->diff($fechaFinalizacion)->format('%m meses, %d días, %h horas, %i minutos, %s segundos') : 'En progreso';
+
+            // Obtener recursos usados
+            $recursosUsados = RecursoReporte::whereHas('historialAccionesReporte', function ($query) use ($reporte) {
+                $query->where('id_acciones_reporte', $reporte->accionesReporte->id);
+            })->get();
+
+            // Obtener datos adicionales
+            $entidad = $reporte->accionesReporte->entidadAsignada;
+            $subalternos = $reporte->empleadosAcciones;
+            $supervisor = $reporte->accionesReporte->usuarioSupervisor;
+            $comentarioSupervisor = $reporte->accionesReporte->comentario_supervisor;
+
+            return view('reportes.ver-informe', [
+                'reporte' => $reporte,
+                'fondos' => $fondos,
+                'recursos' => $recursos,
+                'duracion' => $duracion,
+                'recursosUsados' => $recursosUsados,
+                'entidad' => $entidad,
+                'subalternos' => $subalternos,
+                'supervisor' => $supervisor,
+                'comentarioSupervisor' => $comentarioSupervisor
+            ]);
+        } else {
+            return redirect()->route('reportes.index')->with('error', 'Reporte no encontrado');
+        }
+    }
+
     public function marcarNoProcede(Request $request, $id_reporte): View
     {
         $reporte = Reporte::find($id_reporte);
