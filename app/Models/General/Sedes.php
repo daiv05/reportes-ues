@@ -13,4 +13,14 @@ class Sedes extends Model  implements Auditable
     protected $table = 'sedes';
 
     protected $fillable = ['nombre', 'direccion', 'activo'];
+
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
+
+    public function setDireccionAttribute($value)
+    {
+        $this->attributes['direccion'] = strtoupper($value);
+    }
 }

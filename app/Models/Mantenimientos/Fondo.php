@@ -19,6 +19,10 @@ class Fondo extends Model implements Auditable
         'activo',
     ];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function recursosReportes() : HasMany
     {
         return $this->hasMany(RecursoReporte::class, 'id_fondo');

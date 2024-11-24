@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mantenimientos\Ciclo;
 use App\Models\General\TipoCiclo;
-use App\Http\Requests\CicloRequest;
+use App\Http\Requests\Mantenimiento\CicloRequest;
 use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Mail;
 
@@ -15,9 +15,8 @@ class CicloController extends Controller
 
     public function index()
     {
-        // Obtener los ciclos con su tipo de ciclo relacionado
-        $ciclos = Ciclo::with('tipoCiclo')->paginate(10); // Usa paginación para mostrar la lista
-        $tiposCiclos = TipoCiclo::all(); // Para el selector de tipos de ciclos en el modal
+        $ciclos = Ciclo::with('tipoCiclo')->paginate(10);
+        $tiposCiclos = TipoCiclo::all();
 
         $tiposCiclos = $tiposCiclos->pluck('nombre', 'id')->toArray();
 
@@ -32,10 +31,6 @@ class CicloController extends Controller
 
     public function store(CicloRequest $request)
     {
-
-        // Muestra la data que llega en la solicitud
-        // dd($request->all());
-        // Verifica si se debe activar este ciclo y desactiva otros si es necesario
         if ($request->activo) {
             Ciclo::where('activo', true)->update(['activo' => false]);
         }
@@ -53,7 +48,6 @@ class CicloController extends Controller
     {
         $ciclo = Ciclo::findOrFail($id);
 
-        // Si el ciclo a actualizar es activado, desactiva otros ciclos
         if ($request->activo) {
             Ciclo::where('activo', true)->where('id', '<>', $id)->update(['activo' => false]);
         }

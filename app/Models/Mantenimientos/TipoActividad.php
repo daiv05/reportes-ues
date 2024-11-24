@@ -18,6 +18,10 @@ class TipoActividad extends Model  implements Auditable
         'activo',
     ];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function actividades()
     {
         return $this->hasMany(Actividad::class, 'id_tipo_actividad');

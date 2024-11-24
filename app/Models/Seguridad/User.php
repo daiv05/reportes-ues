@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Models\Audit;
 
 
 
@@ -39,6 +40,11 @@ class User extends Authenticatable implements Auditable
         'email_verified_at' => 'datetime',
     ];
 
+
+    public function setCarnetAttribute($value)
+    {
+        $this->attributes['carnet'] = strtoupper($value);
+    }
     public function persona() : BelongsTo
     {
         return $this->belongsTo(Persona::class, 'id_persona');

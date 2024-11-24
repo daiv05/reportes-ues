@@ -18,6 +18,10 @@ class TipoCiclo extends Model  implements Auditable
         'activo',
     ];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function ciclos()
     {
         return $this->hasMany(Ciclo::class, 'id_tipo_ciclo');

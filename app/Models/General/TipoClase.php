@@ -17,6 +17,10 @@ class TipoClase extends Model  implements Auditable
         'activo',
     ];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function clases()
     {
         //return $this->hasMany(Clase::class, 'id_tipo_clase');

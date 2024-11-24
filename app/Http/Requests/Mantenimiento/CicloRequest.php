@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Mantenimiento;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Mantenimientos\Ciclo;

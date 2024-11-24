@@ -1,7 +1,7 @@
 @php
     $headers = [
         ['text' => 'Puesto', 'align' => 'left'],
-        ['text' => 'Entidad', 'align' => 'left'], // Nueva columna
+        ['text' => 'Entidad', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
@@ -10,14 +10,14 @@
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Puestos" />
-    </x-slot>
-    <div>
         <div class="p-6">
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
-                type="button" id="add-button">
+                type="button">
                 Añadir
             </x-forms.primary-button>
         </div>
+    </x-slot>
+    <x-container>
         <x-table.base :headers="$headers">
             @foreach ($puestos as $puesto)
                 <x-table.tr>
@@ -45,21 +45,34 @@
             aria-label="Table navigation">
             {{ $puestos->links() }}
         </nav>
-    </div>
+
+    </x-container>
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
-            <h3 id="head-text" class="text-2xl font-bold text-escarlata-ues">Añadir Puesto</h3>
+            <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Añadir Puesto</h3>
         </x-slot>
         <x-slot name="body">
-            <form id="add-puesto-form" method="POST" action="{{ route('puestos.store') }}">
+            <form id="asignacion-form" method="POST" action="{{ route('puestos.store') }}">
                 @csrf
+                <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
-                    <x-forms.field label="Nombre" name="nombre" type="text" :value="old('nombre')" :error="$errors->get('nombre')" />
-                    <x-forms.select label="Entidad" id="id_entidad" name="id_entidad" :options="$entidades->pluck('nombre', 'id')->toArray()"
-                        :value="old('id_entidad')" :error="$errors->get('id_entidad')" />
-                    <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
-                        :error="$errors->get('activo')" />
+                    <div>
+                        <x-forms.select label="Entidad" id="id_entidad" name="id_entidad" :options="$entidades->pluck('nombre', 'id')->toArray()"
+                            :value="old('id_entidad')" :error="$errors->get('id_entidad')" required/>
+                        <div id="entidad-error" class="text-sm text-red-500"></div>
+                    </div>
+                    <div>
+                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')"
+                            :error="$errors->get('nombre')" required/>
+                        <div id="nombre-error" class="text-sm text-red-500"></div>
+                    </div>
+
+                    <div>
+                        <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
+                            :error="$errors->get('activo')" required/>
+                        <div id="estado-error" class="text-sm text-red-500"></div>
+                    </div>
                 </x-forms.row>
             </form>
         </x-slot>
@@ -68,7 +81,7 @@
                 class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                 Cancelar
             </button>
-            <button type="submit" form="add-puesto-form"
+            <button type="submit" form="asignacion-form"
                 class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
                 Guardar
             </button>
@@ -76,38 +89,92 @@
     </x-form-modal>
 </x-app-layout>
 <script>
-  document.querySelectorAll('.edit-button').forEach((button) => {
-     button.addEventListener('click', function(event) {
-         event.preventDefault();
+    document.getElementById('asignacion-form').addEventListener('submit', function(event) {
+        const nombreField = document.getElementById('nombre');
+        const entidadField = document.getElementById('id_entidad');
+        const estadoField = document.getElementById('activo');
 
-         // Obtener los datos del puesto desde los atributos del botón
-         const id = this.getAttribute('data-id');
-         const nombre = this.getAttribute('data-nombre');
-         const id_entidad = this.getAttribute('data-entidad');
-         const activo = this.getAttribute('data-activo');
+        let hasErrors = false;
 
-         // Verificar los valores obtenidos
-         console.log(id, nombre, id_entidad, activo);
+        document.getElementById('general-errors').innerHTML = '';
+        document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
 
-         // Configurar el formulario para la edición
-         const form = document.getElementById('add-puesto-form');
-         form.action = `/rhu/puestos/${id}`;
-         form.method = 'POST';
-         if (!form.querySelector('input[name="_method"]')) {
-             form.innerHTML += '<input type="hidden" name="_method" value="PUT">';
-         }
+        if (!nombreField.value.trim()) {
+            hasErrors = true;
+            document.getElementById('nombre-error').innerHTML = 'El campo Nombre es obligatorio';
+        }
 
-         // Asignar valores al formulario
-         document.getElementById('nombre').value = nombre;
-         document.getElementById('id_entidad').value = id_entidad;
-         document.getElementById('activo').value = activo;
+        if (!entidadField.value.trim()) {
+            hasErrors = true;
+            document.getElementById('entidad-error').innerHTML = 'El campo entidad es obligatorio';
+        }
 
-         // Configurar el título del modal
-         document.getElementById('head-text').textContent = 'Editar Puesto';
+        if (!estadoField.value.trim()) {
+            hasErrors = true;
+            document.getElementById('estado-error').innerHTML = 'El campo Estado es obligatorio';
+        }
 
-         // Abrir el modal
-         document.querySelector('[data-modal-target="static-modal"]').click();
-     });
- });
+        if (hasErrors) {
+            event.preventDefault();
+            document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
+        }
+    });
 
+    document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
+        button.addEventListener('click', function() {
+            updateModalTitle('Añadir Aula');
+
+            resetForm();
+
+            document.getElementById('asignacion-form').method = 'POST';
+            document.getElementById('asignacion-form').action = "{{ route('puestos.store') }}";
+
+            document.querySelectorAll('input[name="_method"]').forEach((input) => input.remove());
+
+        });
+    });
+
+    document.querySelectorAll('.edit-button').forEach((button) => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+            const entidad = this.getAttribute('data-entidad');
+            const activo = this.getAttribute('data-activo');
+
+            updateModalTitle('Editar Aula');
+
+            document.getElementById('asignacion-form').action = `/rhu/puestos/${id}`;
+            document.getElementById('asignacion-form').method = 'POST';
+
+            if (!document.querySelector('input[name="_method"]')) {
+                document.getElementById('asignacion-form').innerHTML +=
+                    '<input type="hidden" name="_method" value="PUT">';
+            }
+
+            document.getElementById('nombre').value = nombre;
+            document.getElementById('id_entidad').value = entidad;
+            document.getElementById('activo').value = activo;
+
+            // Abrir el modal
+            document.querySelector('[data-modal-target="static-modal"]').click();
+        });
+    });
+
+
+    function updateModalTitle(title) {
+        document.getElementById('modal-title').textContent = title;
+    }
+    // Función para resetear el formulario y limpiar los errores
+    function resetForm() {
+        document.getElementById('asignacion-form').reset(); // Limpiar el formulario
+        document.getElementById('general-errors').innerHTML = ''; // Limpiar errores generales
+
+        document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML =
+            '')); // Limpiar errores específicos de campo
+
+        // Limpiar los valores de los select
+        document.querySelectorAll('select').forEach((select) => {
+            select.selectedIndex = 0; // Restablecer el primer valor (vacío o predeterminado)
+        });
+    }
 </script>

@@ -20,6 +20,11 @@ class Entidades extends Model implements Auditable
         'jerarquia'        // Asegúrate de incluir este campo
     ];
 
+
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function padre()
     {
         return $this->belongsTo(Entidades::class, 'id_entidad', 'id');

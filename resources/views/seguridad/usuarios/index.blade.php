@@ -46,14 +46,11 @@
                         <x-status.is-active :active="$usuario->activo" />
                     </x-table.td>
                     <x-table.td>
-                        <div class="flex space-x-2"> <!-- Flexbox para alinear los íconos -->
-                            <!-- Botón para editar (con ícono de lápiz) -->
+                        <div class="flex space-x-2">
                             <a href="{{ url('seguridad/usuarios/' . $usuario->id . '/edit') }}"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
-
-                            <!-- Botón para ver detalles (con ícono de ojo) -->
                             <a href="{{ url('seguridad/usuarios/' . $usuario->id) }}"
                                 class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
                                 <x-heroicon-o-eye class="h-5 w-5" />
@@ -70,7 +67,7 @@
                 aria-label="Table navigation">
                 {{ $usuarios->links() }}
             </nav>
-     
+
 
     </x-container>
 

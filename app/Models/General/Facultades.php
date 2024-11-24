@@ -15,6 +15,10 @@ class Facultades extends Model  implements Auditable
 
     protected $fillable = ['nombre', 'activo', 'id_sede'];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
     public function sedes()
     {
         return $this->belongsTo(Sedes::class, 'id_sede');

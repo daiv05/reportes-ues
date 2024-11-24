@@ -21,6 +21,15 @@ class Persona extends Model implements Auditable
         'telefono'
     ];
 
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = strtoupper($value);
+    }
+
+    public function setApellidoAttribute($value)
+    {
+        $this->attributes['apellido'] = strtoupper($value);
+    }
     public function usuario() : HasOne
     {
         return $this->hasOne(User::class, 'id_persona');
