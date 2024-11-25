@@ -14,6 +14,7 @@ use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
 use App\Http\Controllers\Mantenimientos\CicloController;
+use App\Http\Controllers\Mantenimientos\RecursoController;
 use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
@@ -118,6 +119,9 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [CicloController::class, 'store'])->name('ciclos.store');
             Route::put('/{id}', [CicloController::class, 'update'])->name('ciclos.update');
         });
+
+        //Recursos
+        Route::resource('recursos', RecursoController::class)->except(['destroy']);
     });
     /* ****************************************** */
     /*   ************* SEGURIDAD ************   */
