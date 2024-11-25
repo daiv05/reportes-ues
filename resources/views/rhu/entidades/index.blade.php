@@ -13,7 +13,7 @@
         <x-header.simple titulo="Gestión de Entidades" />
     </x-slot>
 
-    <div>
+    <x-container>
         <div class="p-6">
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button">
@@ -52,7 +52,7 @@
             aria-label="Table navigation">
             {{ $entidades->links() }}
         </nav>
-    </div>
+    </x-container>
 
 
     <x-form-modal id="static-modal">
@@ -98,7 +98,7 @@
             </form>
         </x-slot>
         <x-slot name="footer">
-            <button data-modal-hide="static-modal" type="button" onclick="buttonCloseModal()"
+            <button data-modal-hide="static-modal" type="button"
                 class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
                 Cancelar
             </button>
@@ -182,8 +182,7 @@
             document.getElementById('add-entidades-form').action = `/rhu/entidades/${id}`;
             document.getElementById('add-entidades-form').method = 'POST';
             if (!document.querySelector('input[name="_method"]')) {
-                document.getElementById('add-entidades-form').innerHTML +=
-                    '<input type="hidden" name="_method" value="PUT">';
+                document.getElementById('add-entidades-form').insertAdjacentHTML('beforeend', '<input type="hidden" name="_method" value="PUT">');
             }
 
             // Asignar los valores al formulario
@@ -213,9 +212,5 @@
     });
     function updateTitle(title) {
         document.getElementById('modal-title').textContent = title;
-    }
-
-    function buttonCloseModal() {
-        document.querySelector('[data-modal-target="static-modal"]').click();
     }
 </script>
