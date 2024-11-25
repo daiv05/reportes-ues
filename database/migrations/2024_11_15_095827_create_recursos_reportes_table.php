@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_historial_acciones_reporte');
             $table->unsignedBigInteger('id_recurso');
+            $table->unsignedBigInteger('id_unidad_medida');
             $table->unsignedBigInteger('id_fondo');
             $table->integer('cantidad');
             $table->text('comentario');
             $table->foreign('id_historial_acciones_reporte')->references('id')->on('historial_acciones_reportes')->onDelete('restrict');
             $table->foreign('id_recurso')->references('id')->on('recursos')->onDelete('restrict');
+            $table->foreign('id_unidad_medida')->references('id')->on('unidades_medida')->onDelete('restrict');
             $table->foreign('id_fondo')->references('id')->on('fondos')->onDelete('restrict');
         });
     }

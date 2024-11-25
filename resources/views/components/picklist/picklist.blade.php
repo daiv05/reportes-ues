@@ -33,22 +33,25 @@
         </ul>
     </div>
 
+    @php
+        $controlsClass = 'bg-red text-black p-1 rounded-full shadow hover:bg-red-600 flex items-center justify-center rotate-90 sm:rotate-0'
+    @endphp
     <!-- Controles para agregar y quitar items -->
-    <div class="flex flex-col justify-center space-y-2">
+    <div class="flex flex-row sm:flex-col justify-center space-x-2 sm:space-x-0 sm:space-y-2">
         <button type="button"
-                class="add-all-items bg-red text-black p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
+                class="add-all-items {{ $controlsClass }}">
             <x-heroicon-o-chevron-double-right class="h-4 w-4"/>
         </button>
         <button type="button"
-                class="add-item bg-red text-black p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
+                class="add-item {{ $controlsClass }}">
             <x-heroicon-o-chevron-right class="h-4 w-4"/>
         </button>
         <button type="button"
-                class="remove-item bg-red text-black p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
+                class="remove-item {{ $controlsClass }}">
             <x-heroicon-o-chevron-left class="h-4 w-4"/>
         </button>
         <button type="button"
-                class="remove-all-items bg-red text-black p-1 w-min rounded-full shadow hover:bg-red-600 flex items-center justify-center">
+                class="remove-all-items {{ $controlsClass }}">
             <x-heroicon-o-chevron-double-left class="h-4 w-4"/>
         </button>
     </div>

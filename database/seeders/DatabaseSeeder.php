@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TiposCiclosSeeder::class);
         $this->call(FondoSeeder::class);
         $this->call(RecursoSeeder::class);
+        $this->call(UnidadMedidaSeeder::class);
     }
 
 }

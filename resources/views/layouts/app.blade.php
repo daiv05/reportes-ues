@@ -28,11 +28,14 @@
         @include('layouts.aside')
         <!-- Page Content -->
         <main class="min-h-screen">
-            <div id="loader" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-[100] hidden">
+            <div id="loader"
+                class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-[100] hidden">
                 <div class="flex flex-col items-center space-y-4">
                     <!-- Spinner -->
                     <div class="relative w-16 h-16">
-                        <div class="absolute inset-0 rounded-full border-4 border-gray-400 border-t-orange-900 animate-spin"></div>
+                        <div
+                            class="absolute inset-0 rounded-full border-4 border-gray-400 border-t-orange-900 animate-spin">
+                        </div>
                     </div>
                     <!-- Texto -->
                     <p class="text-lg font-medium text-gray-100">Por favor, espera...</p>
@@ -129,9 +132,11 @@
         @endif
 
         @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                noty(@json($error), 'warning');
-            @endforeach
+            const errs = @json($errors->all());
+            for (let i = 0; i < errs.length; i++) {
+                if (i > 4) break;
+                noty(errs[i], 'warning');
+            }
         @endif
     </script>
 
@@ -143,21 +148,21 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const loader = document.getElementById('loader');
 
-            window.addEventListener('beforeunload', function () {
+            window.addEventListener('beforeunload', function() {
                 // Mostrar el loader al salir de la página
                 loader.classList.remove('hidden');
             });
 
-            document.addEventListener('submit', function () {
+            document.addEventListener('submit', function() {
                 // Mostrar el loader al enviar un formulario
                 loader.classList.remove('hidden');
             });
 
             // Ocultar el loader al regresar a la página
-            window.addEventListener('pageshow', function (event) {
+            window.addEventListener('pageshow', function(event) {
                 if (event.persisted) { // Si la página está cargada desde caché
                     loader.classList.add('hidden');
                 }

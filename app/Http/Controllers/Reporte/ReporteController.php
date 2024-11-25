@@ -131,6 +131,72 @@ class ReporteController extends Controller
         }
     }
 
+    public function verInforme($id_reporte)
+    {
+        $reporte = Reporte::with(
+            'aula',
+            'actividad',
+            'accionesReporte',
+            'accionesReporte.entidadAsignada',
+            'accionesReporte.usuarioSupervisor',
+            'accionesReporte.usuarioSupervisor.persona',
+            'accionesReporte.historialAccionesReporte',
+            'accionesReporte.historialAccionesReporte.estado',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario',
+            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario.persona',
+            'usuarioReporta',
+            'usuarioReporta.persona',
+            'empleadosAcciones',
+            'empleadosAcciones.empleadoPuesto',
+            'empleadosAcciones.empleadoPuesto.usuario',
+            'empleadosAcciones.empleadoPuesto.usuario.persona'
+        )->find($id_reporte);
+
+        if (isset($reporte)) {
+            // Obtener fondos y recursos
+            $fondos = DB::table('fondos')->get();
+            $recursos = DB::table('recursos')->get();
+
+            // Calcular la duración del reporte
+            $fechaCreacion = \Carbon\Carbon::parse($reporte->fecha_reporte);
+            $fechaFinalizacion = $reporte->accionesReporte->historialAccionesReporte
+                ->where('estado.nombre', 'FINALIZADO')
+                ->first()
+                ->created_at ?? null;
+
+            $duracion = $fechaFinalizacion ? $fechaCreacion->diff($fechaFinalizacion)->format('%m meses, %d días, %h horas, %i minutos') : 'En progreso';
+
+            // Obtener recursos usados
+            $recursosUsados = RecursoReporte::whereHas('historialAccionesReporte', function ($query) use ($reporte) {
+                $query->where('id_acciones_reporte', $reporte->accionesReporte->id);
+            })->get();
+
+            // Obtener datos adicionales
+            $entidad = $reporte->accionesReporte->entidadAsignada;
+            $subalternos = $reporte->empleadosAcciones;
+            $supervisor = $reporte->accionesReporte->usuarioSupervisor;
+            $comentarioSupervisor = $reporte->accionesReporte->comentario_supervisor;
+
+            return view('reportes.ver-informe', [
+                'reporte' => $reporte,
+                'fondos' => $fondos,
+                'recursos' => $recursos,
+                'duracion' => $duracion,
+                'recursosUsados' => $recursosUsados,
+                'entidad' => $entidad,
+                'subalternos' => $subalternos,
+                'supervisor' => $supervisor,
+                'comentarioSupervisor' => $comentarioSupervisor
+            ]);
+        } else {
+            return redirect()->route('reportes.index')->with('message', [
+                'type' => 'error',
+                'content' => 'Reporte no encontrado'
+            ]);
+        }
+    }
+
     public function marcarNoProcede(Request $request, $id_reporte): View
     {
         $reporte = Reporte::find($id_reporte);
@@ -267,6 +333,7 @@ class ReporteController extends Controller
                 'recursos.*.cantidad' => 'required|integer|max:100',
                 'recursos.*.id_fondo' => 'required|integer|exists:fondos,id',
                 'recursos.*.id_recurso' => 'required|integer|exists:recursos,id',
+                'recursos.*.id_unidad_medida' => 'required|integer|exists:unidades_medida,id',
             ],
             [
                 'recursos.array' => 'Estructura de recursos utilizados inválida.',
@@ -279,6 +346,9 @@ class ReporteController extends Controller
                 'recursos.*.id_recurso.required' => 'Debe especificar el recurso utilizado',
                 'recursos.*.id_recurso.integer' => 'El identificador del recurso debe ser un número entero',
                 'recursos.*.id_recurso.exists' => 'Recurso no encontrado',
+                'recursos.*.id_unidad_medida.required' => 'Debe especificar una unidad de medida',
+                'recursos.*.id_unidad_medida.integer' => 'El identificador de la unidad debe ser un número entero',
+                'recursos.*.id_unidad_medida.exists' => 'Unidad de medida no encontrada',
                 'comentario.required' => 'Debe especificar las acciones realizadas.',
                 'comentario.string' => 'El comentario debe ser un texto válido.',
                 'evidencia.image' => 'La evidencia debe ser un archivo de imagen.',
@@ -366,6 +436,7 @@ class ReporteController extends Controller
                             'cantidad' => $recurso['cantidad'],
                             'id_fondo' => $recurso['id_fondo'],
                             'id_recurso' => $recurso['id_recurso'],
+                            'id_unidad_medida' => $recurso['id_unidad_medida'],
                         ]);
                     }
                 }
@@ -383,11 +454,8 @@ class ReporteController extends Controller
             ];
             if ($esFinalizado || $esIncompleto) {
                 // Envio de correos a SUBALTERNOS cuando SUPERVISOR envie resolucion (FINALIZADO o INCOMPLETO)
-                error_log(json_encode($puestosEmpleadoIds));
                 foreach ($puestosEmpleadoIds as $emp) {
-                    error_log($emp);
                     $empPuesto = EmpleadoPuesto::find($emp)->usuario->email;
-                    error_log($empPuesto);
                     $subject = '';
                     $esFinalizado ? $subject = 'Reporte FINALIZADO' : $subject = 'Reporte INCOMPLETO';
                     Mail::to($empPuesto)->send(new ReporteMailable('emails.supervisor-revision', $tableData, $subject));
@@ -402,7 +470,6 @@ class ReporteController extends Controller
                 'content' => 'Seguimiento de reporte actualizado con éxito'
             ]);
         } catch (\Exception $e) {
-            error_log($e->getMessage());
             Session::flash('message', [
                 'type' => 'error',
                 'content' => 'Ocurrió un error inesperado'

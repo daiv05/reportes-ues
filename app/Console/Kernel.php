@@ -9,7 +9,7 @@ class Kernel extends ConsoleKernel
 {
 
     protected $commands = [
-        \App\Console\Commands\DevPostmanCommand::class
+        \App\Console\Commands\DevPostman::class
     ];
 
     /**
