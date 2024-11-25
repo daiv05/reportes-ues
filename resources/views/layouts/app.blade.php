@@ -144,17 +144,23 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('import-excel');
             const loader = document.getElementById('loader');
 
             window.addEventListener('beforeunload', function () {
-                // Mostrar el loader
+                // Mostrar el loader al salir de la página
                 loader.classList.remove('hidden');
             });
 
             document.addEventListener('submit', function () {
-                // Mostrar el loader
+                // Mostrar el loader al enviar un formulario
                 loader.classList.remove('hidden');
+            });
+
+            // Ocultar el loader al regresar a la página
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) { // Si la página está cargada desde caché
+                    loader.classList.add('hidden');
+                }
             });
         });
     </script>
