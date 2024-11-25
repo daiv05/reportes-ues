@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Actividades;
 
 use App\Models\Actividades\Actividad;
 use App\Models\Mantenimientos\Aulas;

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-class DevPostmanCommand extends Command
+class DevPostman extends Command
 {
     protected $signature = 'dev:postman {guard} {user?}';
     protected $description = 'Generating access for Postman.';
@@ -38,13 +38,12 @@ class DevPostmanCommand extends Command
     
             Route::get('/iniciar-sesion', function () use ($user) {
                 Auth::login($user);
-                return response("Hello mevelix.");
+                return response("Hello daiv.");
             })->middleware('web');
     
             $request = Request::create('/iniciar-sesion');
             $kernel = app()->make(HttpKernel::class);
             $response = $kernel->handle($request);
-            error_log($response);
             $cookies = $response->headers->getCookies('array');
             $cookie1 = $cookies[""]["/"]['laravel_session'];
             $cookie2 = $cookies[""]["/"]['XSRF-TOKEN'];
