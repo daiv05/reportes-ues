@@ -28,7 +28,7 @@
         @include('layouts.aside')
         <!-- Page Content -->
         <main class="min-h-screen">
-            <div id="loader" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50 hidden">
+            <div id="loader" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-[100] hidden">
                 <div class="flex flex-col items-center space-y-4">
                     <!-- Spinner -->
                     <div class="relative w-16 h-16">
@@ -139,29 +139,29 @@
         const hasRole = (rol) => {
             const roles = @json(Auth::user()->roles);
             return roles.some((item) => item.name === rol);
-        } 
+        }
     </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('import-excel');
             const loader = document.getElementById('loader');
 
             window.addEventListener('beforeunload', function () {
-                // Mostrar el loader
+                // Mostrar el loader al salir de la página
                 loader.classList.remove('hidden');
             });
 
             document.addEventListener('submit', function () {
-                // Mostrar el loader
+                // Mostrar el loader al enviar un formulario
                 loader.classList.remove('hidden');
             });
-        });
 
-
-        document.addEventListener('onload', function () {
-            const loader = document.getElementById('loader');
-            loader.classList.remove('hidden');
+            // Ocultar el loader al regresar a la página
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) { // Si la página está cargada desde caché
+                    loader.classList.add('hidden');
+                }
+            });
         });
     </script>
 
