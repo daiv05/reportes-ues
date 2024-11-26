@@ -28,7 +28,9 @@ enum RolesEnum: string
                 PermisosEnum::RECURSOS_EDITAR->value,
                 PermisosEnum::UNIDADES_MEDIDA_VER->value,
                 PermisosEnum::UNIDADES_MEDIDA_CREAR->value,
-                PermisosEnum::UNIDADES_MEDIDA_EDITAR->value
+                PermisosEnum::UNIDADES_MEDIDA_EDITAR->value,
+                PermisosEnum::CLASES_VER->value,
+                PermisosEnum::EVENTOS_VER->value,
             ],
             self::SUPERVISOR_REPORTE->value => [
                 PermisosEnum::REPORTES_CREAR->value,
@@ -42,7 +44,9 @@ enum RolesEnum: string
                 PermisosEnum::RECURSOS_EDITAR->value,
                 PermisosEnum::UNIDADES_MEDIDA_VER->value,
                 PermisosEnum::UNIDADES_MEDIDA_CREAR->value,
-                PermisosEnum::UNIDADES_MEDIDA_EDITAR->value
+                PermisosEnum::UNIDADES_MEDIDA_EDITAR->value,
+                PermisosEnum::CLASES_VER->value,
+                PermisosEnum::EVENTOS_VER->value,
             ],
             self::EMPLEADO->value => [
                 PermisosEnum::REPORTES_CREAR->value,
@@ -55,12 +59,16 @@ enum RolesEnum: string
                 PermisosEnum::RECURSOS_EDITAR->value,
                 PermisosEnum::UNIDADES_MEDIDA_VER->value,
                 PermisosEnum::UNIDADES_MEDIDA_CREAR->value,
-                PermisosEnum::UNIDADES_MEDIDA_EDITAR->value
+                PermisosEnum::UNIDADES_MEDIDA_EDITAR->value,
+                PermisosEnum::CLASES_VER->value,
+                PermisosEnum::EVENTOS_VER->value,
             ],
             self::USUARIO->value => [
                 PermisosEnum::REPORTES_CREAR->value,
                 PermisosEnum::REPORTES_VER_LISTADO_GENERAL->value,
-                PermisosEnum::ACTIVIDADES_CREAR_REPORTE->value
+                PermisosEnum::ACTIVIDADES_CREAR_REPORTE->value,
+                PermisosEnum::CLASES_VER->value,
+                PermisosEnum::EVENTOS_VER->value,
             ]
         ];
         $perm = $rolePermissions[$this->value] ?? [];
