@@ -83,7 +83,7 @@
                     'to' => 'importar-actividades',
                     'active' => request()->is('actividades/importacion-actividades'),
                     'label' => 'Importación de actividades',
-                    'permissions' => ['CARGA_ACTIVIDADES_EXCEL'],
+                    'permissions' => ['ACTIVIDADES_CARGA_EXCEL'],
                 ],
             ],
         ],
