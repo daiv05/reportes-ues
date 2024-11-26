@@ -22,7 +22,7 @@ enum RolesEnum: string
                 PermisosEnum::REPORTES_VER_LISTADO_GENERAL->value,
                 PermisosEnum::REPORTES_VER_ASIGNACIONES->value,
                 PermisosEnum::REPORTES_REVISION_SOLUCION->value,
-                PermisosEnum::ACTIVIDADES_REALIZAR_REPORTE->value,
+                PermisosEnum::ACTIVIDADES_CREAR_REPORTE->value,
                 PermisosEnum::RECURSOS_VER->value,
                 PermisosEnum::RECURSOS_CREAR->value,
                 PermisosEnum::RECURSOS_EDITAR->value,
@@ -36,7 +36,7 @@ enum RolesEnum: string
                 PermisosEnum::REPORTES_VER_LISTADO_GENERAL->value,
                 PermisosEnum::REPORTES_VER_ASIGNACIONES->value,
                 PermisosEnum::REPORTES_REVISION_SOLUCION->value,
-                PermisosEnum::ACTIVIDADES_REALIZAR_REPORTE->value,
+                PermisosEnum::ACTIVIDADES_CREAR_REPORTE->value,
                 PermisosEnum::RECURSOS_VER->value,
                 PermisosEnum::RECURSOS_CREAR->value,
                 PermisosEnum::RECURSOS_EDITAR->value,
@@ -49,7 +49,7 @@ enum RolesEnum: string
                 PermisosEnum::REPORTES_ACTUALIZAR_ESTADO->value,
                 PermisosEnum::REPORTES_VER_LISTADO_GENERAL->value,
                 PermisosEnum::REPORTES_VER_ASIGNACIONES->value,
-                PermisosEnum::ACTIVIDADES_REALIZAR_REPORTE->value,
+                PermisosEnum::ACTIVIDADES_CREAR_REPORTE->value,
                 PermisosEnum::RECURSOS_VER->value,
                 PermisosEnum::RECURSOS_CREAR->value,
                 PermisosEnum::RECURSOS_EDITAR->value,
@@ -60,7 +60,7 @@ enum RolesEnum: string
             self::USUARIO->value => [
                 PermisosEnum::REPORTES_CREAR->value,
                 PermisosEnum::REPORTES_VER_LISTADO_GENERAL->value,
-                PermisosEnum::ACTIVIDADES_REALIZAR_REPORTE->value
+                PermisosEnum::ACTIVIDADES_CREAR_REPORTE->value
             ]
         ];
         $perm = $rolePermissions[$this->value] ?? [];
