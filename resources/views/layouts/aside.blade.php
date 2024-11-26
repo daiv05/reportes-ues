@@ -7,7 +7,7 @@
             'active' => request()->is('inicio'),
             'icon' => 'heroicon-s-chart-pie',
             'label' => 'Inicio',
-            'role' => 'ROLE_USUARIO_BASE',
+            'permissions' => false,
         ],
         [
             'type' => 2,
@@ -15,21 +15,21 @@
             'active' => request()->is('seguridad/*'),
             'icon' => 'heroicon-s-lock-closed',
             'label' => 'Seguridad',
+            'permissions' => ['USUARIOS_VER'],
             'items' => [
                 [
                     'to' => 'roles.index',
                     'active' => request()->is('seguridad/roles'),
                     'label' => 'Roles',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['USUARIOS_VER'],
                 ],
                 [
                     'to' => 'usuarios.index',
                     'active' => request()->is('seguridad/usuarios'),
                     'label' => 'Usuarios',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['USUARIOS_VER'],
                 ],
             ],
-            'role' => 'ROLE_USUARIO_SUPER_ADMIN',
         ],
         [
             'type' => 2,
@@ -37,27 +37,27 @@
             'active' => request()->is('reportes/*'),
             'icon' => 'heroicon-s-document-chart-bar',
             'label' => 'Reportes',
+            'permissions' => ['REPORTES_VER_LISTADO_GENERAL'],
             'items' => [
                 [
                     'to' => 'reportes-generales',
                     'active' => request()->is('reportes/listado-general'),
                     'label' => 'Listado',
-                    'role' => 'ROLE_USUARIO_BASE',
+                    'permissions' => ['REPORTES_VER_LISTADO_GENERAL'],
                 ],
                 [
                     'to' => 'reportes.misReportes',
                     'active' => request()->is('reportes/mis-reportes'),
                     'label' => 'Mis reportes',
-                    'role' => 'ROLE_USUARIO_BASE',
+                    'permissions' => ['REPORTES_CREAR'],
                 ],
                 [
                     'to' => 'reportes.misAsignaciones',
                     'active' => request()->is('reportes/mis-asignaciones'),
                     'label' => 'Mis asignaciones',
-                    'role' => 'ROLE_USUARIO_EMPLEADO',
+                    'permissions' => ['REPORTES_VER_ASIGNACIONES'],
                 ],
             ],
-            'role' => 'ROLE_USUARIO_BASE',
         ],
         [
             'type' => 2,
@@ -65,27 +65,27 @@
             'active' => request()->is('actividades/*'),
             'icon' => 'heroicon-s-calendar-days',
             'label' => 'Actividades',
+            'permissions' => ['EVENTOS_VER', 'CLASES_VER'],
             'items' => [
                 [
                     'to' => 'listado-clases',
                     'active' => request()->is('actividades/clases'),
                     'label' => 'Clases',
-                    'role' => 'ROLE_USUARIO_BASE',
+                    'permissions' => ['CLASES_VER'],
                 ],
                 [
                     'to' => 'listado-eventos-evaluaciones',
                     'active' => request()->is('actividades/eventos-y-evaluaciones'),
                     'label' => 'Eventos',
-                    'role' => 'ROLE_USUARIO_BASE',
+                    'permissions' => ['EVENTOS_VER'],
                 ],
                 [
                     'to' => 'importar-actividades',
                     'active' => request()->is('actividades/importacion-actividades'),
                     'label' => 'Importación de actividades',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['CARGA_ACTIVIDADES_EXCEL'],
                 ],
             ],
-            'role' => 'ROLE_USUARIO_BASE',
         ],
         [
             'type' => 2,
@@ -93,27 +93,27 @@
             'active' => request()->is('rhu/*'),
             'icon' => 'heroicon-s-user-group',
             'label' => 'Recursos humanos',
+            'permissions' => ['ENTIDADES_VER', 'PUESTOS_VER', 'EMPLEADOS_VER'],
             'items' => [
                 [
                     'to' => 'entidades.index',
                     'active' => request()->is('rhu/entidades'),
                     'label' => 'Entidades',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['ENTIDADES_VER'],
                 ],
                 [
                     'to' => 'puestos.index',
                     'active' => request()->is('rhu/puestos'),
                     'label' => 'Puestos',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['PUESTOS_VER'],
                 ],
                 [
                     'to' => 'empleadosPuestos.index',
                     'active' => request()->is('rhu/empleado-puesto'),
                     'label' => 'Empleados - Puestos',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['EMPLEADOS_VER'],
                 ],
             ],
-            'role' => 'ROLE_USUARIO_SUPER_ADMIN',
         ],
         [
             'type' => 2,
@@ -121,54 +121,33 @@
             'active' => request()->is('mantenimientos/*'),
             'icon' => 'heroicon-s-table-cells',
             'label' => 'Mantenimientos',
+            'permissions' => ['AULAS_VER', 'CICLOS_VER', 'ASIGNATURAS_VER', 'ESCUELAS_VER'],
             'items' => [
                 [
                     'to' => 'aulas.index',
                     'active' => request()->is('mantenimientos/aulas'),
                     'label' => 'Aulas',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['AULAS_VER'],
                 ],
                 [
                     'to' => 'escuela.index',
                     'active' => request()->is('mantenimientos/escuelas'),
                     'label' => 'Escuelas',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['ESCUELAS_VER'],
                 ],
                 [
                     'to' => 'asignaturas.index',
                     'active' => request()->is('mantenimientos/asignaturas'),
                     'label' => 'Asignaturas',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['ASIGNATURAS_VER'],
                 ],
                 [
                     'to' => 'ciclos.index',
                     'active' => request()->is('mantenimientos/ciclos'),
                     'label' => 'Ciclos',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['CICLOS_VER'],
                 ],
             ],
-            'role' => 'ROLE_USUARIO_SUPER_ADMIN',
-        ],
-        [
-            'type' => 2,
-            'id' => 'maquetacion-dropdown',
-            'active' => request()->is('maquetacion/*'),
-            'icon' => 'heroicon-s-exclamation-triangle',
-            'label' => 'Maquetación',
-            'items' => [
-                [
-                    'to' => 'dashboard',
-                    'active' => request()->is('maquetacion/general'),
-                    'label' => 'Componentes globales',
-                    'role' => 'ROLE_USUARIO_BASE'
-                ],
-                // [
-                //     'to' => 'detalle-reporte',
-                //     'active' => request()->is('reportes/detalle'),
-                //     'label' => 'Detalle de reporte',
-                // ],
-            ],
-            'role' => 'ROLE_USUARIO_BASE'
         ],
         [
             'type' => 2,
@@ -176,21 +155,32 @@
             'active' => request()->is('auditorias/*'),
             'icon' => 'heroicon-s-book-open',
             'label' => 'Auditorias',
+            'permissions' => ['BITACORA_VER'],
             'items' => [
                 [
                     'to' => 'general.index',
                     'active' => request()->is('auditorias/general'),
                     'label' => 'General',
-                    'role' => 'ROLE_USUARIO_SUPER_ADMIN'
+                    'permissions' => ['BITACORA_VER'],
                 ],
-                // [
-                //     'to' => 'detalle-reporte',
-                //     'active' => request()->is('reportes/detalle'),
-                //     'label' => 'Detalle de reporte',
-                // ],
             ],
-            'role' => 'ROLE_USUARIO_SUPER_ADMIN'
         ],
+        // [
+        //     'type' => 2,
+        //     'id' => 'maquetacion-dropdown',
+        //     'active' => request()->is('maquetacion/*'),
+        //     'icon' => 'heroicon-s-exclamation-triangle',
+        //     'label' => 'Maquetación',
+        //     'permissions' => false,
+        //     'items' => [
+        //         [
+        //             'to' => 'dashboard',
+        //             'active' => request()->is('maquetacion/general'),
+        //             'label' => 'Componentes globales',
+        //             'permissions' => false,
+        //         ],
+        //     ],
+        // ],
     ];
 @endphp
 
@@ -199,17 +189,24 @@
     <div class="h-full overflow-y-auto bg-white px-3 pb-4 dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
             @foreach ($sidebarItems as $sit)
-                @if ($sit['type'] === 1)
-                    <x-aside.base :to="$sit['to']" :active="$sit['active']" :icon="$sit['icon']" :label="$sit['label']" />
-                @elseif ($sit['type'] === 2)
-                    <x-aside.dropdown id="{{ $sit['id'] }}" :active="$sit['active']" :icon="$sit['icon']" :label="$sit['label']" />
-                    <ul id="{{ $sit['id'] }}" class="hidden space-y-2 py-2">
-                        @foreach ($sit['items'] as $item)
-                            <x-aside.dropdown-item :to="$item['to']" :active="$item['active']" :label="$item['label']" />
-                        @endforeach
-                    </ul>
-                @else
-                    {{ error_log('Tipo de item no reconocido') }}
+                @if (
+                    !$sit['permissions'] ||
+                        auth()->user()->canany($sit['permissions']))
+                    @if ($sit['type'] === 1)
+                        <x-aside.base :to="$sit['to']" :active="$sit['active']" :icon="$sit['icon']" :label="$sit['label']" />
+                    @elseif ($sit['type'] === 2)
+                        <x-aside.dropdown id="{{ $sit['id'] }}" :active="$sit['active']" :icon="$sit['icon']"
+                            :label="$sit['label']" />
+                        <ul id="{{ $sit['id'] }}" class="{{ $sit['active'] ? '' : 'hidden'}} space-y-2 py-2">
+                            @foreach ($sit['items'] as $item)
+                                @if (
+                                    !$item['permissions'] ||
+                                        auth()->user()->canany($item['permissions']))
+                                    <x-aside.dropdown-item :to="$item['to']" :active="$item['active']" :label="$item['label']" />
+                                @endif
+                            @endforeach
+                        </ul>
+                    @endif
                 @endif
             @endforeach
         </ul>

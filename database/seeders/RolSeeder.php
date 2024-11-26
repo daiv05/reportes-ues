@@ -11,7 +11,10 @@ class RolSeeder extends Seeder
     public function run(): void
     {
         foreach (RolesEnum::cases() as $rol) {
-            Role::create(['name' => $rol->value]);
+            $role = Role::create(['name' => $rol->value]);
+            foreach ($rol->permisos() as $perm) {
+                $role->givePermissionTo($perm);
+            }
         }
     }
 }

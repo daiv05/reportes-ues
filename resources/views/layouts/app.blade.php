@@ -141,13 +141,6 @@
     </script>
 
     <script>
-        const hasRole = (rol) => {
-            const roles = @json(Auth::user()->roles);
-            return roles.some((item) => item.name === rol);
-        }
-    </script>
-
-    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const loader = document.getElementById('loader');
 
