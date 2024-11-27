@@ -13,6 +13,7 @@
     </div>
 
     <div class="mt-12 mb-8">
+        <h2 class="text-xl font-bold mb-4 lg:ml-8">Detalles del Reporte</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200">
                 <thead class="bg-gray-100">
@@ -59,8 +60,8 @@
         </div>
     </div>
 
-
     <div class="mt-12 mb-8">
+        <h2 class="text-xl font-bold mb-4 lg:ml-8">Información de la Entidad</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200">
                 <thead class="bg-gray-100">
@@ -91,16 +92,13 @@
                     <td class="py-4 px-6 text-sm font-medium text-gray-900">Supervisor</td>
                     <td class="py-4 px-6 text-sm text-gray-500">{{ $supervisor->persona->nombre }} {{ $supervisor->persona->apellido }}</td>
                 </tr>
-                <tr>
-                    <td class="py-4 px-6 text-sm font-medium text-gray-900">Comentario del Supervisor</td>
-                    <td class="py-4 px-6 text-sm text-gray-500">{{ $comentarioSupervisor }}</td>
-                </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <div class="mt-12 mb-8">
+        <h2 class="text-xl font-bold mb-4 lg:ml-8">Recursos Utilizados</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200">
                 <thead class="bg-gray-100">
@@ -112,6 +110,9 @@
                         Cantidad
                     </th>
                     <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                        Unidad de medida
+                    </th>
+                    <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                         Fondo
                     </th>
                 </tr>
@@ -121,6 +122,7 @@
                     <tr>
                         <td class="py-4 px-6 text-sm font-medium text-gray-900">{{ $recurso->recurso->nombre }}</td>
                         <td class="py-4 px-6 text-sm text-gray-500">{{ $recurso->cantidad }}</td>
+                        <td class="py-4 px-6 text-sm text-gray-500">{{ $recurso->unidadMedida->nombre }}</td>
                         <td class="py-4 px-6 text-sm text-gray-500">{{ $recurso->fondo->nombre }}</td>
                     </tr>
                 @endforeach
