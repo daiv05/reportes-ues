@@ -14,6 +14,7 @@ use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
 use App\Http\Controllers\Mantenimientos\CicloController;
+use App\Http\Controllers\Mantenimientos\RecursoController;
 use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
@@ -45,6 +46,10 @@ Route::get('/inicio', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/forbidden', function () {
+        return view('errors.forbidden');
+    })->name('errors.forbidden');
+
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -63,7 +68,7 @@ Route::middleware('auth')->group(function () {
     /* ***************************************** */
     Route::prefix('reportes')->group(function () {
         // Reportes
-        Route::get('/listado-general', [ReporteController::class, 'index'])->name('reportes-generales');
+        Route::middleware('permission:REPORTES_VER_LISTADO_GENERAL')->get('/listado-general', [ReporteController::class, 'index'])->name('reportes-generales');
         Route::get('/registrar', [ReporteController::class, 'create'])->name('crear-reporte');
         Route::post('/store', [ReporteController::class, 'store'])->name('reportes.store');
         Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->name('detalle-reporte');
@@ -118,6 +123,9 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [CicloController::class, 'store'])->name('ciclos.store');
             Route::put('/{id}', [CicloController::class, 'update'])->name('ciclos.update');
         });
+
+        //Recursos
+        Route::resource('recursos', RecursoController::class)->except(['destroy']);
     });
     /* ****************************************** */
     /*   ************* SEGURIDAD ************   */
