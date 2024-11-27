@@ -141,7 +141,7 @@
                                         required
                                         class="w-full mt-1"
                                     />
-                                    <x-forms.input-error :messages="$errors->get('fecha'. $loop->index)" class="mt-2" />
+                                    <x-forms.input-error :messages="$errors->get('fecha.'. $loop->index)" class="mt-2" />
                                 </div>
 
                                 {{-- Materia --}}
@@ -206,7 +206,7 @@
                                 <div class="space-y-2">
                                     <x-forms.select
                                         name="modalidad[]"
-                                        :errors="$errors->get('modalidad. ' . $loop->index)"
+                                        :errors="$errors->get('modalidad.' . $loop->index)"
                                         label="Modalidad"
                                         :options="$modalidades->pluck('nombre', 'id')"
                                         :selected="old('modalidad.' . $loop->index, $row['modalidad'])"

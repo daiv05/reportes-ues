@@ -170,7 +170,7 @@ class ReporteController extends Controller
             // Obtener recursos usados
             $recursosUsados = RecursoReporte::whereHas('historialAccionesReporte', function ($query) use ($reporte) {
                 $query->where('id_acciones_reporte', $reporte->accionesReporte->id);
-            })->get();
+            })->with('unidadMedida')->get();
 
             // Obtener datos adicionales
             $entidad = $reporte->accionesReporte->entidadAsignada;

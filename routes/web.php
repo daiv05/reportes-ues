@@ -14,6 +14,7 @@ use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
 use App\Http\Controllers\Mantenimientos\CicloController;
+use App\Http\Controllers\Mantenimientos\RecursoController;
 use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
@@ -84,6 +85,10 @@ Route::middleware('auth')->group(function () {
     /* ****************************************** */
     Route::prefix('actividades')->group(function () {
         Route::get('/clases', [ActividadController::class, 'listadoClases'])->name('listado-clases');
+        Route::post('/clases', [ActividadController::class, 'storeOneClass'])->name('clase.store');
+        Route::put('/clases/{id}', [ActividadController::class, 'updateClass'])->name('clase.update');
+        Route::post('/eventos-y-evaluaciones', [ActividadController::class, 'storeOneEvent'])->name('evento.store');
+        Route::put('/eventos-y-evaluaciones/{id}', [ActividadController::class, 'updateEvent'])->name('evento.update');
         Route::get('/eventos-y-evaluaciones', [ActividadController::class, 'listadoEventos'])->name('listado-eventos-evaluaciones');
         Route::get('/importar-actividades', [ActividadController::class, 'importarActividadesView'])->name('importar-actividades');
         Route::delete('/eliminar-evento-sesion/{index}', [ActividadController::class, 'eliminarDeSesion'])->name('eliminar-evento-sesion');
@@ -122,6 +127,9 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [CicloController::class, 'store'])->name('ciclos.store');
             Route::put('/{id}', [CicloController::class, 'update'])->name('ciclos.update');
         });
+
+        //Recursos
+        Route::resource('recursos', RecursoController::class)->except(['destroy']);
     });
     /* ****************************************** */
     /*   ************* SEGURIDAD ************   */
