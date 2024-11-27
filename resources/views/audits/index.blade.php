@@ -76,55 +76,57 @@
                 </div>
             </x-forms.row>
         </form>
-        <x-table.base :headers="$headers">
-            @foreach ($audits as $audi)
-                <x-table.tr>
-                    <x-table.td>
-                        @php
-                            $user = \App\Models\Seguridad\User::find($audi->user_id);
-                        @endphp
-                        {{ $user->persona->nombre }} {{ $user->persona->apellido }}
-                    </x-table.td>
-                    <x-table.td>{{ $audi->event }}</x-table.td>
-                    <x-table.td justify="center">{{ class_basename($audi->auditable_type) }}</x-table.td>
-                    <x-table.td justify="center">{{ $audi->auditable_id }}</x-table.td>
-                    <x-table.td justify="center">
-                        @if ($audi->new_values && !empty($audi->new_values))
-                            <button data-modal-target="modalNuevo-{{ $audi->id }}"
-                                data-modal-toggle="modalNuevo-{{ $audi->id }}" type="button">
-                                <x-heroicon-o-eye class="h-5 w-5" />
-                            </button>
-                        @else
-                            -
-                        @endif
-                    </x-table.td>
-                    <x-table.td justify="center">
-                        @if ($audi->old_values && !empty($audi->old_values))
-                            <button data-modal-target="modalViejo-{{ $audi->id }}"
-                                data-modal-toggle="modalViejo-{{ $audi->id }}" type="button">
-                                <x-heroicon-o-eye class="h-5 w-5" />
-                            </button>
-                        @else
-                            -
-                        @endif
-                    </x-table.td>
-
-                    <x-table.td>{{ $audi->url }}</x-table.td>
-                    <x-table.td>{{ $audi->ip_address }}</x-table.td>
-                    <x-table.td justify="center">
-                        @php
-                            $agent = new Jenssegers\Agent\Agent();
-                            $agent->setUserAgent($audi->user_agent);
-                            $browser = $agent->browser();
-                            $platform = $agent->platform();
-                        @endphp
-                        {{ $browser }} - {{ $platform }}
-                    </x-table.td>
-                    <x-table.td>{{ $audi->created_at }}</x-table.td>
-                    <x-table.td>{{ $audi->updated_at }}</x-table.td>
-                </x-table.tr>
-            @endforeach
-        </x-table.base>
+        <div class="overflow-x-auto">
+            <x-table.base :headers="$headers">
+                @foreach ($audits as $audi)
+                    <x-table.tr>
+                        <x-table.td>
+                            @php
+                                $user = \App\Models\Seguridad\User::find($audi->user_id);
+                            @endphp
+                            {{ $user->persona->nombre }} {{ $user->persona->apellido }}
+                        </x-table.td>
+                        <x-table.td>{{ $audi->event }}</x-table.td>
+                        <x-table.td justify="center">{{ class_basename($audi->auditable_type) }}</x-table.td>
+                        <x-table.td justify="center">{{ $audi->auditable_id }}</x-table.td>
+                        <x-table.td justify="center">
+                            @if ($audi->new_values && !empty($audi->new_values))
+                                <button data-modal-target="modalNuevo-{{ $audi->id }}"
+                                    data-modal-toggle="modalNuevo-{{ $audi->id }}" type="button">
+                                    <x-heroicon-o-eye class="h-5 w-5" />
+                                </button>
+                            @else
+                                -
+                            @endif
+                        </x-table.td>
+                        <x-table.td justify="center">
+                            @if ($audi->old_values && !empty($audi->old_values))
+                                <button data-modal-target="modalViejo-{{ $audi->id }}"
+                                    data-modal-toggle="modalViejo-{{ $audi->id }}" type="button">
+                                    <x-heroicon-o-eye class="h-5 w-5" />
+                                </button>
+                            @else
+                                -
+                            @endif
+                        </x-table.td>
+    
+                        <x-table.td>{{ $audi->url }}</x-table.td>
+                        <x-table.td>{{ $audi->ip_address }}</x-table.td>
+                        <x-table.td justify="center">
+                            @php
+                                $agent = new Jenssegers\Agent\Agent();
+                                $agent->setUserAgent($audi->user_agent);
+                                $browser = $agent->browser();
+                                $platform = $agent->platform();
+                            @endphp
+                            {{ $browser }} - {{ $platform }}
+                        </x-table.td>
+                        <x-table.td>{{ $audi->created_at }}</x-table.td>
+                        <x-table.td>{{ $audi->updated_at }}</x-table.td>
+                    </x-table.tr>
+                @endforeach
+            </x-table.base>
+        </div>
 
         <div class="mt-4">
             {{ $audits->appends(request()->query())->links() }}

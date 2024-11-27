@@ -43,11 +43,11 @@
                     </x-table.tr>
                 @endforeach
             </x-table.base>
-            <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
-                aria-label="Table navigation">
-                {{ $ciclos->links() }}
-            </nav>
         </div>
+        <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
+            aria-label="Table navigation">
+            {{ $ciclos->links() }}
+        </nav>
     </x-container>
 
     <x-form-modal id="static-modal">

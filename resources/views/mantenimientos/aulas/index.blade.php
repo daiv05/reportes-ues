@@ -17,29 +17,31 @@
         </div>
     </x-slot>
     <x-container>
-        <x-table.base :headers="$headers">
-            @foreach ($aulas as $aula)
-                <x-table.tr>
-                    <x-table.td>
-                        {{ $aula->nombre }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $aula->facultades->nombre }}
-                    </x-table.td>
-                    <x-table.td>
-                        <x-status.is-active :active="$aula->activo" />
-                    </x-table.td>
-                    <x-table.td>
-                        <a href="#"
-                            class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                            data-id="{{ $aula->id }}" data-nombre="{{ $aula->nombre }}"
-                            data-facultad="{{ $aula->facultades->id }}" data-activo="{{ $aula->activo }}">
-                            <x-heroicon-o-pencil class="h-5 w-5" />
-                        </a>
-                    </x-table.td>
-                </x-table.tr>
-            @endforeach
-        </x-table.base>
+        <div class="overflow-x-auto">
+            <x-table.base :headers="$headers">
+                @foreach ($aulas as $aula)
+                    <x-table.tr>
+                        <x-table.td>
+                            {{ $aula->nombre }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $aula->facultades->nombre }}
+                        </x-table.td>
+                        <x-table.td>
+                            <x-status.is-active :active="$aula->activo" />
+                        </x-table.td>
+                        <x-table.td>
+                            <a href="#"
+                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                data-id="{{ $aula->id }}" data-nombre="{{ $aula->nombre }}"
+                                data-facultad="{{ $aula->facultades->id }}" data-activo="{{ $aula->activo }}">
+                                <x-heroicon-o-pencil class="h-5 w-5" />
+                            </a>
+                        </x-table.td>
+                    </x-table.tr>
+                @endforeach
+            </x-table.base>
+        </div>
 
         <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
@@ -62,13 +64,13 @@
                 </x-forms.row>
                 <x-forms.row :columns="2">
                     <div>
-                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')"
-                            :error="$errors->get('nombre')" required />
+                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')" :error="$errors->get('nombre')"
+                            required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
                         <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']"
-                            :value="old('activo', '1')" :error="$errors->get('activo')" required/>
+                            :value="old('activo', '1')" :error="$errors->get('activo')" required />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
