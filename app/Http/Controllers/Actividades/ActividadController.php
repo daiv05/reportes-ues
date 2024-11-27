@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Actividades;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClaseRequest;
 use App\Http\Requests\ImportActividadClaseRequest;
 use App\Http\Requests\ImportActividadEventoRequest;
+use App\Http\Requests\EventoRequest;
 use App\Imports\CalendarioImport;
 use App\Imports\HorarioImport;
 use App\Models\Actividades\Actividad;
+use App\Models\Actividades\AulaActividad;
 use App\Models\Actividades\Clase;
 use App\Models\Actividades\Evento;
-use App\Models\AulaActividad;
+use App\Models\General\Dia;
 use App\Models\General\Modalidad;
 use App\Models\General\TipoClase;
 use App\Models\Mantenimientos\Asignatura;
@@ -20,6 +23,7 @@ use App\Models\Mantenimientos\Escuela;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 use function PHPUnit\Framework\isEmpty;
@@ -118,7 +122,11 @@ class ActividadController extends Controller
             return redirect()->back()->withErrors($errors)->withInput();
         }
 
-        $data['materia'] = Asignatura::whereIn('nombre', $data['materia'])->pluck('id')->toArray();
+        Log::info($data);
+
+        foreach ($data['materia'] as $key => $materia) {
+            $data['materia'][$key] = Asignatura::where('nombre', $materia)->first()->id;
+        }
         $data['local'] = Aulas::whereIn('nombre', $data['local'])->pluck('id')->toArray();
 
         $cicloActivo = Ciclo::where('activo', 1)->first();
@@ -135,12 +143,7 @@ class ActividadController extends Controller
                 $actividad->save();
 
                 $actividad->asignaturas()->attach($data['materia'][$key]);
-                foreach ($data['local'] as $aula) {
-                    AulaActividad::create([
-                        'id_actividad' => $actividad->id,
-                        'id_aula' => $aula
-                    ]);
-                }
+                $actividad->aulas()->attach($data['local'][$key]);
 
                 $clase = new Clase();
                 $clase->id_actividad = $actividad->id;
@@ -163,6 +166,7 @@ class ActividadController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error($e);
             return redirect()->back()->with('message', [
                 'type' => 'error',
                 'content' => 'Ocurrió un error al guardar las actividades. Detalles: ' . $e->getMessage()
@@ -222,7 +226,7 @@ class ActividadController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error($e);
+            Log::error($e);
             return redirect()->back()->with('message', [
                 'type' => 'error',
                 'content' => 'Ocurrió un error al guardar las actividades. Detalles: ' . $e->getMessage()
@@ -232,15 +236,16 @@ class ActividadController extends Controller
 
     public function listadoClases(Request $request)
     {
-        $materia = $request->input('materia');
-        $escuela = $request->input('escuela');
-        $modalidad = $request->input('modalidad');
-        $tipoClase = $request->input('tipo');
-        $aula = $request->input('aula');
+        $materia = $request->input('materia-filtro');
+        $escuela = $request->input('escuela-filtro');
+        $modalidad = $request->input('modalidad-filtro');
+        $tipoClase = $request->input('tipo-filtro');
+        $aula = $request->input('aula-filtro');
 
         $escuelas = Escuela::all()->pluck('nombre', 'id');
         $modalidades = Modalidad::all()->pluck('nombre', 'id');
         $tiposClase = TipoClase::all()->pluck('nombre', 'id');
+        $dias = Dia::all();
 
         $cicloActivo = Ciclo::where('activo', 1)->first();
         $clases = Clase::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas', 'tipoClase')
@@ -274,13 +279,100 @@ class ActividadController extends Controller
             })
             ->paginate(10)->appends($request->query());
 
-        return view('actividades.listado-actividades.listado-clases', compact('clases', 'escuelas', 'modalidades', 'tiposClase'));
+        return view('actividades.listado-actividades.listado-clases', compact('clases', 'escuelas', 'modalidades', 'tiposClase', 'dias'));
+    }
+
+    public function storeOneClass(ClaseRequest $request)
+    {
+        $cicloActivo = Ciclo::where('activo', 1)->first();
+
+        try {
+            DB::beginTransaction();
+
+            $actividad = new Actividad();
+            $actividad->hora_inicio = $request->input('hora_inicio');
+            $actividad->hora_fin = $request->input('hora_fin');
+            $actividad->id_modalidad = $request->input('modalidad');
+            $actividad->activo = $request->input('estado');
+            $actividad->id_ciclo = $cicloActivo->id;
+            $actividad->save();
+
+            $materia = Asignatura::where('nombre', $request->input('materia'))->first()->id;
+            $aula = Aulas::where('nombre', $request->input('local'))->first()->id;
+
+            if($request->input('materia')) {
+                $actividad->asignaturas()->attach($materia);
+            }
+
+            if($request->input('local') && !empty($request->input('local'))) {
+                $actividad->aulas()->attach($aula);
+            }
+
+            $clase = new Clase();
+            $clase->id_actividad = $actividad->id;
+            $clase->id_tipo_clase = $request->input('tipo');
+            $clase->numero_grupo = $request->input('grupo');
+            $clase->dias_actividad = json_encode($request->input('dias'));
+            $clase->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('message', [
+                'type' => 'success',
+                'content' => 'La clase se ha guardado correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return redirect()->back()->with('message', [
+                'type' => 'error',
+                'content' => 'Ocurrió un error al guardar la clase. Detalles: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function updateClass(ClaseRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $clase = Clase::find($id);
+            $clase->dias_actividad = json_encode($request->input('dias'));
+            $clase->save();
+
+            //actualiza la actividad tamnbien
+            $actividad = Actividad::find($clase->id_actividad);
+            $actividad->hora_inicio = $request->input('hora_inicio');
+            $actividad->hora_fin = $request->input('hora_fin');
+            $actividad->id_modalidad = $request->input('modalidad');
+            $actividad->activo = $request->input('estado');
+            $actividad->save();
+
+            //actuliza las aulas y la materia de la actividad
+            $actividad->asignaturas()->sync([Asignatura::where('nombre', $request->input('materia'))->first()->id]);
+            $actividad->aulas()->sync(Aulas::where('nombre', $request->input('local'))->first()->id);
+
+            DB::commit();
+
+            return redirect()->back()->with('message', [
+                'type' => 'success',
+                'content' => 'La clase se ha actualizado correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return redirect()->back()->with('message', [
+                'type' => 'error',
+                'content' => 'Ocurrió un error al actualizar la clase. Detalles: ' . $e->getMessage()
+            ]);
+        }
     }
 
     public function listadoEventos(Request $request){
         $escuelas = Escuela::all()->pluck('nombre', 'id');
         $modalidades = Modalidad::all()->pluck('nombre', 'id');
         $tiposClase = TipoClase::all()->pluck('nombre', 'id');
+        $aulas = Aulas::all();
 
         $cicloActivo = Ciclo::where('activo', 1)->first();
 
@@ -290,29 +382,119 @@ class ActividadController extends Controller
                     $query->where('id_ciclo', $cicloActivo->id);
                 }
             })
-            ->when($request->input('descripcion'), function ($query) use ($request) {
-                $query->where('descripcion', 'like', "%{$request->input('descripcion')}%");
+            ->when($request->input('descripcion-filter'), function ($query) use ($request) {
+                $query->where('descripcion', 'like', "%{$request->input('descripcion-filter')}%");
             })
-            ->when($request->input('fecha'), function ($query) use ($request) {
-                $query->where('fecha', Carbon::createFromFormat('d/m/Y', $request->input('fecha'))->format('Y-m-d'));
+            ->when($request->input('fecha-filter'), function ($query) use ($request) {
+                $query->where('fecha', Carbon::createFromFormat('d/m/Y', $request->input('fecha-filter'))->format('Y-m-d'));
             })
-            ->when($request->input('materia'), function ($query) use ($request) {
+            ->when($request->input('materia-filter'), function ($query) use ($request) {
                 $query->whereHas('actividad.asignaturas', function ($query) use ($request) {
-                    $query->where('nombre', 'like', "%{$request->input('materia')}%");
+                    $query->where('nombre', 'like', "%{$request->input('materia-filter')}%");
                 });
             })
-            ->when($request->input('modalidad'), function ($query) use ($request) {
+            ->when($request->input('modalidad-filter'), function ($query) use ($request) {
                 $query->whereHas('actividad', function ($query) use ($request) {
-                    $query->where('id_modalidad', $request->input('modalidad'));
+                    $query->where('id_modalidad', $request->input('modalidad-filter'));
                 });
             })
-            ->when($request->input('aula'), function ($query) use ($request) {
+            ->when($request->input('aula-filter'), function ($query) use ($request) {
                 $query->whereHas('actividad.aulas', function ($query) use ($request) {
-                    $query->where('nombre', 'like', "%{$request->input('aula')}%");
+                    $query->where('nombre', 'like', "%{$request->input('aula-filter')}%");
                 });
             })
             ->paginate(10)->appends($request->query());
 
-        return view('actividades.listado-actividades.listado-eventos-evaluaciones', compact('eventos', 'escuelas', 'modalidades', 'tiposClase'));
+        return view('actividades.listado-actividades.listado-eventos-evaluaciones', compact('eventos', 'escuelas', 'modalidades', 'tiposClase', 'aulas'));
+    }
+
+    public function storeOneEvent(EventoRequest $request){
+        $cicloActivo = Ciclo::where('activo', 1)->first();
+
+
+        try {
+            DB::beginTransaction();
+
+            $actividad = new Actividad();
+            $actividad->hora_inicio = $request->input('hora_inicio');
+            $actividad->hora_fin = $request->input('hora_fin');
+            $actividad->id_modalidad = $request->input('modalidad');
+            $actividad->activo = $request->input('estado');
+            $actividad->id_ciclo = $cicloActivo->id;
+            $actividad->save();
+
+            $materia = Asignatura::where('nombre', $request->input('materia'))->first()->id;
+
+            if($request->input('materia')) {
+                $actividad->asignaturas()->attach($materia);
+            }
+
+            if($request->input('aulas') && !empty($request->input('aulas'))) {
+                $actividad->aulas()->attach($request->input('aulas'));
+
+            }
+
+            $evento = new Evento();
+            $evento->descripcion = $request->input('evaluacion');
+            $evento->fecha = Carbon::createFromFormat('d/m/Y', $request->input('fecha'))->format('Y-m-d');
+            $evento->cantidad_asistentes = $request->input('asistentes');
+            $evento->comentarios = $request->input('comentario');
+            $evento->id_actividad = $actividad->id;
+            $evento->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('message', [
+                'type' => 'success',
+                'content' => 'El evento se ha guardado correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return redirect()->back()->with('message', [
+                'type' => 'error',
+                'content' => 'Ocurrió un error al guardar el evento. Detalles: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function updateEvent(EventoRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $evento = Evento::find($id);
+            $evento->descripcion = $request->input('evaluacion');
+            $evento->fecha = Carbon::createFromFormat('d/m/Y', $request->input('fecha'))->format('Y-m-d');
+            $evento->cantidad_asistentes = $request->input('asistentes');
+            $evento->comentarios = $request->input('comentario');
+            $evento->save();
+
+            //actualiza la actividad tamnbien
+            $actividad = Actividad::find($evento->id_actividad);
+            $actividad->hora_inicio = $request->input('hora_inicio');
+            $actividad->hora_fin = $request->input('hora_fin');
+            $actividad->id_modalidad = $request->input('modalidad');
+            $actividad->activo = $request->input('estado');
+            $actividad->save();
+
+            //actuliza las aulas y la materia de la actividad
+            $actividad->asignaturas()->sync([Asignatura::where('nombre', $request->input('materia'))->first()->id]);
+            $actividad->aulas()->sync($request->input('aulas'));
+
+            DB::commit();
+
+            return redirect()->back()->with('message', [
+                'type' => 'success',
+                'content' => 'El evento se ha actualizado correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return redirect()->back()->with('message', [
+                'type' => 'error',
+                'content' => 'Ocurrió un error al actualizar el evento. Detalles: ' . $e->getMessage()
+            ]);
+        }
     }
 }

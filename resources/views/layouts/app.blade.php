@@ -140,28 +140,59 @@
         @endif
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loader = document.getElementById('loader');
+<script>
+    let activeNotifications = 0;
+    const MAX_NOTIFICATIONS = 4;
 
-            window.addEventListener('beforeunload', function() {
-                // Mostrar el loader al salir de la página
-                loader.classList.remove('hidden');
-            });
+    document.addEventListener('DOMContentLoaded', function (e) {
+        const loader = document.getElementById('loader');
 
-            document.addEventListener('submit', function() {
-                // Mostrar el loader al enviar un formulario
-                loader.classList.remove('hidden');
-            });
-
-            // Ocultar el loader al regresar a la página
-            window.addEventListener('pageshow', function(event) {
-                if (event.persisted) { // Si la página está cargada desde caché
-                    loader.classList.add('hidden');
-                }
-            });
+        window.addEventListener('beforeunload', function () {
+            // Mostrar el loader al salir de la página
+            loader.classList.remove('hidden');
         });
-    </script>
+
+        document.addEventListener('submit', function () {
+            // Mostrar el loader al enviar un formulario
+            loader.classList.remove('hidden');
+
+            if (event.defaultPrevented) {
+            // Si el evento fue prevenido, ocultar el loader
+                loader.classList.add('hidden');
+                limitedNoty('Los datos del formulario no son válidos', 'warning');
+            }
+        });
+
+        // Ocultar el loader al regresar a la página
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) { // Si la página está cargada desde caché
+                loader.classList.add('hidden');
+            }
+        });
+    });
+
+    const limitedNoty = (content, type = 'info') => {
+        if (activeNotifications >= MAX_NOTIFICATIONS) {
+            return;
+        }
+
+        // Crear la notificación
+        notyf.open({
+            type: type,
+            message: content,
+            duration: 5000,
+            dismissible: true
+        });
+
+        // Incrementar contador de notificaciones activas
+        activeNotifications++;
+
+        // Restar del contador cuando la notificación desaparezca
+        setTimeout(() => {
+            activeNotifications--;
+        }, 5000); // Duración de la notificación
+    };
+</script>
 
 </body>
 
