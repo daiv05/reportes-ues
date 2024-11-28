@@ -31,6 +31,7 @@ class User extends Authenticatable implements Auditable
         'id_persona',
         'activo',
         'id_escuela',
+        'es_estudiante', 
     ];
 
     protected $hidden = [
