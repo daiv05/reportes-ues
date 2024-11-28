@@ -140,6 +140,7 @@ class ActividadController extends Controller
                 $actividad->id_modalidad = $data['modalidad'][$key];
                 $actividad->hora_inicio = $data['hora_inicio'][$key];
                 $actividad->hora_fin = $data['hora_fin'][$key];
+                $actividad->responsable = $data['responsable'][$key];
                 $actividad->save();
 
                 $actividad->asignaturas()->attach($data['materia'][$key]);
@@ -196,6 +197,7 @@ class ActividadController extends Controller
                 $actividad->id_modalidad = $data['modalidad'][$key];
                 $actividad->hora_inicio = $data['hora_inicio'][$key];
                 $actividad->hora_fin = $data['hora_fin'][$key];
+                $actividad->responsable = $data['responsable'][$key];
                 $actividad->save();
 
                 if($data['materia'][$key]) {
