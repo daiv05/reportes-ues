@@ -141,7 +141,7 @@
                                         data-hora-inicio="{{ \Carbon\Carbon::parse($evento->actividad->hora_inicio)->format('H:i') }}" data-hora-fin="{{ \Carbon\Carbon::parse($evento->actividad->hora_fin)->format('H:i') }}"
                                         data-asistentes="{{ $evento->cantidad_asistentes }}" data-modalidad="{{ $evento->actividad->modalidad->id }}"
                                         data-descripcion="{{ $evento->descripcion }}" data-comentarios="{{ $evento->comentarios }}"
-                                        data-estado="{{ $evento->actividad->activo }}" data-responsable="Ing. Julio Martinez"
+                                        data-estado="{{ $evento->actividad->activo }}" data-responsable="{{ $evento->actividad->responsable }}"
                                     >
                                     <x-heroicon-o-pencil class="h-5 w-5" />
                                     </a>
