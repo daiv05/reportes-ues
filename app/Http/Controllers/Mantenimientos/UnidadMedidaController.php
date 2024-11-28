@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Mantenimientos;
 use App\Http\Controllers\Controller;
 use App\Models\Mantenimientos\UnidadMedida;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
 class UnidadMedidaController extends Controller
@@ -18,7 +18,7 @@ class UnidadMedidaController extends Controller
             $query->where('nombre', 'like', '%' . $filtro . '%');
         }
         $unidades = $query->paginate(10);
-        return view('unidades-medida.index', compact('unidades'));
+        return view('mantenimientos.unidad_medida.index', compact('unidades'));
     }
 
     public function store(Request $request): RedirectResponse
