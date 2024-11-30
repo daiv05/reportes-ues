@@ -24,6 +24,7 @@ class Actividad extends Model  implements Auditable
         'id_ciclo',
         'hora_inicio',
         'hora_fin',
+        'responsable',
         'activo',
     ];
 

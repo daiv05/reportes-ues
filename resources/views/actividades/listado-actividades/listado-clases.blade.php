@@ -127,7 +127,7 @@
                                         data-hora-inicio="{{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('H:i') }}" data-hora-fin="{{ \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('H:i') }}"
                                         data-tipo-clase="{{ $clase->tipoClase->id }}" data-modalidad="{{ $clase->actividad->modalidad->id }}"
                                         data-grupo="{{ $clase->numero_grupo }}" data-dias="{{ $clase->dias_actividad }}"
-                                        data-estado="{{ $clase->actividad->activo }}" data-responsable="Ing. Julio Martinez"
+                                        data-estado="{{ $clase->actividad->activo }}" data-responsable="{{ $clase->actividad->responsable }}"
                                     >
                                     <x-heroicon-o-pencil class="h-5 w-5" />
                                     </a>
