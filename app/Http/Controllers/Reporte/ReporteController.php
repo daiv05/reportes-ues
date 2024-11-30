@@ -553,9 +553,10 @@ class ReporteController extends Controller
             $estController = new EstadoController();
             $estadosHabilitados = $estController->estadosReporte($reporte);
 
-            // Obtener fondos y recursos
+            // Obtener fondos, recursos y unidades de medida
             $fondos = DB::table('fondos')->get();
             $recursos = DB::table('recursos')->get();
+            $unidades_medida = DB::table('unidades_medida')->get();
 
             return [
                 'reporte' => $reporte,
@@ -565,7 +566,8 @@ class ReporteController extends Controller
                 'supervisores' => $supervisores,
                 'estadosPermitidos' => $estadosHabilitados,
                 'fondos' => $fondos,
-                'recursos' => $recursos
+                'recursos' => $recursos,
+                'unidades_medida' => $unidades_medida
             ];
         } else {
             return [
@@ -575,7 +577,8 @@ class ReporteController extends Controller
                 'supervisores' => [],
                 'estadosPermitidos' => [],
                 'fondos' => [],
-                'recursos' => []
+                'recursos' => [],
+                'unidades_medida' => []
             ];
         }
     }
