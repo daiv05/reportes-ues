@@ -75,6 +75,7 @@ class HorarioImport implements ToModel, WithHeadingRow
             'modalidad' => $modalidad,
             'grupo' => $row['grupo'],
             'local' => $row['local'],
+            'responsable' => $row['responsable'] ?? null,
             'hora_inicio' => $horaInicio,
             'hora_fin' => $horaFin,
             'diasActividad' => $dayKeys,

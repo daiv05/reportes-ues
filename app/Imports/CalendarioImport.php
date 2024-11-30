@@ -110,6 +110,7 @@ class CalendarioImport implements ToModel
             'evaluacion' => $row[6] ?? null,
             'modalidad' => $modalidad,
             'cantidad_estudiantes' => $row[8] ?? null,
+            'responsable' => $row[10] ?? null,
             'comentarios' => $row[9] ?? '',
             'horario' => $row[11] ?? null,
             'hora_inicio' => $horario[0] ?? null,

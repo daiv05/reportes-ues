@@ -260,7 +260,7 @@
                                             <x-forms.field
                                                 label="Responsable"
                                                 name="responsable[]"
-                                                :value="old('responsable.' . $loop->index)"
+                                                :value="old('responsable.' . $loop->index, $row['responsable'])"
                                                 :error="$errors->get('responsable.' . $loop->index)"
                                             />
                                         </div>
@@ -429,7 +429,7 @@
                                             <x-forms.field
                                                 label="Responsable"
                                                 name="responsable[]"
-                                                :value="old('responsable.' . $loop->index)"
+                                                :value="old('responsable.' . $loop->index, $row['responsable'])"
                                                 :error="$errors->get('responsable.' . $loop->index)"
                                             />
                                         </div>
