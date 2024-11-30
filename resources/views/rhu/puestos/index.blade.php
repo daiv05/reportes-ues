@@ -18,29 +18,31 @@
         </div>
     </x-slot>
     <x-container>
-        <x-table.base :headers="$headers">
-            @foreach ($puestos as $puesto)
-                <x-table.tr>
-                    <x-table.td>
-                        {{ $puesto->nombre }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $puesto->entidad->nombre }}
-                    </x-table.td>
-                    <x-table.td>
-                        <x-status.is-active :active="$puesto->activo" />
-                    </x-table.td>
-                    <x-table.td>
-                        <a href="#"
-                            class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                            data-id="{{ $puesto->id }}" data-nombre="{{ $puesto->nombre }}"
-                            data-entidad="{{ $puesto->id_entidad }}" data-activo="{{ $puesto->activo }}">
-                            <x-heroicon-o-pencil class="h-5 w-5" />
-                        </a>
-                    </x-table.td>
-                </x-table.tr>
-            @endforeach
-        </x-table.base>
+        <div class="overflow-x-auto">
+            <x-table.base :headers="$headers">
+                @foreach ($puestos as $puesto)
+                    <x-table.tr>
+                        <x-table.td>
+                            {{ $puesto->nombre }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $puesto->entidad->nombre }}
+                        </x-table.td>
+                        <x-table.td>
+                            <x-status.is-active :active="$puesto->activo" />
+                        </x-table.td>
+                        <x-table.td>
+                            <a href="#"
+                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                data-id="{{ $puesto->id }}" data-nombre="{{ $puesto->nombre }}"
+                                data-entidad="{{ $puesto->id_entidad }}" data-activo="{{ $puesto->activo }}">
+                                <x-heroicon-o-pencil class="h-5 w-5" />
+                            </a>
+                        </x-table.td>
+                    </x-table.tr>
+                @endforeach
+            </x-table.base>
+        </div>
         <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $puestos->links() }}
@@ -59,18 +61,18 @@
                 <x-forms.row :columns="1">
                     <div>
                         <x-forms.select label="Entidad" id="id_entidad" name="id_entidad" :options="$entidades->pluck('nombre', 'id')->toArray()"
-                            :value="old('id_entidad')" :error="$errors->get('id_entidad')" required/>
+                            :value="old('id_entidad')" :error="$errors->get('id_entidad')" required />
                         <div id="entidad-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')"
-                            :error="$errors->get('nombre')" required/>
+                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')" :error="$errors->get('nombre')"
+                            required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
 
                     <div>
                         <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
-                            :error="$errors->get('activo')" required/>
+                            :error="$errors->get('activo')" required />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>

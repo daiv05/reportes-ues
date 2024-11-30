@@ -11,14 +11,14 @@
         <x-header.simple titulo="Gestión de Roles" />
     </x-slot>
 
-    <div>
+    <x-container>
         <div class="p-6">
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button" id="add-button">
                 Añadir Rol
             </x-forms.primary-button>
         </div>
-        <div class="mx-auto mb-8">
+        <div class="overflow-x-auto mb-8">
             <x-table.base :headers="$headers">
                 @foreach ($roles as $rol)
                     <x-table.tr>
@@ -39,12 +39,12 @@
                     </x-table.tr>
                 @endforeach
             </x-table.base>
-            <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
-                aria-label="Table navigation">
-                {{ $roles->links() }}
-            </nav>
         </div>
-    </div>
+        <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
+            aria-label="Table navigation">
+            {{ $roles->links() }}
+        </nav>
+    </x-container>
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
@@ -56,13 +56,14 @@
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.field id="name" label="Nombre" name="name" type="text" :value="old('nombre')" required/>
+                        <x-forms.field id="name" label="Nombre" name="name" type="text" :value="old('nombre')"
+                            required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']"
-                            :value="old('activo', '1')" required/>
-                            <div id="estado-error" class="text-sm text-red-500"></div>
+                        <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
+                            required />
+                        <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
             </form>

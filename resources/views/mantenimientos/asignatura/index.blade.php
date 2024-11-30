@@ -18,28 +18,30 @@
         </div>
     </x-slot>
     <x-container>
-        <x-table.base :headers="$headers">
-            @foreach ($asignaturas as $asignatura)
-                <x-table.tr>
-                    <x-table.td>
-                        {{ $asignatura->nombre }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $asignatura->escuela->nombre }}
-                    </x-table.td>
-                    <x-table.td>
-                        <x-status.is-active :active="$asignatura->activo" />
-                    </x-table.td>
-                    <x-table.td>
-                        <a href="#"
-                            class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                            data-id="{{ $asignatura->id }}" data-nombre="{{ $asignatura->nombre }}"
-                            data-escuela="{{ $asignatura->escuela->id }}" data-activo="{{ $asignatura->activo }}">
-                            <x-heroicon-o-pencil class="h-5 w-5" />
-                    </x-table.td>
-                </x-table.tr>
-            @endforeach
-        </x-table.base>
+        <div class="overflow-x-auto">
+            <x-table.base :headers="$headers">
+                @foreach ($asignaturas as $asignatura)
+                    <x-table.tr>
+                        <x-table.td>
+                            {{ $asignatura->nombre }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $asignatura->escuela->nombre }}
+                        </x-table.td>
+                        <x-table.td>
+                            <x-status.is-active :active="$asignatura->activo" />
+                        </x-table.td>
+                        <x-table.td>
+                            <a href="#"
+                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                data-id="{{ $asignatura->id }}" data-nombre="{{ $asignatura->nombre }}"
+                                data-escuela="{{ $asignatura->escuela->id }}" data-activo="{{ $asignatura->activo }}">
+                                <x-heroicon-o-pencil class="h-5 w-5" />
+                        </x-table.td>
+                    </x-table.tr>
+                @endforeach
+            </x-table.base>
+        </div>
         <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $asignaturas->links() }}

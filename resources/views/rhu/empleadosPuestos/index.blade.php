@@ -10,14 +10,11 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <x-header.main
-            tituloMenor="Gestión de"
-            tituloMayor="PUESTOS DE LOS EMPLEADOS"
-            subtitulo="Gestiona de los puestos asignados a los empleados de la universidad"
-        >
+        <x-header.main tituloMenor="Gestión de" tituloMayor="PUESTOS DE LOS EMPLEADOS"
+            subtitulo="Gestiona de los puestos asignados a los empleados de la universidad">
             <x-slot name="acciones">
                 <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
-                type="button" id="add-button">
+                    type="button" id="add-button">
                     Asignar puesto
                 </x-forms.primary-button>
             </x-slot>
@@ -26,66 +23,73 @@
 
     <x-container>
         <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0">
-            <form action="{{ route('empleadosPuestos.index') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4">
+            <form action="{{ route('empleadosPuestos.index') }}" method="GET"
+                class="flex-row flex flex-wrap items-center space-x-8 mt-4">
                 <div class="flex md:w-1/2 gap-4">
                     <x-forms.row :columns="2">
-                        <x-forms.select label="Entidad" id="entidad-filtro" name="entidad-filtro" :options="$entidades" :value="request('entidad-filtro')" onchange="filtrarPuestosFiltro()" />
-                        <x-forms.select label="Puesto" id="puesto-filtro" name="puesto-filtro" :options="$puestos[request('entidad-filtro')] ?? []" :value="request('puesto-filtro')" />
+                        <x-forms.select label="Entidad" id="entidad-filtro" name="entidad-filtro" :options="$entidades"
+                            :value="request('entidad-filtro')" onchange="filtrarPuestosFiltro()" />
+                        <x-forms.select label="Puesto" id="puesto-filtro" name="puesto-filtro" :options="$puestos[request('entidad-filtro')] ?? []"
+                            :value="request('puesto-filtro')" />
                     </x-forms.row>
                 </div>
                 <button type="submit"
-                        class="align-middle h-fit rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    class="align-middle h-fit rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="h-4 w-4">
+                        stroke="currentColor" class="h-4 w-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
                 </button>
 
                 <button type="reset"
-                        class="align-middle h-fit rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                        onclick="window.location.href='{{ route('empleadosPuestos.index') }}';">
+                    class="align-middle h-fit rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    onclick="window.location.href='{{ route('empleadosPuestos.index') }}';">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="h-4 w-4">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M6 18L18 6M6 6l12 12"/>
+                        stroke="currentColor" class="h-4 w-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </form>
         </div>
-        <div class="mx-auto mb-6 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
-            <x-table.base :headers="$headers">
-                @foreach ($empleadosPuestos as $empPuesto)
-                    <x-table.tr>
-                        <x-table.td>{{ $empPuesto->usuario->persona->nombre. ' '. $empPuesto->usuario->persona->apellido }}</x-table.td>
-                        <x-table.td>{{ $empPuesto->puesto->entidad->nombre }}</x-table.td>
-                        <x-table.td>{{ $empPuesto->puesto->nombre }}</x-table.td>
-                        <x-table.td>
-                            <x-status.is-active :active="$empPuesto->activo" />
-                        </x-table.td>
-                        <x-table.td>
-                            <div class="flex flex-wrap justify-center gap-2">
-                                <a href="#"
-                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                    data-id="{{ $empPuesto->id }}" data-empleado="{{ $empPuesto->usuario->id }}"
-                                    data-entidad="{{ $empPuesto->puesto->id_entidad }}" data-puesto="{{ $empPuesto->id_puesto }}" data-estado="{{ $empPuesto->activo }}">
-                                    <x-heroicon-o-pencil class="h-5 w-5" />
-                                </a>
+        <div>
+            <div class="overflow-x-auto">
+                <x-table.base :headers="$headers">
+                    @foreach ($empleadosPuestos as $empPuesto)
+                        <x-table.tr>
+                            <x-table.td>{{ $empPuesto->usuario->persona->nombre . ' ' . $empPuesto->usuario->persona->apellido }}</x-table.td>
+                            <x-table.td>{{ $empPuesto->puesto->entidad->nombre }}</x-table.td>
+                            <x-table.td>{{ $empPuesto->puesto->nombre }}</x-table.td>
+                            <x-table.td>
+                                <x-status.is-active :active="$empPuesto->activo" />
+                            </x-table.td>
+                            <x-table.td>
+                                <div class="flex flex-wrap justify-center gap-2">
+                                    <a href="#"
+                                        class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                        data-id="{{ $empPuesto->id }}" data-empleado="{{ $empPuesto->usuario->id }}"
+                                        data-entidad="{{ $empPuesto->puesto->id_entidad }}"
+                                        data-puesto="{{ $empPuesto->id_puesto }}"
+                                        data-estado="{{ $empPuesto->activo }}">
+                                        <x-heroicon-o-pencil class="h-5 w-5" />
+                                    </a>
 
-                                <a href="{{ url('rhu/empleados-puestos/' . $empPuesto->id) }}"
-                                    class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
-                                    <x-heroicon-o-eye class="h-5 w-5" />
-                                </a>
-                            </div>
-                        </x-table.td>
-                    </x-table.tr>
-                @endforeach
-            </x-table.base>
-            <nav class="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
+                                    <a href="{{ url('rhu/empleados-puestos/' . $empPuesto->id) }}"
+                                        class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
+                                        <x-heroicon-o-eye class="h-5 w-5" />
+                                    </a>
+                                </div>
+                            </x-table.td>
+                        </x-table.tr>
+                    @endforeach
+                </x-table.base>
+            </div>
+            <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
                 aria-label="Table navigation">
                 {{ $empleadosPuestos->links() }}
             </nav>
         </div>
+
     </x-container>
 
     <x-form-modal id="static-modal">
@@ -98,24 +102,28 @@
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.searchable-select id="empleado" label="Empleado" name="empleado" :options="$empleados" onchange="filtrarPuestos()" searchable required />
+                        <x-forms.searchable-select id="empleado" label="Empleado" name="empleado" :options="$empleados"
+                            onchange="filtrarPuestos()" searchable required />
                         <div id="empleado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
                 <div class="mb-4">
                     <x-forms.row :columns="2">
                         <div>
-                            <x-forms.select label="Entidad" id="entidad" name="entidad" :options="$entidades" :value="old('entidad')" onchange="filtrarPuestos()" required />
+                            <x-forms.select label="Entidad" id="entidad" name="entidad" :options="$entidades"
+                                :value="old('entidad')" onchange="filtrarPuestos()" required />
                             <div id="entidad-error" class="mb-4 text-sm text-red-500"></div>
                         </div>
                         <div>
-                            <x-forms.select label="Puesto" id="puesto" name="puesto" :options="$puestos[old('entidad')] ?? []" :value="old('puesto')" :error="$errors->get('puesto')" required />
+                            <x-forms.select label="Puesto" id="puesto" name="puesto" :options="$puestos[old('entidad')] ?? []"
+                                :value="old('puesto')" :error="$errors->get('puesto')" required />
                             <div id="puesto-error" class="mb-4 text-sm text-red-500"></div>
                         </div>
                     </x-forms.row>
                 </div>
                 <div class="mb-4">
-                    <x-forms.select label="Estado" id="estado" name="estado" :options="$estados" :selected="1" :error="$errors->get('estado')" required />
+                    <x-forms.select label="Estado" id="estado" name="estado" :options="$estados" :selected="1"
+                        :error="$errors->get('estado')" required />
                     <div id="estado-error" class="mb-4 text-sm text-red-500"></div>
                     @error('estado')
                         <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
@@ -178,10 +186,11 @@
         button.addEventListener('click', function() {
             updateTitle('Asignar puesto');
             document.dispatchEvent(new Event('modal:open'));
-            document.getElementById('asignacion-form').action = '{{ route('empleadosPuestos.store') }}';
+            document.getElementById('asignacion-form').action =
+            '{{ route('empleadosPuestos.store') }}';
             document.getElementById('asignacion-form').method = 'POST';
             method = document.querySelector('[name="_method"]')
-            if(method) document.getElementById('asignacion-form').removeChild(method);
+            if (method) document.getElementById('asignacion-form').removeChild(method);
             document.getElementById('search-empleado').disabled = false;
             document.getElementById('search-empleado').classList.remove('!bg-gray-300');
             document.getElementById('search-empleado').value = null;

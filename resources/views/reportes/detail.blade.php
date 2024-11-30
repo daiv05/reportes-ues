@@ -83,7 +83,7 @@
                                 <x-heroicon-o-calendar-days class="w-6 h-6"/>
                                 Actividad reportada
                             </div>
-                            <div class="ml-12 mt-2 overflow-auto">
+                            <div class="ml-12 mt-2 overflow-x-auto">
                                 <div>
                                     <table class="text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
                                         <thead
@@ -243,7 +243,7 @@
                                 'messages' => $errors->get('id_empleados_puestos'),
                             ])
                         @else
-                            <div class="mt-6 bg-white shadow overflow-auto sm:rounded-lg text-center">
+                            <div class="mt-6 bg-white shadow overflow-x-auto sm:rounded-lg text-center">
                                 <div class="border-gray-200">
                                     <x-table.base :headers="$headersSubalternos">
                                         @foreach ($reporte->empleadosAcciones as $index => $empleadoAccion)
@@ -280,7 +280,7 @@
                                 'messages' => $errors->get('id_empleado_supervisor'),
                             ])
                         @else
-                            <div class="overflow-auto">
+                            <div class="overflow-x-auto">
                                 <div class="border-gray-200">
                                     <x-table.base :headers="$headersSupervisor">
                                         <x-table.tr>
