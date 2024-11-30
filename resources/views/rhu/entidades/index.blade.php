@@ -20,34 +20,36 @@
                 Añadir
             </x-forms.primary-button>
         </div>
-        <x-table.base :headers="$headers">
-            @foreach ($entidades as $entidad)
-                <x-table.tr>
-                    <x-table.td>
-                        {{ $entidad->nombre }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $entidad->descripcion }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{-- Mostrar el entidad padre o "Raíz" si es null --}}
-                        {{ $entidad->id_entidad ? $entidad->padre->nombre : '-' }}
-                    </x-table.td>
-                    <x-table.td>
-                        <x-status.is-active :active="$entidad->activo" />
-                    </x-table.td>
-                    <x-table.td justify="center">
-                        <a href="#"
-                            class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                            data-id="{{ $entidad->id }}" data-nombre="{{ $entidad->nombre }}"
-                            data-descripcion="{{ $entidad->descripcion }}" data-estado="{{ $entidad->activo }}"
-                            data-id_entidad="{{ $entidad->id_entidad }}">
-                            <x-heroicon-o-pencil class="h-5 w-5" />
-                        </a>
-                    </x-table.td>
-                </x-table.tr>
-            @endforeach
-        </x-table.base>
+        <div class="overflow-x-auto">
+            <x-table.base :headers="$headers">
+                @foreach ($entidades as $entidad)
+                    <x-table.tr>
+                        <x-table.td>
+                            {{ $entidad->nombre }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $entidad->descripcion }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{-- Mostrar el entidad padre o "Raíz" si es null --}}
+                            {{ $entidad->id_entidad ? $entidad->padre->nombre : '-' }}
+                        </x-table.td>
+                        <x-table.td>
+                            <x-status.is-active :active="$entidad->activo" />
+                        </x-table.td>
+                        <x-table.td justify="center">
+                            <a href="#"
+                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                data-id="{{ $entidad->id }}" data-nombre="{{ $entidad->nombre }}"
+                                data-descripcion="{{ $entidad->descripcion }}" data-estado="{{ $entidad->activo }}"
+                                data-id_entidad="{{ $entidad->id_entidad }}">
+                                <x-heroicon-o-pencil class="h-5 w-5" />
+                            </a>
+                        </x-table.td>
+                    </x-table.tr>
+                @endforeach
+            </x-table.base>
+        </div>
         <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $entidades->links() }}

@@ -19,23 +19,25 @@
     </x-slot>
 
     <x-container>
-        <x-table.base :headers="$headers">
-            @foreach ($escuelas as $escuela)
-                <x-table.tr>
-                    <x-table.td>{{ $escuela->nombre }}</x-table.td>
-                    <x-table.td>{{ $escuela->facultades->nombre }}</x-table.td>
-                    <x-table.td justify="center"><x-status.is-active :active="$escuela->activo" /></x-table.td>
-                    <x-table.td justify="center">
-                        <a href="#"
-                            class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                            data-id="{{ $escuela->id }}" data-nombre="{{ $escuela->nombre }}"
-                            data-facultad="{{ $escuela->facultades->id }}" data-estado="{{ $escuela->activo }}">
-                            <x-heroicon-o-pencil class="h-5 w-5" />
-                        </a>
-                    </x-table.td>
-                </x-table.tr>
-            @endforeach
-        </x-table.base>
+        <div class="overflow-x-auto">
+            <x-table.base :headers="$headers">
+                @foreach ($escuelas as $escuela)
+                    <x-table.tr>
+                        <x-table.td>{{ $escuela->nombre }}</x-table.td>
+                        <x-table.td>{{ $escuela->facultades->nombre }}</x-table.td>
+                        <x-table.td justify="center"><x-status.is-active :active="$escuela->activo" /></x-table.td>
+                        <x-table.td justify="center">
+                            <a href="#"
+                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                data-id="{{ $escuela->id }}" data-nombre="{{ $escuela->nombre }}"
+                                data-facultad="{{ $escuela->facultades->id }}" data-estado="{{ $escuela->activo }}">
+                                <x-heroicon-o-pencil class="h-5 w-5" />
+                            </a>
+                        </x-table.td>
+                    </x-table.tr>
+                @endforeach
+            </x-table.base>
+        </div>
         <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
             aria-label="Table navigation">
             {{ $escuelas->links() }}
@@ -59,14 +61,15 @@
                 </x-forms.row>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.field label="Nombre" name="nombre" type="text" :value="old('name')" :error="$errors->get('name')" required />
+                        <x-forms.field label="Nombre" name="nombre" type="text" :value="old('name')" :error="$errors->get('name')"
+                            required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.select label="Estado" id="activo" name="activo" :options="[1 => 'ACTIVO', 0 => 'INACTIVO']" :selected="1"
-                            :error="$errors->get('activo')" required />
+                        <x-forms.select label="Estado" id="activo" name="activo" :options="[1 => 'ACTIVO', 0 => 'INACTIVO']"
+                            :selected="1" :error="$errors->get('activo')" required />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
@@ -119,7 +122,7 @@
             document.getElementById('add-escuela-form').action = '{{ route('escuela.store') }}';
             document.getElementById('add-escuela-form').method = 'POST';
             method = document.querySelector('[name="_method"]')
-            if(method) document.getElementById('add-escuela-form').removeChild(method);
+            if (method) document.getElementById('add-escuela-form').removeChild(method);
             document.getElementById('add-escuela-form').reset();
             document.getElementById('general-errors').innerHTML = '';
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
@@ -149,6 +152,7 @@
             document.querySelector('[data-modal-target="static-modal"]').click();
         });
     });
+
     function updateTitle(title) {
         document.getElementById('modal-title').textContent = title;
     }
