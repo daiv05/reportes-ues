@@ -1,5 +1,5 @@
 <x-modal name="actualizar-seguimiento-modal" :show="false" maxWidth="xl">
-    <form method="POST" action="{{ route('reportes.actualizarEstado', ['id' => $reporte->id]) }}"
+    <form id="updateForm" method="POST" action="{{ route('reportes.actualizarEstado', ['id' => $reporte->id]) }}"
           enctype="multipart/form-data">
         @csrf
         <div class="p-6 flex flex-col items-center w-full">
@@ -16,6 +16,7 @@
                         <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
                     @endforeach
                 </select>
+                <span id="id_estado_error" class="text-red-500 text-sm"></span>
                 @include('components.forms.input-error', ['messages' => $errors->get('id_estado')])
             </div>
             <div class="mt-4 w-full">
@@ -23,6 +24,7 @@
                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Comentarios</label>
                 <textarea id="comentarios" name="comentario" rows="3"
                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                <span id="comentarios_error" class="text-red-500 text-sm"></span>
                 @include('components.forms.input-error', ['messages' => $errors->get('comentario')])
             </div>
             <div class="mt-4 w-full">
@@ -30,6 +32,7 @@
                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Evidencia</label>
                 <input type="file" id="evidencia" name="evidencia"
                        class="mt-1 block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:border-indigo-500 focus:ring-indigo-500">
+                <span id="evidencia_error" class="text-red-500 text-sm"></span>
                 @include('components.forms.input-error', ['messages' => $errors->get('evidencia')])
             </div>
             <div class="mt-4 w-full">
@@ -43,7 +46,7 @@
                           "searchWrapperClasses": "bg-white p-2 -mx-1 sticky top-0 dark:bg-neutral-900",
                           "placeholder": "Seleccione los recursos",
                           "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
-                          "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-neutral-600",
+                          "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700",
                           "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
                           "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
                           "optionTemplate": "<div class=\"flex items-center\"><div class=\"me-2\" data-icon></div><div><div class=\"hs-selected:font-semibold text-sm text-gray-800 \" data-title></div></div><div class=\"ms-auto\"><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-4 text-blue-600\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z\"/></svg></span></div></div>",
@@ -67,7 +70,8 @@
                     <!-- Filas dinámicas se añadirán aquí -->
                     </tbody>
                 </table>
-                @include('components.forms.input-error', ['messages' => $errors->get('recursos')])
+                <span id="recursos_utilizados_error" class="text-red-500 text-sm"></span>
+                @include('components.forms.input-error', ['messages' => $errors->get('recursos_utilizados')])
 
                 <script>
                     function updateTable() {
@@ -130,3 +134,28 @@
         </div>
     </form>
 </x-modal>
+
+<script>
+    document.getElementById('updateForm').addEventListener('submit', function(event) {
+        let valid = true;
+
+        document.getElementById('id_estado_error').textContent = '';
+        document.getElementById('comentarios_error').textContent = '';
+
+        const idEstado = document.getElementById('id_estado');
+        if (idEstado.value === '') {
+            document.getElementById('id_estado_error').textContent = 'Seleccione un estado.';
+            valid = false;
+        }
+
+        const comentarios = document.getElementById('comentarios');
+        if (comentarios.value.trim() === '') {
+            document.getElementById('comentarios_error').textContent = 'Ingrese un comentario.';
+            valid = false;
+        }
+
+        if (!valid) {
+            event.preventDefault();
+        }
+    });
+</script>
