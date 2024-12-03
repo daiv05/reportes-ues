@@ -94,9 +94,9 @@
                                 const recurso = {
                                     id: recursoId,
                                     nombre: recursoNombre,
-                                    unidad: unidadesMedida[0].id, // Default unit
-                                    cantidad: 1, // Default quantity
-                                    fondo: fondos[0].id // Default fondo
+                                    unidad: unidadesMedida[0].id,
+                                    cantidad: 1,
+                                    fondo: fondos[0].id
                                 };
 
                                 recursosSeleccionados.push(recurso);
