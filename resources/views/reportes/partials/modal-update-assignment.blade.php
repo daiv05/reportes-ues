@@ -85,6 +85,7 @@
                         const unidadesMedida = @json($unidades_medida);
                         const fondos = @json($fondos);
 
+
                         document.getElementById('recursos_utilizados').addEventListener('change', function () {
                             const selectedOption = this.options[this.selectedIndex];
                             const recursoId = selectedOption.value;
