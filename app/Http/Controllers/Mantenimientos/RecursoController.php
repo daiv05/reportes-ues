@@ -13,11 +13,11 @@ class RecursoController extends Controller
     public function index(Request $request): View
     {
         $query = Recurso::query();
-        if ($request->has('nombre')) {
-            $filtro = $request->input('nombre');
+        if ($request->has('nombre-filter')) {
+            $filtro = $request->input('nombre-filter');
             $query->where('nombre', 'like', '%' . $filtro . '%');
         }
-        $recursos = $query->paginate(10);
+        $recursos = $query->paginate(10)->appends($request->query());
         return view('mantenimientos.recursos.index', compact('recursos'));
     }
 

@@ -19,6 +19,7 @@ class EmpleadoPuestoController extends Controller
 
         $entidadFiltro = $request->get('entidad-filtro');
         $puestoFiltro = $request->get('puesto-filtro');
+        $empleadoFiltro = $request->get('empleado-filtro');
 
         $empleadosPuestos = EmpleadoPuesto::with('puesto.entidad', 'usuario', 'usuario.persona')
             ->when($entidadFiltro, function ($query, $entidadFiltro) {
@@ -28,6 +29,11 @@ class EmpleadoPuestoController extends Controller
             })
             ->when($puestoFiltro, function ($query, $puestoFiltro) {
                 return $query->where('id_puesto', '=', $puestoFiltro);
+            })
+            ->when($empleadoFiltro, function ($query, $empleadoFiltro) {
+                return $query->whereHas('usuario.persona', function ($query) use ($empleadoFiltro) {
+                    $query->whereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ["%{$empleadoFiltro}%"]);
+                });
             })
             ->paginate(10);
         $entidades = [];

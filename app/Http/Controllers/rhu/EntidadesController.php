@@ -13,8 +13,13 @@ class EntidadesController extends Controller
 {
     public function index(): View
     {
+        $nombreFilter = request('nombre-filter');
+
         // entidades paginados
-        $entidades = Entidades::paginate(10);
+        $entidades = Entidades::when($nombreFilter, function ($query, $nombreFilter) {
+                return $query->where('nombre', 'like', "%$nombreFilter%");
+            })
+            ->paginate(10)->appends(request()->query());
 
         // Lista jerárquica de entidades para el select
         $entidadesLista = $this->getHierarchicalEntidades();
