@@ -316,7 +316,7 @@ class ReporteController extends Controller
         $requestRecursos = $request->input('recursos');
         if (!empty($requestRecursos)) {
             $request->merge([
-                'recursos' => json_decode($requestRecursos)
+                'recursos' => json_decode($requestRecursos, true)
             ]);
         } else {
             $request->merge([
@@ -432,11 +432,12 @@ class ReporteController extends Controller
                 if (isset($request->recursos)) {
                     foreach ($request->input('recursos', []) as $recurso) {
                         RecursoReporte::create([
-                            'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+                            'id_historial_acciones_reporte' => $newHistorialAccionesReportes->id,
                             'cantidad' => $recurso['cantidad'],
                             'id_fondo' => $recurso['id_fondo'],
                             'id_recurso' => $recurso['id_recurso'],
                             'id_unidad_medida' => $recurso['id_unidad_medida'],
+                            'comentario' => $request->get('comentario', ''),
                         ]);
                     }
                 }
