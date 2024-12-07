@@ -30,10 +30,12 @@
     <div class="mt-12 mb-8">
         @if ($reporte->estado_ultimo_historial?->nombre === 'FINALIZADO')
             <div class="flex justify-center">
-                <a href="{{ route('reportes.verInforme', ['id' => $reporte->id]) }}"
-                   class="bg-green-500 text-white text-sm py-2 px-10 rounded hover:bg-green-700 cursor-pointer">
-                    Ver informe del reporte
-                </a>
+                @canany(['REPORTES_REVISION_SOLUCION'])
+                    <a href="{{ route('reportes.verInforme', ['id' => $reporte->id]) }}"
+                       class="bg-green-500 text-white text-sm py-2 px-10 rounded hover:bg-green-700 cursor-pointer">
+                        Ver informe del reporte
+                    </a>
+                @endcanany
             </div>
         @endif
         <div class="flex flex-col lg:flex-row w-full">
@@ -174,11 +176,13 @@
                 <x-reportes.detail.header title="Asignación">
                     @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
                         <div>
-                            <button id="marcarNoProcede"
-                                    class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500" x-data
-                                    x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')">
-                                No Procede
-                            </button>
+                            @canany(['REPORTES_ACTUALIZAR_ESTADO'])
+                                <button id="marcarNoProcede"
+                                        class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500" x-data
+                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')">
+                                    No Procede
+                                </button>
+                            @endcanany
                         </div>
                         @include('reportes.partials.modal-not-valid-report')
                     @endif
@@ -316,10 +320,12 @@
 
                 @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
                     <div class="flex flex-col lg:flex-row w-full justify-center mt-8">
-                        <button id="enviarAsignacion"
-                                class="bg-escarlata-ues text-white text-sm py-2 px-4 rounded hover:bg-red-700">
-                            Enviar Asignación
-                        </button>
+                        @canany(['REPORTES_ACTUALIZAR_ESTADO' , 'REPORTES_ASIGNAR'])
+                            <button id="enviarAsignacion"
+                                    class="bg-escarlata-ues text-white text-sm py-2 px-4 rounded hover:bg-red-700">
+                                Enviar Asignación
+                            </button>
+                        @endcanany
                     </div>
                 @endif
             </form>
@@ -333,12 +339,14 @@
                         {{-- Boton actualizar estado --}}
                         @if ($updateAvailable)
                             <div>
-                                <button id="abrirActualizarSeguimiento"
-                                        class="bg-escarlata-ues text-white text-sm py-2 mb-4 px-4 rounded hover:bg-red-500 flex items-center"
-                                        x-data x-on:click="$dispatch('open-modal', 'actualizar-seguimiento-modal')">
-                                    <p class="mr-2">Actualizar</p>
-                                    <x-heroicon-o-bell-alert class="h-6 w-6"/>
-                                </button>
+                                @canany(['REPORTES_ACTUALIZAR_ESTADO'])
+                                    <button id="abrirActualizarSeguimiento"
+                                            class="bg-escarlata-ues text-white text-sm py-2 mb-4 px-4 rounded hover:bg-red-500 flex items-center"
+                                            x-data x-on:click="$dispatch('open-modal', 'actualizar-seguimiento-modal')">
+                                        <p class="mr-2">Actualizar</p>
+                                        <x-heroicon-o-bell-alert class="h-6 w-6"/>
+                                    </button>
+                                @endcanany
                             </div>
                         @endif
                         {{-- Modal actualizar seguimiento --}}
