@@ -22,36 +22,48 @@
     </x-slot>
 
     <x-container>
-        <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0">
-            <form action="{{ route('empleadosPuestos.index') }}" method="GET"
-                class="flex-row flex flex-wrap items-center space-x-8 mt-4">
-                <div class="flex md:w-1/2 gap-4">
-                    <x-forms.row :columns="2">
+
+        {{-- Filtros --}}
+        <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 w-full">
+            <form action="{{ route('empleadosPuestos.index') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
+                <div class="flex w-full flex-col md:w-5/6 px-4 md:px-0">
+                    <x-forms.row :columns="3">
+                        <x-forms.field
+                            id="empleado-filtro"
+                            label="Nombre de empleado"
+                            name="empleado-filtro"
+                            :value="request('empleado-filtro')"
+                        />
                         <x-forms.select label="Entidad" id="entidad-filtro" name="entidad-filtro" :options="$entidades"
-                            :value="request('entidad-filtro')" onchange="filtrarPuestosFiltro()" />
+                            :selected="request('entidad-filtro')" onchange="filtrarPuestosFiltro()" />
                         <x-forms.select label="Puesto" id="puesto-filtro" name="puesto-filtro" :options="$puestos[request('entidad-filtro')] ?? []"
-                            :value="request('puesto-filtro')" />
+                            :selected="request('puesto-filtro')" />
                     </x-forms.row>
                 </div>
-                <button type="submit"
-                    class="align-middle h-fit rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-4 w-4">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
-                </button>
+                <div class="flex flex-wrap space-x-4">
+                    <button type="submit"
+                            class="align-middle rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="h-4 w-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                        </svg>
+                    </button>
 
-                <button type="reset"
-                    class="align-middle h-fit rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                    onclick="window.location.href='{{ route('empleadosPuestos.index') }}';">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-4 w-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                    <button type="reset"
+                            class="align-middle rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                            onclick="window.location.href='{{ route('empleadosPuestos.index') }}';">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="h-4 w-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
             </form>
         </div>
+
+        {{-- TABLA --}}
         <div>
             <div class="overflow-x-auto">
                 <x-table.base :headers="$headers">

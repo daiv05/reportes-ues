@@ -15,10 +15,40 @@ use OwenIt\Auditing\Models\Audit;
 
 class UsuarioController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $usuarios = User::with('roles')->paginate(10);
-        return view('seguridad.usuarios.index', compact('usuarios'));
+        $nombreFilter = $request->get('nombre-filter');
+        $emailFilter = $request->get('email-filter');
+        $rolFilter = $request->get('role-filter');
+
+        $usuarios = User::with('roles', 'persona')
+            ->when($nombreFilter, function ($query, $nombreFilter) {
+                return $query->whereHas('persona', function ($query) use ($nombreFilter) {
+                    $query->whereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ["%{$nombreFilter}%"]);
+                });
+            })
+            ->when($emailFilter, function ($query, $emailFilter) {
+                return $query->where('email', 'LIKE', "%{$emailFilter}%");
+            })
+            ->when($rolFilter, function ($query, $rolFilter) {
+                return $query->whereHas('roles', function ($query) use ($rolFilter) {
+                    $query->where('id', '=', $rolFilter);
+                });
+            })
+            ->paginate(10);
+
+        $roles = Role::all();
+        $roles = $roles->map(
+            function ($rol) {
+                return [
+                    'id' => $rol->id,
+                    'nombre' => str_replace('_', ' ', substr($rol->name, 5, strlen($rol->name))),
+                ];
+            }
+        );
+
+        $roles = $roles->pluck('nombre', 'id');
+        return view('seguridad.usuarios.index', compact('usuarios', 'roles'));
     }
     public function store(Request $request)
     {

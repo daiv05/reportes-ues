@@ -15,9 +15,13 @@ use Illuminate\View\View;
 
 class EscuelaController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $escuelas = Escuela::paginate(10);
+        $nombreFilter = $request->get('nombre-filter');
+
+        $escuelas = Escuela::when($nombreFilter, function ($query, $nombreFilter) {
+            return $query->where('nombre', 'like', "%$nombreFilter%");
+        })->paginate(10)->appends($request->query());
         $facultades = Facultades::all();
         return view('mantenimientos.escuela.index', compact('escuelas', 'facultades'));
     }
