@@ -60,6 +60,11 @@ class Reporte extends Model implements Auditable
         return $this->hasMany(EmpleadoAccion::class, 'id_reporte');
     }
 
+    public function reportesBienes(): HasMany
+    {
+        return $this->hasMany(ReporteBien::class, 'id_reporte');
+    }
+
     public function getEstadoUltimoHistorialAttribute()
     {
         return $this->accionesReporte()
