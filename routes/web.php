@@ -15,10 +15,12 @@ use App\Http\Controllers\Seguridad\RoleController;
 use App\Http\Controllers\Seguridad\UsuarioController;
 use App\Http\Controllers\Mantenimientos\CicloController;
 use App\Http\Controllers\Mantenimientos\RecursoController;
+use App\Http\Controllers\Mantenimientos\UnidadMedidaController;
 use App\Mail\EnvioMailable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Auditorias\UserAuditController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +130,12 @@ Route::middleware('auth')->group(function () {
             Route::put('/{id}', [CicloController::class, 'update'])->name('ciclos.update');
         });
 
+        Route::prefix('unidades-medida')->group(function () {
+            Route::get('/', [UnidadMedidaController::class, 'index'])->name('unidades-medida.index');
+            Route::post('/', [UnidadMedidaController::class, 'store'])->name('unidades-medida.store');
+            Route::put('{id}', [UnidadMedidaController::class, 'update'])->name('unidades-medida.update');
+        });
+
         //Recursos
         Route::resource('recursos', RecursoController::class)->except(['destroy']);
     });
@@ -181,6 +189,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/auditorias', [UserAuditController::class, 'index'])->name('general.index');
     Route::get('/auditorias/get-events', [UserAuditController::class, 'getEvents']); // Ruta AJAX
+
 
 });
 

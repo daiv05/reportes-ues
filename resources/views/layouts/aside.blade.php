@@ -154,6 +154,13 @@
                     'role' => 'ROLE_USUARIO_SUPER_ADMIN',
                     'permissions' => ['RECURSOS_VER'],
                 ],
+                [
+                    'to' => 'unidades-medida.index',
+                    'active' => request()->is('mantenimientos/unidades-medida'),
+                    'label' => 'Unidades de medida',
+                    'role' => 'ROLE_USUARIO_SUPER_ADMIN',
+                    'permissions' => ['RECURSOS_VER'],
+                ],
             ],
         ],
         [
