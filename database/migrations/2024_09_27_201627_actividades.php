@@ -17,6 +17,7 @@ return new class extends Migration
             $table->time('hora_fin')->nullable();
             $table->foreignId('id_modalidad')->constrained('modalidades');
             $table->foreignId('id_ciclo')->constrained('ciclos');
+            $table->string('responsable')->nullable();
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });

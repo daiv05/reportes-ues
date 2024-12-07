@@ -103,7 +103,7 @@
                 </form>
             </div>
             {{-- TABLA --}}
-            <div class="mx-auto mb-6 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
+            <div class="mx-auto mb-6 flex flex-col overflow-x-auto sm:rounded-lg">
                 <x-table.base :headers="$headers" id="table-content">
                     @if($eventos->isEmpty())
                         <x-table.td colspan="{{ count($headers) }}" justify="center">
@@ -141,7 +141,7 @@
                                         data-hora-inicio="{{ \Carbon\Carbon::parse($evento->actividad->hora_inicio)->format('H:i') }}" data-hora-fin="{{ \Carbon\Carbon::parse($evento->actividad->hora_fin)->format('H:i') }}"
                                         data-asistentes="{{ $evento->cantidad_asistentes }}" data-modalidad="{{ $evento->actividad->modalidad->id }}"
                                         data-descripcion="{{ $evento->descripcion }}" data-comentarios="{{ $evento->comentarios }}"
-                                        data-estado="{{ $evento->actividad->activo }}" data-responsable="Ing. Julio Martinez"
+                                        data-estado="{{ $evento->actividad->activo }}" data-responsable="{{ $evento->actividad->responsable }}"
                                     >
                                     <x-heroicon-o-pencil class="h-5 w-5" />
                                     </a>
@@ -155,13 +155,13 @@
                         </x-table.tr>
                     @endforeach
                 </x-table.base>
-                <nav
-                    class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
-                    aria-label="Table navigation"
-                >
-                    {{ $eventos->links() }}
-                </nav>
             </div>
+            <nav
+                class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row w-full"
+                aria-label="Table navigation"
+            >
+                {{ $eventos->links() }}
+            </nav>
         </div>
     </x-container>
 

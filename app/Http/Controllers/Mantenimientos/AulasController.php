@@ -13,9 +13,14 @@ use App\Http\Requests\Mantenimiento\UpdateAulaRequest;
 
 class AulasController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $aulas = Aulas::paginate(10);
+        $nombreFilter = request('nombre-filter');
+
+        $aulas = Aulas::when($nombreFilter, function ($query, $nombreFilter) {
+                return $query->where('nombre', 'like', "%$nombreFilter%");
+            })
+            ->paginate(10)->appends($request->query());
         $facultades = Facultades::all();
         return view('mantenimientos.aulas.index', compact('aulas', 'facultades'));
     }

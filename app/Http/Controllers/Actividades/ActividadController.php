@@ -140,6 +140,7 @@ class ActividadController extends Controller
                 $actividad->id_modalidad = $data['modalidad'][$key];
                 $actividad->hora_inicio = $data['hora_inicio'][$key];
                 $actividad->hora_fin = $data['hora_fin'][$key];
+                $actividad->responsable = $data['responsable'][$key];
                 $actividad->save();
 
                 $actividad->asignaturas()->attach($data['materia'][$key]);
@@ -196,6 +197,7 @@ class ActividadController extends Controller
                 $actividad->id_modalidad = $data['modalidad'][$key];
                 $actividad->hora_inicio = $data['hora_inicio'][$key];
                 $actividad->hora_fin = $data['hora_fin'][$key];
+                $actividad->responsable = $data['responsable'][$key];
                 $actividad->save();
 
                 if($data['materia'][$key]) {
@@ -294,6 +296,7 @@ class ActividadController extends Controller
             $actividad->hora_fin = $request->input('hora_fin');
             $actividad->id_modalidad = $request->input('modalidad');
             $actividad->activo = $request->input('estado');
+            $actividad->responsable = $request->input('responsable');
             $actividad->id_ciclo = $cicloActivo->id;
             $actividad->save();
 
@@ -345,6 +348,7 @@ class ActividadController extends Controller
             $actividad->hora_inicio = $request->input('hora_inicio');
             $actividad->hora_fin = $request->input('hora_fin');
             $actividad->id_modalidad = $request->input('modalidad');
+            $actividad->responsable = $request->input('responsable');
             $actividad->activo = $request->input('estado');
             $actividad->save();
 
@@ -419,6 +423,7 @@ class ActividadController extends Controller
             $actividad->hora_inicio = $request->input('hora_inicio');
             $actividad->hora_fin = $request->input('hora_fin');
             $actividad->id_modalidad = $request->input('modalidad');
+            $actividad->responsable = $request->input('responsable');
             $actividad->activo = $request->input('estado');
             $actividad->id_ciclo = $cicloActivo->id;
             $actividad->save();
@@ -475,6 +480,7 @@ class ActividadController extends Controller
             $actividad->hora_inicio = $request->input('hora_inicio');
             $actividad->hora_fin = $request->input('hora_fin');
             $actividad->id_modalidad = $request->input('modalidad');
+            $actividad->responsable = $request->input('responsable');
             $actividad->activo = $request->input('estado');
             $actividad->save();
 

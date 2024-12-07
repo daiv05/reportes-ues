@@ -5,7 +5,7 @@
                 class="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700"
             ></div>
             <div class="mb-2">
-                <x-status.chips :text="$historial->estado->nombre" class="mb-2" />
+                <x-status.chips :text="$historial->estado->nombre" class="mb-2"/>
             </div>
             <div class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                 {{ \Carbon\Carbon::parse($historial->fecha_actualizacion)->format('d/m/Y') . '  -  ' . \Carbon\Carbon::parse($historial->hora_actualizacion)->format('h:i A') }}
@@ -27,7 +27,7 @@
                     }"
                 >
                     Evidencia
-                    <x-heroicon-o-eye class=" ml-2 w-3 h-3" />
+                    <x-heroicon-o-eye class=" ml-2 w-3 h-3"/>
                 </button>
                 {{-- Modal mostrar evidencia --}}
                 <x-modal name="{{ 'evidencia-modal-' . $historial->id }}" :show="false" maxWidth="xl">
@@ -87,12 +87,14 @@
                 {{-- Modal mostrar evidencia --}}
                 <x-modal name="{{ 'recursos-modal-' . $historial->id }}" :show="false" maxWidth="xl">
                     <div class="flex w-full flex-col items-center p-6">
-                        <h2 class="text-lg font-medium text-escarlata-ues dark:text-gray-100">Listado de recursos utilizados</h2>
+                        <h2 class="text-lg font-medium text-escarlata-ues dark:text-gray-100">Listado de recursos
+                            utilizados</h2>
                         <div class="mt-4 w-full">
                             @php
                                 $headers = [
                                     ['text' => 'Nombre', 'align' => 'left'],
                                     ['text' => 'Cantidad', 'align' => 'left'],
+                                    ['text' => 'Unidad de Medida', 'align' => 'left'],
                                     ['text' => 'Fondo', 'align' => 'left'],
                                 ];
                             @endphp
@@ -103,6 +105,9 @@
                                         <x-table.td>{{ $recurso->recurso->nombre }}</x-table.td>
                                         <x-table.td>
                                             {{ $recurso->cantidad }}
+                                        </x-table.td>
+                                        <x-table.td>
+                                            {{ $recurso->unidadMedida->nombre }}
                                         </x-table.td>
                                         <x-table.td>
                                             {{ $recurso->fondo->nombre }}

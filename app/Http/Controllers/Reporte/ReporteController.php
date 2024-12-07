@@ -34,7 +34,7 @@ class ReporteController extends Controller
     {
         $query = Reporte::query();
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10);
+        $reportes = $query->paginate(10)->appends($request->query());
         return view('reportes.index', compact('reportes'));
     }
 
@@ -43,7 +43,7 @@ class ReporteController extends Controller
         $query = Reporte::query();
         $query->where('id_usuario_reporta', Auth::user()->id);
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10);
+        $reportes = $query->paginate(10)->appends($request->query());
         return view('reportes.my-reports', compact('reportes'));
     }
 
@@ -59,7 +59,7 @@ class ReporteController extends Controller
             });
         });
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10);
+        $reportes = $query->paginate(10)->appends($request->query());
         return view('reportes.my-assignments', compact('reportes'));
     }
 
@@ -316,7 +316,7 @@ class ReporteController extends Controller
         $requestRecursos = $request->input('recursos');
         if (!empty($requestRecursos)) {
             $request->merge([
-                'recursos' => json_decode($requestRecursos)
+                'recursos' => json_decode($requestRecursos, true)
             ]);
         } else {
             $request->merge([
@@ -432,11 +432,12 @@ class ReporteController extends Controller
                 if (isset($request->recursos)) {
                     foreach ($request->input('recursos', []) as $recurso) {
                         RecursoReporte::create([
-                            'id_historial_acciones_reporte ' => $newHistorialAccionesReportes->id,
+                            'id_historial_acciones_reporte' => $newHistorialAccionesReportes->id,
                             'cantidad' => $recurso['cantidad'],
                             'id_fondo' => $recurso['id_fondo'],
                             'id_recurso' => $recurso['id_recurso'],
                             'id_unidad_medida' => $recurso['id_unidad_medida'],
+                            'comentario' => $request->get('comentario', ''),
                         ]);
                     }
                 }
@@ -553,9 +554,10 @@ class ReporteController extends Controller
             $estController = new EstadoController();
             $estadosHabilitados = $estController->estadosReporte($reporte);
 
-            // Obtener fondos y recursos
+            // Obtener fondos, recursos y unidades de medida
             $fondos = DB::table('fondos')->get();
             $recursos = DB::table('recursos')->get();
+            $unidades_medida = DB::table('unidades_medida')->get();
 
             return [
                 'reporte' => $reporte,
@@ -565,7 +567,8 @@ class ReporteController extends Controller
                 'supervisores' => $supervisores,
                 'estadosPermitidos' => $estadosHabilitados,
                 'fondos' => $fondos,
-                'recursos' => $recursos
+                'recursos' => $recursos,
+                'unidades_medida' => $unidades_medida
             ];
         } else {
             return [
@@ -575,7 +578,8 @@ class ReporteController extends Controller
                 'supervisores' => [],
                 'estadosPermitidos' => [],
                 'fondos' => [],
-                'recursos' => []
+                'recursos' => [],
+                'unidades_medida' => []
             ];
         }
     }

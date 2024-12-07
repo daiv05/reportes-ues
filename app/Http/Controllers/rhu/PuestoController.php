@@ -14,24 +14,16 @@ class PuestoController extends Controller
      */
     public function index(Request $request)
     {
-        $entidades = Entidades::all();
-        $idEntidad = $request->input('id_entidad');
-        $search = $request->input('search');
+        $entidadFilter = $request->input('entidad-filter');
+        $search = $request->input('nombre-filter');
 
-        $puestos = Puesto::query();
+        $entidades = Entidades::all()->pluck('nombre', 'id');
 
-        // Filtro por entidad si está seleccionado
-        if ($idEntidad) {
-            $puestos->where('id_entidad', $idEntidad);
-        }
-
-        // Filtro por búsqueda de nombre
-        if ($search) {
-            $puestos->where('nombre', 'like', '%' . $search . '%');
-        }
-
-        // Paginación
-        $puestos = $puestos->paginate(10);
+        $puestos = Puesto::when($entidadFilter, function ($query, $entidadFilter) {
+            return $query->where('id_entidad', $entidadFilter);
+        })->when($search, function ($query, $search) {
+            return $query->where('nombre', 'like', '%' . $search . '%');
+        })->paginate(10)->appends($request->query());
 
         return view('rhu.puestos.index', compact('puestos', 'entidades'));
     }

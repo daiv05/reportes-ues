@@ -11,10 +11,19 @@ use Illuminate\View\View;
 
 class AsignaturaController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $asignaturas = Asignatura::paginate(10);
-        $escuelas = Escuela::all();
+        $escuelaFilter = request('escuela-filter');
+        $nombreFilter = request('nombre-filter');
+
+        $asignaturas = Asignatura::when($escuelaFilter, function ($query, $escuelaFilter) {
+                return $query->where('id_escuela', $escuelaFilter);
+            })
+            ->when($nombreFilter, function ($query, $nombreFilter) {
+                return $query->where('nombre', 'like', "%$nombreFilter%");
+            })
+            ->paginate(10)->appends($request->query());
+        $escuelas = Escuela::all()->pluck('nombre', 'id');
         return view('mantenimientos.asignatura.index', compact('asignaturas', 'escuelas'))->with('message', [
             'type' => 'success',
             'content' => 'La asignatura se ha creado exitosamente.'

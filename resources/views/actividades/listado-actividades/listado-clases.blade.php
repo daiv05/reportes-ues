@@ -100,7 +100,7 @@
                 </form>
             </div>
             {{-- TABLA --}}
-            <div class="mx-auto mb-6 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
+            <div class="mx-auto mb-6 flex flex-col overflow-x-auto sm:rounded-lg">
                 <x-table.base :headers="$headers" id="table-content">
                     @if($clases->isEmpty())
                         <x-table.td colspan="{{ count($headers) }}" justify="center">
@@ -127,7 +127,7 @@
                                         data-hora-inicio="{{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('H:i') }}" data-hora-fin="{{ \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('H:i') }}"
                                         data-tipo-clase="{{ $clase->tipoClase->id }}" data-modalidad="{{ $clase->actividad->modalidad->id }}"
                                         data-grupo="{{ $clase->numero_grupo }}" data-dias="{{ $clase->dias_actividad }}"
-                                        data-estado="{{ $clase->actividad->activo }}" data-responsable="Ing. Julio Martinez"
+                                        data-estado="{{ $clase->actividad->activo }}" data-responsable="{{ $clase->actividad->responsable }}"
                                     >
                                     <x-heroicon-o-pencil class="h-5 w-5" />
                                     </a>
@@ -141,13 +141,13 @@
                         </x-table.tr>
                     @endforeach
                 </x-table.base>
-                <nav
-                    class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
-                    aria-label="Table navigation"
-                >
-                    {{ $clases->links() }}
-                </nav>
             </div>
+            <nav
+                class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row w-full"
+                aria-label="Table navigation"
+            >
+                {{ $clases->links() }}
+            </nav>
         </div>
     </x-container>
 

@@ -23,11 +23,12 @@
                 <div class="flex items-center ms-3">
                     <div>
                         <button type="button"
-                            class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                                data-dropdown-toggle="dropdown-user">
-                            <span class="sr-only">Abrir menú perfil</span>
-                            <img class="h-8 w-8 rounded-full"
-                                src="{{ Vite::asset('resources/img/perfil-default.png') }}" alt="user photo" />
+                            class="flex text-sm p-1 items-center justify-center bg-white rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            data-dropdown-toggle="dropdown-user"
+                        >
+                            <img class="h-8 w-8 rounded-full" src="{{ Vite::asset('resources/img/perfil-default.png') }}" alt="user photo" />
+                            <span class="hidden md:flex text-sm font-bold text-gray-900 dark:text-white pr-1">{{ Auth::user()->carnet }}</span>
+                            <x-heroicon-o-chevron-down class="w-4 pt-0.5" />
                         </button>
                     </div>
                     <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"

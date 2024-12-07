@@ -23,7 +23,7 @@ class ClaseRequest extends FormRequest
     {
         return [
             'materia' => 'required|exists:asignaturas,nombre',
-            'tipo' => 'required|exists:tipos_clases,id',
+            'tipo' => 'required|exists:tipo_clases,id',
             'modalidad' => 'required|exists:modalidades,id',
             'hora_inicio' => 'required|date_format:H:i',
             'hora_fin' => 'required|date_format:H:i',
