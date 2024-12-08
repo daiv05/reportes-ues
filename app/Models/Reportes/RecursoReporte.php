@@ -16,12 +16,15 @@ class RecursoReporte extends Model implements Auditable
 
     protected $table = 'recursos_reportes';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'cantidad',
         'comentario',
         'id_historial_acciones_reporte',
         'id_recurso',
-        'id_fondo'
+        'id_fondo',
+        'id_unidad_medida',
     ];
 
     public function historialAccionesReporte(): BelongsTo

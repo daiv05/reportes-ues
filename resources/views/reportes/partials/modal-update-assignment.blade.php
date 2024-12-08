@@ -61,22 +61,27 @@
                             </option>
                         @endforeach
                     </select>
+                    <p class="text-xs text-green-500">Seleccione un elemento de la lista para añadirlo</p>
 
                     <input type="hidden" id="recursos_input" name="recursos">
-                    <table id="recursos_table" class="mt-4 w-full table-auto hidden">
-                        <thead>
-                        <tr>
-                            <th class="w-1/5">Nombre</th>
-                            <th class="w-1/5">Cantidad</th>
-                            <th class="w-1/5">Unidad de medida</th>
-                            <th class="w-1/5">Fondo</th>
-                            <th class="w-1/5">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- Filas dinámicas se añadirán aquí -->
-                        </tbody>
-                    </table>
+                    <div class="relative overflow-x-auto">
+                        <table id="recursos_table"
+                               class="mt-8 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 hidden">
+                            <thead
+                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-2 py-1 w-[25%]">Nombre</th>
+                                <th scope="col" class="px-2 py-1 w-[20%]">Cantidad</th>
+                                <th scope="col" class="px-2 py-1 w-[25%]">Unidad de medida</th>
+                                <th scope="col" class="px-2 py-1 w-[25%]">Fondo</th>
+                                <th scope="col" class="px-2 py-1 w-[5%]">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Filas dinámicas se añadirán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
 
                     <script>
                         const recursosSeleccionados = [];
@@ -88,13 +93,13 @@
                             const recursoId = selectedOption.value;
                             const recursoNombre = selectedOption.getAttribute('data-nombre');
 
-                            if (recursoId && !recursosSeleccionados.some(recurso => recurso.id === recursoId)) {
+                            if (recursoId && !recursosSeleccionados.some(recurso => recurso.id_recurso === recursoId)) {
                                 const recurso = {
-                                    id: recursoId,
+                                    id_recurso: recursoId,
                                     nombre: recursoNombre,
-                                    unidad: unidadesMedida[0].id, // Default unit
-                                    cantidad: 1, // Default quantity
-                                    fondo: fondos[0].id // Default fondo
+                                    id_unidad_medida: unidadesMedida[0].id,
+                                    cantidad: 1,
+                                    id_fondo: fondos[0].id
                                 };
 
                                 recursosSeleccionados.push(recurso);
@@ -108,24 +113,26 @@
 
                             recursosSeleccionados.forEach((recurso, index) => {
                                 const row = document.createElement('tr');
+                                row.classList.add('bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700');
 
                                 row.innerHTML = `
-                <td>${recurso.nombre}</td>
-                <td><input type="number" value="${recurso.cantidad}" min="1" onchange="actualizarCantidad(${index}, this.value)" class="w-full"></td>
-                <td>
-                    <select onchange="actualizarUnidad(${index}, this.value)" class="w-full text-sm">
-                        ${unidadesMedida.map(unidad => `<option value="${unidad.id}" ${unidad.id == recurso.unidad ? 'selected' : ''}>${unidad.nombre}</option>`).join('')}
+                <td class="px-2 py-4">${recurso.nombre}</td>
+                <td class="px-2 py-4">
+                    <input type="number" value="${recurso.cantidad}" min="1" max="100" onchange="actualizarCantidad(${index}, this.value)" class="w-full h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </td>
+                <td class="px-2 py-4">
+                    <select onchange="actualizarUnidad(${index}, this.value)" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        ${unidadesMedida.map(unidad => `<option value="${unidad.id}" ${unidad.id == recurso.id_unidad_medida ? 'selected' : ''}>${unidad.nombre}</option>`).join('')}
                     </select>
                 </td>
-                <td>
-                    <select onchange="actualizarFondo(${index}, this.value)" class="w-full text-sm">
-                        ${fondos.map(fondo => `<option value="${fondo.id}" ${fondo.id == recurso.fondo ? 'selected' : ''}>${fondo.nombre}</option>`).join('')}
+                <td class="px-2 py-4">
+                    <select onchange="actualizarFondo(${index}, this.value)" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        ${fondos.map(fondo => `<option value="${fondo.id}" ${fondo.id == recurso.id_fondo ? 'selected' : ''}>${fondo.nombre.replace('FONDO', '').trim()}</option>`).join('')}
                     </select>
                 </td>
-                <td><button type="button" onclick="eliminarRecurso(${index})" class="w-full flex justify-center text-red-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-</svg>
-</button></td>
+                <td class="px-2 py-4"><button type="button" onclick="eliminarRecurso(${index})" class="w-full flex justify-center text-red-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg></button></td>
             `;
 
                                 tbody.appendChild(row);
@@ -141,12 +148,12 @@
                         }
 
                         function actualizarFondo(index, fondo) {
-                            recursosSeleccionados[index].fondo = fondo;
+                            recursosSeleccionados[index].id_fondo = fondo;
                             document.getElementById('recursos_input').value = JSON.stringify(recursosSeleccionados);
                         }
 
                         function actualizarUnidad(index, unidad) {
-                            recursosSeleccionados[index].unidad = unidad;
+                            recursosSeleccionados[index].id_unidad_medida = unidad;
                             document.getElementById('recursos_input').value = JSON.stringify(recursosSeleccionados);
                         }
 
@@ -197,23 +204,3 @@
         }
     });
 </script>
-
-<style>
-    #recursos_table th, #recursos_table td {
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-    }
-
-    #recursos_table th {
-        background-color: #f4f4f4;
-    }
-
-    #recursos_table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .text-sm {
-        font-size: 0.875rem;
-    }
-</style>

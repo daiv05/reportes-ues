@@ -30,10 +30,12 @@
     <div class="mt-12 mb-8">
         @if ($reporte->estado_ultimo_historial?->nombre === 'FINALIZADO')
             <div class="flex justify-center">
-                <a href="{{ route('reportes.verInforme', ['id' => $reporte->id]) }}"
-                   class="bg-green-500 text-white text-sm py-2 px-10 rounded hover:bg-green-700 cursor-pointer">
-                    Ver informe del reporte
-                </a>
+                @canany(['REPORTES_REVISION_SOLUCION'])
+                    <a href="{{ route('reportes.verInforme', ['id' => $reporte->id]) }}"
+                       class="bg-green-500 text-white text-sm py-2 px-10 rounded hover:bg-green-700 cursor-pointer">
+                        Ver informe del reporte
+                    </a>
+                @endcanany
             </div>
         @endif
         <div class="flex flex-col lg:flex-row w-full">
@@ -168,188 +170,197 @@
         </div>
 
         <x-general.divider/>
-        <x-reportes.detail.container>
-            <x-reportes.detail.header title="Asignación">
-                @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
-                    <div>
-                        <button id="marcarNoProcede"
-                                class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500" x-data
-                                x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')">
-                            No Procede
-                        </button>
-                    </div>
-                    @include('reportes.partials.modal-not-valid-report')
-                @endif
-            </x-reportes.detail.header>
-        </x-reportes.detail.container>
-        <form method="POST" action="{{ route('reportes.realizarAsignacion', ['id' => $reporte->id]) }}"
-              enctype="multipart/form-data">
-            @csrf
+
+        @if($reporte->no_procede === 0)
             <x-reportes.detail.container>
-                <x-reportes.detail.block>
-                    <x-reportes.detail.subheader subtitle="Entidad" icon="heroicon-o-briefcase"/>
-                    <x-reportes.detail.subheader-content>
-                        @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
-                            <select id="entidad"
-                                    class="border border-gray-300 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    onchange="document.getElementById('id_entidad').value = this.value; location.href='?entidad=' + this.value;">
-                                <option value="" disabled selected>Selecciona una entidad</option>
-                                @foreach ($entidades as $entidad)
-                                    <option value="{{ $entidad->id }}"
-                                        {{ request()->get('entidad') == $entidad->id ? 'selected' : '' }}>
-                                        {{ $entidad->nombre }}</option>
-                                @endforeach
-                            </select>
-                            @include('components.forms.input-error', [
-                                'messages' => $errors->get('id_entidad'),
-                            ])
-                            <input type="hidden" id="id_entidad" name="id_entidad"
-                                   value="{{ request()->get('entidad') }}">
-
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const urlParams = new URLSearchParams(window.location.search);
-                                    const entidadId = urlParams.get('entidad');
-                                    if (entidadId) {
-                                        document.getElementById('entidad').value = entidadId;
-                                    }
-                                });
-                            </script>
-                        @else
-                            <select id="entidad"
-                                    class="border border-gray-300 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    disabled>
-                                <option value="" disabled selected>Selecciona una entidad</option>
-                                @foreach ($entidades as $entidad)
-                                    <option value="{{ $entidad->id }}"
-                                        {{ $reporte->accionesReporte->id_entidad_asignada == $entidad->id ? 'selected' : '' }}>
-                                        {{ $entidad->nombre }}</option>
-                                @endforeach
-                            </select>
-                        @endif
-                    </x-reportes.detail.subheader-content>
-                </x-reportes.detail.block>
-                <x-reportes.detail.block>
-                    <x-reportes.detail.subheader subtitle="Subalternos" icon="heroicon-o-shopping-bag"/>
-                    <x-reportes.detail.subheader-content>
-                        @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
-                            <x-picklist.picklist :items="$empleadosPorEntidad" :asignados="[]" :empleados="true"
-                                                 tituloDisponibles="Empleados disponibles"
-                                                 tituloAsignados="Empleados asignados"
-                                                 placeholderDisponibles="Buscar empleados..."
-                                                 placeholderAsignados="Buscar asignados..."
-                                                 inputName="id_empleados_puestos"/>
-                            @include('components.forms.input-error', [
-                                'messages' => $errors->get('id_empleados_puestos'),
-                            ])
-                        @else
-                            <div class="mt-6 bg-white shadow overflow-x-auto sm:rounded-lg text-center">
-                                <div class="border-gray-200">
-                                    <x-table.base :headers="$headersSubalternos">
-                                        @foreach ($reporte->empleadosAcciones as $index => $empleadoAccion)
-                                            <x-table.tr>
-                                                <x-table.td>{{ $index + 1 }}</x-table.td>
-                                                <x-table.td>{{ $empleadoAccion->empleadoPuesto->usuario->persona->nombre . ' ' . $empleadoAccion->empleadoPuesto->usuario->persona->apellido }}</x-table.td>
-                                                <x-table.td>{{ $empleadoAccion->empleadoPuesto->puesto->nombre }}</x-table.td>
-                                                <x-table.td>{{ $empleadoAccion->empleadoPuesto->usuario->email }}</x-table.td>
-
-                                            </x-table.tr>
-                                        @endforeach
-                                    </x-table.base>
-                                </div>
-                            </div>
-                        @endif
-                    </x-reportes.detail.subheader-content>
-                </x-reportes.detail.block>
-                <x-reportes.detail.block>
-                    <x-reportes.detail.subheader subtitle="Supervisor" icon="heroicon-o-check-badge"/>
-                    <x-reportes.detail.subheader-content>
-                        @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
-                            <select id="supervisor" name="id_empleado_supervisor"
-                                    class="border border-gray-300 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                <option value="" disabled selected>Selecciona un supervisor</option>
-                                @foreach ($supervisores as $supervisor)
-                                    <option value="{{ $supervisor->id_empleado_puesto }}">
-                                        {{ $supervisor->nombre_empleado }}
-                                        {{ $supervisor->apellido_empleado }}
-                                        - {{ $supervisor->email }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @include('components.forms.input-error', [
-                                'messages' => $errors->get('id_empleado_supervisor'),
-                            ])
-                        @else
-                            <div class="overflow-x-auto">
-                                <div class="border-gray-200">
-                                    <x-table.base :headers="$headersSupervisor">
-                                        <x-table.tr>
-                                            <x-table.td>{{ $reporte->accionesReporte->usuarioSupervisor->persona->nombre . ' ' . $reporte->accionesReporte->usuarioSupervisor->persona->apellido }}</x-table.td>
-                                            <x-table.td>{{ $reporte->accionesReporte->usuarioSupervisor->email }}</x-table.td>
-                                        </x-table.tr>
-                                    </x-table.base>
-                                </div>
-                            </div>
-                        @endif
-                    </x-reportes.detail.subheader-content>
-                </x-reportes.detail.block>
-                <x-reportes.detail.block>
-                    <x-reportes.detail.subheader subtitle="Comentario de administración"
-                                                 icon="heroicon-o-chat-bubble-bottom-center-text"/>
-                    <x-reportes.detail.subheader-content>
-                        @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
-                            <textarea id="comentario" name="comentario" rows="8"
-                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"></textarea>
-                            @include('components.forms.input-error', [
-                                'messages' => $errors->get('comentario'),
-                            ])
-                        @else
-                            <textarea id="comentario" name="comentario" rows="8"
-                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
-                                      disabled>{{ $reporte->accionesReporte->comentario }}</textarea>
-                        @endif
-                    </x-reportes.detail.subheader-content>
-                </x-reportes.detail.block>
-            </x-reportes.detail.container>
-
-            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
-                <div class="flex flex-col lg:flex-row w-full justify-center mt-8">
-                    <button id="enviarAsignacion"
-                            class="bg-escarlata-ues text-white text-sm py-2 px-4 rounded hover:bg-red-700">
-                        Enviar Asignación
-                    </button>
-                </div>
-            @endif
-        </form>
-
-        @if ($reporte->accionesReporte)
-
-            <x-general.divider/>
-
-            <x-reportes.detail.container>
-                <x-reportes.detail.header title="Seguimiento">
-                    {{-- Boton actualizar estado --}}
-                    @if ($updateAvailable)
+                <x-reportes.detail.header title="Asignación">
+                    @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
                         <div>
-                            <button id="abrirActualizarSeguimiento"
-                                    class="bg-escarlata-ues text-white text-sm py-2 mb-4 px-4 rounded hover:bg-red-500 flex items-center"
-                                    x-data x-on:click="$dispatch('open-modal', 'actualizar-seguimiento-modal')">
-                                <p class="mr-2">Actualizar</p>
-                                <x-heroicon-o-bell-alert class="h-6 w-6"/>
-                            </button>
+                            @canany(['REPORTES_ACTUALIZAR_ESTADO'])
+                                <button id="marcarNoProcede"
+                                        class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500" x-data
+                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')">
+                                    No Procede
+                                </button>
+                            @endcanany
                         </div>
+                        @include('reportes.partials.modal-not-valid-report')
                     @endif
-                    {{-- Modal actualizar seguimiento --}}
-                    @include('reportes.partials.modal-update-assignment')
                 </x-reportes.detail.header>
-                <x-reportes.detail.block>
-                    <x-reportes.detail.subheader-content>
-                        <div class="flex justify-center md:justify-start">
-                            @include('reportes.partials.timeline')
-                        </div>
-                    </x-reportes.detail.subheader-content>
-                </x-reportes.detail.block>
             </x-reportes.detail.container>
+            <form method="POST" action="{{ route('reportes.realizarAsignacion', ['id' => $reporte->id]) }}"
+                  enctype="multipart/form-data">
+                @csrf
+                <x-reportes.detail.container>
+                    <x-reportes.detail.block>
+                        <x-reportes.detail.subheader subtitle="Entidad" icon="heroicon-o-briefcase"/>
+                        <x-reportes.detail.subheader-content>
+                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                                <select id="entidad"
+                                        class="border border-gray-300 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                                        onchange="document.getElementById('id_entidad').value = this.value; location.href='?entidad=' + this.value;">
+                                    <option value="" disabled selected>Selecciona una entidad</option>
+                                    @foreach ($entidades as $entidad)
+                                        <option value="{{ $entidad->id }}"
+                                            {{ request()->get('entidad') == $entidad->id ? 'selected' : '' }}>
+                                            {{ $entidad->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                @include('components.forms.input-error', [
+                                    'messages' => $errors->get('id_entidad'),
+                                ])
+                                <input type="hidden" id="id_entidad" name="id_entidad"
+                                       value="{{ request()->get('entidad') }}">
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const urlParams = new URLSearchParams(window.location.search);
+                                        const entidadId = urlParams.get('entidad');
+                                        if (entidadId) {
+                                            document.getElementById('entidad').value = entidadId;
+                                        }
+                                    });
+                                </script>
+                            @else
+                                <select id="entidad"
+                                        class="border border-gray-300 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                                        disabled>
+                                    <option value="" disabled selected>Selecciona una entidad</option>
+                                    @foreach ($entidades as $entidad)
+                                        <option value="{{ $entidad->id }}"
+                                            {{ $reporte->accionesReporte->id_entidad_asignada == $entidad->id ? 'selected' : '' }}>
+                                            {{ $entidad->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
+                        </x-reportes.detail.subheader-content>
+                    </x-reportes.detail.block>
+                    <x-reportes.detail.block>
+                        <x-reportes.detail.subheader subtitle="Subalternos" icon="heroicon-o-shopping-bag"/>
+                        <x-reportes.detail.subheader-content>
+                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                                <x-picklist.picklist :items="$empleadosPorEntidad" :asignados="[]" :empleados="true"
+                                                     tituloDisponibles="Empleados disponibles"
+                                                     tituloAsignados="Empleados asignados"
+                                                     placeholderDisponibles="Buscar empleados..."
+                                                     placeholderAsignados="Buscar asignados..."
+                                                     inputName="id_empleados_puestos"/>
+                                @include('components.forms.input-error', [
+                                    'messages' => $errors->get('id_empleados_puestos'),
+                                ])
+                            @else
+                                <div class="mt-6 bg-white shadow overflow-x-auto sm:rounded-lg text-center">
+                                    <div class="border-gray-200">
+                                        <x-table.base :headers="$headersSubalternos">
+                                            @foreach ($reporte->empleadosAcciones as $index => $empleadoAccion)
+                                                <x-table.tr>
+                                                    <x-table.td>{{ $index + 1 }}</x-table.td>
+                                                    <x-table.td>{{ $empleadoAccion->empleadoPuesto->usuario->persona->nombre . ' ' . $empleadoAccion->empleadoPuesto->usuario->persona->apellido }}</x-table.td>
+                                                    <x-table.td>{{ $empleadoAccion->empleadoPuesto->puesto->nombre }}</x-table.td>
+                                                    <x-table.td>{{ $empleadoAccion->empleadoPuesto->usuario->email }}</x-table.td>
+
+                                                </x-table.tr>
+                                            @endforeach
+                                        </x-table.base>
+                                    </div>
+                                </div>
+                            @endif
+                        </x-reportes.detail.subheader-content>
+                    </x-reportes.detail.block>
+                    <x-reportes.detail.block>
+                        <x-reportes.detail.subheader subtitle="Supervisor" icon="heroicon-o-check-badge"/>
+                        <x-reportes.detail.subheader-content>
+                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                                <select id="supervisor" name="id_empleado_supervisor"
+                                        class="border border-gray-300 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                    <option value="" disabled selected>Selecciona un supervisor</option>
+                                    @foreach ($supervisores as $supervisor)
+                                        <option value="{{ $supervisor->id_empleado_puesto }}">
+                                            {{ $supervisor->nombre_empleado }}
+                                            {{ $supervisor->apellido_empleado }}
+                                            - {{ $supervisor->email }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @include('components.forms.input-error', [
+                                    'messages' => $errors->get('id_empleado_supervisor'),
+                                ])
+                            @else
+                                <div class="overflow-x-auto">
+                                    <div class="border-gray-200">
+                                        <x-table.base :headers="$headersSupervisor">
+                                            <x-table.tr>
+                                                <x-table.td>{{ $reporte->accionesReporte->usuarioSupervisor->persona->nombre . ' ' . $reporte->accionesReporte->usuarioSupervisor->persona->apellido }}</x-table.td>
+                                                <x-table.td>{{ $reporte->accionesReporte->usuarioSupervisor->email }}</x-table.td>
+                                            </x-table.tr>
+                                        </x-table.base>
+                                    </div>
+                                </div>
+                            @endif
+                        </x-reportes.detail.subheader-content>
+                    </x-reportes.detail.block>
+                    <x-reportes.detail.block>
+                        <x-reportes.detail.subheader subtitle="Comentario de administración"
+                                                     icon="heroicon-o-chat-bubble-bottom-center-text"/>
+                        <x-reportes.detail.subheader-content>
+                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                                <textarea id="comentario" name="comentario" rows="8"
+                                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"></textarea>
+                                @include('components.forms.input-error', [
+                                    'messages' => $errors->get('comentario'),
+                                ])
+                            @else
+                                <textarea id="comentario" name="comentario" rows="8"
+                                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
+                                          disabled>{{ $reporte->accionesReporte->comentario }}</textarea>
+                            @endif
+                        </x-reportes.detail.subheader-content>
+                    </x-reportes.detail.block>
+                </x-reportes.detail.container>
+
+                @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                    <div class="flex flex-col lg:flex-row w-full justify-center mt-8">
+                        @canany(['REPORTES_ACTUALIZAR_ESTADO' , 'REPORTES_ASIGNAR'])
+                            <button id="enviarAsignacion"
+                                    class="bg-escarlata-ues text-white text-sm py-2 px-4 rounded hover:bg-red-700">
+                                Enviar Asignación
+                            </button>
+                        @endcanany
+                    </div>
+                @endif
+            </form>
+
+            @if ($reporte->accionesReporte)
+
+                <x-general.divider/>
+
+                <x-reportes.detail.container>
+                    <x-reportes.detail.header title="Seguimiento">
+                        {{-- Boton actualizar estado --}}
+                        @if ($updateAvailable)
+                            <div>
+                                @canany(['REPORTES_ACTUALIZAR_ESTADO'])
+                                    <button id="abrirActualizarSeguimiento"
+                                            class="bg-escarlata-ues text-white text-sm py-2 mb-4 px-4 rounded hover:bg-red-500 flex items-center"
+                                            x-data x-on:click="$dispatch('open-modal', 'actualizar-seguimiento-modal')">
+                                        <p class="mr-2">Actualizar</p>
+                                        <x-heroicon-o-bell-alert class="h-6 w-6"/>
+                                    </button>
+                                @endcanany
+                            </div>
+                        @endif
+                        {{-- Modal actualizar seguimiento --}}
+                        @include('reportes.partials.modal-update-assignment')
+                    </x-reportes.detail.header>
+                    <x-reportes.detail.block>
+                        <x-reportes.detail.subheader-content>
+                            <div class="flex justify-center md:justify-start">
+                                @include('reportes.partials.timeline')
+                            </div>
+                        </x-reportes.detail.subheader-content>
+                    </x-reportes.detail.block>
+                </x-reportes.detail.container>
+            @endif
         @endif
     </div>
 </x-app-layout>

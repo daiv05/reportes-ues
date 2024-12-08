@@ -6,6 +6,7 @@ namespace App\Models\Seguridad;
 use App\Models\Registro\Persona;
 use App\Models\Reportes\Reporte;
 use App\Models\rhu\EmpleadoPuesto;
+use App\Models\Mantenimientos\Escuela;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,7 +29,9 @@ class User extends Authenticatable implements Auditable
         'email',
         'password',
         'id_persona',
-        'activo'
+        'activo',
+        'id_escuela',
+        'es_estudiante', 
     ];
 
     protected $hidden = [
@@ -58,5 +61,10 @@ class User extends Authenticatable implements Auditable
     public function reportes() : HasMany
     {
         return $this->hasMany(Reporte::class, 'id_usuario_reporta');
+    }
+
+    public function escuela(): BelongsTo
+    {
+        return $this->belongsTo(Escuela::class, 'id_escuela'); // Asegúrate de que el modelo Escuela esté correctamente importado
     }
 }
