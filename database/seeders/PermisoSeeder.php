@@ -11,7 +11,7 @@ class PermisoSeeder extends Seeder
     public function run(): void
     {
         foreach (PermisosEnum::cases() as $per) {
-            Permission::create(['name' => $per->value]);
+            Permission::firstOrCreate(['name' => $per->value]);
         }
     }
 }
