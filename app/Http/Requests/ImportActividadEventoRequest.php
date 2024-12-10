@@ -78,7 +78,7 @@ class ImportActividadEventoRequest extends FormRequest
             $hora_fin = $this->input('hora_fin');
             $modalidad = $this->input('modalidad');
 
-            foreach ($hora_inicio as $index => $hora_inicio_value) {
+            foreach ($modalidad as $index => $hora_inicio_value) {
                 // Verificar que la hora de fin sea mayor que la hora de inicio
                 $hora_inicio_timestamp = strtotime($hora_inicio[$index]);
                 $hora_fin_timestamp = strtotime($hora_fin[$index]);
