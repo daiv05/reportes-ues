@@ -19,31 +19,27 @@ class EscuelaSeeder extends Seeder
             ],
             [
                 'id_facultad' => 3,
-                'nombre' => 'Ingeniería Civil',
+                'nombre' => 'Escuela de Ingeniería Civil',
             ],
             [
                 'id_facultad' => 3,
-                'nombre' => 'Ingeniería de Sistemas Informáticos',
+                'nombre' => 'Escuela Ingeniería de Sistemas Informáticos',
             ],
             [
                 'id_facultad' => 3,
-                'nombre' => 'Ingeniería Eléctrica',
+                'nombre' => 'Escuela de Ingeniería Eléctrica',
             ],
             [
                 'id_facultad' => 3,
-                'nombre' => 'Ingeniería Industrial',
+                'nombre' => 'Escuela Ingeniería Industrial',
             ],
             [
                 'id_facultad' => 3,
-                'nombre' => 'Ingeniería Mecánica',
+                'nombre' => 'Escuela de Ingeniería Mecánica',
             ],
             [
                 'id_facultad' => 3,
-                'nombre' => 'Ingeniería Química',
-            ],
-            [
-                'id_facultad' => 3,
-                'nombre' => 'Ingeniería de Alimentos',
+                'nombre' => 'Escuela Ingeniería Química e Ingeniería de Alimentos',
             ],
             [
                 'id_facultad' => 3,

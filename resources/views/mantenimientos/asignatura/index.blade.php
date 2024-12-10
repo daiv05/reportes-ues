@@ -1,5 +1,6 @@
 @php
     $headers = [
+        ['text' => 'Código', 'align' => 'left'],
         ['text' => 'Nombre', 'align' => 'left'],
         ['text' => 'Escuela', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
@@ -15,6 +16,10 @@
                 type="button">
                 Añadir
             </x-forms.primary-button>
+            <x-forms.primary-button data-modal-target="static-modal-excel" data-modal-toggle="static-modal-excel" class="block"
+                type="button">
+                Importar datos
+            </x-forms.primary-button>
         </div>
     </x-slot>
     <x-container>
@@ -22,12 +27,16 @@
         <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 w-full">
             <form action="{{ route('asignaturas.index') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
                 <div class="flex w-full flex-col md:w-4/6 px-4 md:px-0">
-                    <x-forms.row :columns="2">
+                    <x-forms.row :columns="3">
                         <x-forms.field
-                            id="materia"
-                            label="Nombre"
+                            label="Código"
                             name="nombre-filter"
                             :value="request('nombre-filter')"
+                        />
+                        <x-forms.field
+                            label="Nombre"
+                            name="nombre-completo-filter"
+                            :value="request('nombre-completo-filter')"
                         />
                         <x-forms.select
                             name="escuela-filter"
@@ -69,6 +78,9 @@
                             {{ $asignatura->nombre }}
                         </x-table.td>
                         <x-table.td>
+                            {{ $asignatura->nombre_completo }}
+                        </x-table.td>
+                        <x-table.td>
                             {{ $asignatura->escuela->nombre }}
                         </x-table.td>
                         <x-table.td justify="center">
@@ -78,6 +90,7 @@
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                 data-id="{{ $asignatura->id }}" data-nombre="{{ $asignatura->nombre }}"
+                                data-nombre-completo="{{ $asignatura->nombre_completo }}"
                                 data-escuela="{{ $asignatura->escuela->id }}" data-activo="{{ $asignatura->activo }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                         </x-table.td>
@@ -102,14 +115,19 @@
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.select label="Escuela" id="id_escuela" name="id_escuela" :options="$escuelas->pluck('nombre', 'id')->toArray()"
+                        <x-forms.select label="Escuela" id="id_escuela" name="id_escuela" :options="$escuelas"
                             :value="old('id_escuela')" :error="$errors->get('id_escuela')" required />
                         <div id="escuela-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.field id="nombre" label="Nombre" name="nombre" :value="old('nombre')" :error="$errors->get('nombre')"
+                        <x-forms.field id="nombre" label="Código" name="nombre" :value="old('nombre')" :error="$errors->get('nombre')"
                             required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
+                    </div>
+                    <div>
+                        <x-forms.field id="nombre_completo" label="Nombre" name="nombre_completo" :value="old('nombre_completo')" :error="$errors->get('nombre')"
+                            required />
+                        <div id="nombre-completo-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
                         <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
@@ -130,11 +148,45 @@
             </button>
         </x-slot>
     </x-form-modal>
+
+    <!-- Modal Importación de Excel-->
+    <x-form-modal id="static-modal-excel" class="hidden">
+        <x-slot name="header">
+            <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Importar asignaturas</h3>
+        </x-slot>
+        <x-slot name="body">
+            <form id="import-excel-asignaturas" action="{{ route('asignaturas.importar') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-4">
+                @csrf
+                <div class="flex flex-col gap-3 w-full justify-center items-center mx-auto">
+                    <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white" onclick="uploadFile()">
+                        <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
+                        <span id="file-name" class="mt-2 text-base leading-normal">Selecciona un archivo</span>
+                        <input type="file" name="excel_file" accept=".xls,.xlsx,.csv" id="excel_file" class="hidden" onchange="updateFileName(this)" />
+                        @if ($errors->has('excel_file'))
+                            <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
+                        @endif
+                    </label>
+                    <div id="excel-error" class="text-sm text-red-500"></div>
+                </div>
+            </form>
+        </x-slot>
+        <x-slot name="footer">
+            <button data-modal-hide="static-modal-excel" type="button"
+                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
+                Cancelar
+            </button>
+            <button type="submit" form="import-excel-asignaturas"
+                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
+                Guardar
+            </button>
+        </x-slot>
+    </x-form-modal>
 </x-app-layout>
 <script>
     document.getElementById('add-asignatura-form').addEventListener('submit', function(event) {
 
         const nombre = document.getElementById('nombre').value.trim();
+        const nombreCompleto = document.getElementById('nombre_completo').value.trim();
         const escuela = document.getElementById('id_escuela').value.trim();
         const estado = document.getElementById('activo').value.trim();
 
@@ -145,7 +197,12 @@
 
         if (!nombre) { // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
-            document.getElementById('nombre-error').innerHTML = 'El campo Nombre es obligatorio';
+            document.getElementById('nombre-error').innerHTML = 'El campo Código es obligatorio';
+        }
+
+        if (!nombreCompleto) { // Cambiado: no usar .value ya que es un valor ya extraído
+            hasErrors = true;
+            document.getElementById('nombre-completo-error').innerHTML = 'El campo Nombre es obligatorio';
         }
 
         if (!escuela) { // Cambiado: no usar .value ya que es un valor ya extraído
@@ -161,6 +218,26 @@
         if (hasErrors) {
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
+        }
+    });
+
+    document.getElementById('import-excel-asignaturas').addEventListener('submit', function(event) {
+        const excelFile = document.getElementById('excel_file').value.trim();
+        let hasErrors = false;
+
+        if (!excelFile) { // Cambiado: no usar .value ya que es un valor ya extraído
+            hasErrors = true;
+            document.getElementById('excel-error').innerHTML = 'El archivo es obligatorio';
+        } else {
+            const extension = excelFile.split('.').pop().toLowerCase();
+            if (extension !== 'xls' && extension !== 'xlsx' && extension !== 'csv') {
+                hasErrors = true;
+                document.getElementById('excel-error').innerHTML = 'El archivo debe ser de tipo Excel o CSV';
+            }
+        }
+
+        if (hasErrors) {
+            event.preventDefault();
         }
     });
 
@@ -182,6 +259,7 @@
 
             const id = this.getAttribute('data-id');
             const nombre = this.getAttribute('data-nombre');
+            const nombreCompleto = this.getAttribute('data-nombre-completo');
             const escuela = this.getAttribute('data-escuela');
             const activo = this.getAttribute('data-activo');
 
@@ -196,6 +274,7 @@
             }
 
             document.getElementById('nombre').value = nombre;
+            document.getElementById('nombre_completo').value = nombreCompleto;
             document.getElementById('id_escuela').value = escuela;
             document.getElementById('activo').value = activo;
 
@@ -220,5 +299,14 @@
         document.querySelectorAll('select').forEach((select) => {
             select.selectedIndex = 0; // Restablecer el primer valor (vacío o predeterminado)
         });
+    }
+
+    function updateFileName(input) {
+        const fileName = input.files[0] ? input.files[0].name : "Selecciona un archivo";
+        document.getElementById('file-name').textContent = fileName;
+    }
+
+    function uploadFile() {
+        document.getElementById('excel_file').click();
     }
 </script>

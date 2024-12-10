@@ -119,6 +119,7 @@ Route::middleware('auth')->group(function () {
         // Rutas de Asignaturas
         Route::prefix('asignaturas')->group(function () {
             Route::get('/', [AsignaturaController::class, 'index'])->name('asignaturas.index');
+            Route::post('/importar', [AsignaturaController::class, 'importarDatos'])->name('asignaturas.importar');
             Route::patch('/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->name('asignaturas.toggleActivo');
         });
         Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
