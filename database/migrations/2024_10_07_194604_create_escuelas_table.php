@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('escuelas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_facultad');
-            $table->string('nombre', 50);
+            $table->string('nombre');
             $table->boolean('activo')->default(true);
             $table->timestamps();
 

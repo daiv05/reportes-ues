@@ -10,11 +10,12 @@ class Asignatura extends Model  implements Auditable
 {
     use HasFactory,\OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['id_escuela', 'nombre', 'activo'];
+    protected $fillable = ['id_escuela', 'nombre', 'nombre_completo', 'activo'];
 
     public function setNombreAttribute($value)
     {
         $this->attributes['nombre'] = strtoupper($value);
+        $this->attributes['nombre_completo'] = strtoupper($value);
     }
     public function escuela()
     {
