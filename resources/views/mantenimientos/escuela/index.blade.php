@@ -11,10 +11,12 @@
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Escuelas" />
         <div class="p-6">
+            @canany(['ESCUELAS_CREAR'])
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button">
                 Añadir
             </x-forms.primary-button>
+            @endcanany
         </div>
     </x-slot>
 
