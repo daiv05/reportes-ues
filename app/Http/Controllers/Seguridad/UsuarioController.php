@@ -35,7 +35,7 @@ class UsuarioController extends Controller
                     $query->where('id', '=', $rolFilter);
                 });
             })
-            ->paginate(10);
+            ->paginate(10)->appends($request->query());
 
         $roles = Role::all();
         $roles = $roles->map(

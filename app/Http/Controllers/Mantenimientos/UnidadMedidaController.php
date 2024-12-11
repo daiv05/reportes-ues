@@ -17,7 +17,7 @@ class UnidadMedidaController extends Controller
             $filtro = $request->input('nombre');
             $query->where('nombre', 'like', '%' . $filtro . '%');
         }
-        $unidades = $query->paginate(10);
+        $unidades = $query->paginate(10)->appends($request->query());
         return view('mantenimientos.unidad_medida.index', compact('unidades'));
     }
 
