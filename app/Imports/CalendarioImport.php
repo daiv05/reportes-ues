@@ -107,7 +107,7 @@ class CalendarioImport implements ToModel, WithHeadingRow, WithStartRow
 
         $this->importedData[] = [
             'index' => $this->index++,
-            'semana' => $row[0] || isEmpty($row[0]) ?? $this->week,
+            'semana' => $row[0] ?? $this->week,
             'fecha' => Date::excelToDateTimeObject($row[2] ?? $this->date)->format('d/m/Y'),
             'materia' => $row[4] ?? null,
             'evaluacion' => $row[6] ?? null,

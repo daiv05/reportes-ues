@@ -36,6 +36,8 @@ class ImportActividadEventoRequest extends FormRequest
             'evaluacion.*' => 'string',
             'cantidad_estudiantes' => 'required|array|min:1',
             'cantidad_estudiantes.*' => 'integer|min:0',
+            'responsable' => 'required|array|min:1',
+            'responsable.*' => 'required|string',
         ];
 
         foreach ($this->input('modalidad', []) as $key => $value) {
@@ -68,6 +70,7 @@ class ImportActividadEventoRequest extends FormRequest
             'evaluacion.*.string' => 'La evaluación debe ser una cadena de texto',
             'cantidad_estudiantes.*.integer' => 'La cantidad de estudiantes debe ser un número entero',
             'cantidad_estudiantes.*.min' => 'La cantidad de estudiantes no puede ser negativa',
+            'responsable.*.required' => 'El responsable es requerido',
         ];
     }
 
