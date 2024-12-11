@@ -40,8 +40,12 @@
                 {{ $user->email }}
             </x-view.description-list-item>
 
-            <x-view.description-list-item label="Username">
+            <x-view.description-list-item label="Nombre de usuario">
                 {{ $user->carnet }}
+            </x-view.description-list-item>
+
+            <x-view.description-list-item label="Tipo de usuario">
+                {{ $user->es_estudiante ? 'Estudiante' : 'Empleado' }}
             </x-view.description-list-item>
 
             <x-view.description-list-item label="Estado">
@@ -81,73 +85,76 @@
             </div>
         </div>
 
-        <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg text-center">
-            <div class="px-4 py-2 sm:px-6 bg-gray-100">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Puestos asignados</h3>
-            </div>
+        @if(!$user->es_estudiante)
+            <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg text-center">
+                <div class="px-4 py-2 sm:px-6 bg-gray-100">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Puestos asignados</h3>
+                </div>
 
-            <div class="border-t border-gray-200">
-                <x-table.base :headers="$headersPuestos">
-                    @foreach ($user->empleadosPuestos as $empPuesto)
-                    <x-table.tr>
-                        <x-table.td>{{ $empPuesto->puesto->entidad->nombre }}</x-table.td>
-                        <x-table.td>{{ $empPuesto->puesto->nombre }}</x-table.td>
-                        <x-table.td justify="center">
-                            <x-status.is-active :active="$empPuesto->activo" />
-                        </x-table.td>
-                        <x-table.td justify="center">
-                            <div class="flex flex-wrap justify-center gap-2">
-                                <a href="{{ url('rhu/empleados-puestos/' . $empPuesto->id) }}"
-                                    class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
-                                    <x-heroicon-o-eye class="h-5 w-5" />
-                                </a>
-                            </div>
-                        </x-table.td>
-                    </x-table.tr>
-                @endforeach
-                </x-table.base>
-            </div>
-        </div>
-
-        <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg text-center">
-            <div class="px-4 py-2 sm:px-6 bg-gray-100">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Reportes asignados</h3>
-            </div>
-
-            <div class="border-t border-gray-200">
-                <x-table.base :headers="$headersReports">
-
-                    @foreach($user->empleadosPuestos as $empPuesto)
-                        @if($empPuesto->activo)
-                            @foreach($empPuesto->empleadosAcciones as $empAccion)
-                                <x-table.tr>
-                                    <x-table.td>{{ $empAccion->reporte->titulo }}</x-table.td>
-                                    <x-table.td>{{ \Carbon\Carbon::parse($empAccion->reporte->fecha_reporte . ' ' . $empAccion->reporte->hora_reporte)->format('d/m/Y, h:i A') }}</x-table.td>
-                                    <x-table.td>{{ $empAccion->reporte->usuarioReporta?->persona?->nombre }} {{ $empAccion->reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
-                                    <x-table.td>{{ $empPuesto->puesto->nombre ?? '-' }}</x-table.td>
-                                    <x-table.td>{{ $empAccion->reporte->accionesReporte?->entidadAsignada?->nombre ?? '-' }}</x-table.td>
-                                    <x-table.td>{{ $empAccion->reporte->actividad ? 'Actividad' : 'General' }}</x-table.td>
-                                    <x-table.td>
-                                        <x-status.chips :text="$empAccion->reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
-                                                        class="mb-2"/>
-                                    </x-table.td>
-                                    <x-table.td justify="center">
-                                        <a href="{{ route('detalle-reporte', ['id' => $empAccion->reporte->id]) }}"
-                                           class="font-medium text-gray-700 hover:underline">
-                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M4 6h16M4 12h16m-7 6h7"></path>
-                                            </svg>
-                                        </a>
-                                    </x-table.td>
-                                </x-table.tr>
-                            @endforeach
-                        @endif
+                <div class="border-t border-gray-200">
+                    <x-table.base :headers="$headersPuestos">
+                        @foreach ($user->empleadosPuestos as $empPuesto)
+                        <x-table.tr>
+                            <x-table.td>{{ $empPuesto->puesto->entidad->nombre }}</x-table.td>
+                            <x-table.td>{{ $empPuesto->puesto->nombre }}</x-table.td>
+                            <x-table.td justify="center">
+                                <x-status.is-active :active="$empPuesto->activo" />
+                            </x-table.td>
+                            <x-table.td justify="center">
+                                <div class="flex flex-wrap justify-center gap-2">
+                                    <a href="{{ url('rhu/empleados-puestos/' . $empPuesto->id) }}"
+                                        class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
+                                        <x-heroicon-o-eye class="h-5 w-5" />
+                                    </a>
+                                </div>
+                            </x-table.td>
+                        </x-table.tr>
                     @endforeach
-                </x-table.base>
+                    </x-table.base>
+                </div>
             </div>
-        </div>
+
+            <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg text-center">
+                <div class="px-4 py-2 sm:px-6 bg-gray-100">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Reportes asignados</h3>
+                </div>
+
+                <div class="border-t border-gray-200">
+                    <x-table.base :headers="$headersReports">
+
+                        @foreach($user->empleadosPuestos as $empPuesto)
+                            @if($empPuesto->activo)
+                                @foreach($empPuesto->empleadosAcciones as $empAccion)
+                                    <x-table.tr>
+                                        <x-table.td>{{ $empAccion->reporte->titulo }}</x-table.td>
+                                        <x-table.td>{{ \Carbon\Carbon::parse($empAccion->reporte->fecha_reporte . ' ' . $empAccion->reporte->hora_reporte)->format('d/m/Y, h:i A') }}</x-table.td>
+                                        <x-table.td>{{ $empAccion->reporte->usuarioReporta?->persona?->nombre }} {{ $empAccion->reporte->usuarioReporta?->persona?->apellido }}</x-table.td>
+                                        <x-table.td>{{ $empPuesto->puesto->nombre ?? '-' }}</x-table.td>
+                                        <x-table.td>{{ $empAccion->reporte->accionesReporte?->entidadAsignada?->nombre ?? '-' }}</x-table.td>
+                                        <x-table.td>{{ $empAccion->reporte->actividad ? 'Actividad' : 'General' }}</x-table.td>
+                                        <x-table.td>
+                                            <x-status.chips :text="$empAccion->reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
+                                                            class="mb-2"/>
+                                        </x-table.td>
+                                        <x-table.td justify="center">
+                                            <a href="{{ route('detalle-reporte', ['id' => $empAccion->reporte->id]) }}"
+                                            class="font-medium text-gray-700 hover:underline">
+                                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M4 6h16M4 12h16m-7 6h7"></path>
+                                                </svg>
+                                            </a>
+                                        </x-table.td>
+                                    </x-table.tr>
+                                @endforeach
+                            @endif
+                        @endforeach
+                    </x-table.base>
+                </div>
+            </div>
+        @endif
+
     </x-container>
 </x-app-layout>
 
