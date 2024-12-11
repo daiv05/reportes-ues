@@ -11,10 +11,12 @@
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Ciclos" />
         <div class="p-6">
+            @canany(['CICLOS_CREAR'])
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button" id="add-button">
                 Añadir Ciclo
             </x-forms.primary-button>
+            @endcanany
         </div>
     </x-slot>
 
