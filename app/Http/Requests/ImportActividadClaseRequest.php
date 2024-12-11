@@ -41,6 +41,8 @@ class ImportActividadClaseRequest extends FormRequest
             'diasActividad' => 'required|array|min:1',
             'diasActividad.*' => 'required|array|min:1',
             'diasActividad.*.*' => 'exists:dias,id',
+            'responsable' => 'required|array|min:1',
+            'responsable.*' => 'required|string',
         ];
     }
 
@@ -60,6 +62,17 @@ class ImportActividadClaseRequest extends FormRequest
             'diasActividad.*.required' => 'Debe seleccionar al menos un día para la actividad',
             'diasActividad.*.*.exists' => 'El día seleccionado no existe',
             'local.*.exists' => 'El local ingresado no existe',
+            'grupo.*.integer' => 'El grupo debe ser un número entero',
+            'grupo.*.min' => 'El grupo debe ser un número entero positivo',
+            'materia.*.required' => 'Debe seleccionar al menos una materia',
+            'tipo.*.required' => 'Debe seleccionar al menos un tipo de clase',
+            'grupo.*.required' => 'Debe seleccionar al menos un grupo',
+            'modalidad.*.required' => 'Debe seleccionar al menos una modalidad',
+            'local.*.required' => 'Debe seleccionar al menos un local',
+            'hora_inicio.*.required' => 'Debe seleccionar al menos una hora de inicio',
+            'hora_fin.*.required' => 'Debe seleccionar al menos una hora de fin',
+            'responsable.*.required' => 'Debe seleccionar al menos un responsable',
+            'responsable.*.string' => 'El responsable debe ser una cadena de texto',
         ];
     }
 

@@ -2,9 +2,8 @@
 
 namespace App\Imports;
 use Maatwebsite\Excel\Concerns\ToModel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithstartRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class HorarioImport implements ToModel, WithHeadingRow
 {
@@ -14,11 +13,17 @@ class HorarioImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        // $out->writeln($row[0]);
+        $out->writeln(json_encode(array_keys($row)));
+        $keys = ["materia","tipo","modalidad","grupo","local","lunes","martes","miercoles","jueves","viernes","sabado","domingo","responsable"];
         $modalidad = null;
         $horaInicio = null;
         $horaFin = null;
         // Extraer los horarios de cada día
+
+        if(!empty(array_diff($keys, array_keys($row)))){
+            return null;
+        }
+
         $horarios = [
             1 => $row['lunes'],
             2 => $row['martes'],

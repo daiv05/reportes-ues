@@ -6,7 +6,7 @@
     <x-container>
         <!-- Título con el nombre del usuario -->
         <div class="pt-4 pb-8 text-2xl font-bold text-red-900 dark:text-gray-100">
-            Usuario : {{ $user->persona->nombre }}
+            {{ $user->es_estudiante ? 'Estudiante' : 'Empleado' }} : {{ $user->persona->nombre . ' ' . $user->persona->apellido }}
         </div>
         <!-- Formulario para editar usuario -->
         <form action="{{ route('usuarios.update', $user->id) }}" method="POST">
@@ -20,36 +20,49 @@
                     name="nombre"
                     :value="old('nombre', $user->persona->nombre)"
                     type="text"
-                    :readonly="true"
                     class="bg-gray-100"
                 />
 
                 <x-forms.field
+                    label="Apellido"
+                    name="apellido"
+                    :value="old('apellido', $user->persona->apellido)"
+                    type="text"
+                    class="bg-gray-100"
+                />
+            </x-forms.row>
+
+            <x-forms.row :columns="2">
+                <x-forms.field
                     label="Correo electrónico"
                     name="email"
-                    :value="$user->email"
+                    :value="old('email', $user->email)"
                     type="email"
-                    :readonly="true"
                     class="bg-gray-100"
                 />
 
                 <x-forms.field
                     label="Username"
                     name="carnet"
-                    :value="$user->carnet"
+                    :value="old('carnet', $user->carnet)"
                     type="text"
-                    :readonly="true"
                     class="bg-gray-100"
                 />
             </x-forms.row>
 
             <!-- Estado Activo (Checkbox) -->
-            <x-forms.row :fullRow="true">
-                <x-forms.checkbox
-                    label="Activo"
-                    name="activo"
-                    :checked="$user->activo"
-                />
+            <x-forms.row :columns="2">
+                @if($user->es_estudiante)
+                    <x-forms.select label="Escuela" name="escuela" :options="$escuelas" :selected="old('escuela', $user->id_escuela)"
+                        :error="$errors->get('escuela')" required />
+                @endif
+                <div class="flex h-full items-center ml-2">
+                    <x-forms.checkbox
+                        label="Activo"
+                        name="activo"
+                        :checked="$user->activo"
+                    />
+                </div>
             </x-forms.row>
 
             <!-- Picklist de Roles -->

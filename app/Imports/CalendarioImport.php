@@ -5,10 +5,16 @@ namespace App\Imports;
 use App\Models\Mantenimientos\Asignatura;
 use Illuminate\Support\Str;
 use App\Models\Mantenimientos\Aulas;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class CalendarioImport implements ToModel
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNan;
+
+class CalendarioImport implements ToModel, WithHeadingRow, WithStartRow
 {
     protected $week = null;
     protected $day = null;
@@ -16,8 +22,29 @@ class CalendarioImport implements ToModel
     protected $index = 0;
     protected $importedData = [];
 
+    public function startRow(): int
+    {
+        return 7;
+    }
+
     public function model(array $row)
     {
+        // row 0 -> Semana
+        // row 1 -> Día
+        // row 2 -> Fecha
+        // row 3 -> Escuela
+        // row 4 -> Materia
+        // row 5 -> Ciclo
+        // row 6 -> Evaluación
+        // row 7 -> Modalidad
+        // row 8 -> Cantidad de estudiantes
+        // row 9 -> Comentarios
+        // row 10 -> Hora de inicio
+        // row 11 -> Hora de fin
+        // row 12 -> Duración
+        // row 13 -> Aulas
+        // row 14 -> Responsable
+
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
         $aulasCatalog = Aulas::all();
         $aulas = [];
@@ -25,7 +52,6 @@ class CalendarioImport implements ToModel
         if(count($row) < 12){
             return null;
         }
-        $horario = $row[11] ?? null;
 
         if($row[0]){
             $this->week = $row[0];
@@ -43,11 +69,6 @@ class CalendarioImport implements ToModel
 
         $this->index = $this->index + 1;
 
-        if(isset($row[11])){
-            $horario = $row[11];
-            $horario = array_map('trim', explode('-', $horario));
-        }
-
         if(isset($row[4])){
             $row[4] = substr($row[4], 0, 6);
         }
@@ -58,8 +79,8 @@ class CalendarioImport implements ToModel
             $modalidad = 2;
         }
 
-        if($row[12]){
-            $aulasExcel = explode(',', $row[12]);
+        if($row[13]){
+            $aulasExcel = explode(',', $row[13]);
             foreach($aulasExcel as $aula){
                 $aula = trim($aula);
                 $aula = strtoupper($aula);
@@ -75,33 +96,15 @@ class CalendarioImport implements ToModel
                     }
                 }
             }
-            $out->writeln('Aulas: ' . json_encode($aulas));
         }
 
-        if(!$row[4] && !$row[6] && !$row[7] && !$row[8] && !$row[11]){
+        if(!$row[4] && !$row[6] && !$row[7] && !$row[8] && !$row[10] && !$row[11]){
             $out->writeln('Fila ' . $this->index . ' ->'. $row[0] . ' ' . $row[1] . ' ' . $row[2] . ' ' . $row[3] . ' ' . $row[4] . ' ' . $row[5] . ' ' . $row[6] . ' ' . $row[7] . ' ' . $row[8] . ' ' . $row[9] . ' ' . $row[10] . ' ' . $row[11] . ' ' . $row[12]);
             return null;
         }
 
-        if($row[3] !== 'Sistemas'){
-            return null;
-        }
+        $out->writeln(gettype(($row[10])) . ' - ' . gettype($row[11]));
 
-        // return new Calendario([
-        //     'semana'        => $this->week, // Asegúrate de que el encabezado coincida con el Excel
-        //     'dia'           => $this->day, // Asegúrate de que el encabezado coincida con el Excel
-        //     'fecha'         => Date::excelToDateTimeObject($this->date),
-        //     'escuela'       => $row[3] ?? null,
-        //     'codigo'        => $row[4] ?? null,
-        //     'ciclo'         => $row[5] ?? null,
-        //     'evaluacion'    => $row[6] ?? null,
-        //     'modalidad'     => $row[7] ?? null,
-        //     'cantidad_estudiantes' => $row[8] ?? null,
-        //     'comentarios'   => $row[9] ?? null,
-        //     'duracion'      => $row[10] ?? null,
-        //     'horario'       => $row[11] ?? null,
-        //     'local'         => $row[12] ?? null,
-        // ]);
         $this->importedData[] = [
             'index' => $this->index++,
             'semana' => $row[0] ?? $this->week,
@@ -110,12 +113,11 @@ class CalendarioImport implements ToModel
             'evaluacion' => $row[6] ?? null,
             'modalidad' => $modalidad,
             'cantidad_estudiantes' => $row[8] ?? null,
-            'responsable' => $row[10] ?? null,
-            'comentarios' => $row[9] ?? '',
-            'horario' => $row[11] ?? null,
-            'hora_inicio' => $horario[0] ?? null,
-            'hora_fin' => $horario[1] ?? null,
-            'aulas' => $aulas
+            'comentarios' => $row[9] ?? null,
+            'hora_inicio' => gettype($row[10]) == 'double' ? Carbon::createFromTimestamp($row[10] * 86400, 'UTC')->format('H:i') : null,
+            'hora_fin' => gettype($row[11]) == 'double' ? Carbon::createFromTimestamp($row[11] * 86400, 'UTC')->format('H:i') : null,
+            'aulas' => $aulas,
+            'responsable' => $row[14] ?? null,
         ];
     }
 

@@ -38,7 +38,7 @@
                             <div class="mt-4">
                                 <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo de actividad</label>
                                 <select id="tipo_actividad" name="tipo_actividad" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    <option value="evento">Evento</option>
+                                    <option value="evento">Evento / Evaluación</option>
                                     <option value="clase">Clase</option>
                                 </select>
                             </div>
@@ -111,9 +111,36 @@
                     $tipoActividad = session('tipoActividad');
                     $tipoClases = \App\Models\General\TipoClase::all();
                     $modalidades = \App\Models\General\Modalidad::all();
+                    $errorIndices = collect(array_keys($errors->toArray()))
+                    ->map(function ($key) {
+                        return explode('.', $key)[1] ?? null; // Extraer el índice después del punto
+                    })
+                    ->filter() // Eliminar nulos
+                    ->unique()
+                    ->values()
+                    ->sort()
+                    ->toArray();
                 @endphp
 
                 <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Vista previa de la información</h1>
+
+                @if(!empty($errorIndices))
+                    <div class="bg-white rounded-lg  w-full max-w-4xl mt-4 mx-auto overflow-hidden border-[1px] border-escarlata-ues">
+                        <div class="bg-escarlata-ues flex justify-center py-1">
+                            <h2 class="text-lg font-semibold text-white">Errores Detectados</h2>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-sm text-gray-600 mb-3">Estos son los registros que presentan errores. Haz clic en los chips para dirigirte a los detalles de cada error.</p>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($errorIndices as $index)
+                                    <a href="#activity-{{ $index }}" class="px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors">
+                                        Registro {{ $index + 1 }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 @if($tipoActividad == 'evento')
 
@@ -126,9 +153,9 @@
                             </button>
                         </div>
 
-                        <div id="ebento-records-container">
+                        <div id="evento-records-container">
                             @foreach($excelData as $row)
-                                <div class="record-block shadow-sm p-5 rounded-lg border-b border-gray-300 mb-5" data-index="{{ $loop->index }}">
+                                <div class="record-block shadow-sm p-5 rounded-lg border-b border-gray-300 mb-5" id="activity-{{ $loop->index }}">
                                     <div class="flex flex-wrap gap-3 md:gap-8 items-center my-4">
                                         <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Registro de actividad {{ $loop->iteration }} - Semana {{ $row['semana'] }}</h1>
                                         {{-- Botón para eliminar --}}
@@ -300,7 +327,7 @@
 
                         <div id="clase-records-container">
                             @foreach($excelData as $row)
-                                <div class="record-block shadow-sm p-5 rounded-lg border-b border-gray-300 mb-5" data-index="{{ $loop->index }}">
+                                <div class="record-block shadow-sm p-5 rounded-lg border-b border-gray-300 mb-5" id="activity-{{ $loop->index }}">
                                     <div class="flex flex-wrap gap-3 md:gap-8 items-center my-4">
                                         <h1 class="text-xl font-bold text-orange-900">Registro de actividad {{ $loop->iteration }}</h1>
                                         {{-- Botón para eliminar --}}

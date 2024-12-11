@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seguridad;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mantenimientos\Escuela;
 use App\Models\Registro\Persona;
 use App\Models\rhu\EmpleadoPuesto;
 use App\Models\rhu\Puesto;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use OwenIt\Auditing\Models\Audit;
 
 class UsuarioController extends Controller
@@ -52,17 +54,25 @@ class UsuarioController extends Controller
     }
     public function store(Request $request)
     {
-        // Validación de datos
-        $request->validate([
+
+        $rules = [
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
             'fecha_nacimiento' => 'required',
             'telefono' => 'required|string|max:15',
             'email' => 'required|string|email|max:255|unique:users',
             'carnet' => 'required|string|max:20',
+            'tipo_user' => 'required|boolean', // Validar que el tipo de usuario sea 1 o 2
             'roles' => 'nullable|string', // Roles como cadena separada por comas
-            'puesto' => 'required|exists:puestos,id', // Validar que puesto existe en la tabla puestos
-        ]);
+        ];
+        $tipo = $request->input('tipo_user');
+
+        if ($tipo == '1') {
+            $rules['escuela'] = 'required|exists:escuelas,id';
+        } else {
+            $rules['puesto'] = 'required|exists:puestos,id'; // Validar que puesto existe en la tabla puestos
+        }
+        $request->validate($rules);
 
         $request->merge([
             'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
@@ -88,16 +98,29 @@ class UsuarioController extends Controller
                 'id_persona' => $persona->id, // Asignar persona_id al usuario
             ]);
 
-            EmpleadoPuesto::create([
-                'id_usuario' => $usuario->id,
-                'id_puesto' => $request->input('puesto'),
-            ]);
+            if ($tipo == '1') {
+                $usuario->id_escuela = $request->input('escuela');
+                $usuario->es_estudiante = true;
+                $usuario->save();
+
+                $usuario->assignRole('ROLE_USUARIO_BASE');
+            } else {
+                $usuario->es_estudiante = false;
+                $usuario->save();
+                EmpleadoPuesto::create([
+                    'id_usuario' => $usuario->id,
+                    'id_puesto' => $request->input('puesto'),
+                ]);
+            }
 
             // Si hay roles, convertir la cadena de IDs a nombres de roles
             if ($request->filled('roles')) {
                 $roles = Role::whereIn('id', explode(',', $request->roles))->pluck('name')->toArray();
                 $usuario->syncRoles($roles);
+            } else {
+                $usuario->assignRole('ROLE_USUARIO_BASE');
             }
+
 
             DB::commit();
         } catch (\Exception $e) {
@@ -124,17 +147,38 @@ class UsuarioController extends Controller
         $user = User::findOrFail($id);
 
         // Validar los datos de entrada
-        $request->validate([
-            'email' => 'required|email|max:255',
+
+        $rules = [
+            'nombre' => 'required|string',
+            'apellido' => 'required|string',
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id), ],
             'carnet' => 'required|string|max:20',
             'roles' => 'nullable|string', // Validar los roles (cadena separada por comas)
-        ]);
+        ];
+
+        if ($user->es_estudiante) {
+            $rules['escuela'] = 'required|exists:escuelas,id';
+        }
+
+        $request->validate($rules);
 
         // Guardar los datos actualizados del usuario
         $user->update([
             'email' => $request->email,
             'carnet' => $request->carnet,
             'activo' => $request->has('activo'),
+        ]);
+
+        if ($user->es_estudiante) {
+            $user->id_escuela = $request->escuela;
+            $user->save();
+        }
+
+        $persona = Persona::findOrFail($user->id_persona);
+
+        $persona->update([
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido
         ]);
 
         // Obtener los roles actuales y los nuevos roles
@@ -176,6 +220,7 @@ class UsuarioController extends Controller
     {
         // Obtener los roles disponibles
         $roles = Role::all();
+        $escuelas = Escuela::all()->pluck('nombre', 'id');
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
         $idEntidad = $request->input('entidad');
 
@@ -188,7 +233,7 @@ class UsuarioController extends Controller
             return $puestos->pluck('nombre', 'id');
         });
 
-        return view('seguridad.usuarios.create', compact('roles', 'entidades', 'puestos'));
+        return view('seguridad.usuarios.create', compact('roles', 'entidades', 'puestos', 'escuelas'));
     }
 
 
@@ -205,12 +250,13 @@ class UsuarioController extends Controller
      */
     public function edit(string $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('empleadosPuestos')->findOrFail($id);
+        $escuelas = Escuela::all()->pluck('nombre', 'id');
 
         // Obtener todos los roles disponibles
         $roles = Role::all();
 
-        return view('seguridad.usuarios.edit', compact('user', 'roles'));
+        return view('seguridad.usuarios.edit', compact('user', 'roles', 'escuelas'));
     }
 
     public function toggleActivo(User $aula)
