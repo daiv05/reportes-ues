@@ -82,28 +82,28 @@ class UserSeeder extends Seeder
             ],
             [
                 "id_persona" => 11,
-                "carnet" => "nn1101",
+                "carnet" => "nn11001",
                 "email" => "nn11001@yopmail.com",
                 "password" => bcrypt("pass123"),
                 "role" => "USUARIO"
             ],
             [
                 "id_persona" => 12,
-                "carnet" => "nn2101",
+                "carnet" => "nn21001",
                 "email" => "nn21001@yopmail.com",
                 "password" => bcrypt("pass123"),
                 "role" => "USUARIO"
             ],
             [
                 "id_persona" => 13,
-                "carnet" => "nn3101",
+                "carnet" => "nn31001",
                 "email" => "nn31001@yopmail.com",
                 "password" => bcrypt("pass123"),
                 "role" => "USUARIO"
             ],
             [
                 "id_persona" => 14,
-                "carnet" => "nn4101",
+                "carnet" => "nn41001",
                 "email" => "nn41001@yopmail.com",
                 "password" => bcrypt("pass123"),
                 "role" => "USUARIO"

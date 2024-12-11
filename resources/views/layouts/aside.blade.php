@@ -121,7 +121,7 @@
             'active' => request()->is('mantenimientos/*'),
             'icon' => 'heroicon-s-table-cells',
             'label' => 'Mantenimientos',
-            'permissions' => ['AULAS_VER', 'CICLOS_VER', 'ASIGNATURAS_VER', 'ESCUELAS_VER'],
+            'permissions' => ['AULAS_VER', 'ESCUELAS_VER', 'ASIGNATURAS_VER', 'CICLOS_VER', 'RECURSOS_VER', 'UNIDADES_MEDIDA_VER'],
             'items' => [
                 [
                     'to' => 'aulas.index',
@@ -157,7 +157,7 @@
                     'to' => 'unidades-medida.index',
                     'active' => request()->is('mantenimientos/unidades-medida'),
                     'label' => 'Unidades de medida',
-                    'permissions' => ['RECURSOS_VER'],
+                    'permissions' => ['UNIDADES_MEDIDA_VER'],
                 ],
             ],
         ],
