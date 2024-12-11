@@ -13,10 +13,12 @@
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Usuarios" />
         <div class="p-6">
+            @canany(['USUARIOS_CREAR'])
             <x-forms.primary-button class="block" type="button" id="add-button"
                 onclick="window.location.href='{{ url('seguridad/usuarios/create') }}'">
                 Añadir
             </x-forms.primary-button>
+            @endcanany
         </div>
     </x-slot>
     <x-container>
