@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Mail;
 class CicloController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $ciclos = Ciclo::with('tipoCiclo')->paginate(10);
+        $ciclos = Ciclo::with('tipoCiclo')->paginate(10)->appends($request->query());
         $tiposCiclos = TipoCiclo::all();
 
         $tiposCiclos = $tiposCiclos->pluck('nombre', 'id')->toArray();

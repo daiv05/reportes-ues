@@ -143,6 +143,7 @@
 <script>
     let activeNotifications = 0;
     const MAX_NOTIFICATIONS = 4;
+    const TIME_DISPLAY_NOTY = 5000;
 
     document.addEventListener('DOMContentLoaded', function (e) {
         const loader = document.getElementById('loader');
@@ -180,7 +181,7 @@
         notyf.open({
             type: type,
             message: content,
-            duration: 5000,
+            duration: TIME_DISPLAY_NOTY,
             dismissible: true
         });
 
@@ -190,7 +191,7 @@
         // Restar del contador cuando la notificación desaparezca
         setTimeout(() => {
             activeNotifications--;
-        }, 5000); // Duración de la notificación
+        }, TIME_DISPLAY_NOTY); // Duración de la notificación
     };
 </script>
 

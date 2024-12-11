@@ -19,7 +19,7 @@ class EntidadesController extends Controller
         $entidades = Entidades::when($nombreFilter, function ($query, $nombreFilter) {
                 return $query->where('nombre', 'like', "%$nombreFilter%");
             })
-            ->paginate(10)->appends(request()->query());
+            ->paginate(2)->appends(request()->query());
 
         // Lista jerárquica de entidades para el select
         $entidadesLista = $this->getHierarchicalEntidades();
