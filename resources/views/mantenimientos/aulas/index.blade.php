@@ -10,10 +10,12 @@
     <x-slot name="header">
         <x-header.simple titulo="Gestión de aulas" />
         <div class="p-6">
+            @canany(['ESCUELAS_CREAR'])
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button">
                 Añadir
             </x-forms.primary-button>
+            @endcanany
         </div>
     </x-slot>
     <x-container>
@@ -192,7 +194,7 @@
             document.getElementById('id_facultad').value = facultad;
             document.getElementById('activo').value = activo;
 
-            // Abrir el modal
+
             document.querySelector('[data-modal-target="static-modal"]').click();
         });
     });
@@ -201,17 +203,17 @@
     function updateModalTitle(title) {
         document.getElementById('modal-title').textContent = title;
     }
-    // Función para resetear el formulario y limpiar los errores
+
     function resetForm() {
-        document.getElementById('asignacion-form').reset(); // Limpiar el formulario
-        document.getElementById('general-errors').innerHTML = ''; // Limpiar errores generales
+        document.getElementById('asignacion-form').reset();
+        document.getElementById('general-errors').innerHTML = '';
 
         document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML =
-            '')); // Limpiar errores específicos de campo
+            ''));
 
-        // Limpiar los valores de los select
+
         document.querySelectorAll('select').forEach((select) => {
-            select.selectedIndex = 0; // Restablecer el primer valor (vacío o predeterminado)
+            select.selectedIndex = 0;
         });
     }
 </script>
