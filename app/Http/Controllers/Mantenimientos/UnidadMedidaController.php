@@ -24,10 +24,11 @@ class UnidadMedidaController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50',
+            'nombre' => 'required|max:50|unique:unidades_medida,nombre',
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre de la unidad es requerido',
+            'nombre.unique' => 'Ya existe una unidad de medida con ese nombre',
             'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres'
         ]);
 
@@ -41,7 +42,7 @@ class UnidadMedidaController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50',
+            'nombre' => 'required|max:50|unique:unidades_medida,nombre,' . $id,
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre de la unidad es requerido',

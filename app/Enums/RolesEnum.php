@@ -4,11 +4,11 @@ namespace App\Enums;
 
 enum RolesEnum: string
 {
-    case SUPERADMIN = 'ROLE_USUARIO_SUPER_ADMIN';
-    case ADMIN_REPORTE = 'ROLE_USUARIO_ADMIN_REPORTE';
-    case SUPERVISOR_REPORTE = 'ROLE_USUARIO_SUPERVISOR_REPORTE';
-    case EMPLEADO = 'ROLE_USUARIO_EMPLEADO';
-    case USUARIO = 'ROLE_USUARIO_BASE';
+    case SUPERADMIN = 'SUPERADMIN';
+    case ADMIN_REPORTE = 'ADMINISTRADOR DE REPORTES';
+    case SUPERVISOR_REPORTE = 'SUPERVISOR';
+    case EMPLEADO = 'EMPLEADO';
+    case USUARIO = 'USUARIO';
 
     public function permisos(): array
     {
@@ -47,6 +47,12 @@ enum RolesEnum: string
                 PermisosEnum::UNIDADES_MEDIDA_EDITAR->value,
                 PermisosEnum::CLASES_VER->value,
                 PermisosEnum::EVENTOS_VER->value,
+                PermisosEnum::BIENES_VER->value,
+                PermisosEnum::BIENES_CREAR->value,
+                PermisosEnum::BIENES_EDITAR->value,
+                PermisosEnum::TIPOS_BIENES_VER->value,
+                PermisosEnum::TIPOS_BIENES_CREAR->value,
+                PermisosEnum::TIPOS_BIENES_EDITAR->value,
             ],
             self::EMPLEADO->value => [
                 PermisosEnum::REPORTES_CREAR->value,
@@ -62,6 +68,13 @@ enum RolesEnum: string
                 PermisosEnum::UNIDADES_MEDIDA_EDITAR->value,
                 PermisosEnum::CLASES_VER->value,
                 PermisosEnum::EVENTOS_VER->value,
+                PermisosEnum::BIENES_VER->value,
+                PermisosEnum::BIENES_CREAR->value,
+                PermisosEnum::BIENES_EDITAR->value,
+                PermisosEnum::TIPOS_BIENES_VER->value,
+                PermisosEnum::TIPOS_BIENES_CREAR->value,
+                PermisosEnum::TIPOS_BIENES_EDITAR->value,
+
             ],
             self::USUARIO->value => [
                 PermisosEnum::REPORTES_CREAR->value,
