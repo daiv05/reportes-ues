@@ -84,23 +84,19 @@ Route::middleware('auth')->group(function () {
     /* ********************************************* */
     Route::prefix('mantenimientos')->group(function () {
         Route::prefix('escuelas')->group(function () {
-            Route::get('/', [EscuelaController::class, 'index'])->name('escuelas.index')->middleware('permission:ESCUELAS_VER');
-            Route::post('/', [EscuelaController::class, 'store'])->name('escuelas.store')->middleware('permission:ESCUELAS_CREAR');
-            Route::get('/{escuela}/edit', [EscuelaController::class, 'edit'])->name('escuelas.edit')->middleware('permission:ESCUELAS_EDITAR');
-            Route::patch('/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuelas.toggleActivo')->middleware('permission:ESCUELAS_EDITAR');
+            Route::get('/', [EscuelaController::class, 'index'])->name('escuelas.index');
+            Route::patch('/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuelas.toggleActivo');
         });
+        Route::resource('/escuela', EscuelaController::class)->except(['destroy']);
 
-
+        // Rutas de Aulas
         Route::prefix('aulas')->group(function () {
-            Route::get('/', [AulasController::class, 'index'])->name('aulas.index')->middleware('permission:AULAS_VER');
-            Route::get('/create', [AulasController::class, 'create'])->name('aulas.create')->middleware('permission:AULAS_CREAR');
-            Route::post('/', [AulasController::class, 'store'])->name('aulas.store')->middleware('permission:AULAS_CREAR');
-            Route::get('/{aula}/edit', [AulasController::class, 'edit'])->name('aulas.edit')->middleware('permission:AULAS_EDITAR');
-            Route::patch('/{aula}', [AulasController::class, 'update'])->name('aulas.update')->middleware('permission:AULAS_EDITAR');
-            Route::patch('/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo')->middleware('permission:AULAS_EDITAR');
+            Route::get('/', [AulasController::class, 'index'])->name('aulas.index');
+            Route::patch('/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
         });
+        Route::resource('aulas', AulasController::class)->except(['destroy']);
 
-
+        // Rutas de Asignaturas
         Route::prefix('asignaturas')->group(function () {
             Route::get('/', [AsignaturaController::class, 'index'])->name('asignaturas.index');
             Route::post('/importar', [AsignaturaController::class, 'importarDatos'])->name('asignaturas.importar');
