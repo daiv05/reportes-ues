@@ -102,14 +102,11 @@ Route::middleware('auth')->group(function () {
 
 
         Route::prefix('asignaturas')->group(function () {
-            Route::get('/', [AsignaturaController::class, 'index'])->name('asignaturas.index')->middleware('permission:ASIGNATURAS_VER');
-            Route::post('/importar', [AsignaturaController::class, 'importarDatos'])->name('asignaturas.importar') > middleware('permission:ASIGNATURAS_CREAR');
-            Route::patch('/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->name('asignaturas.toggleActivo')->middleware('permission:ASIGNATURAS_EDITAR');
-            Route::get('/create', [AsignaturaController::class, 'create'])->name('asignaturas.create')->middleware('permission:ASIGNATURAS_CREAR');
-            Route::post('/', [AsignaturaController::class, 'store'])->name('asignaturas.store')->middleware('permission:ASIGNATURAS_CREAR');
-            Route::get('/{asignatura}/edit', [AsignaturaController::class, 'edit'])->name('asignaturas.edit')->middleware('permission:ASIGNATURAS_EDITAR');
-            Route::patch('/{asignatura}', [AsignaturaController::class, 'update'])->name('asignaturas.update')->middleware('permission:ASIGNATURAS_EDITAR');
+            Route::get('/', [AsignaturaController::class, 'index'])->name('asignaturas.index');
+            Route::post('/importar', [AsignaturaController::class, 'importarDatos'])->name('asignaturas.importar');
+            Route::patch('/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->name('asignaturas.toggleActivo');
         });
+        Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
 
         // Rutas de Ciclos
         Route::prefix('ciclos')->group(function () {
