@@ -43,21 +43,17 @@ class PuestoController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar los datos recibidos
         $validated = $request->validate([
             'nombre' => 'required|string|max:50',
             'id_entidad' => 'required|integer|exists:entidades,id',
             'activo' => 'required|boolean',
         ]);
 
-        // Crear el puesto con los datos validados
         $puesto = new Puesto();
         $puesto->nombre = $validated['nombre'];
         $puesto->id_entidad = $validated['id_entidad'];
         $puesto->activo = $validated['activo'];
         $puesto->save();
-
-        // Redirigir con mensaje de éxito
         return redirect()->route('puestos.index')->with('message', [
             'type' => 'success',
             'content' => 'Puesto creado exitosamente.'
@@ -85,21 +81,16 @@ class PuestoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validar los datos recibidos
         $validated = $request->validate([
             'nombre' => 'required|string|max:50',
             'id_entidad' => 'required|integer|exists:entidades,id',
             'activo' => 'required|boolean',
         ]);
-
-        // Buscar el puesto y actualizarlo
         $puesto = Puesto::findOrFail($id);
         $puesto->nombre = $validated['nombre'];
         $puesto->id_entidad = $validated['id_entidad'];
         $puesto->activo = $validated['activo'];
         $puesto->save();
-
-        // Redirigir con mensaje de éxito
         return redirect()->route('puestos.index')->with('message', [
             'type' => 'success',
             'content' => 'Puesto actualizado exitosamente.'
