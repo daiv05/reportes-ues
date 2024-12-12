@@ -83,26 +83,39 @@ Route::middleware('auth', 'verified')->group(function () {
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */
     /* ********************************************* */
     Route::prefix('mantenimientos')->group(function () {
-        Route::prefix('escuelas')->group(function () {
-            Route::get('/', [EscuelaController::class, 'index'])->name('escuelas.index');
-            Route::patch('/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuelas.toggleActivo');
-        });
-        Route::resource('/escuela', EscuelaController::class)->except(['destroy']);
+        Route::get('/escuelas', [EscuelaController::class, 'index'])->name('escuelas.index');
+        Route::patch('/escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuelas.toggleActivo');
+        Route::get('escuela', [EscuelaController::class, 'index'])->name('escuela.index');
+        Route::post('escuela', [EscuelaController::class, 'store'])->name('escuela.store');
+        Route::get('escuela/create', [EscuelaController::class, 'create'])->name('escuela.create');
+        Route::get('escuela/{escuela}', [EscuelaController::class, 'show'])->name('escuela.show');
+        Route::put('escuela/{escuela}', [EscuelaController::class, 'update'])->name('escuela.update');
+        Route::patch('escuela/{escuela}', [EscuelaController::class, 'update'])->name('escuela.update');
+        Route::get('escuela/{escuela}/edit', [EscuelaController::class, 'edit'])->name('escuela.edit');
+        Route::patch('escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuelas.toggleActivo');
 
         // Rutas de Aulas
-        Route::prefix('aulas')->group(function () {
-            Route::get('/', [AulasController::class, 'index'])->name('aulas.index');
-            Route::patch('/{aula}/toggle', [AulasController::class, 'toggleActivo'])->name('aulas.toggleActivo');
-        });
-        Route::resource('aulas', AulasController::class)->except(['destroy']);
+        Route::get('aulas', [AulasController::class, 'index'])->middleware('permission:AULAS_VER')->name('aulas.index');
+        Route::post('aulas', [AulasController::class, 'store'])->middleware('permission:AULAS_CREAR')->name('aulas.store');
+        Route::get('aulas/create', [AulasController::class, 'create'])->middleware('permission:AULAS_CREAR')->name('aulas.create');
+        Route::get('aulas/{aula}', [AulasController::class, 'show'])->middleware('permission:AULAS_VER')->name('aulas.show');
+        Route::put('aulas/{aula}', [AulasController::class, 'update'])->middleware('permission:AULAS_EDITAR')->name('aulas.update');
+        Route::patch('aulas/{aula}', [AulasController::class, 'update'])->middleware('permission:AULAS_EDITAR')->name('aulas.update'); 
+        Route::get('aulas/{aula}/edit', [AulasController::class, 'edit'])->middleware('permission:AULAS_EDITAR')->name('aulas.edit');
+        Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('aulas.toggleActivo');
 
         // Rutas de Asignaturas
-        Route::prefix('asignaturas')->group(function () {
-            Route::get('/', [AsignaturaController::class, 'index'])->name('asignaturas.index');
-            Route::post('/importar', [AsignaturaController::class, 'importarDatos'])->name('asignaturas.importar');
-            Route::patch('/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->name('asignaturas.toggleActivo');
-        });
-        Route::resource('/asignatura', AsignaturaController::class)->except(['destroy']);
+        Route::get('asignaturas', [AsignaturaController::class, 'index'])->middleware('permission:ASIGNATURAS_VER')->name('asignaturas.index');
+        Route::post('asignatura', [AsignaturaController::class, 'store'])->middleware('permission:ASIGNATURAS_CREAR')->name('asignatura.store');
+        Route::get('asignatura/create', [AsignaturaController::class, 'create'])->middleware('permission:ASIGNATURAS_CREAR')->name('asignatura.create');
+        Route::get('asignatura/{asignatura}', [AsignaturaController::class, 'show'])->middleware('permission:ASIGNATURAS_VER')->name('asignatura.show');
+        Route::put('asignatura/{asignatura}', [AsignaturaController::class, 'update'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignatura.update');
+        Route::patch('asignatura/{asignatura}', [AsignaturaController::class, 'update'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignatura.update');
+        Route::get('asignatura/{asignatura}/edit', [AsignaturaController::class, 'edit'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignatura.edit');
+        Route::patch('asignaturas/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignaturas.toggleActivo');
+        Route::post('asignaturas/importar', [AsignaturaController::class, 'importarDatos'])->middleware('permission:ASIGNATURAS_CREAR')->name('asignaturas.importar');
+
+
 
         // Rutas de Ciclos
         Route::prefix('ciclos')->group(function () {
@@ -147,14 +160,25 @@ Route::middleware('auth', 'verified')->group(function () {
 
         // Rutas para los roles
         Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-        Route::resource('roles', RoleController::class)->except(['destroy']);
+        Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+        Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+        Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
+        Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+        Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+        Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
         Route::patch('roles/{rol}/toggle', [RoleController::class, 'toggleActivo'])->name('roles.toggleActivo');
 
-        /*USUARIOS*/
-        Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
-        Route::resource('usuarios', UsuarioController::class)->except(['destroy']);
-        Route::patch('usuarios/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->name('usuarios.toggleActivo');
+        // Rutas para los usuarios
+        Route::get('/usuarios', [UsuarioController::class, 'index'])->middleware('permission:USUARIOS_VER')->name('usuarios.index');
+        Route::post('/usuarios', [UsuarioController::class, 'store'])->middleware('permission:USUARIOS_CREAR')->name('usuarios.store');
+        Route::get('/usuarios/create', [UsuarioController::class, 'create'])->middleware('permission:USUARIOS_CREAR')->name('usuarios.create');
+        Route::get('/usuarios/{usuario}', [UsuarioController::class, 'show'])->middleware('permission:USUARIOS_VER')->name('usuarios.show');
+        Route::put('/usuarios/{usuario}', [UsuarioController::class, 'update'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.update');
+        Route::patch('/usuarios/{usuario}', [UsuarioController::class, 'update'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.update');
+        Route::get('/usuarios/{usuario}/edit', [UsuarioController::class, 'edit'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.edit');
+        Route::patch('usuarios/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.toggleActivo');
     });
+
 
     /* ****************************************** */
     /*   ************* RHU ************   */
