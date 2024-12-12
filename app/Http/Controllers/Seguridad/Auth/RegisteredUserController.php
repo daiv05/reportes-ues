@@ -39,7 +39,7 @@ class RegisteredUserController extends Controller
             'apellido' => ['required', 'string', 'max:255'],
             'fecha_nacimiento' => ['required'],
             'telefono' => ['required', 'string', 'max:15'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -71,26 +71,6 @@ class RegisteredUserController extends Controller
                 'ip_address' => request()->ip(),
                 'user_agent' => request()->header('User-Agent'),
             ]);
-
-            $verify =  DB::table('password_reset_tokens')->where([
-                ['email', $request->all()['email']]
-            ]);
-
-            if ($verify->exists()) {
-                $verify->delete();
-            }
-
-            $code = rand(100000, 999999);
-
-            DB::table('password_reset_tokens')
-                ->insert(
-                    [
-                        'email' => $request->all()['email'],
-                        'token' => $code
-                    ]
-                );
-
-            Mail::to($request->email)->send(new VerifyEmail($code));
 
             Auth::login($user);
 

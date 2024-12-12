@@ -21,7 +21,7 @@ use App\Http\Controllers\Mantenimientos\TipoBienController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('landing');
 
 Route::get('/inicio', function () {
     return view('dashboard');
