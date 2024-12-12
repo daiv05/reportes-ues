@@ -95,7 +95,7 @@
                 <div id="general-errors" class="mb-4 text-sm text-red-500"></div>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.select label="Entidad" id="id_entidad" name="entidad" :options="$entidades"
+                        <x-forms.select label="Entidad" id="id_entidad" name="id_entidad" :options="$entidades"
                             :value="old('id_entidad')" :error="$errors->get('id_entidad')" required />
                         <div id="entidad-error" class="text-sm text-red-500"></div>
                     </div>

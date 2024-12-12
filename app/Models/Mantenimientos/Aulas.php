@@ -30,4 +30,5 @@ class Aulas extends Model  implements Auditable
     {
         return $this->hasMany(Reporte::class, 'id_aula');
     }
+
 }

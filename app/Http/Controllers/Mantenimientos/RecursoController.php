@@ -29,19 +29,20 @@ class RecursoController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50',
+            'nombre' => 'required|max:50|unique:recursos,nombre',
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre del recurso es requerido',
-            'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres'
+            'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
+            'nombre.unique' => 'Ya existe un recurso con ese nombre.',
         ]);
-
         Recurso::create($request->all());
         return redirect()->route('recursos.index')->with('message', [
             'type' => 'success',
             'content' => 'El recurso se ha creado exitosamente.'
         ]);
     }
+
 
     public function edit(Recurso $recurso): View
     {
@@ -51,11 +52,12 @@ class RecursoController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50',
+            'nombre' => 'required|max:50|unique:recursos,nombre,' . $id,
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre del recurso es requerido',
-            'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres'
+            'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
+            'nombre.unique' => 'Ya existe un recurso con ese nombre.',
         ]);
 
         $recurso = Recurso::findOrFail($id);
@@ -65,4 +67,5 @@ class RecursoController extends Controller
             'content' => 'El recurso se ha actualizado exitosamente.'
         ]);
     }
+
 }

@@ -49,16 +49,27 @@ class PuestoController extends Controller
             'activo' => 'required|boolean',
         ]);
 
+        $existingPuesto = Puesto::where('nombre', $validated['nombre'])
+                                ->where('id_entidad', $validated['id_entidad'])
+                                ->first();
+
+        if ($existingPuesto) {
+            return back()->withErrors(['nombre' => 'El puesto con ese nombre ya existe para esta entidad.'])
+                         ->withInput();
+        }
+
         $puesto = new Puesto();
         $puesto->nombre = $validated['nombre'];
         $puesto->id_entidad = $validated['id_entidad'];
         $puesto->activo = $validated['activo'];
         $puesto->save();
+
         return redirect()->route('puestos.index')->with('message', [
             'type' => 'success',
             'content' => 'Puesto creado exitosamente.'
         ]);
     }
+
 
     /**
      * Display the specified resource.
@@ -86,16 +97,29 @@ class PuestoController extends Controller
             'id_entidad' => 'required|integer|exists:entidades,id',
             'activo' => 'required|boolean',
         ]);
+
+        $existingPuesto = Puesto::where('nombre', $validated['nombre'])
+                                ->where('id_entidad', $validated['id_entidad'])
+                                ->where('id', '!=', $id)
+                                ->first();
+
+        if ($existingPuesto) {
+            return back()->withErrors(['nombre' => 'El puesto con ese nombre ya existe para esta entidad.'])
+                         ->withInput();
+        }
+
         $puesto = Puesto::findOrFail($id);
         $puesto->nombre = $validated['nombre'];
         $puesto->id_entidad = $validated['id_entidad'];
         $puesto->activo = $validated['activo'];
         $puesto->save();
+
         return redirect()->route('puestos.index')->with('message', [
             'type' => 'success',
             'content' => 'Puesto actualizado exitosamente.'
         ]);
     }
+
 
     /**
      * Remove the specified resource from storage.
