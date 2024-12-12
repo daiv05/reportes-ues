@@ -19,7 +19,7 @@ class Aulas extends Model  implements Auditable
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] = strtoupper($value);
+        $this->attributes['nombre'] = mb_strtoupper($value, 'utf-8');
     }
     public function facultades()
     {
@@ -30,4 +30,5 @@ class Aulas extends Model  implements Auditable
     {
         return $this->hasMany(Reporte::class, 'id_aula');
     }
+
 }

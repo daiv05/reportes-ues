@@ -21,7 +21,7 @@ class LogPasswordResetEvent
             'new_values' => [], // No hay nuevos valores directamente asociados
             'url' => request()->url(),
             'ip_address' => request()->ip(), // IP del usuario
-            'agent' => request()->header('User-Agent'), // Información del navegador
+            'user_agent' => request()->header('User-Agent'), // Información del navegador
         ]);
     }
 }

@@ -14,17 +14,12 @@ class VerifyEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $code;
-    /**
-     * Create a new message instance.
-     */
+
     public function __construct($code)
     {
         $this->code = $code;
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -32,9 +27,6 @@ class VerifyEmail extends Mailable
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
@@ -42,11 +34,6 @@ class VerifyEmail extends Mailable
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];

@@ -19,6 +19,6 @@ class Dia extends Model  implements Auditable
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] = strtoupper($value);
+        $this->attributes['nombre'] = mb_strtoupper($value, 'utf-8');
     }
 }
