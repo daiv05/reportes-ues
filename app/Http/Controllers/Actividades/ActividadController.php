@@ -195,8 +195,8 @@ class ActividadController extends Controller
                 $actividad = new Actividad();
                 $actividad->id_ciclo = $cicloActivo->id;
                 $actividad->id_modalidad = $data['modalidad'][$key];
-                $actividad->hora_inicio = $data['hora_inicio'][$key];
-                $actividad->hora_fin = $data['hora_fin'][$key];
+                $actividad->hora_inicio = $data['hora_inicio'][$key] ?? null;
+                $actividad->hora_fin = $data['hora_fin'][$key] ?? null;
                 $actividad->responsable = $data['responsable'][$key];
                 $actividad->save();
 

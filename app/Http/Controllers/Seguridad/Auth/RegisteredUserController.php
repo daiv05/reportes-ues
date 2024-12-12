@@ -3,35 +3,30 @@
 namespace App\Http\Controllers\Seguridad\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\VerifyEmail;
 use App\Models\Mantenimientos\Escuela;
 use App\Models\Registro\Persona;
 use App\Models\Seguridad\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use OwenIt\Auditing\Models\Audit;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
     public function create(): View
     {
         $escuelas = Escuela::all();
         return view('seguridad.auth.register', ['escuelas' => $escuelas]);
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->merge([
@@ -44,7 +39,8 @@ class RegisteredUserController extends Controller
             'apellido' => ['required', 'string', 'max:255'],
             'fecha_nacimiento' => ['required'],
             'telefono' => ['required', 'string', 'max:15'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'],
+            // 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -60,24 +56,109 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'id_persona' => $persona->id,
+            'id_escuela' => $request->escuela,
+            'es_estudiante' => true,
         ]);
 
-        event(new Registered($user));
+        $user->assignRole('USUARIO');
 
+        if ($user) {
+            event(new Registered($user));
 
-        Audit::create([
-            'user_id' => $user->id,
-            'event' => 'user_registered',
-            'auditable_type' => 'App\Models\Seguridad\User',
-            'auditable_id' => $user->id,
-            'old_values' => [],
-            'new_values' => $user->getAttributes(),
-            'url' => request()->url(),
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->header('User-Agent'),
-        ]);
-        Auth::login($user);
+            Audit::create([
+                'user_id' => $user->id,
+                'event' => 'user_registered',
+                'auditable_type' => 'App\Models\Seguridad\User',
+                'auditable_id' => $user->id,
+                'old_values' => [],
+                'new_values' => $user->getAttributes(),
+                'url' => request()->url(),
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->header('User-Agent'),
+            ]);
 
-        return redirect(RouteServiceProvider::HOME);
+            Auth::login($user);
+
+            return redirect()->route('verificacion-email.comprobacion');
+
+        } else {
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'Ocurrió un error inesperado, por favor vuelva a intentar'
+            ]);
+            return redirect()->back();
+        }
+
     }
+
+    // public function verifyEmail(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'token' => ['required'],
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         Session::flash('message', [
+    //             'type' => 'error',
+    //             'content' => 'El código es inválido'
+    //         ]);
+    //         return redirect()->back();
+    //     }
+    //     $select = DB::table('password_reset_tokens')
+    //         ->where('email', Auth::user()->email)
+    //         ->where('token', $request->token);
+
+    //     if ($select->get()->isEmpty()) {
+    //         Session::flash('message', [
+    //             'type' => 'error',
+    //             'content' => 'El código es inválido'
+    //         ]);
+    //         return redirect()->back();
+    //     }
+
+    //     $select = DB::table('password_reset_tokens')
+    //         ->where('email', Auth::user()->email)
+    //         ->where('token', $request->token)
+    //         ->delete();
+
+    //     $user = User::find(Auth::user()->id);
+    //     $user->email_verified_at = Carbon::now()->getTimestamp();
+    //     $user->save();
+
+    //     Auth::login($user);
+
+    //     Session::flash('message', [
+    //         'type' => 'success',
+    //         'content' => '¡Bienvenido!'
+    //     ]);
+    //     return redirect(RouteServiceProvider::HOME);
+    // }
+
+    // public function resendCode(Request $request)
+    // {
+    //     $verify =  DB::table('password_reset_tokens')->where([
+    //         ['email', Auth::user()->email]
+    //     ]);
+
+    //     if ($verify->exists()) {
+    //         $verify->delete();
+    //     }
+
+    //     $token = random_int(100000, 999999);
+    //     $password_reset = DB::table('password_reset_tokens')->insert([
+    //         'email' => Auth::user()->email,
+    //         'token' =>  $token,
+    //         'created_at' => Carbon::now()
+    //     ]);
+
+    //     if ($password_reset) {
+    //         Mail::to(Auth::user()->email)->send(new VerifyEmail($token));
+
+    //         Session::flash('message', [
+    //             'type' => 'success',
+    //             'content' => 'El correo de verificación ha sido reenviado'
+    //         ]);
+    //         return redirect()->back();
+    //     }
+    // }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\VerifyEmailController as AuthVerifyEmailController;
 use App\Http\Controllers\Seguridad\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Seguridad\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Seguridad\Auth\EmailVerificationNotificationController;
@@ -36,21 +37,16 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
-        ->name('verification.notice');
+    Route::get('verificar-email', EmailVerificationPromptController::class)
+        ->name('verificacion-email.comprobacion');
 
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+    Route::post('verificar-email/reenviar-codigo', [EmailVerificationNotificationController::class, 'store'])
         ->middleware('throttle:6,1')
-        ->name('verification.send');
+        ->name('verificacion-email.reenviar');
 
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->name('password.confirm');
-
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    Route::post('verificar-email/confirmar', VerifyEmailController::class)
+        ->middleware('throttle:6,1')
+        ->name('verificacion-email.confirmar');
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
