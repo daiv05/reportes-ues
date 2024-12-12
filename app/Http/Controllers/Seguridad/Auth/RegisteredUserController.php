@@ -59,7 +59,7 @@ class RegisteredUserController extends Controller
             'es_estudiante' => true,
         ]);
 
-        $user->assignRole('ROLE_USUARIO_BASE');
+        $user->assignRole('USUARIO');
 
         if ($user) {
             event(new Registered($user));
