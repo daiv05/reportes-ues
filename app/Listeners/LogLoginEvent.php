@@ -23,7 +23,7 @@ class LogLoginEvent
             'new_values' => [],       // No hay valores nuevos para login
             'url' => request()->url(), // URL actual
             'ip_address' => request()->ip(), // IP del usuario
-            'agent' => request()->header('User-Agent'), // Información del navegador
+            'user_agent' => request()->header('User-Agent'), // Información del navegador
         ]);
     }
 }

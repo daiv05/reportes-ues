@@ -163,6 +163,27 @@
             justify-content: center;
             align-items: center;
         }
+
+        .btn-primary {
+            background-color: #9a3412;
+            border: none;
+            border-radius: 4px;
+            color: white !important;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .flex-div {
+            display: flex;
+            justify-content: center;
+            justify-self: center;
+            justify-items: center;
+        }
     </style>
 </head>
 
