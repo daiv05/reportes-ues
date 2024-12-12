@@ -5,24 +5,62 @@ namespace App\Http\Controllers\Seguridad\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class VerifyEmailController extends Controller
 {
-    /**
-     * Mark the authenticated user's email address as verified.
-     */
-    public function __invoke(EmailVerificationRequest $request): RedirectResponse
+    public function __invoke(Request $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(RouteServiceProvider::HOME.'?verified=1');
+        if (auth()->user()->hasVerifiedEmail()) {
+            return redirect(RouteServiceProvider::HOME);
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
+        error_log(json_encode($request->all()));
+
+        $validator = Validator::make($request->all(), [
+            'code' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'Debe ingresar un código válido'
+            ]);
+            return back()->withInput();
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME.'?verified=1');
+        $select = DB::table('password_reset_tokens')
+            ->where('email', $request->user()->email)
+            ->where('token', $request->input('code'));
+
+        if ($select->get()->isEmpty()) {
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'El código ingresado es inválido'
+            ]);
+            return back()->withInput();
+        }
+
+        $select = DB::table('password_reset_tokens')
+            ->where('email', $request->user()->email)
+            ->where('token', $request->input('code'))
+            ->delete();
+
+        auth()->user()->markEmailAsVerified();
+
+        event(new Verified(auth()->user()));
+
+        // Auth::login($request->user());
+
+        Session::flash('message', [
+            'type' => 'success',
+            'content' => '¡Bienvenido!'
+        ]);
+        return redirect(RouteServiceProvider::HOME);
     }
 }
