@@ -2,7 +2,6 @@
 
 namespace App\Models\Seguridad;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Registro\Persona;
 use App\Models\Reportes\Reporte;
 use App\Models\rhu\EmpleadoPuesto;
@@ -15,13 +14,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
-use OwenIt\Auditing\Models\Audit;
-
-
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable implements Auditable
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable,\OwenIt\Auditing\Auditable;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, \OwenIt\Auditing\Auditable;
 
 
     protected $fillable = [
@@ -31,7 +28,7 @@ class User extends Authenticatable implements Auditable
         'id_persona',
         'activo',
         'id_escuela',
-        'es_estudiante', 
+        'es_estudiante',
     ];
 
     protected $hidden = [
@@ -43,28 +40,34 @@ class User extends Authenticatable implements Auditable
         'email_verified_at' => 'datetime',
     ];
 
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = config('app.url') . '/reset-password' . '/' . $token . '?email=' . $this->email;
+        $this->notify(new ResetPasswordNotification($url));
+    }
 
     public function setCarnetAttribute($value)
     {
-        $this->attributes['carnet'] = strtoupper($value);
+        $this->attributes['carnet'] = mb_strtoupper($value, 'utf-8');
     }
-    public function persona() : BelongsTo
+
+    public function persona(): BelongsTo
     {
         return $this->belongsTo(Persona::class, 'id_persona');
     }
 
-    public function empleadosPuestos() : HasMany
+    public function empleadosPuestos(): HasMany
     {
         return $this->hasMany(EmpleadoPuesto::class, 'id_usuario');
     }
 
-    public function reportes() : HasMany
+    public function reportes(): HasMany
     {
         return $this->hasMany(Reporte::class, 'id_usuario_reporta');
     }
 
     public function escuela(): BelongsTo
     {
-        return $this->belongsTo(Escuela::class, 'id_escuela'); // Asegúrate de que el modelo Escuela esté correctamente importado
+        return $this->belongsTo(Escuela::class, 'id_escuela');
     }
 }

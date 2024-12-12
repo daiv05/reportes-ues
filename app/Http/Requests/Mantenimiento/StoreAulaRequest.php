@@ -15,7 +15,7 @@ class StoreAulaRequest extends FormRequest
     {
         return [
             'id_facultad' => 'required|exists:facultades,id',
-            'nombre' => 'required|max:50',
+            'nombre' => 'required|max:50|unique:aulas,nombre,NULL,id,id_facultad,' . $this->id_facultad,
             'activo' => 'required|boolean',
         ];
     }
@@ -27,8 +27,10 @@ class StoreAulaRequest extends FormRequest
             'id_facultad.exists' => 'La facultad seleccionada no existe en nuestra base de datos.',
             'nombre.required' => 'El nombre del aula es obligatorio.',
             'nombre.max' => 'El nombre del aula no debe exceder los 50 caracteres.',
+            'nombre.unique' => 'Ya existe un aula con este nombre en la facultad seleccionada.', 
             'activo.required' => 'El campo de estado activo es obligatorio.',
             'activo.boolean' => 'El campo de estado activo debe ser verdadero o falso.',
         ];
     }
 }
+

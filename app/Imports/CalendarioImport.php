@@ -83,7 +83,7 @@ class CalendarioImport implements ToModel, WithHeadingRow, WithStartRow
             $aulasExcel = explode(',', $row[13]);
             foreach($aulasExcel as $aula){
                 $aula = trim($aula);
-                $aula = strtoupper($aula);
+                $aula = mb_strtoupper($aula, 'utf-8');
                 $aula = str_replace('-', '', $aula);
                 $aula = str_replace(' ', '', $aula);
                 if(Str::contains($aula, 'AUDITORIO') || Str::contains($aula, 'A340') || Str::contains($aula, 'MARMOL')){
