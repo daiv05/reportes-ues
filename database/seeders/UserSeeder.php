@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Seguridad\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -116,7 +117,8 @@ class UserSeeder extends Seeder
                     "id_persona" => $usuario["id_persona"],
                     "carnet" => $usuario["carnet"],
                     "email" => $usuario["email"],
-                    "password" => $usuario["password"]
+                    "password" => $usuario["password"],
+                    "email_verified_at" => Carbon::now()
                 ]
             );
             $user->assignRole($usuario["role"]);
