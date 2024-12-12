@@ -29,19 +29,26 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->merge([
-            'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
-        ]);
 
         $request->validate([
-            'carnet' => ['required', 'string', 'max:10', 'unique:users'],
+            'carnet' => ['required', 'string', 'max:15', 'unique:users'],
             'nombre' => ['required', 'string', 'max:255'],
             'apellido' => ['required', 'string', 'max:255'],
-            'fecha_nacimiento' => ['required'],
+            'fecha_nacimiento' => ['required', 'date_format:d/m/Y'],
+            'escuela' => ['required', 'exists:' . Escuela::class . ',id'],
             'telefono' => ['required', 'string', 'max:15'],
             // 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'email.regex' => 'El correo electrónico debe ser institucional (@ues.edu.sv).',
+            'fecha_nacimiento.date_format' => 'El campo fecha de nacimiento no tiene un formato válido.',
+            'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.required' => 'El campo contraseña es obligatorio.',
+        ]);
+        $request->merge([
+            'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
         ]);
 
         $persona = Persona::create([
