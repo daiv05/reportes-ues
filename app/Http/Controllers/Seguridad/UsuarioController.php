@@ -40,16 +40,8 @@ class UsuarioController extends Controller
             ->paginate(10)->appends($request->query());
 
         $roles = Role::all();
-        $roles = $roles->map(
-            function ($rol) {
-                return [
-                    'id' => $rol->id,
-                    'nombre' => str_replace('_', ' ', substr($rol->name, 5, strlen($rol->name))),
-                ];
-            }
-        );
 
-        $roles = $roles->pluck('nombre', 'id');
+        $roles = $roles->pluck('name', 'id');
         return view('seguridad.usuarios.index', compact('usuarios', 'roles'));
     }
     public function store(Request $request)
@@ -58,24 +50,32 @@ class UsuarioController extends Controller
         $rules = [
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
-            'fecha_nacimiento' => 'required',
+            'fecha_nacimiento' => 'required|date_format:d/m/Y',
             'telefono' => 'required|string|max:15',
             'email' => 'required|string|email|max:255|unique:users',
-            'carnet' => 'required|string|max:20',
+            'carnet' => 'required|string|max:20|unique:users',
             'tipo_user' => 'required|boolean', // Validar que el tipo de usuario sea 1 o 2
             'roles' => 'nullable|string', // Roles como cadena separada por comas
+        ];
+
+        $messages = [
+            'tipo_user.boolean' => 'El tipo de usuario debe ser un valor booleano.',
+            'fecha_nacimiento.date_format' => 'El campo fecha de nacimiento no tiene un formato válido.',
+            'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
         ];
         $tipo = $request->input('tipo_user');
 
         if ($tipo == '1') {
             $rules['escuela'] = 'required|exists:escuelas,id';
+            $rules['email'] = 'required|string|email|max:255|unique:users|regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'; // Validar que el correo sea institucional
+            $messages['email.regex'] = 'El correo electrónico debe ser institucional (@ues.edu.sv).';
         } else {
             $rules['puesto'] = 'required|exists:puestos,id'; // Validar que puesto existe en la tabla puestos
         }
         $request->validate($rules);
 
         $request->merge([
-            'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
+            'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
         ]);
 
         try {
@@ -103,7 +103,7 @@ class UsuarioController extends Controller
                 $usuario->es_estudiante = true;
                 $usuario->save();
 
-                $usuario->assignRole('ROLE_USUARIO_BASE');
+                $usuario->assignRole('USUARIO');
             } else {
                 $usuario->es_estudiante = false;
                 $usuario->save();
@@ -118,7 +118,7 @@ class UsuarioController extends Controller
                 $roles = Role::whereIn('id', explode(',', $request->roles))->pluck('name')->toArray();
                 $usuario->syncRoles($roles);
             } else {
-                $usuario->assignRole('ROLE_USUARIO_BASE');
+                $usuario->assignRole('USUARIO');
             }
 
 
