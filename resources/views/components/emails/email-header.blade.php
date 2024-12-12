@@ -3,7 +3,7 @@
     'title' => 'Asignación de Reporte',  // Título predeterminado
 ])
 
-<div class="header">
+<div class="header text-center">
     <img src="{{ $logoSrc }}" class="h-36" alt="Reportfia Logo"  />
     <h2 class="text-xl font-semibold text-gray-800">{{ $title }}</h2>
 </div>
