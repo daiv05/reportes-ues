@@ -13,10 +13,12 @@
 
     <x-container>
         <div class="p-6">
+            @canany(['ROLES_CREAR'])
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button" id="add-button">
                 Añadir Rol
             </x-forms.primary-button>
+            @endcanany
         </div>
         <div class="overflow-x-auto mb-8">
             <x-table.base :headers="$headers">

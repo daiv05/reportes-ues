@@ -83,7 +83,6 @@ Route::middleware('auth', 'verified')->group(function () {
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */
     /* ********************************************* */
     Route::prefix('mantenimientos')->group(function () {
-        // Rutas de Escuela
         Route::prefix('escuelas')->group(function () {
             Route::get('/', [EscuelaController::class, 'index'])->name('escuelas.index');
             Route::patch('/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuelas.toggleActivo');
@@ -145,15 +144,26 @@ Route::middleware('auth', 'verified')->group(function () {
     /*   ************* SEGURIDAD ************   */
     /* ****************************************** */
     Route::prefix('seguridad')->group(function () {
-        // Roles
-        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-        Route::resource('roles', RoleController::class)->except(['destroy']);
-        Route::patch('roles/{rol}/toggle', [RoleController::class, 'toggleActivo'])->name('roles.toggleActivo');
 
-        // Usuarios
-        Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
-        Route::resource('usuarios', UsuarioController::class)->except(['destroy']);
-        Route::patch('usuarios/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->name('usuarios.toggleActivo');
+        // Rutas para los roles
+        Route::prefix('roles')->group(function () {
+            Route::get('/', [RoleController::class, 'index'])->name('roles.index')->middleware('permission:ROLES_VER');
+            Route::get('/create', [RoleController::class, 'create'])->name('roles.create')->middleware('permission:ROLES_CREAR');
+            Route::post('/', [RoleController::class, 'store'])->name('roles.store')->middleware('permission:ROLES_CREAR');
+            Route::get('/{rol}/edit', [RoleController::class, 'edit'])->name('roles.edit')->middleware('permission:ROLES_EDITAR');
+            Route::patch('/{rol}', [RoleController::class, 'update'])->name('roles.update')->middleware('permission:ROLES_EDITAR');
+            Route::patch('/{rol}/toggle', [RoleController::class, 'toggleActivo'])->name('roles.toggleActivo')->middleware('permission:ROLES_EDITAR');
+        });
+
+        // Rutas para Usuarios
+        Route::prefix('usuarios')->group(function () {
+            Route::get('/', [UsuarioController::class, 'index'])->name('usuarios.index')->middleware('permission:USUARIOS_VER');
+            Route::get('/create', [UsuarioController::class, 'create'])->name('usuarios.create')->middleware('permission:USUARIOS_CREAR');
+            Route::post('/', [UsuarioController::class, 'store'])->name('usuarios.store')->middleware('permission:USUARIOS_CREAR');
+            Route::get('/{usuario}/edit', [UsuarioController::class, 'edit'])->name('usuarios.edit')->middleware('permission:USUARIOS_EDITAR');
+            Route::patch('/{usuario}', [UsuarioController::class, 'update'])->name('usuarios.update')->middleware('permission:USUARIOS_EDITAR');
+            Route::patch('/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->name('usuarios.toggleActivo')->middleware('permission:USUARIOS_EDITAR');
+        });
     });
 
     /* ****************************************** */

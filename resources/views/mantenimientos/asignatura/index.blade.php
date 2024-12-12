@@ -12,57 +12,49 @@
         <x-header.simple titulo="Gestión de Asignaturas" />
 
         <div class="p-6">
-            <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
-                type="button">
-                Añadir
-            </x-forms.primary-button>
-            <x-forms.primary-button data-modal-target="static-modal-excel" data-modal-toggle="static-modal-excel" class="block"
-                type="button">
-                Importar datos
-            </x-forms.primary-button>
+            @canany(['ASIGNATURAS_CREAR'])
+                <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
+                    type="button">
+                    Añadir
+                </x-forms.primary-button>
+
+                <x-forms.primary-button data-modal-target="static-modal-excel" data-modal-toggle="static-modal-excel"
+                    class="block" type="button">
+                    Importar datos
+                </x-forms.primary-button>
+            @endcanany
         </div>
     </x-slot>
     <x-container>
         {{-- Filtros --}}
-        <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 w-full">
-            <form action="{{ route('asignaturas.index') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
+        <div
+            class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 w-full">
+            <form action="{{ route('asignaturas.index') }}" method="GET"
+                class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
                 <div class="flex w-full flex-col md:w-4/6 px-4 md:px-0">
                     <x-forms.row :columns="3">
-                        <x-forms.field
-                            label="Código"
-                            name="nombre-filter"
-                            :value="request('nombre-filter')"
-                        />
-                        <x-forms.field
-                            label="Nombre"
-                            name="nombre-completo-filter"
-                            :value="request('nombre-completo-filter')"
-                        />
-                        <x-forms.select
-                            name="escuela-filter"
-                            label="Escuela"
-                            :options="$escuelas"
-                            selected="{{ request('escuela-filter') }}"
-                        />
+                        <x-forms.field label="Código" name="nombre-filter" :value="request('nombre-filter')" />
+                        <x-forms.field label="Nombre" name="nombre-completo-filter" :value="request('nombre-completo-filter')" />
+                        <x-forms.select name="escuela-filter" label="Escuela" :options="$escuelas"
+                            selected="{{ request('escuela-filter') }}" />
                     </x-forms.row>
                 </div>
                 <div class="flex flex-wrap space-x-4">
                     <button type="submit"
-                            class="align-middle rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        class="align-middle rounded-full inline-flex items-center px-3 py-3 border border-transparent shadow-sm text-sm font-medium text-white bg-escarlata-ues hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="h-4 w-4">
+                            stroke="currentColor" class="h-4 w-4">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                         </svg>
                     </button>
 
                     <button type="reset"
-                            class="align-middle rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                            onclick="window.location.href='{{ route('asignaturas.index') }}';">
+                        class="align-middle rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                        onclick="window.location.href='{{ route('asignaturas.index') }}';">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="h-4 w-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"/>
+                            stroke="currentColor" class="h-4 w-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
@@ -120,18 +112,18 @@
                         <div id="escuela-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.field id="nombre" label="Código" name="nombre" :value="old('nombre')" :error="$errors->get('nombre')"
-                            required />
+                        <x-forms.field id="nombre" label="Código" name="nombre" :value="old('nombre')"
+                            :error="$errors->get('nombre')" required />
                         <div id="nombre-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.field id="nombre_completo" label="Nombre" name="nombre_completo" :value="old('nombre_completo')" :error="$errors->get('nombre')"
-                            required />
+                        <x-forms.field id="nombre_completo" label="Nombre" name="nombre_completo" :value="old('nombre_completo')"
+                            :error="$errors->get('nombre')" required />
                         <div id="nombre-completo-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']" :value="old('activo', '1')"
-                            :error="$errors->get('activo')" required />
+                        <x-forms.select label="Estado" id="activo" name="activo" :options="['1' => 'ACTIVO', '0' => 'INACTIVO']"
+                            :value="old('activo', '1')" :error="$errors->get('activo')" required />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
@@ -155,13 +147,17 @@
             <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Importar asignaturas</h3>
         </x-slot>
         <x-slot name="body">
-            <form id="import-excel-asignaturas" action="{{ route('asignaturas.importar') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-4">
+            <form id="import-excel-asignaturas" action="{{ route('asignaturas.importar') }}" method="POST"
+                enctype="multipart/form-data" class="grid grid-cols-1 gap-4">
                 @csrf
                 <div class="flex flex-col gap-3 w-full justify-center items-center mx-auto">
-                    <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white" onclick="uploadFile()">
+                    <label for="file"
+                        class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white"
+                        onclick="uploadFile()">
                         <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
                         <span id="file-name" class="mt-2 text-base leading-normal">Selecciona un archivo</span>
-                        <input type="file" name="excel_file" accept=".xls,.xlsx,.csv" id="excel_file" class="hidden" onchange="updateFileName(this)" />
+                        <input type="file" name="excel_file" accept=".xls,.xlsx,.csv" id="excel_file"
+                            class="hidden" onchange="updateFileName(this)" />
                         @if ($errors->has('excel_file'))
                             <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
                         @endif
