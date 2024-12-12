@@ -21,13 +21,13 @@ use App\Http\Controllers\Mantenimientos\TipoBienController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('landing');
 
 Route::get('/inicio', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'verified')->group(function () {
 
     Route::get('/forbidden', function () {
         return view('errors.forbidden');
