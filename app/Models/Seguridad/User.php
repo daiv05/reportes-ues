@@ -48,7 +48,7 @@ class User extends Authenticatable implements Auditable
 
     public function setCarnetAttribute($value)
     {
-        $this->attributes['carnet'] = mb_strtoupper($value, 'utf-8');
+        $this->attributes['carnet'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
     }
 
     public function persona(): BelongsTo

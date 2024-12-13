@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Escuela extends Model  implements Auditable
+class Escuela extends Model implements Auditable
 {
-    use HasFactory,\OwenIt\Auditing\Auditable;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $fillable = ['id_facultad', 'nombre', 'activo'];
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] = mb_strtoupper($value, 'utf-8');
+        $this->attributes['nombre'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+
     }
     public function asignaturas()
     {

@@ -16,11 +16,11 @@ class Sedes extends Model  implements Auditable
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] = mb_strtoupper($value, 'utf-8');
+        $this->attributes['nombre'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
     }
 
     public function setDireccionAttribute($value)
     {
-        $this->attributes['direccion'] = mb_strtoupper($value, 'utf-8');
+        $this->attributes['direccion'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
     }
 }
