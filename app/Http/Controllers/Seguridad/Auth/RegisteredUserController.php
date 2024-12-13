@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use IvanoMatteo\LaravelDeviceTracking\Facades\DeviceTracker;
+use IvanoMatteo\LaravelDeviceTracking\Models\Device;
 use OwenIt\Auditing\Models\Audit;
 
 class RegisteredUserController extends Controller
@@ -78,6 +80,9 @@ class RegisteredUserController extends Controller
             ]);
 
             Auth::login($user);
+
+            DeviceTracker::detectFindAndUpdate();
+            DeviceTracker::flagCurrentAsVerified();
 
             return redirect()->route('verificacion-email.comprobacion');
 
