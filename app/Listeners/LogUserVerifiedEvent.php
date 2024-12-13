@@ -15,10 +15,10 @@ class LogUserVerifiedEvent
      */
     public function handle(Verified $event)
     {
-        $user = $event->user; 
+        $user = $event->user;
         Audit::create([
             'user_id' => $user->id,
-            'event' => 'Vericar correo',
+            'event' => 'Verificar correo',
             'auditable_type' => 'App\Models\Seguridad\User',
             'auditable_id' => $user->id,
             'old_values' => [],
