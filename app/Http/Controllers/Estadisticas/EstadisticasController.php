@@ -45,16 +45,16 @@ class EstadisticasController extends Controller
         $conteoReportesPorEstado = [];
 
         foreach($estados as $estado) {
-            $conteoReportesPorEstado[$estado] = random_int(0, 1000);
+            $conteoReportesPorEstado[$estado] = 0;
         }
-        $conteoReportesPorEstado['NO PROCEDE'] = $reportesNoProcede * 1000;
+        $conteoReportesPorEstado['NO PROCEDE'] = $reportesNoProcede;
 
         foreach($reportes as $reporte) {
             if($reporte->estado_ultimo_historial == null) {
-                $conteoReportesPorEstado['NO ASIGNADO'] = $conteoReportesPorEstado['NO ASIGNADO'] + 200;
+                $conteoReportesPorEstado['NO ASIGNADO'] = $conteoReportesPorEstado['NO ASIGNADO'] + 1;
             } else {
                 $estado = Estado::find($reporte->estado_ultimo_historial->id)->nombre;
-                $conteoReportesPorEstado[$estado] = $conteoReportesPorEstado[$estado] + 500;
+                $conteoReportesPorEstado[$estado] = $conteoReportesPorEstado[$estado] + 1;
             }
         }
 
