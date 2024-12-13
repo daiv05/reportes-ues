@@ -136,7 +136,7 @@
                     'permissions' => ['ESCUELAS_VER'],
                 ],
                 [
-                    'to' => 'asignaturas.index',
+                    'to' => 'asignatura.index',
                     'active' => request()->is('mantenimientos/asignaturas'),
                     'label' => 'Asignaturas',
                     'permissions' => ['ASIGNATURAS_VER'],

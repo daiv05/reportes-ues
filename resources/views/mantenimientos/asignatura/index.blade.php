@@ -29,7 +29,7 @@
         {{-- Filtros --}}
         <div
             class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 w-full">
-            <form action="{{ route('asignaturas.index') }}" method="GET"
+            <form action="{{ route('asignatura.index') }}" method="GET"
                 class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
                 <div class="flex w-full flex-col md:w-4/6 px-4 md:px-0">
                     <x-forms.row :columns="3">
@@ -51,7 +51,7 @@
 
                     <button type="reset"
                         class="align-middle rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                        onclick="window.location.href='{{ route('asignaturas.index') }}';">
+                        onclick="window.location.href='{{ route('asignatura.index') }}';">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="h-4 w-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -147,7 +147,7 @@
             <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Importar asignaturas</h3>
         </x-slot>
         <x-slot name="body">
-            <form id="import-excel-asignaturas" action="{{ route('asignaturas.importar') }}" method="POST"
+            <form id="import-excel-asignaturas" action="{{ route('asignatura.importar') }}" method="POST"
                 enctype="multipart/form-data" class="grid grid-cols-1 gap-4">
                 @csrf
                 <div class="flex flex-col gap-3 w-full justify-center items-center mx-auto">
