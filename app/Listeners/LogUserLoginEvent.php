@@ -15,25 +15,23 @@ class LogUserLoginEvent
      */
     public function handle(Login $event)
     {
-        $user = $event->user;  // Obtén el usuario autenticado
-        $guard = $event->guard; // El guard utilizado para la autenticación
-        $remember = $event->remember; // Si el usuario eligió "recordarme"
-
-        // Registrar la auditoría para el evento de inicio de sesión
+        $user = $event->user;
+        $guard = $event->guard;
+        $remember = $event->remember;
         Audit::create([
-            'user_id' => $user->id, // ID del usuario que inició sesión
-            'event' => 'Inicio de session', // Tipo de evento
-            'auditable_type' => 'App\Models\Seguridad\User', // Tipo de modelo (usuario)
-            'auditable_id' => $user->id, // ID del usuario
-            'old_values' => [], // No hay valores previos para este evento
+            'user_id' => $user->id,
+            'event' => 'Inicio de sesión',
+            'auditable_type' => 'App\Models\Seguridad\User',
+            'auditable_id' => $user->id,
+            'old_values' => [],
             'new_values' => [
-                'guard' => $guard, // El guard utilizado para la autenticación
-                'remember' => $remember, // Si el usuario eligió "recordarme"
-                'email' => $user->email, // Correo del usuario
+                'guard' => $guard,
+                'remember' => $remember,
+                'email' => $user->email,
             ],
-            'url' => request()->url(), // URL desde la que se realizó el login
-            'ip_address' => request()->ip(), // Dirección IP del usuario
-            'user_agent' => request()->header('User-Agent'), // Información del agente de usuario (navegador)
+            'url' => request()->url(),
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->header('User-Agent'),
         ]);
     }
 }

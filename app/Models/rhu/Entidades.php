@@ -17,13 +17,13 @@ class Entidades extends Model implements Auditable
         'descripcion',
         'activo',
         'id_entidad',
-        'jerarquia'   
+        'jerarquia'
     ];
 
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] = mb_strtoupper($value, 'utf-8');
+        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
     }
     public function padre()
     {
