@@ -16,6 +16,7 @@ use App\Http\Controllers\Mantenimientos\RecursoController;
 use App\Http\Controllers\Mantenimientos\UnidadMedidaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auditorias\UserAuditController;
+use App\Http\Controllers\Estadisticas\EstadisticasController;
 use App\Http\Controllers\Mantenimientos\BienController;
 use App\Http\Controllers\Mantenimientos\TipoBienController;
 
@@ -206,6 +207,10 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::prefix('auditorias')->group(function () {
         Route::get('/', [UserAuditController::class, 'index'])->middleware('permission:BITACORA_VER')->name('general.index');
         Route::get('/get-events', [UserAuditController::class, 'getEvents'])->middleware('permission:BITACORA_VER');
+    });
+
+    Route::prefix('estadisticas')->group(function () {
+        Route::get('/', [EstadisticasController::class, 'index'])->middleware('permission:BITACORA_VER')->name('estadisticas.index');
     });
 });
 

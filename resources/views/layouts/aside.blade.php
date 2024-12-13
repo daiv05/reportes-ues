@@ -177,22 +177,22 @@
                 ],
             ],
         ],
-        // [
-        //     'type' => 2,
-        //     'id' => 'maquetacion-dropdown',
-        //     'active' => request()->is('maquetacion/*'),
-        //     'icon' => 'heroicon-s-exclamation-triangle',
-        //     'label' => 'Maquetación',
-        //     'permissions' => false,
-        //     'items' => [
-        //         [
-        //             'to' => 'dashboard',
-        //             'active' => request()->is('maquetacion/general'),
-        //             'label' => 'Componentes globales',
-        //             'permissions' => false,
-        //         ],
-        //     ],
-        // ],
+        [
+            'type' => 2,
+            'id' => 'estadisticas-dropdown',
+            'active' => request()->is('estadisticas/*'),
+            'icon' => 'heroicon-s-chart-bar-square',
+            'label' => 'Estadísticas',
+            'permissions' => ['BITACORA_VER'],
+            'items' => [
+                [
+                    'to' => 'estadisticas.index',
+                    'active' => request()->is('estadisticas/'),
+                    'label' => 'Estadíticas y graficos',
+                    'permissions' => ['BITACORA_VER'],
+                ],
+            ],
+        ],
     ];
 @endphp
 
