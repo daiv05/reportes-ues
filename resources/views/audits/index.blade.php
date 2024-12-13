@@ -50,15 +50,15 @@
                         <div
                             class="rtl:inset-r-0 pointer-events-none absolute inset-y-0 left-0 flex items-center ps-3 rtl:right-0">
                             <svg class="h-4 w-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor"
-                                 viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
-                                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                      clip-rule="evenodd"></path>
+                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                    clip-rule="evenodd"></path>
                             </svg>
                         </div>
                         <input type="text" id="table-search" name="titulo" value="{{ request('titulo') }}"
-                               class="block w-full sm:w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
-                               placeholder="Buscar por nombre"/>
+                            class="block w-full sm:w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
+                            placeholder="Buscar por nombre" />
                     </div>
                     <x-forms.input-error :messages="$errors->get('titulo')" class="mt-2" />
                 </div>
@@ -90,9 +90,11 @@
                     <x-table.tr>
                         <x-table.td>
                             @php
-                                $user = \App\Models\Seguridad\User::find($audi->user_id);
+                                $user = \App\Models\Seguridad\User::find($audi->user_id)
                             @endphp
-                            {{ $user->persona->nombre }} {{ $user->persona->apellido }}
+                            @if ($user)
+                                {{ $user->persona->nombre }} {{ $user->persona->apellido }}
+                            @endif
                         </x-table.td>
                         <x-table.td>{{ $audi->event }}</x-table.td>
                         <x-table.td justify="center">{{ class_basename($audi->auditable_type) }}</x-table.td>
@@ -117,7 +119,7 @@
                                 -
                             @endif
                         </x-table.td>
-    
+
                         <x-table.td>{{ $audi->url }}</x-table.td>
                         <x-table.td>{{ $audi->ip_address }}</x-table.td>
                         <x-table.td justify="center">
