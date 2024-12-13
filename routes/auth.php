@@ -9,6 +9,7 @@ use App\Http\Controllers\Seguridad\Auth\NewPasswordController;
 use App\Http\Controllers\Seguridad\Auth\PasswordController;
 use App\Http\Controllers\Seguridad\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Seguridad\Auth\RegisteredUserController;
+use App\Http\Controllers\Seguridad\Auth\TwoFactorController;
 use App\Http\Controllers\Seguridad\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Verificación de email
     Route::get('verificar-email', EmailVerificationPromptController::class)
         ->name('verificacion-email.comprobacion');
 
@@ -48,8 +50,22 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('verificacion-email.confirmar');
 
+    // Verificación de doble factor
+    Route::get('two-factor', TwoFactorController::class)
+        ->name('two-factor.comprobacion');
+
+    Route::post('two-factor/reenviar-codigo', [TwoFactorController::class, 'sendTwoFactorCode'])
+        ->middleware('throttle:6,1')
+        ->name('two-factor.reenviar');
+
+    Route::post('two-factor/confirmar', [TwoFactorController::class, 'confirmTwoFactorCode'])
+        ->middleware('throttle:6,1')
+        ->name('two-factor.confirmar');
+
+    // Actualización de contraseña
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
+    // Cierre de sesión
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });

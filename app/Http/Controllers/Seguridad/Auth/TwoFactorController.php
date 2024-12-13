@@ -2,22 +2,44 @@
 
 namespace App\Http\Controllers\Seguridad\Auth;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Verified;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use IvanoMatteo\LaravelDeviceTracking\Facades\DeviceTracker;
 
-class VerifyEmailController extends Controller
+class TwoFactorController extends Controller
 {
-    public function __invoke(Request $request): RedirectResponse
+    public function __invoke(Request $request): RedirectResponse|View
     {
-        if (auth()->user()->hasVerifiedEmail()) {
+        return $request->user()->hasDeviceVerified()
+            ? redirect(RouteServiceProvider::HOME)
+            : view('seguridad.auth.two-factor');
+    }
+
+    public function sendTwoFactorCode(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $code = $user->generateTwoFactorCode();
+
+        $user->sendTwoFactorCode($code);
+
+        Session::flash('code-send', true);
+
+        return redirect()->back()->with('message', [
+            'type' => 'success',
+            'content' => 'Código de verificación enviado'
+        ]);
+    }
+
+    function confirmTwoFactorCode(Request $request)
+    {
+        if (auth()->user()->hasDeviceVerified()) {
             return redirect(RouteServiceProvider::HOME);
         }
 
@@ -33,8 +55,8 @@ class VerifyEmailController extends Controller
             return back()->withInput();
         }
 
-        $select = DB::table('password_reset_tokens')
-            ->where('email', $request->user()->email)
+        $select = DB::table('two_factor_tokens')
+            ->where('user_id', $request->user()->id)
             ->where('token', $request->input('code'));
 
         if ($select->get()->isEmpty()) {
@@ -45,17 +67,12 @@ class VerifyEmailController extends Controller
             return back()->withInput();
         }
 
-        $select = DB::table('password_reset_tokens')
-            ->where('email', $request->user()->email)
+        $select = DB::table('two_factor_tokens')
+            ->where('user_id', $request->user()->id)
             ->where('token', $request->input('code'))
             ->delete();
 
-        auth()->user()->markEmailAsVerified();
-
-        event(new Verified(auth()->user()));
-
-        DeviceTracker::detectFindAndUpdate();
-        DeviceTracker::flagCurrentAsVerified();
+        auth()->user()->markDeviceAsVerified();
 
         // Auth::login($request->user());
 
