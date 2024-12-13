@@ -15,10 +15,14 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\SendTwoFactorCode;
+use Illuminate\Support\Facades\DB;
+use IvanoMatteo\LaravelDeviceTracking\Facades\DeviceTracker;
+use IvanoMatteo\LaravelDeviceTracking\Traits\UseDevices;
 
 class User extends Authenticatable implements Auditable
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, \OwenIt\Auditing\Auditable;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, UseDevices, \OwenIt\Auditing\Auditable;
 
 
     protected $fillable = [
@@ -28,7 +32,7 @@ class User extends Authenticatable implements Auditable
         'id_persona',
         'activo',
         'id_escuela',
-        'es_estudiante',
+        'es_estudiante'
     ];
 
     protected $hidden = [
@@ -46,9 +50,54 @@ class User extends Authenticatable implements Auditable
         $this->notify(new ResetPasswordNotification($url));
     }
 
+    public function generateTwoFactorCode(): int
+    {
+        $verify =  DB::table('two_factor_tokens')->where([
+            ['user_id', $this->id]
+        ]);
+
+        if ($verify->exists()) {
+            $verify->delete();
+        }
+
+        $code = rand(100000, 999999);
+
+        DB::table('two_factor_tokens')
+            ->insert(
+                [
+                    'user_id' => $this->id,
+                    'token' => $code,
+                    'expires_at' => now()->addMinutes(10)
+                ]
+            );
+
+        return $code;
+    }
+
+    public function sendTwoFactorCode($code): void
+    {
+        $this->notify(new SendTwoFactorCode($code));
+    }
+
+    public function markDeviceAsVerified(): void
+    {
+        DeviceTracker::flagCurrentAsVerified();
+    }
+
+    public function twoFactorToken(): HasMany
+    {
+        return $this->hasMany(TwoFactorToken::class, 'user_id');
+    }
+
+    public function hasDeviceVerified(): bool
+    {
+        $device = DeviceTracker::detectFindAndUpdate();
+        return $device->currentUserStatus->verified_at !== null;
+    }
+
     public function setCarnetAttribute($value)
     {
-        $this->attributes['carnet'] = mb_strtoupper($value, 'utf-8');
+        $this->attributes['carnet'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
     }
 
     public function persona(): BelongsTo

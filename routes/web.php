@@ -24,12 +24,12 @@ Route::get('/', function () {
     return view('welcome');
 })->name('landing');
 
-Route::get('/inicio', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth', 'verified', 'two_factor')->group(function () {
 
-Route::middleware('auth', 'verified')->group(function () {
-
+    Route::get('/inicio', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    
     Route::get('/forbidden', function () {
         return view('errors.forbidden');
     })->name('errors.forbidden');

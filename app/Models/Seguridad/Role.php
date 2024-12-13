@@ -10,14 +10,12 @@ class Role extends Model  implements Auditable
 {
     use HasFactory,\OwenIt\Auditing\Auditable;
 
-    // Definir los campos que pueden ser asignados en masa
     protected $fillable = ['name', 'activo'];
     protected $table = 'roles';
 
 
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = mb_strtoupper($value, 'utf-8');
+        $this->attributes['name'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
     }
-    // Puedes agregar relaciones si el rol tiene alguna
 }

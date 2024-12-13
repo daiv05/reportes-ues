@@ -10,7 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Bien extends Model implements Auditable
 {
     use HasFactory,\OwenIt\Auditing\Auditable;
-    
+
     protected $table = 'bienes';
 
     protected $fillable = [
@@ -24,5 +24,9 @@ class Bien extends Model implements Auditable
     public function tipoBien() : BelongsTo
     {
         return $this->belongsTo(TipoBien::class, 'id_tipo_bien');
+    }
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
     }
 }

@@ -22,4 +22,8 @@ class Estado extends Model implements Auditable
     {
         return $this->hasMany(HistorialAccionesReporte::class, 'id_estado');
     }
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+    }
 }

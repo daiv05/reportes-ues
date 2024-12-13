@@ -29,5 +29,9 @@
                 {{ __('Enviar enlace para reestablecer') }}
             </x-forms.primary-button>
         </div>
+        <a class="rounded-md text-sm text-gray-600 underline hover:text-gray-900"
+            href="{{ route('landing') }}">
+            <x-heroicon-s-arrow-left class="h-4 w-4" />
+        </a>
     </form>
 </x-guest-layout>
