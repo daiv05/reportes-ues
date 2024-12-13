@@ -10,18 +10,16 @@ class LogPasswordResetEvent
     public function handle(PasswordReset $event)
     {
         $user = $event->user;
-
-        // Registrar la auditoría para el evento de restablecimiento de contraseña
         Audit::create([
-            'user_id' => $user->id, // ID del usuario
-            'event' => 'Resetear contra', // Tipo de evento
-            'auditable_type' => 'App\Models\Seguridad\User', // Tipo de modelo
-            'auditable_id' => $user->id, // ID del usuario
-            'old_values' => [], // No hay valores previos para este evento
-            'new_values' => [], // No hay nuevos valores directamente asociados
+            'user_id' => $user->id,
+            'event' => 'Resetear contra',
+            'auditable_type' => 'App\Models\Seguridad\User',
+            'auditable_id' => $user->id,
+            'old_values' => [],
+            'new_values' => [],
             'url' => request()->url(),
-            'ip_address' => request()->ip(), // IP del usuario
-            'user_agent' => request()->header('User-Agent'), // Información del navegador
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->header('User-Agent'),
         ]);
     }
 }
