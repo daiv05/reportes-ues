@@ -159,6 +159,18 @@
                     'label' => 'Unidades de medida',
                     'permissions' => ['UNIDADES_MEDIDA_VER'],
                 ],
+                [
+                    'to' => 'tiposBienes.index',
+                    'active' => request()->is('mantenimientos/tipos-bienes'),
+                    'label' => 'Tipos de bienes',
+                    'permissions' => ['TIPOS_BIENES_VER'],
+                ],
+                [
+                    'to' => 'bienes.index',
+                    'active' => request()->is('bienes'),
+                    'label' => 'Bienes',
+                    'permissions' => ['BIENES_VER'],
+                ],
             ],
         ],
         [
