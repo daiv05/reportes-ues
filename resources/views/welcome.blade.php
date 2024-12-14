@@ -25,7 +25,7 @@
         <header class="relative z-10 bg-orange-900 text-white p-4">
             <nav class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center space-x-4">
-                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="Reportia logo" class="h-10 w-fit">
+                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="ReportFIA logo" class="h-10 w-fit">
                     <span class="font-bold text-xl">ReportFIA</span>
                 </div>
                 <div class="hidden md:flex space-x-4">
@@ -120,11 +120,11 @@
         <footer class="bg-gray-100 py-2">
             <div class="mx-auto w-full max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
                 <div class="flex items-center mb-2 ">
-                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="Reportia logo" class="h-10 w-fit mr-2">
+                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="ReportFIA logo" class="h-10 w-fit mr-2">
                     <span class="font-bold text-xl text-orange-900 mr-4">ReportFIA</span>
                     <span class="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
                         © 2024
-                        <a href="https://flowbite.com/" class="hover:underline">Reportfia</a>
+                        <a href="{{ config('app.url') }}" class="hover:underline">ReportFIA</a>
                         . Todos los derechos reservados.
                     </span>
                 </div>
