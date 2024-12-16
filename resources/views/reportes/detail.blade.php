@@ -300,6 +300,33 @@
                         </x-reportes.detail.subheader-content>
                     </x-reportes.detail.block>
                     <x-reportes.detail.block>
+                        <x-reportes.detail.subheader subtitle="Bienes" icon="heroicon-o-clipboard-document-list"/>
+                        <x-reportes.detail.subheader-content>
+                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                                <div class="pb-4">
+                                    <span class="text-gray-600">Si el reporte involucra la reparación/mantenimiento de un bien de la facultad, especificarlo aqui</span>
+                                </div>
+                                @include('reportes.partials.assets-specification')
+                            @else
+                                <div class="overflow-x-auto mt-4">
+                                    {{-- TABLA --}}
+                                    @php
+                                        $headersBienesDetalle = [
+                                            ['text' => 'Código', 'align' => 'left'],
+                                            ['text' => 'Nombre', 'align' => 'left'],
+                                        ];
+                                    @endphp
+                                    <x-table.base :headers="$headersBienesDetalle">
+                                        <x-table.tr>
+                                            <x-table.td>LUM-B11</x-table.td>
+                                            <x-table.td>Luminaria B11</x-table.td>
+                                        </x-table.tr>
+                                    </x-table.base>
+                                </div>
+                            @endif
+                        </x-reportes.detail.subheader-content>
+                    </x-reportes.detail.block>
+                    <x-reportes.detail.block>
                         <x-reportes.detail.subheader subtitle="Comentario de administración"
                                                      icon="heroicon-o-chat-bubble-bottom-center-text"/>
                         <x-reportes.detail.subheader-content>

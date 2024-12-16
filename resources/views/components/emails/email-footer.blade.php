@@ -3,7 +3,7 @@
 ])
 
 <div class="footer">
-    <p>&copy; {{ date('Y') }} ReportFIA - UES</p>
+    <p>&copy; {{ date('Y') . ' ' . config('app.name') }} - UES</p>
     <div>
         @foreach ($footerLinks as $link)
             <a href="{{ $link['url'] }}" class="text-red-600 hover:underline" target="_blank">{{ $link['label'] }}</a>
