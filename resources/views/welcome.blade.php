@@ -26,7 +26,7 @@
             <nav class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center space-x-4">
                     <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="ReportFIA logo" class="h-10 w-fit">
-                    <span class="font-bold text-xl">ReportFIA</span>
+                    <span class="font-bold text-xl">{{ config('app.name') }}</span>
                 </div>
                 <div class="hidden md:flex space-x-4">
                     <a href="{{ route('login') }}" class="bg-transparent text-white border border-white px-4 py-2 rounded">Iniciar sesión<a>
@@ -120,11 +120,11 @@
         <footer class="bg-gray-100 py-2">
             <div class="mx-auto w-full max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
                 <div class="flex items-center mb-2 ">
-                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="ReportFIA logo" class="h-10 w-fit mr-2">
-                    <span class="font-bold text-xl text-orange-900 mr-4">ReportFIA</span>
+                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="logo" class="h-10 w-fit mr-2">
+                    <span class="font-bold text-xl text-orange-900 mr-4">{{ config('app.name') }}</span>
                     <span class="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
                         © 2024
-                        <a href="{{ config('app.url') }}" class="hover:underline">ReportFIA</a>
+                        <a href="{{ config('app.url') }}" class="hover:underline">{{ config('app.name') }}</a>
                         . Todos los derechos reservados.
                     </span>
                 </div>

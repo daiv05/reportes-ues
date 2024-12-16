@@ -14,9 +14,9 @@
                     </svg>
                 </button>
                 <a href="{{ route('dashboard') }}" class="flex ms-2 lg:me-24">
-                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" class="h-8 me-3" alt="ReportFIA Logo" />
+                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" class="h-8 me-3" alt="logo" />
                     <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-white">ReportFIA</span>
+                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-white">{{ config('app.name') }}</span>
                 </a>
             </div>
             <div class="flex items-center">
