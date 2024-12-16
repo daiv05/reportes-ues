@@ -184,7 +184,7 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
     /* ****************************************** */
     /*   ************* RHU ************   */
     /* ****************************************** */
-    Route::prefix('rhu')->group(function () {
+    Route::prefix('recursos-humanos')->group(function () {
         // Rutas de entidades
         Route::prefix('entidades')->group(function () {
             Route::get('/', [EntidadesController::class, 'index'])->middleware('permission:ENTIDADES_VER')->name('entidades.index');
@@ -196,7 +196,7 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
         Route::resource('puestos', PuestoController::class)->except(['destroy']);
         Route::patch('puestos/{puesto}/toggle', [PuestoController::class, 'toggleActivo'])->name('puestos.toggleActivo');
         // Empleados Puestos
-        Route::get('/empleados-puestos', [EmpleadoPuestoController::class, 'index'])->middleware('permission:EMPLEADOS_VER')->name('empleadosPuestos.index');
+        Route::get('/empleados', [EmpleadoPuestoController::class, 'index'])->middleware('permission:EMPLEADOS_VER')->name('empleadosPuestos.index');
         Route::post('/empleados-puestos', [EmpleadoPuestoController::class, 'store'])->middleware('permission:EMPLEADOS_CREAR')->name('empleadosPuestos.store');
         Route::put('/empleados-puestos/{id}', [EmpleadoPuestoController::class, 'update'])->middleware('permission:EMPLEADOS_EDITAR')->name('empleadosPuestos.update');
         Route::get('/empleados-puestos/{id}', [EmpleadoPuestoController::class, 'show'])->middleware('permission:EMPLEADOS_VER')->name('empleadosPuestos.show');
@@ -204,7 +204,7 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
         // Route::get('/busqueda-supervisor-por-nombre', [EmpleadoPuestoController::class, 'buscarSupervisorPorNombre'])->middleware('permission:ENTIDADES_EDITAR')->name('empleadosPuestos.buscarSupervisorPorNombre');
     });
 
-    Route::prefix('auditorias')->group(function () {
+    Route::prefix('bitacora')->group(function () {
         Route::get('/', [UserAuditController::class, 'index'])->middleware('permission:BITACORA_VER')->name('general.index');
         Route::get('/get-events', [UserAuditController::class, 'getEvents'])->middleware('permission:BITACORA_VER');
     });

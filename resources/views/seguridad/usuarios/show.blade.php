@@ -112,7 +112,7 @@
                             </x-table.td>
                             <x-table.td justify="center">
                                 <div class="flex flex-wrap justify-center gap-2">
-                                    <a href="{{ url('rhu/empleados-puestos/' . $empPuesto->id) }}"
+                                    <a href="{{ url('recursos-humanos/empleados-puestos/' . $empPuesto->id) }}"
                                         class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
                                         <x-heroicon-o-eye class="h-5 w-5" />
                                     </a>
