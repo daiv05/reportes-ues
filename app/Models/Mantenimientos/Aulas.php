@@ -21,7 +21,7 @@ class Aulas extends Model  implements Auditable
     {
         $this->attributes['nombre'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
     }
-    public function facultades()
+    public function facultad()
     {
         return $this->belongsTo(Facultades::class, 'id_facultad');
     }

@@ -64,13 +64,13 @@
                 @foreach ($escuelas as $escuela)
                     <x-table.tr>
                         <x-table.td>{{ $escuela->nombre }}</x-table.td>
-                        <x-table.td>{{ $escuela->facultades->nombre }}</x-table.td>
+                        <x-table.td>{{ $escuela->facultad->nombre }}</x-table.td>
                         <x-table.td justify="center"><x-status.is-active :active="$escuela->activo" /></x-table.td>
                         <x-table.td justify="center">
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                 data-id="{{ $escuela->id }}" data-nombre="{{ $escuela->nombre }}"
-                                data-facultad="{{ $escuela->facultades->id }}" data-estado="{{ $escuela->activo }}">
+                                data-facultad="{{ $escuela->facultad->id }}" data-estado="{{ $escuela->activo }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
                         </x-table.td>

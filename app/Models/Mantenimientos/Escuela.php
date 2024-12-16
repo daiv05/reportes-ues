@@ -23,7 +23,7 @@ class Escuela extends Model implements Auditable
         return $this->hasMany(Asignatura::class, 'id_escuela');
     }
 
-    public function facultades()
+    public function facultad()
     {
         return $this->belongsTo(Facultades::class, 'id_facultad');
     }

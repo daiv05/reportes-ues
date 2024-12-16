@@ -84,11 +84,6 @@ class User extends Authenticatable implements Auditable
         DeviceTracker::flagCurrentAsVerified();
     }
 
-    public function twoFactorToken(): HasMany
-    {
-        return $this->hasMany(TwoFactorToken::class, 'user_id');
-    }
-
     public function hasDeviceVerified(): bool
     {
         $device = DeviceTracker::detectFindAndUpdate();

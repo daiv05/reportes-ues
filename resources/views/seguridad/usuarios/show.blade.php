@@ -48,6 +48,16 @@
                 {{ $user->es_estudiante ? 'Estudiante' : 'Empleado' }}
             </x-view.description-list-item>
 
+            @if ($user->es_estudiante)
+                <x-view.description-list-item label="Escuela">
+                    {{ $user->escuela->nombre }}
+                </x-view.description-list-item>
+
+                <x-view.description-list-item label="Facultad">
+                    {{ $user->escuela->facultad->nombre }}
+                </x-view.description-list-item>
+            @endif
+
             <x-view.description-list-item label="Estado">
                 <div class="flex justify-start">
                     <x-status.is-active :active="$user->activo" />
