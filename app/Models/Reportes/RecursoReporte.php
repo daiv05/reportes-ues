@@ -16,7 +16,7 @@ class RecursoReporte extends Model implements Auditable
 
     protected $table = 'recursos_reportes';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'cantidad',

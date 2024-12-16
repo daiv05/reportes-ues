@@ -1,7 +1,25 @@
 @php
-    $headers = [
+    $headersReportesEstados = [
         ['text' => 'Estado de reporte', 'align' => 'left'],
         ['text' => 'Cantidad', 'align' => 'left'],
+    ];
+
+    $headersRecursosUtilizados = [
+        ['text' => 'Recurso', 'align' => 'left'],
+        ['text' => 'Utilizado', 'align' => 'left'],
+        ['text' => 'Medidas utilizadas', 'align' => 'left'],
+        ['text' => 'Fondo utilizados', 'align' => 'left'],
+    ];
+
+    $headersRecursosPorFondos = [
+        ['text' => 'Fondo', 'align' => 'left'],
+        ['text' => 'Cantidad de uso', 'align' => 'center'],
+        ['text' => 'Porcentaje', 'align' => 'center'],
+    ];
+
+    $headersEmpleadosAsignaciones = [
+        ['text' => 'Empleado', 'align' => 'left'],
+        ['text' => 'Número de asignaciones', 'align' => 'center'],
     ];
 @endphp
 <x-app-layout>
@@ -122,31 +140,197 @@
             </form>
         </div>
 
-        {{-- TABLA --}}
-        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div class="col-span-1 lg:col-span-2 bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg p-2 md:p-4">
-                <div class="bg-white pb-7 absolute w-[31rem]">
-                    <h3 class="text-lg font-bold text-escarlata-ues dark:text-gray-300">Reportes por estado</h3>
+        {{-- REPORTES POR ESTADO --}}
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div class="mt-4">
+                <div class="overflow-x-auto">
+                    {{-- TABLA --}}
+                    <x-table.base :headers="$headersReportesEstados">
+                        @for($i = 0; $i < count($estados); $i++)
+                            <x-table.tr>
+                                <x-table.td>
+                                    <x-status.chips :text="$estados[$i] ?? 'NO ASIGNADO'"
+                                                    class="mb-2"/>
+                                </x-table.td>
+                                <x-table.td justify="center">
+                                    {{ $conteoReportesPorEstado[$estados[$i]] ?? 0 }}
+                                </x-table.td>
+                            </x-table.tr>
+                        @endfor
+                    </x-table.base>
                 </div>
+            </div>
+            <div class="col-span-1 lg:col-span-2 bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg p-2 md:p-4">
                 <div class="h-auto lg:h-[30rem] m-8">
                     {!! $chartReportesEstados->container() !!}
                     {!! $chartReportesEstados->script() !!}
                 </div>
             </div>
-            <div class="overflow-x-auto">
+        </div>
+
+        {{-- RECURSOS MENOS UTILIZADOS --}}
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 mt-24">
+            <div class="col-span-1 bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg p-2 md:p-4">
+                <div class="bg-white pb-3">
+                    <h3 class="text-2xl py-2 font-bold text-escarlata-ues dark:text-gray-300">Recursos menos utilizados</h3>
+                </div>
+                <div class="h-auto lg:h-[30rem] m-8">
+                    {!! $chartRecursosMenosUtilizados->container() !!}
+                    {!! $chartRecursosMenosUtilizados->script() !!}
+                </div>
+            </div>
+            <div class="overflow-x-auto mt-8">
                 {{-- TABLA --}}
-                <x-table.base :headers="$headers">
-                    @for($i = 0; $i < count($estados); $i++)
+                    <x-table.base :headers="$headersRecursosUtilizados">
+                        @foreach($recursosMenosUtilizados as $recurso)
+                            <x-table.tr>
+                                <x-table.td>
+                                    {{ $recurso['recurso_nombre'] }}
+                                </x-table.td>
+                                <x-table.td>
+                                    {{ $recurso['cantidad'] }}
+                                </x-table.td>
+                                <x-table.td>
+                                    {{ implode( ', ', $recurso['unidades_medida']) }}
+                                </x-table.td>
+                                <x-table.td>
+                                    {{ implode(', ', $recurso['fondos']) }}
+                                </x-table.td>
+                            </x-table.tr>
+                        @endforeach
+                    </x-table.base>
+                </div>
+        </div>
+
+
+        {{-- RECURSOS MAS UTILIZADOS --}}
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 mt-24">
+            <div class="mt-4">
+                <div class="bg-white pb-3">
+                    <h3 class="text-2xl py-2 font-bold text-escarlata-ues dark:text-gray-300">Recursos más utilizados</h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                {{-- TABLA --}}
+                    <x-table.base :headers="$headersRecursosUtilizados">
+                        @foreach($recursosUtilizados as $recurso)
+                            <x-table.tr>
+                                <x-table.td>
+                                    {{ $recurso['recurso_nombre'] }}
+                                </x-table.td>
+                                <x-table.td>
+                                    {{ $recurso['cantidad'] }}
+                                </x-table.td>
+                                <x-table.td>
+                                    {{ implode( ', ', $recurso['unidades_medida']) }}
+                                </x-table.td>
+                                <x-table.td>
+                                    {{ implode(', ', $recurso['fondos']) }}
+                                </x-table.td>
+                            </x-table.tr>
+                        @endforeach
+                    </x-table.base>
+                </div>
+            </div>
+            <div class="col-span-1 bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg p-2 md:p-4">
+                <div class="h-auto lg:h-[30rem] m-8">
+                    {!! $chartRecursosUtilizados->container() !!}
+                    {!! $chartRecursosUtilizados->script() !!}
+                </div>
+            </div>
+        </div>
+
+
+        {{-- RECURSOS POR FONDOS --}}
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 mt-24">
+            <div class="col-span-1 bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg p-2 md:p-4">
+                <div class="bg-white pb-3">
+                    <h3 class="text-2xl font-bold text-escarlata-ues dark:text-gray-300">Fondos utilizados</h3>
+                </div>
+                <div class="h-auto lg:h-[30rem] m-8">
+                    {!! $chartRecursosPorFondos->container() !!}
+                    {!! $chartRecursosPorFondos->script() !!}
+                </div>
+            </div>
+            <div class="overflow-x-auto mt-8">
+                {{-- TABLA --}}
+                <x-table.base :headers="$headersRecursosPorFondos">
+                    @foreach($recursosPorFondos as $fondo)
                         <x-table.tr>
                             <x-table.td>
-                                <x-status.chips :text="$estados[$i] ?? 'NO ASIGNADO'"
-                                                class="mb-2"/>
+                                {{ $fondo['nombre'] }}
                             </x-table.td>
-                            <x-table.td>
-                                {{ $conteoReportesPorEstado[$estados[$i]] ?? 0 }}
+                            <x-table.td justify="center">
+                                {{ $fondo['cantidad'] }}
+                            </x-table.td>
+                            <x-table.td justify="center">
+                                <span class="bg-red-100 text-escarlata-ues font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-red-400 border border-red-400">
+                                    {{ $fondo['porcentaje'] }}%
+                                </span>
                             </x-table.td>
                         </x-table.tr>
-                    @endfor
+                    @endforeach
+                </x-table.base>
+            </div>
+        </div>
+
+
+        {{-- EMPLEADOS CON MAS ASIGNACIONES --}}
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 mt-24">
+            <div class="mt-4">
+                <div class="bg-white pb-3">
+                    <h3 class="text-2xl py-2 font-bold text-escarlata-ues dark:text-gray-300">Empleados con más asignaciones</h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                    {{-- TABLA --}}
+                    <x-table.base :headers="$headersEmpleadosAsignaciones">
+                        @foreach($empleadosMasAsignaciones as $empAsignacion)
+                            <x-table.tr>
+                                <x-table.td>
+                                    {{ $empAsignacion->empleado_nombre_completo }}
+                                </x-table.td>
+                                <x-table.td justify="center">
+                                    {{ $empAsignacion->numero_asignaciones }}
+                                </x-table.td>
+                            </x-table.tr>
+                        @endforeach
+                    </x-table.base>
+                </div>
+            </div>
+            <div class="col-span-1 bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg p-2 md:p-4">
+                <div class="h-auto lg:h-[30rem] m-8">
+                    {!! $chartEmpleadosMasAsignaciones->container() !!}
+                    {!! $chartEmpleadosMasAsignaciones->script() !!}
+                </div>
+            </div>
+        </div>
+
+
+        {{-- EMPLEADOS CON MENOS ASIGNACIONES --}}
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 mt-24">
+            <div class="col-span-1 bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg p-2 md:p-4">
+                <div class="bg-white pb-3">
+                    <h3 class="absolute text-2xl font-bold pb-9 bg-white text-escarlata-ues dark:text-gray-300">Empleados con menos asignaciones</h3>
+                </div>
+                <div class="h-auto lg:h-[30rem] m-8">
+                    {!! $chartEmpleadosMenosAsignaciones->container() !!}
+                    {!! $chartEmpleadosMenosAsignaciones->script() !!}
+                </div>
+            </div>
+            <div class="overflow-x-auto mt-8">
+                {{-- TABLA --}}
+                <x-table.base :headers="$headersEmpleadosAsignaciones">
+                    @foreach($empleadosMenosAsignaciones as $empAsignacion)
+                        <x-table.tr>
+                            <x-table.td>
+                                {{ $empAsignacion->empleado_nombre_completo }}
+                            </x-table.td>
+                            <x-table.td justify="center">
+                                {{ $empAsignacion->numero_asignaciones }}
+                            </x-table.td>
+                        </x-table.tr>
+                    @endforeach
                 </x-table.base>
             </div>
         </div>
@@ -169,6 +353,5 @@
         if (filterRadio) {
             updateSelection(filterRadio === 'hoy' ? 'Hoy' : filterRadio === '7_dias' ? 'Últimos 7 días' : filterRadio === '30_dias' ? 'Últimos 30 días' : filterRadio === 'mes' ? 'Último mes' : 'Último año');
         }
-        console.log(filterRadio);
     });
 </script>
