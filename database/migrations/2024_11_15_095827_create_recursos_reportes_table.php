@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('id_recurso')->references('id')->on('recursos')->onDelete('restrict');
             $table->foreign('id_unidad_medida')->references('id')->on('unidades_medida')->onDelete('restrict');
             $table->foreign('id_fondo')->references('id')->on('fondos')->onDelete('restrict');
+            $table->timestamps();
         });
     }
 
