@@ -13,15 +13,15 @@ class BienController extends Controller
 {
     public function index(Request $request): View
     {
-        $filtroNombre = $request->input('nombre');
+        $filtroNombre = $request->input('nombre-filter');
         $filtroTipo = $request->input('tipoBien');
         $bienes = Bien::when($filtroTipo, function ($query, $filtroTipo) {
             return $query->where('id_tipo_bien', $filtroTipo);
         })->when($filtroNombre, function ($query, $filtroNombre) {
             return $query->where('nombre', 'like', '%' . $filtroNombre . '%');
         })->paginate(10)->appends($request->query());
-        $tiposBienes = TipoBien::all()->pluck('nombre', 'id');
-        return view('bienes.index', compact('tiposBienes'));
+        $tiposBienes = TipoBien::all();
+        return view('mantenimientos.bienes.index', compact('tiposBienes', 'bienes'));
     }
 
     public function store(Request $request): RedirectResponse
