@@ -340,6 +340,8 @@ class ActividadController extends Controller
             DB::beginTransaction();
 
             $clase = Clase::find($id);
+            $clase->id_tipo_clase = $request->input('tipo');
+            $clase->numero_grupo = $request->input('grupo');
             $clase->dias_actividad = json_encode($request->input('dias'));
             $clase->save();
 
