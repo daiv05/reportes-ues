@@ -15,6 +15,7 @@ use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
 use App\Models\Reportes\RecursoReporte;
+use App\Models\Reportes\ReporteBien;
 use App\Models\rhu\EmpleadoPuesto;
 use App\Models\Seguridad\User;
 use Carbon\Carbon;
@@ -281,6 +282,14 @@ class ReporteController extends Controller
                 $empAcciones->id_empleado_puesto = $emp;
                 $empAcciones->id_reporte = $id_reporte;
                 $empAcciones->save();
+            }
+
+            // Registro en REPORTE_BIENES
+            foreach ($validated['id_bienes'] as $bien) {
+                $repBien = new ReporteBien();
+                $repBien->id_bien = $bien;
+                $repBien->id_reporte = $id_reporte;
+                $repBien->save();
             }
         });
 
