@@ -40,8 +40,6 @@
                         ],
                     )"
                         :value="old('event')" />
-
-
                 </div>
 
                 <div>
@@ -90,8 +88,13 @@
                     <x-table.tr>
                         <x-table.td>
                             @php
-                                $user = \App\Models\Seguridad\User::find($audi->user_id)
+                                $user = \App\Models\Seguridad\User::find($audi->user_id);
                             @endphp
+                            @if (!$user)
+                                @php
+                                    $user = \App\Models\Seguridad\User::find($audi->auditable_id);
+                                @endphp
+                            @endif
                             @if ($user)
                                 {{ $user->persona->nombre }} {{ $user->persona->apellido }}
                             @endif
@@ -190,7 +193,7 @@
         document.getElementById('model').addEventListener('change', function() {
             var model = this.value;
             if (model) {
-                fetch(`/auditorias/get-events?model=${model}`)
+                fetch(`/bitacora/get-events?model=${model}`)
                     .then(response => response.json())
                     .then(data => {
                         var eventSelect = document.getElementById('event');
