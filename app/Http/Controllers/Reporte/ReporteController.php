@@ -18,7 +18,6 @@ use App\Models\Reportes\RecursoReporte;
 use App\Models\rhu\EmpleadoPuesto;
 use App\Models\Seguridad\User;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -197,25 +196,23 @@ class ReporteController extends Controller
         }
     }
 
-    public function marcarNoProcede(Request $request, $id_reporte): View
+    public function marcarNoProcede(Request $request, $id_reporte): RedirectResponse
     {
         $reporte = Reporte::find($id_reporte);
         if (isset($reporte)) {
             $reporte->no_procede = !$reporte->no_procede;
             $reporte->save();
-            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
             Session::flash('message', [
                 'type' => 'success',
                 'content' => 'Reporte actualizado'
             ]);
-            return view('reportes.detail', $infoReporte);
+            return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         } else {
-            $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
             Session::flash('message', [
                 'type' => 'error',
                 'content' => 'Reporte no encontrado'
             ]);
-            return view('reportes.detail', $infoReporte);
+            return redirect()->action([ReporteController::class, 'detalle'], ['id' => $reporte->id]);
         }
     }
 
@@ -554,10 +551,11 @@ class ReporteController extends Controller
             $estController = new EstadoController();
             $estadosHabilitados = $estController->estadosReporte($reporte);
 
-            // Obtener fondos, recursos y unidades de medida
+            // Catalogos para el detalle
             $fondos = DB::table('fondos')->get();
             $recursos = DB::table('recursos')->get();
             $unidades_medida = DB::table('unidades_medida')->get();
+            $tiposBienes = DB::table('tipos_bienes')->get();
 
             return [
                 'reporte' => $reporte,
@@ -568,7 +566,8 @@ class ReporteController extends Controller
                 'estadosPermitidos' => $estadosHabilitados,
                 'fondos' => $fondos,
                 'recursos' => $recursos,
-                'unidades_medida' => $unidades_medida
+                'unidades_medida' => $unidades_medida,
+                'tipos_bienes' => $tiposBienes
             ];
         } else {
             return [
@@ -579,7 +578,8 @@ class ReporteController extends Controller
                 'estadosPermitidos' => [],
                 'fondos' => [],
                 'recursos' => [],
-                'unidades_medida' => []
+                'unidades_medida' => [],
+                'tipos_bienes' => []
             ];
         }
     }
