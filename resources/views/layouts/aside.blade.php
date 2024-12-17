@@ -81,7 +81,7 @@
                 ],
                 [
                     'to' => 'importar-actividades',
-                    'active' => request()->is('actividades/importacion-actividades'),
+                    'active' => request()->is('actividades/importar-actividades'),
                     'label' => 'Importación de actividades',
                     'permissions' => ['ACTIVIDADES_CARGA_EXCEL'],
                 ],
@@ -90,27 +90,27 @@
         [
             'type' => 2,
             'id' => 'rhu-dropdown',
-            'active' => request()->is('rhu/*'),
+            'active' => request()->is('recursos-humanos/*'),
             'icon' => 'heroicon-s-user-group',
             'label' => 'Recursos humanos',
             'permissions' => ['ENTIDADES_VER', 'PUESTOS_VER', 'EMPLEADOS_VER'],
             'items' => [
                 [
                     'to' => 'entidades.index',
-                    'active' => request()->is('rhu/entidades'),
+                    'active' => request()->is('recursos-humanos/entidades'),
                     'label' => 'Entidades',
                     'permissions' => ['ENTIDADES_VER'],
                 ],
                 [
                     'to' => 'puestos.index',
-                    'active' => request()->is('rhu/puestos'),
+                    'active' => request()->is('recursos-humanos/puestos'),
                     'label' => 'Puestos',
                     'permissions' => ['PUESTOS_VER'],
                 ],
                 [
                     'to' => 'empleadosPuestos.index',
-                    'active' => request()->is('rhu/empleado-puesto'),
-                    'label' => 'Empleados - Puestos',
+                    'active' => request()->is('recursos-humanos/empleados'),
+                    'label' => 'Empleados',
                     'permissions' => ['EMPLEADOS_VER'],
                 ],
             ],
@@ -131,13 +131,13 @@
                 ],
                 [
                     'to' => 'escuela.index',
-                    'active' => request()->is('mantenimientos/escuelas'),
+                    'active' => request()->is('mantenimientos/escuela'),
                     'label' => 'Escuelas',
                     'permissions' => ['ESCUELAS_VER'],
                 ],
                 [
                     'to' => 'asignatura.index',
-                    'active' => request()->is('mantenimientos/asignaturas'),
+                    'active' => request()->is('mantenimientos/asignatura'),
                     'label' => 'Asignaturas',
                     'permissions' => ['ASIGNATURAS_VER'],
                 ],
@@ -159,40 +159,52 @@
                     'label' => 'Unidades de medida',
                     'permissions' => ['UNIDADES_MEDIDA_VER'],
                 ],
+                [
+                    'to' => 'tiposBienes.index',
+                    'active' => request()->is('mantenimientos/tipos-bienes'),
+                    'label' => 'Tipos de bienes',
+                    'permissions' => ['TIPOS_BIENES_VER'],
+                ],
+                [
+                    'to' => 'bienes.index',
+                    'active' => request()->is('mantenimientos/bienes'),
+                    'label' => 'Bienes',
+                    'permissions' => ['BIENES_VER'],
+                ],
             ],
         ],
         [
             'type' => 2,
             'id' => 'auditorias-dropdown',
-            'active' => request()->is('auditorias/*'),
+            'active' => request()->is('bitacora'),
             'icon' => 'heroicon-s-book-open',
-            'label' => 'Auditorias',
+            'label' => 'Bitácora',
             'permissions' => ['BITACORA_VER'],
             'items' => [
                 [
                     'to' => 'general.index',
-                    'active' => request()->is('auditorias/general'),
+                    'active' => request()->is('bitacora'),
                     'label' => 'General',
                     'permissions' => ['BITACORA_VER'],
                 ],
             ],
         ],
-        // [
-        //     'type' => 2,
-        //     'id' => 'maquetacion-dropdown',
-        //     'active' => request()->is('maquetacion/*'),
-        //     'icon' => 'heroicon-s-exclamation-triangle',
-        //     'label' => 'Maquetación',
-        //     'permissions' => false,
-        //     'items' => [
-        //         [
-        //             'to' => 'dashboard',
-        //             'active' => request()->is('maquetacion/general'),
-        //             'label' => 'Componentes globales',
-        //             'permissions' => false,
-        //         ],
-        //     ],
-        // ],
+        [
+            'type' => 2,
+            'id' => 'estadisticas-dropdown',
+            'active' => request()->is('estadisticas/*'),
+            'icon' => 'heroicon-s-chart-bar-square',
+            'label' => 'Estadísticas',
+            'permissions' => ['BITACORA_VER'],
+            'items' => [
+                [
+                    'to' => 'estadisticas.index',
+                    'active' => request()->is('estadisticas/'),
+                    'label' => 'Estadíticas y graficos',
+                    'permissions' => ['BITACORA_VER'],
+                ],
+            ],
+        ],
     ];
 @endphp
 

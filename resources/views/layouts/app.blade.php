@@ -1,7 +1,3 @@
-@php
-    use Illuminate\Support\Facades\Vite;
-@endphp
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -45,7 +41,7 @@
                 <!-- Page Heading -->
                 @if (isset($header))
                     <div class="pb-6 pt-12">
-                        <div class="mx-auto max-w-[95%] lg:px-2">
+                        <div class="mx-auto max-w-[95%] lg:px-2 mt-3">
                             <div class="overflow-hidden bg-white py-4 shadow-sm dark:bg-gray-800 sm:rounded-lg">
                                 {{ $header }}
                             </div>
@@ -194,6 +190,8 @@
         }, TIME_DISPLAY_NOTY); // Duración de la notificación
     };
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </body>
 

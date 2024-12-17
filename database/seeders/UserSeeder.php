@@ -16,13 +16,15 @@ class UserSeeder extends Seeder
                 "carnet" => "aa11001",
                 "email" => "aa11001@yopmail.com",
                 "password" => bcrypt("pass123"),
-                "role" => "SUPERADMIN"
+                "role" => "SUPERADMIN",
+                'es_estudiante' => 0
             ],
             [
                 "id_persona" => 2,
                 "carnet" => "rr11001",
                 "email" => "rr11001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "ADMINISTRADOR DE REPORTES"
             ],
             [
@@ -30,6 +32,7 @@ class UserSeeder extends Seeder
                 "carnet" => "ss11001",
                 "email" => "dc19019@ues.edu.sv",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "SUPERVISOR"
             ],
             [
@@ -37,6 +40,7 @@ class UserSeeder extends Seeder
                 "carnet" => "ss21001",
                 "email" => "ss21001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "SUPERVISOR"
             ],
             [
@@ -44,6 +48,7 @@ class UserSeeder extends Seeder
                 "carnet" => "ee11001",
                 "email" => "ee11001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "EMPLEADO"
             ],
             [
@@ -51,6 +56,7 @@ class UserSeeder extends Seeder
                 "carnet" => "ee21001",
                 "email" => "ee21001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "EMPLEADO"
             ],
             [
@@ -58,6 +64,7 @@ class UserSeeder extends Seeder
                 "carnet" => "ee31001",
                 "email" => "ee31001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "EMPLEADO"
             ],
             [
@@ -65,6 +72,7 @@ class UserSeeder extends Seeder
                 "carnet" => "ee41001",
                 "email" => "ee41001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "EMPLEADO"
             ],
             [
@@ -72,6 +80,7 @@ class UserSeeder extends Seeder
                 "carnet" => "ee51001",
                 "email" => "ee51001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "EMPLEADO"
             ],
             [
@@ -79,6 +88,7 @@ class UserSeeder extends Seeder
                 "carnet" => "ee61001",
                 "email" => "ee61001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 0,
                 "role" => "EMPLEADO"
             ],
             [
@@ -86,6 +96,8 @@ class UserSeeder extends Seeder
                 "carnet" => "nn11001",
                 "email" => "nn11001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 1,
+                'id_escuela' => 1,
                 "role" => "USUARIO"
             ],
             [
@@ -93,6 +105,8 @@ class UserSeeder extends Seeder
                 "carnet" => "nn21001",
                 "email" => "nn21001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 1,
+                'id_escuela' => 2,
                 "role" => "USUARIO"
             ],
             [
@@ -100,6 +114,8 @@ class UserSeeder extends Seeder
                 "carnet" => "nn31001",
                 "email" => "nn31001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 1,
+                'id_escuela' => 3,
                 "role" => "USUARIO"
             ],
             [
@@ -107,6 +123,8 @@ class UserSeeder extends Seeder
                 "carnet" => "nn41001",
                 "email" => "nn41001@yopmail.com",
                 "password" => bcrypt("pass123"),
+                'es_estudiante' => 1,
+                'id_escuela' => 4,
                 "role" => "USUARIO"
             ],
         ];
@@ -118,6 +136,8 @@ class UserSeeder extends Seeder
                     "carnet" => $usuario["carnet"],
                     "email" => $usuario["email"],
                     "password" => $usuario["password"],
+                    "es_estudiante" => $usuario["es_estudiante"],
+                    "id_escuela" => $usuario["id_escuela"] ?? null,
                     "email_verified_at" => Carbon::now()
                 ]
             );

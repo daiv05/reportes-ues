@@ -3,9 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -15,15 +13,15 @@ class ReporteMailable extends Mailable
     use Queueable, SerializesModels;
 
     public $viewName;
-    public $subjectText = 'ReportFIA';
+    public $subjectText;
     public $tableData;
     /**
      * Create a new message instance.
      */
-    public function __construct($viewName, $tableData, $subjectText = 'ReportFIA')
+    public function __construct($viewName, $tableData, $subjectText = '')
     {
         $this->viewName = $viewName;
-        $this->subjectText = $subjectText;
+        $this->subjectText = $subjectText ?? config('app.name');
         $this->tableData = $tableData;
     }
 
@@ -33,7 +31,6 @@ class ReporteMailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('reportefiaues@gmail.com', 'ReportFIA'),
             subject: $this->subjectText
         );
     }

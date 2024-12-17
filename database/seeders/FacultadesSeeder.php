@@ -24,7 +24,7 @@ class FacultadesSeeder extends Seeder
             ],
             [
                 'id_sedes' => 1,
-                'nombre' => 'Facultad de Ingeníeria y Arquitectura',
+                'nombre' => 'Facultad de Ingenería y Arquitectura',
             ],
             [
                 'id_sedes' => 1,

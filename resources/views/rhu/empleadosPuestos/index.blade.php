@@ -86,7 +86,7 @@
                                         <x-heroicon-o-pencil class="h-5 w-5" />
                                     </a>
 
-                                    <a href="{{ url('rhu/empleados-puestos/' . $empPuesto->id) }}"
+                                    <a href="{{ url('recursos-humanos/empleados-puestos/' . $empPuesto->id) }}"
                                         class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
                                         <x-heroicon-o-eye class="h-5 w-5" />
                                     </a>
@@ -226,7 +226,7 @@
 
             updateTitle('Editar asignación de puesto')
 
-            document.getElementById('asignacion-form').action = `/rhu/empleados-puestos/${id}`;
+            document.getElementById('asignacion-form').action = `/recursos-humanos/empleados-puestos/${id}`;
             document.getElementById('asignacion-form').method = 'POST';
             document.getElementById('asignacion-form').innerHTML +=
                 '<input type="hidden" name="_method" value="PUT">';

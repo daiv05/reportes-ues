@@ -179,7 +179,7 @@
 
             updateModalTitle('Editar Aula');
 
-            document.getElementById('asignacion-form').action = `/rhu/puestos/${id}`;
+            document.getElementById('asignacion-form').action = `/recursos-humanos/puestos/${id}`;
             document.getElementById('asignacion-form').method = 'POST';
 
             if (!document.querySelector('input[name="_method"]')) {

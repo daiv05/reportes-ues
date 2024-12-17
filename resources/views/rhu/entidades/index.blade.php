@@ -218,7 +218,7 @@
             updateTitle('Editar entidad');
 
             // Ajustar el formulario para la edición
-            document.getElementById('add-entidades-form').action = `/rhu/entidades/${id}`;
+            document.getElementById('add-entidades-form').action = `/recursos-humanos/entidades/${id}`;
             document.getElementById('add-entidades-form').method = 'POST';
             if (!document.querySelector('input[name="_method"]')) {
                 document.getElementById('add-entidades-form').insertAdjacentHTML('beforeend', '<input type="hidden" name="_method" value="PUT">');
