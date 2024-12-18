@@ -9,10 +9,12 @@
     <x-slot name="header">
         <x-header.simple titulo="Gestión de tipos de bienes"/>
         <div class="p-6">
+            @canany(['TIPOS_BIENES_CREAR'])
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                                     type="button">
                 Añadir
             </x-forms.primary-button>
+            @endcanany
         </div>
     </x-slot>
     <x-container>
@@ -64,12 +66,14 @@
                             <x-status.is-active :active="$tipoBien->activo"/>
                         </x-table.td>
                         <x-table.td>
+                            @canany(['TIPOS_BIENES_EDITAR'])
                             <a href="#"
                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                data-id="{{ $tipoBien->id }}" data-nombre="{{ $tipoBien->nombre }}"
                                data-activo="{{ $tipoBien->activo }}">
                                 <x-heroicon-o-pencil class="h-5 w-5"/>
                             </a>
+                            @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach

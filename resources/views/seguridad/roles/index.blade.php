@@ -31,12 +31,14 @@
                             <x-status.is-active :active="$rol->activo" />
                         </x-table.td>
                         <x-table.td>
+                            @canany(['ROLES_EDITAR_NO EXISTIRA'])
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                 data-id="{{ $rol->id }}" data-name="{{ $rol->name }}"
                                 data-activo="{{ $rol->activo }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
+                            @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach

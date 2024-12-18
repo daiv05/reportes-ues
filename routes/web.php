@@ -29,7 +29,7 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
     Route::get('/inicio', function () {
         return view('dashboard');
     })->name('dashboard');
-    
+
     Route::get('/forbidden', function () {
         return view('errors.forbidden');
     })->name('errors.forbidden');
@@ -84,16 +84,16 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */
     /* ********************************************* */
     Route::prefix('mantenimientos')->group(function () {
-        Route::get('/escuelas', [EscuelaController::class, 'index'])->name('escuelas.index');
-        Route::patch('/escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuelas.toggleActivo');
-        Route::get('escuela', [EscuelaController::class, 'index'])->name('escuela.index');
-        Route::post('escuela', [EscuelaController::class, 'store'])->name('escuela.store');
-        Route::get('escuela/create', [EscuelaController::class, 'create'])->name('escuela.create');
-        Route::get('escuela/{escuela}', [EscuelaController::class, 'show'])->name('escuela.show');
-        Route::put('escuela/{escuela}', [EscuelaController::class, 'update'])->name('escuela.update');
-        Route::patch('escuela/{escuela}', [EscuelaController::class, 'update'])->name('escuela.update');
-        Route::get('escuela/{escuela}/edit', [EscuelaController::class, 'edit'])->name('escuela.edit');
-        Route::patch('escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->name('escuelas.toggleActivo');
+      //  Route::get('/escuelas', [EscuelaController::class, 'index'])->middleware('permission:ASIGNATURAS_VER')->name('escuelas.index');
+      //  Route::patch('/escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('escuelas.toggleActivo');
+        Route::get('escuela', [EscuelaController::class, 'index'])->middleware('permission:ESCUELAS_VER')->name('escuela.index');
+        Route::post('escuela', [EscuelaController::class, 'store'])->middleware('permission:ESCUELAS_CREAR')->name('escuela.store');
+        Route::get('escuela/create', [EscuelaController::class, 'create'])->middleware('permission:ESCUELAS_CREAR')->name('escuela.create');
+        Route::get('escuela/{escuela}', [EscuelaController::class, 'show'])->middleware('permission:ESCUELAS_VER')->name('escuela.show');
+        Route::put('escuela/{escuela}', [EscuelaController::class, 'update'])->middleware('permission:ESCUELAS_EDITAR')->name('escuela.update');
+        Route::patch('escuela/{escuela}', [EscuelaController::class, 'update'])->middleware('permission:ESCUELAS_EDITAR')->name('escuela.update');
+        Route::get('escuela/{escuela}/edit', [EscuelaController::class, 'edit'])->middleware('permission:ESCUELAS_EDITAR')->name('escuela.edit');
+        Route::patch('escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->middleware('permission:ESCUELAS_EDITAR')->name('escuelas.toggleActivo');
 
         // Rutas de Aulas
         Route::get('aulas', [AulasController::class, 'index'])->middleware('permission:AULAS_VER')->name('aulas.index');
