@@ -7,7 +7,7 @@
 
         <!-- Carnet -->
         <div>
-            <x-forms.input-label for="username" :value="__('Username')" />
+            <x-forms.input-label for="username" value="Usuario/Carnet" />
             <x-forms.text-input id="carnet" class="mt-1 block w-full" type="text" name="carnet" :value="old('carnet')"
                 required autofocus autocomplete="carnet" />
             <x-forms.input-error :messages="$errors->get('carnet')" class="mt-2" />
@@ -27,7 +27,7 @@
         <div class="mt-4 block">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
+                    class="rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-red-600 dark:focus:ring-offset-gray-800"
                     name="remember" />
                 <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Recordarme') }}</span>
             </label>
@@ -35,7 +35,7 @@
 
         <div class="mt-4 flex items-center justify-end">
             @if (Route::has('password.request'))
-                <a class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                <a class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                     href="{{ route('password.request') }}">
                     {{ __('¿Olvidaste tu contraseña?') }}
                 </a>

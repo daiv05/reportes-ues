@@ -61,7 +61,7 @@
         <!-- Carnet -->
         <div>
             <x-forms.field
-                label="Carnet"
+                label="Usuario/Carnet"
                 name="carnet"
                 :value="old('carnet')"
                 :error="$errors->get('carnet')"

@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            'email.regex' => 'El correo electrónico debe ser institucional (@ues.edu.sv).',
+            // 'email.regex' => 'El correo electrónico debe ser institucional (@ues.edu.sv).',
             'fecha_nacimiento.date_format' => 'El campo fecha de nacimiento no tiene un formato válido.',
             'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
@@ -102,75 +102,4 @@ class RegisteredUserController extends Controller
         }
 
     }
-
-    // public function verifyEmail(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'token' => ['required'],
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         Session::flash('message', [
-    //             'type' => 'error',
-    //             'content' => 'El código es inválido'
-    //         ]);
-    //         return redirect()->back();
-    //     }
-    //     $select = DB::table('password_reset_tokens')
-    //         ->where('email', Auth::user()->email)
-    //         ->where('token', $request->token);
-
-    //     if ($select->get()->isEmpty()) {
-    //         Session::flash('message', [
-    //             'type' => 'error',
-    //             'content' => 'El código es inválido'
-    //         ]);
-    //         return redirect()->back();
-    //     }
-
-    //     $select = DB::table('password_reset_tokens')
-    //         ->where('email', Auth::user()->email)
-    //         ->where('token', $request->token)
-    //         ->delete();
-
-    //     $user = User::find(Auth::user()->id);
-    //     $user->email_verified_at = Carbon::now()->getTimestamp();
-    //     $user->save();
-
-    //     Auth::login($user);
-
-    //     Session::flash('message', [
-    //         'type' => 'success',
-    //         'content' => '¡Bienvenido!'
-    //     ]);
-    //     return redirect(RouteServiceProvider::HOME);
-    // }
-
-    // public function resendCode(Request $request)
-    // {
-    //     $verify =  DB::table('password_reset_tokens')->where([
-    //         ['email', Auth::user()->email]
-    //     ]);
-
-    //     if ($verify->exists()) {
-    //         $verify->delete();
-    //     }
-
-    //     $token = random_int(100000, 999999);
-    //     $password_reset = DB::table('password_reset_tokens')->insert([
-    //         'email' => Auth::user()->email,
-    //         'token' =>  $token,
-    //         'created_at' => Carbon::now()
-    //     ]);
-
-    //     if ($password_reset) {
-    //         Mail::to(Auth::user()->email)->send(new VerifyEmail($token));
-
-    //         Session::flash('message', [
-    //             'type' => 'success',
-    //             'content' => 'El correo de verificación ha sido reenviado'
-    //         ]);
-    //         return redirect()->back();
-    //     }
-    // }
 }

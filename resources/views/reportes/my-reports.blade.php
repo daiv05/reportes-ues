@@ -32,8 +32,13 @@
                             {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</x-table.td>
                         <x-table.td>{{ $reporte->actividad ? 'Actividad' : 'General' }}</x-table.td>
                         <x-table.td justify="center">
-                            <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
-                                            class="mb-2"/>
+                            @if ($reporte->no_procede === 0)
+                                <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
+                                    class="mb-2"/>
+                            @else
+                                <x-status.chips text="NO PROCEDE"
+                                    class="mb-2"/>
+                            @endif
                         </x-table.td>
                         <x-table.td justify="center">
                             <a href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"

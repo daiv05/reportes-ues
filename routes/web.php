@@ -144,6 +144,7 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
             Route::get('/', [BienController::class, 'index'])->middleware('permission:BIENES_VER')->name('bienes.index');
             Route::post('/', [BienController::class, 'store'])->middleware('permission:BIENES_CREAR')->name('bienes.store');
             Route::put('/{id}', [BienController::class, 'update'])->middleware('permission:BIENES_EDITAR')->name('bienes.update');
+            Route::get('filtro', [BienController::class, 'findByNameOrCode'])->middleware('permission:BIENES_VER|REPORTES_CREAR')->name('bienes.findByNameOrCode');
         });
 
         // Tipos de bienes
