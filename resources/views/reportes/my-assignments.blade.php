@@ -34,7 +34,13 @@
                         </x-table.td>
                         <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
                         <x-table.td>
-                            <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'" class="mb-2" />
+                            @if ($reporte->no_procede === 0)
+                                <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
+                                    class="mb-2"/>
+                            @else
+                                <x-status.chips text="NO PROCEDE"
+                                    class="mb-2"/>
+                            @endif
                         </x-table.td>
                         <x-table.td>
                             <a href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
