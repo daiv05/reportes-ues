@@ -12,11 +12,13 @@
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Entidades" />
         <div class="p-6">
+            @canany(['ENTIDADES_CREAR'])
             <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                 type="button">
                 Añadir
             </x-forms.primary-button>
         </div>
+        @endcanany
     </x-slot>
 
     <x-container>
@@ -75,6 +77,7 @@
                             <x-status.is-active :active="$entidad->activo" />
                         </x-table.td>
                         <x-table.td justify="center">
+                            @canany(['ENTIDADES_EDITAR'])
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                 data-id="{{ $entidad->id }}" data-nombre="{{ $entidad->nombre }}"
@@ -82,6 +85,7 @@
                                 data-id_entidad="{{ $entidad->id_entidad }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
+                            @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach
