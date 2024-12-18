@@ -32,22 +32,6 @@ class EntidadesSeeder extends Seeder
             [
                 'nombre' => 'MANTENIMIENTO Y SERVICIOS GENERALES',
                 'descripcion' => 'Descripcion'
-            ],
-            [
-                'nombre' => 'ESCUELA DE INGENIERIA DE SISTEMAS INFORMATICOS',
-                'descripcion' => 'Descripcion'
-            ],
-            [
-                'nombre' => 'ESCUELA DE ARQUITECTURA',
-                'descripcion' => 'Descripcion'
-            ],
-            [
-                'nombre' => 'ESCUELA DE INGENIERIA INDUSTRIAL',
-                'descripcion' => 'Descripcion'
-            ],
-            [
-                'nombre' => 'ESCUELA DE INGENIERIA CIVIL',
-                'descripcion' => 'Descripcion'
             ]
         ];
 

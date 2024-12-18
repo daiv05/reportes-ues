@@ -42,7 +42,7 @@
                 />
 
                 <x-forms.field
-                    label="Username"
+                    label="Usuario/Carnet"
                     name="carnet"
                     :value="old('carnet', $user->carnet)"
                     type="text"

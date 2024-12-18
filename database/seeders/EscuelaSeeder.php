@@ -31,7 +31,7 @@ class EscuelaSeeder extends Seeder
             ],
             [
                 'id_facultad' => 3,
-                'nombre' => 'Escuela Ingeniería Industrial',
+                'nombre' => 'Escuela de Ingeniería Industrial',
             ],
             [
                 'id_facultad' => 3,

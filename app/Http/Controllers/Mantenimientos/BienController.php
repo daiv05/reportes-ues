@@ -80,4 +80,20 @@ class BienController extends Controller
             'content' => 'El bien se ha actualizado exitosamente.'
         ]);
     }
+
+    public function findByNameOrCode(Request $request)
+    {
+        $request->validate([
+            'search' => 'nullable|string',
+            'id_tipo_bien' => 'nullable|exists:tipos_bienes,id',
+        ]);
+
+        $bienes = Bien::where('nombre', 'like', '%' . $request->input('search') . '%')
+            ->orWhere('codigo', 'like', '%' . $request->input('search') . '%')
+            ->when($request->input('id_tipo_bien'), function ($query, $id_tipo_bien) {
+                return $query->where('id_tipo_bien', $id_tipo_bien);
+            })->get();
+            
+        return response()->json($bienes);
+    }
 }
