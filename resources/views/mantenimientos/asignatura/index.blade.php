@@ -79,12 +79,14 @@
                             <x-status.is-active :active="$asignatura->activo" />
                         </x-table.td>
                         <x-table.td>
-                            <a href="#"
-                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                data-id="{{ $asignatura->id }}" data-nombre="{{ $asignatura->nombre }}"
-                                data-nombre-completo="{{ $asignatura->nombre_completo }}"
-                                data-escuela="{{ $asignatura->escuela->id }}" data-activo="{{ $asignatura->activo }}">
-                                <x-heroicon-o-pencil class="h-5 w-5" />
+                            @canany(['ASIGNATURAS_EDITAR'])
+                                <a href="#"
+                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                    data-id="{{ $asignatura->id }}" data-nombre="{{ $asignatura->nombre }}"
+                                    data-nombre-completo="{{ $asignatura->nombre_completo }}"
+                                    data-escuela="{{ $asignatura->escuela->id }}" data-activo="{{ $asignatura->activo }}">
+                                    <x-heroicon-o-pencil class="h-5 w-5" />
+                                @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach

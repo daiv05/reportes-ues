@@ -67,12 +67,14 @@
                         <x-table.td>{{ $escuela->facultad->nombre }}</x-table.td>
                         <x-table.td justify="center"><x-status.is-active :active="$escuela->activo" /></x-table.td>
                         <x-table.td justify="center">
+                            @canany(['ESCUELAS_EDITAR'])
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                 data-id="{{ $escuela->id }}" data-nombre="{{ $escuela->nombre }}"
                                 data-facultad="{{ $escuela->facultad->id }}" data-estado="{{ $escuela->activo }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
+                            @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach

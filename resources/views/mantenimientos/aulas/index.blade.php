@@ -6,6 +6,7 @@
         ['text' => 'Acción', 'align' => 'left'],
     ];
 @endphp
+
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de aulas" />
@@ -70,12 +71,14 @@
                             <x-status.is-active :active="$aula->activo" />
                         </x-table.td>
                         <x-table.td>
+                            @canany(['AULAS_EDITAR'])
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                 data-id="{{ $aula->id }}" data-nombre="{{ $aula->nombre }}"
                                 data-facultad="{{ $aula->facultad->id }}" data-activo="{{ $aula->activo }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
+                            @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach
