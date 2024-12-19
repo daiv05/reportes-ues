@@ -35,12 +35,14 @@
                             <x-status.is-active :active="$ciclo->activo" />
                         </x-table.td>
                         <x-table.td justify="center">
+                            @canany(['CICLOS_EDITAR'])
                             <a href="#"
                                 class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                 data-id="{{ $ciclo->id }}" data-anio="{{ $ciclo->anio }}"
                                 data-tipo_ciclo="{{ $ciclo->id_tipo_ciclo }}" data-estado="{{ $ciclo->activo }}">
                                 <x-heroicon-o-pencil class="h-5 w-5" />
                             </a>
+                            @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach

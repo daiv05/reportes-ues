@@ -21,6 +21,7 @@ class AuditObserver
             'deleted'  => 'Eliminado',
             'restored' => 'Restaurado',
             'forceDeleted' => 'Eliminado permanentemente',
+            'user_registered' =>'Usuario registrado'
         ];
 
         // Traduce el evento si está mapeado

@@ -13,10 +13,12 @@
         <x-header.main tituloMenor="Gestión de" tituloMayor="PUESTOS DE LOS EMPLEADOS"
             subtitulo="Gestiona de los puestos asignados a los empleados de la universidad">
             <x-slot name="acciones">
+                @canany(['ASIGNAR_PUESTOS_EMPLEADOS'])
                 <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
                     type="button" id="add-button">
                     Asignar puesto
                 </x-forms.primary-button>
+                @endcanany
             </x-slot>
         </x-header.main>
     </x-slot>
@@ -77,6 +79,7 @@
                             </x-table.td>
                             <x-table.td>
                                 <div class="flex flex-wrap justify-center gap-2">
+                                    @canany(['EDITAR_PUESTOS_EMPLEADOS'])
                                     <a href="#"
                                         class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                         data-id="{{ $empPuesto->id }}" data-empleado="{{ $empPuesto->usuario->id }}"
@@ -85,11 +88,13 @@
                                         data-estado="{{ $empPuesto->activo }}">
                                         <x-heroicon-o-pencil class="h-5 w-5" />
                                     </a>
-
+                                    @endcanany
+                                    @canany(['VER_PUESTOS_EMPLEADOS'])
                                     <a href="{{ url('recursos-humanos/empleados-puestos/' . $empPuesto->id) }}"
                                         class="view-button font-medium text-blue-600 hover:underline dark:text-blue-400">
                                         <x-heroicon-o-eye class="h-5 w-5" />
                                     </a>
+                                    @endcanany
                                 </div>
                             </x-table.td>
                         </x-table.tr>
