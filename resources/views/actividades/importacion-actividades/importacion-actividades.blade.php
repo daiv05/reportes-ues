@@ -43,6 +43,7 @@
                                 </select>
                             </div>
                             <div class="flex items-center justify-center w-full">
+                                @canany(['ACTIVIDADES_CARGA_EXCEL'])
                                 <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white">
                                     <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
                                     <span id="file-name" class="mt-2 text-base leading-normal">Selecciona un archivo</span>
@@ -51,11 +52,14 @@
                                         <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
                                     @endif
                                 </label>
+                                @endcanany
                             </div>
                             <div class="flex items-center py-2 gap-2 md:gap-4 justify-center w-full mt-4 md:col-span-2">
+                                @canany(['ACTIVIDADES_CARGA_EXCEL'])
                                 <x-forms.primary-button>
                                     Subir archivo
                                 </x-forms.primary-button>
+                                @endcanany
                             </div>
                         </form>
 

@@ -6,9 +6,22 @@
         ['text' => 'Entidad', 'align' => 'left'],
         ['text' => 'Tipo', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
+    ];
+@endphp
+
+@canany(['REPORTES_ASIGNAR'])
+@php
+    $headers = [
+        ['text' => 'Título', 'align' => 'left'],
+        ['text' => 'Fecha y Hora', 'align' => 'left'],
+        ['text' => 'Reportado por', 'align' => 'left'],
+        ['text' => 'Entidad', 'align' => 'left'],
+        ['text' => 'Tipo', 'align' => 'left'],
+        ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
 @endphp
+@endcanany
 
 <x-app-layout>
     <x-slot name="header">
@@ -38,10 +51,16 @@
                         <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre ?? '-' }}</x-table.td>
                         <x-table.td>{{ $reporte->actividad ? 'Actividad' : 'Incidencia' }}</x-table.td>
                         <x-table.td>
-                            <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
-                                            class="mb-2"/>
+                            @if ($reporte->no_procede === 0)
+                                <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
+                                    class="mb-2"/>
+                            @else
+                                <x-status.chips text="NO PROCEDE"
+                                    class="mb-2"/>
+                            @endif
                         </x-table.td>
                         <x-table.td justify="center">
+                            @canany(['REPORTES_ASIGNAR'])
                             <a href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
                                class="font-medium text-gray-700 hover:underline">
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -50,6 +69,7 @@
                                           d="M4 6h16M4 12h16m-7 6h7"></path>
                                 </svg>
                             </a>
+                            @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach

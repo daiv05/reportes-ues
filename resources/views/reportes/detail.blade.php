@@ -124,8 +124,13 @@
                             </p>
                         </div>
                         <div class="basis-2/3">
-                            <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
-                                            class="mb-2"/>
+                            @if ($reporte->no_procede === 0)
+                                <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
+                                    class="mb-2"/>
+                            @else
+                                <x-status.chips text="NO PROCEDE"
+                                    class="mb-2"/>
+                            @endif
                         </div>
                     </div>
                     <div class="flex flex-row mb-4">

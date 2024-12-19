@@ -37,7 +37,15 @@
                 </tr>
                 <tr>
                     <td class="py-4 px-6 text-sm font-medium text-gray-900">Estado</td>
-                    <td class="py-4 px-6 text-sm text-gray-500">{{ $reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO' }}</td>
+                    <td class="py-4 px-6 text-sm text-gray-500">
+                        @if ($reporte->no_procede === 0)
+                            <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
+                                class="mb-2"/>
+                        @else
+                            <x-status.chips text="NO PROCEDE"
+                                class="mb-2"/>
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td class="py-4 px-6 text-sm font-medium text-gray-900">Fecha de Creación</td>
