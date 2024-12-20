@@ -1,5 +1,6 @@
 @php
     $headers = [
+        ['text' => 'ID', 'align' => 'left'],
         ['text' => 'Título', 'align' => 'left'],
         ['text' => 'Fecha y Hora', 'align' => 'left'],
         ['text' => 'Tipo', 'align' => 'left'],
@@ -27,6 +28,7 @@
             <x-table.base :headers="$headers">
                 @foreach ($reportes as $reporte)
                     <x-table.tr>
+                        <x-table.td>{{ $reporte->id }}</x-table.td>
                         <x-table.td>{{ $reporte->titulo }}</x-table.td>
                         <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y') }}
                             {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</x-table.td>
