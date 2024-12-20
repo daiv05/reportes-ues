@@ -17,6 +17,7 @@ use App\Http\Controllers\Mantenimientos\UnidadMedidaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auditorias\UserAuditController;
 use App\Http\Controllers\Estadisticas\EstadisticasController;
+use App\Http\Controllers\InicioController;
 use App\Http\Controllers\Mantenimientos\BienController;
 use App\Http\Controllers\Mantenimientos\TipoBienController;
 
@@ -26,9 +27,7 @@ Route::get('/', function () {
 
 Route::middleware('auth', 'verified', 'two_factor')->group(function () {
 
-    Route::get('/inicio', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/inicio', [InicioController::class, 'inicio'])->name('dashboard');
 
     Route::get('/forbidden', function () {
         return view('errors.forbidden');
