@@ -118,10 +118,10 @@ class InicioController extends Controller
         //     'estado' => 'ESTADO_DEL REPORTE', en caso existira
         //     'fecha' => 'FECHA DE LA ACCION' para ordenarlas segun la fecha
         // ]
-        $actividadRecientes = [];
+        $actividadReciente = [];
 
         foreach ($reportesEstadosMásRecientes as $reporte) {
-            $actividadRecientes[] = [
+            $actividadReciente[] = [
                 'reporte' => $reporte->accionesReporte->reporte->id,
                 'acciones' => 'ACTUALIZACION',
                 'estado' => $reporte->estado->nombre,
@@ -130,7 +130,7 @@ class InicioController extends Controller
         }
 
         foreach ($reportesNoProcedeRecientes as $reporte) {
-            $actividadRecientes[] = [
+            $actividadReciente[] = [
                 'reporte' => $reporte->id,
                 'acciones' => 'ACTUALIZACION',
                 'estado' => 'NO PROCEDE',
@@ -139,23 +139,23 @@ class InicioController extends Controller
         }
 
         foreach ($reportesRecientes as $reporte) {
-            $actividadRecientes[] = [
+            $actividadReciente[] = [
                 'reporte' => $reporte->id,
                 'acciones' => 'CREACION',
                 'fecha' => $reporte->created_at
             ];
         }
 
-        usort($actividadRecientes, function($a, $b) {
+        usort($actividadReciente, function($a, $b) {
             return $b['fecha'] <=> $a['fecha'];
         });
 
-        foreach ($actividadRecientes as $key => $actividad) {
-            $actividadRecientes[$key]['fecha'] = $actividad['fecha']->format('d/m/Y H:i:s');
+        foreach ($actividadReciente as $key => $actividad) {
+            $actividadReciente[$key]['fecha'] = $actividad['fecha']->format('d/m/Y H:i:s');
         }
 
-        if(count($actividadRecientes) > 5) {
-            $actividadReciente = array_slice($actividadRecientes, 0, 5);
+        if(count($actividadReciente) > 5) {
+            $actividadReciente = array_slice($actividadReciente, 0, 5);
         }
         // dd($actividadReciente);
 
