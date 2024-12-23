@@ -83,8 +83,8 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */
     /* ********************************************* */
     Route::prefix('mantenimientos')->group(function () {
-      //  Route::get('/escuelas', [EscuelaController::class, 'index'])->middleware('permission:ASIGNATURAS_VER')->name('escuelas.index');
-      //  Route::patch('/escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('escuelas.toggleActivo');
+        //  Route::get('/escuelas', [EscuelaController::class, 'index'])->middleware('permission:ASIGNATURAS_VER')->name('escuelas.index');
+        //  Route::patch('/escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('escuelas.toggleActivo');
         Route::get('escuela', [EscuelaController::class, 'index'])->middleware('permission:ESCUELAS_VER')->name('escuela.index');
         Route::post('escuela', [EscuelaController::class, 'store'])->middleware('permission:ESCUELAS_CREAR')->name('escuela.store');
         Route::get('escuela/create', [EscuelaController::class, 'create'])->middleware('permission:ESCUELAS_CREAR')->name('escuela.create');
@@ -116,7 +116,6 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
         Route::post('asignatura/importar', [AsignaturaController::class, 'importarDatos'])->middleware('permission:ASIGNATURAS_CREAR')->name('asignatura.importar');
 
 
-
         // Rutas de Ciclos
         Route::prefix('ciclos')->group(function () {
             Route::get('/', [CicloController::class, 'index'])->middleware('permission:CICLOS_VER')->name('ciclos.index');
@@ -143,7 +142,9 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
             Route::get('/', [BienController::class, 'index'])->middleware('permission:BIENES_VER')->name('bienes.index');
             Route::post('/', [BienController::class, 'store'])->middleware('permission:BIENES_CREAR')->name('bienes.store');
             Route::put('/{id}', [BienController::class, 'update'])->middleware('permission:BIENES_EDITAR')->name('bienes.update');
-            Route::get('filtro', [BienController::class, 'findByNameOrCode'])->middleware('permission:BIENES_VER|REPORTES_CREAR')->name('bienes.findByNameOrCode');
+            Route::get('filtro', [BienController::class, 'findByNameOrCode'])
+                ->middleware('permission:BIENES_VER|REPORTES_CREAR')
+                ->name('bienes.findByNameOrCode');
         });
 
         // Tipos de bienes

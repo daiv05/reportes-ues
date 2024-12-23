@@ -83,17 +83,27 @@ class BienController extends Controller
 
     public function findByNameOrCode(Request $request)
     {
-        $request->validate([
-            'search' => 'nullable|string',
+        $validated = $request->validate([
+            'search' => 'nullable|string|min:1',
             'id_tipo_bien' => 'nullable|exists:tipos_bienes,id',
         ]);
 
-        $bienes = Bien::where('nombre', 'like', '%' . $request->input('search') . '%')
-            ->orWhere('codigo', 'like', '%' . $request->input('search') . '%')
-            ->when($request->input('id_tipo_bien'), function ($query, $id_tipo_bien) {
-                return $query->where('id_tipo_bien', $id_tipo_bien);
-            })->get();
-            
+        $query = Bien::query();
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nombre', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('codigo', 'like', '%' . $request->input('search') . '%');
+            });
+        }
+
+        if ($request->filled('id_tipo_bien')) {
+            $query->where('id_tipo_bien', $request->input('id_tipo_bien'));
+        }
+
+        $bienes = $query->get();
+
         return response()->json($bienes);
     }
+
 }
