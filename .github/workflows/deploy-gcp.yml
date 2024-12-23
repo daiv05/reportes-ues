@@ -18,18 +18,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-
       - name: Deploy to VM GCP
         run: |
           ssh -o StrictHostKeyChecking=no davidderas50@34.145.159.234 "
             cd /opt/bitnami/projects/reportes-ues &&
             git pull origin dev &&
-            npm install &&
             npm run build &&
-            /opt/bitnami/php/bin/php artisan migrate:fresh --seed &&
-            /opt/bitnami/php/bin/php artisan cache:clear
+            sudo /opt/bitnami/php/bin/php artisan optimize:clear
           "
