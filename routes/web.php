@@ -83,8 +83,8 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
     /*   ****** GESTIONES DE MANTENIMIENTOS ******   */
     /* ********************************************* */
     Route::prefix('mantenimientos')->group(function () {
-      //  Route::get('/escuelas', [EscuelaController::class, 'index'])->middleware('permission:ASIGNATURAS_VER')->name('escuelas.index');
-      //  Route::patch('/escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('escuelas.toggleActivo');
+        //  Route::get('/escuelas', [EscuelaController::class, 'index'])->middleware('permission:ASIGNATURAS_VER')->name('escuelas.index');
+        //  Route::patch('/escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('escuelas.toggleActivo');
         Route::get('escuela', [EscuelaController::class, 'index'])->middleware('permission:ESCUELAS_VER')->name('escuela.index');
         Route::post('escuela', [EscuelaController::class, 'store'])->middleware('permission:ESCUELAS_CREAR')->name('escuela.store');
         Route::get('escuela/create', [EscuelaController::class, 'create'])->middleware('permission:ESCUELAS_CREAR')->name('escuela.create');
@@ -116,7 +116,6 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
         Route::post('asignatura/importar', [AsignaturaController::class, 'importarDatos'])->middleware('permission:ASIGNATURAS_CREAR')->name('asignatura.importar');
 
 
-
         // Rutas de Ciclos
         Route::prefix('ciclos')->group(function () {
             Route::get('/', [CicloController::class, 'index'])->middleware('permission:CICLOS_VER')->name('ciclos.index');
@@ -143,7 +142,9 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
             Route::get('/', [BienController::class, 'index'])->middleware('permission:BIENES_VER')->name('bienes.index');
             Route::post('/', [BienController::class, 'store'])->middleware('permission:BIENES_CREAR')->name('bienes.store');
             Route::put('/{id}', [BienController::class, 'update'])->middleware('permission:BIENES_EDITAR')->name('bienes.update');
-            Route::get('filtro', [BienController::class, 'findByNameOrCode'])->middleware('permission:BIENES_VER|REPORTES_CREAR')->name('bienes.findByNameOrCode');
+            Route::get('filtro', [BienController::class, 'findByNameOrCode'])
+                ->middleware('permission:BIENES_VER|REPORTES_CREAR')
+                ->name('bienes.findByNameOrCode');
         });
 
         // Tipos de bienes
@@ -160,14 +161,12 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
     Route::prefix('seguridad')->group(function () {
 
         // Rutas para los roles
-        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-        Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-        Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
-        Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
-        Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
-        Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
-        Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
-        Route::patch('roles/{rol}/toggle', [RoleController::class, 'toggleActivo'])->name('roles.toggleActivo');
+        Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ROLES_VER')->name('roles.index');
+        Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:ROLES_CREAR')->name('roles.store');
+        Route::get('/roles/create', [RoleController::class, 'create'])->middleware('permission:ROLES_CREAR')->name('roles.create');
+        Route::put('/roles/{role}', [RoleController::class, 'update'])->middleware('permission:ROLES_EDITAR')->name('roles.update');
+        Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->middleware('permission:ROLES_EDITAR')->name('roles.edit');
+        Route::get('/roles/{role}', [RoleController::class, 'show'])->middleware('permission:ROLES_VER')->name('roles.show');
 
         // Rutas para los usuarios
         Route::get('/usuarios', [UsuarioController::class, 'index'])->middleware('permission:USUARIOS_VER')->name('usuarios.index');
@@ -175,9 +174,7 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
         Route::get('/usuarios/create', [UsuarioController::class, 'create'])->middleware('permission:USUARIOS_CREAR')->name('usuarios.create');
         Route::get('/usuarios/{usuario}', [UsuarioController::class, 'show'])->middleware('permission:USUARIOS_VER')->name('usuarios.show');
         Route::put('/usuarios/{usuario}', [UsuarioController::class, 'update'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.update');
-        Route::patch('/usuarios/{usuario}', [UsuarioController::class, 'update'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.update');
         Route::get('/usuarios/{usuario}/edit', [UsuarioController::class, 'edit'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.edit');
-        Route::patch('usuarios/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.toggleActivo');
     });
 
 

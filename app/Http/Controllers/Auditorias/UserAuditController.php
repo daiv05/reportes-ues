@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auditorias;
 
+use App\Enums\GeneralEnum;
 use OwenIt\Auditing\Models\Audit;
 use App\Models\Seguridad\User;
 use Illuminate\Http\Request;
@@ -50,7 +51,7 @@ class UserAuditController extends Controller
         if (!$filtersApplied) {
             $audits = new LengthAwarePaginator([], 0, 5);
         } else {
-            $audits = $query->paginate(5);
+            $audits = $query->paginate(GeneralEnum::PAGINACION->value);
         }
 
         $models = Audit::select('auditable_type')->distinct()->get();

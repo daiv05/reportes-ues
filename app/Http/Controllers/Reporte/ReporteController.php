@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reporte;
 
 use App\Enums\EstadosEnum;
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Mail\ReporteMailable;
@@ -34,7 +35,7 @@ class ReporteController extends Controller
     {
         $query = Reporte::query();
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10)->appends($request->query());
+        $reportes = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('reportes.index', compact('reportes'));
     }
 
@@ -230,6 +231,14 @@ class ReporteController extends Controller
                 'id_empleados_puestos' => []
             ]);
         }
+        $idBienes = $request->input('id_bienes');
+        if (!is_array($idBienes)) {
+            $idBienes = json_decode($idBienes, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $idBienes = explode(',', $idBienes);
+            }
+            $request->merge(['id_bienes' => $idBienes]);
+        }
 
         $validated = $request->validate(
             [
@@ -238,6 +247,8 @@ class ReporteController extends Controller
                 'comentario' => 'nullable|string',
                 'id_entidad' => 'required|integer|exists:entidades,id',
                 'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
+                'id_bienes' => 'required|array',
+                'id_bienes.*' => 'integer|exists:bienes,id',
             ],
             [
                 'id_empleados_puestos.required' => 'Debe asignar al menos un empleado al reporte.',
@@ -251,6 +262,10 @@ class ReporteController extends Controller
                 'id_empleado_supervisor.required' => 'Debe seleccionar un supervisor para el reporte.',
                 'id_empleado_supervisor.integer' => 'El ID del supervisor debe ser un número entero.',
                 'id_empleado_supervisor.exists' => 'El empleado supervisor seleccionado no existe.',
+                'id_bienes.required' => 'Debe asignar al menos un bien al reporte.',
+                'id_bienes.array' => 'Estructura de bienes asignados inválida.',
+                'id_bienes.*.integer' => 'Cada bien debe tener un ID válido.',
+                'id_bienes.*.exists' => 'Uno o más bienes seleccionados no existen.',
             ]
         );
 
@@ -537,7 +552,8 @@ class ReporteController extends Controller
             'empleadosAcciones',
             'empleadosAcciones.empleadoPuesto',
             'empleadosAcciones.empleadoPuesto.usuario',
-            'empleadosAcciones.empleadoPuesto.usuario.persona'
+            'empleadosAcciones.empleadoPuesto.usuario.persona',
+            'reporteBienes.bien'
         )->find($id_reporte);
 
         if (isset($reporte)) {
@@ -576,7 +592,8 @@ class ReporteController extends Controller
                 'fondos' => $fondos,
                 'recursos' => $recursos,
                 'unidades_medida' => $unidades_medida,
-                'tipos_bienes' => $tiposBienes
+                'tipos_bienes' => $tiposBienes,
+                'reporteBienes' => $reporte->reporteBienes
             ];
         } else {
             return [
@@ -588,7 +605,8 @@ class ReporteController extends Controller
                 'fondos' => [],
                 'recursos' => [],
                 'unidades_medida' => [],
-                'tipos_bienes' => []
+                'tipos_bienes' => [],
+                'reporteBienes' => []
             ];
         }
     }

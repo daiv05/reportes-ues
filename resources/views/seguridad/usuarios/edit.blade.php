@@ -4,16 +4,12 @@
     </x-slot>
 
     <x-container>
-        <!-- Título con el nombre del usuario -->
         <div class="pt-4 pb-8 text-2xl font-bold text-red-900 dark:text-gray-100">
             {{ $user->es_estudiante ? 'Estudiante' : 'Empleado' }} : {{ $user->persona->nombre . ' ' . $user->persona->apellido }}
         </div>
-        <!-- Formulario para editar usuario -->
         <form action="{{ route('usuarios.update', $user->id) }}" method="POST">
             @csrf
             @method('PUT')
-
-            <!-- Primera fila: Nombre completo, Correo electrónico y Carnet -->
             <x-forms.row :columns="2">
                 <x-forms.field
                     label="Nombre completo"
@@ -49,8 +45,6 @@
                     class="bg-gray-100"
                 />
             </x-forms.row>
-
-            <!-- Estado Activo (Checkbox) -->
             <x-forms.row :columns="2">
                 @if($user->es_estudiante)
                     <x-forms.select label="Escuela" name="escuela" :options="$escuelas" :selected="old('escuela', $user->id_escuela)"
@@ -64,8 +58,6 @@
                     />
                 </div>
             </x-forms.row>
-
-            <!-- Picklist de Roles -->
             <x-forms.row :fullRow="true">
                 <x-picklist.picklist
                     :items="$roles"
@@ -77,8 +69,6 @@
                     inputName="roles"
                 />
             </x-forms.row>
-
-            <!-- Botones para guardar o cancelar -->
             <div class="flex justify-center">
                 <x-forms.button-group>
                     <x-forms.cancel-button href="{{ route('usuarios.index') }}">

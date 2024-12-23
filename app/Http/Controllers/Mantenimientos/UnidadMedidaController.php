@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mantenimientos;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Mantenimientos\UnidadMedida;
 use Illuminate\Contracts\View\View;
@@ -17,7 +18,7 @@ class UnidadMedidaController extends Controller
             $filtro = $request->input('nombre');
             $query->where('nombre', 'like', '%' . $filtro . '%');
         }
-        $unidades = $query->paginate(10)->appends($request->query());
+        $unidades = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('mantenimientos.unidad_medida.index', compact('unidades'));
     }
 

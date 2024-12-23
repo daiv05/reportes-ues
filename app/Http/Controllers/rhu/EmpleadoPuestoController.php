@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\rhu;
 
+use App\Enums\GeneralEnum;
 use App\Enums\RolesEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -35,7 +36,7 @@ class EmpleadoPuestoController extends Controller
                     $query->whereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ["%{$empleadoFiltro}%"]);
                 });
             })
-            ->paginate(10);
+            ->paginate(GeneralEnum::PAGINACION->value);
         $entidades = [];
         $entidadesBackup = \App\Models\rhu\Entidades::all();
         foreach ($entidadesBackup as $entidad) {

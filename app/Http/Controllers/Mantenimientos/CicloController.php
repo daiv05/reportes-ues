@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mantenimientos;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mantenimientos\Ciclo;
@@ -15,7 +16,7 @@ class CicloController extends Controller
 
     public function index(Request $request)
     {
-        $ciclos = Ciclo::with('tipoCiclo')->paginate(10)->appends($request->query());
+        $ciclos = Ciclo::with('tipoCiclo')->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         $tiposCiclos = TipoCiclo::all();
 
         $tiposCiclos = $tiposCiclos->pluck('nombre', 'id')->toArray();

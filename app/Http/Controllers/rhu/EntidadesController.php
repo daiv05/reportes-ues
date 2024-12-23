@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\rhu;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Models\rhu\Entidades;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,7 @@ class EntidadesController extends Controller
         $entidades = Entidades::when($nombreFilter, function ($query, $nombreFilter) {
                 return $query->where('nombre', 'like', "%$nombreFilter%");
             })
-            ->paginate(2)->appends(request()->query());
+            ->paginate(GeneralEnum::PAGINACION->value)->appends(request()->query());
 
         // Lista jerárquica de entidades para el select
         $entidadesLista = $this->getHierarchicalEntidades();
