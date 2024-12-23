@@ -15,7 +15,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Reporte extends Model implements Auditable
 {
-    use HasFactory,\OwenIt\Auditing\Auditable;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $table = 'reportes';
 
@@ -60,7 +60,7 @@ class Reporte extends Model implements Auditable
         return $this->hasMany(EmpleadoAccion::class, 'id_reporte');
     }
 
-    public function reportesBienes(): HasMany
+    public function reporteBienes(): HasMany
     {
         return $this->hasMany(ReporteBien::class, 'id_reporte');
     }
@@ -102,5 +102,4 @@ class Reporte extends Model implements Auditable
         }
         return $relaciones;
     }
-
 }

@@ -322,10 +322,13 @@
                                         ];
                                     @endphp
                                     <x-table.base :headers="$headersBienesDetalle">
-                                        <x-table.tr>
-                                            <x-table.td>LUM-B11</x-table.td>
-                                            <x-table.td>Luminaria B11</x-table.td>
-                                        </x-table.tr>
+                                        @foreach ($reporte->reporteBienes as $reporteBien)
+                                            <x-table.tr>
+                                                <x-table.td>{{ $reporteBien->bien->codigo }}</x-table.td>
+                                                <x-table.td>{{ $reporteBien->bien->nombre }}</x-table.td>
+                                                <x-table.td>{{ $reporteBien->bien->descripcion }}</x-table.td>
+                                            </x-table.tr>
+                                        @endforeach
                                     </x-table.base>
                                 </div>
                             @endif

@@ -551,7 +551,8 @@ class ReporteController extends Controller
             'empleadosAcciones',
             'empleadosAcciones.empleadoPuesto',
             'empleadosAcciones.empleadoPuesto.usuario',
-            'empleadosAcciones.empleadoPuesto.usuario.persona'
+            'empleadosAcciones.empleadoPuesto.usuario.persona',
+            'reporteBienes.bien'
         )->find($id_reporte);
 
         if (isset($reporte)) {
@@ -590,7 +591,8 @@ class ReporteController extends Controller
                 'fondos' => $fondos,
                 'recursos' => $recursos,
                 'unidades_medida' => $unidades_medida,
-                'tipos_bienes' => $tiposBienes
+                'tipos_bienes' => $tiposBienes,
+                'reporteBienes' => $reporte->reporteBienes
             ];
         } else {
             return [
@@ -602,7 +604,8 @@ class ReporteController extends Controller
                 'fondos' => [],
                 'recursos' => [],
                 'unidades_medida' => [],
-                'tipos_bienes' => []
+                'tipos_bienes' => [],
+                'reporteBienes' => []
             ];
         }
     }
