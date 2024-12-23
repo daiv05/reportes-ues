@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mantenimientos;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Mantenimientos\Recurso;
 use Illuminate\Contracts\View\View;
@@ -17,7 +18,7 @@ class RecursoController extends Controller
             $filtro = $request->input('nombre-filter');
             $query->where('nombre', 'like', '%' . $filtro . '%');
         }
-        $recursos = $query->paginate(10)->appends($request->query());
+        $recursos = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('mantenimientos.recursos.index', compact('recursos'));
     }
 

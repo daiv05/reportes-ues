@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seguridad;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Mantenimientos\Escuela;
 use App\Models\Registro\Persona;
@@ -14,6 +15,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use OwenIt\Auditing\Models\Audit;
+
 
 class UsuarioController extends Controller
 {
@@ -37,7 +39,7 @@ class UsuarioController extends Controller
                     $query->where('id', '=', $rolFilter);
                 });
             })
-            ->paginate(10)->appends($request->query());
+            ->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
 
         $roles = Role::all();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reporte;
 
 use App\Enums\EstadosEnum;
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\rhu\EmpleadoPuestoController;
 use App\Mail\ReporteMailable;
@@ -34,7 +35,7 @@ class ReporteController extends Controller
     {
         $query = Reporte::query();
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10)->appends($request->query());
+        $reportes = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('reportes.index', compact('reportes'));
     }
 

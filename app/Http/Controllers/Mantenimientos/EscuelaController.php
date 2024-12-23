@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mantenimientos;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Models\General\Facultades;
 use App\Models\Mantenimientos\Escuela;
@@ -21,7 +22,7 @@ class EscuelaController extends Controller
 
         $escuelas = Escuela::when($nombreFilter, function ($query, $nombreFilter) {
             return $query->where('nombre', 'like', "%$nombreFilter%");
-        })->paginate(10)->appends($request->query());
+        })->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         $facultades = Facultades::all();
         return view('mantenimientos.escuela.index', compact('escuelas', 'facultades'));
     }

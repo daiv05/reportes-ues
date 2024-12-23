@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\rhu;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Models\rhu\Entidades;
 use App\Models\rhu\Puesto;
@@ -23,7 +24,7 @@ class PuestoController extends Controller
             return $query->where('id_entidad', $entidadFilter);
         })->when($search, function ($query, $search) {
             return $query->where('nombre', 'like', '%' . $search . '%');
-        })->paginate(10)->appends($request->query());
+        })->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
 
         return view('rhu.puestos.index', compact('puestos', 'entidades'));
     }

@@ -15,7 +15,6 @@
             </x-forms.primary-button>
         </div>
     </x-slot>
-
     <x-container>
         <div class="overflow-x-auto mb-8">
             <x-table.base :headers="$headers">

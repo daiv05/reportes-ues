@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mantenimientos;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use App\Imports\AsignaturaImport;
 use App\Models\Mantenimientos\Asignatura;
@@ -29,7 +30,7 @@ class AsignaturaController extends Controller
             ->when($nombreCompletoFilter, function ($query, $nombreCompletoFilter) {
                 return $query->where('nombre_completo', 'like', "%$nombreCompletoFilter%");
             })
-            ->paginate(10)->appends($request->query());
+            ->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         $escuelas = Escuela::all()->pluck('nombre', 'id');
         return view('mantenimientos.asignatura.index', compact('asignaturas', 'escuelas'))->with('message', [
             'type' => 'success',
