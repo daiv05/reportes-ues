@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seguridad;
 
+use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
 use BladeUI\Icons\Factory;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class RoleController extends Controller
     public function index(): View
     {
 
-        $roles = Role::paginate(10);
+        $roles = Role::paginate(GeneralEnum::PAGINACION->value);
         // Retornar la vista y pasar los datos
         return view('seguridad.roles.index', compact('roles'));
     }
@@ -85,4 +86,12 @@ class RoleController extends Controller
             'content' => 'Rol actualizado correctamente.',
         ]);
     }
+
+    public function show(string $id)
+    {
+        $role = Role::with('permissions')->findOrFail($id);
+        $permissions = $role->permissions()->paginate(GeneralEnum::PAGINACION->value/2);
+        return view('seguridad.roles.show', compact('role', 'permissions'));
+    }
+
 }

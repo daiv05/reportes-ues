@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mantenimientos;
 
+use App\Enums\GeneralEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Reportes\TipoBien;
@@ -17,7 +18,7 @@ class TipoBienController extends Controller
             $filtro = $request->input('nombre-filter');
             $query->where('nombre', 'like', '%' . $filtro . '%');
         }
-        $tiposBienes = $query->paginate(10)->appends($request->query());
+        $tiposBienes = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('mantenimientos.tiposBienes.index', compact('tiposBienes'));
     }
 
