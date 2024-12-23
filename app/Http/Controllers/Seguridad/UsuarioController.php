@@ -79,7 +79,6 @@ class UsuarioController extends Controller
         ]);
 
         try {
-
             DB::beginTransaction();
 
             $persona = Persona::create([
@@ -88,16 +87,13 @@ class UsuarioController extends Controller
                 'fecha_nacimiento' => $request->fecha_nacimiento,
                 'telefono' => $request->telefono,
             ]);
-
-            // Crear el usuario con una contraseña predeterminada
             $usuario = User::create([
                 'email' => $request->input('email'),
                 'carnet' => $request->input('carnet'),
                 'activo' => $request->has('activo'),
-                'password' => bcrypt('password123'), // O cualquier otra contraseña que quieras asignar
-                'id_persona' => $persona->id, // Asignar persona_id al usuario
+                'password' => bcrypt('password123'),
+                'id_persona' => $persona->id,
             ]);
-
             if ($tipo == '1') {
                 $usuario->id_escuela = $request->input('escuela');
                 $usuario->es_estudiante = true;
@@ -112,7 +108,6 @@ class UsuarioController extends Controller
                     'id_puesto' => $request->input('puesto'),
                 ]);
             }
-
             // Si hay roles, convertir la cadena de IDs a nombres de roles
             if ($request->filled('roles')) {
                 $roles = Role::whereIn('id', explode(',', $request->roles))->pluck('name')->toArray();
@@ -120,8 +115,6 @@ class UsuarioController extends Controller
             } else {
                 $usuario->assignRole('USUARIO');
             }
-
-
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -137,17 +130,9 @@ class UsuarioController extends Controller
             'content' => 'Usuario creado y roles asignados correctamente.',
         ]);
     }
-
-
-
-
-
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
-
-        // Validar los datos de entrada
-
         $rules = [
             'nombre' => 'required|string',
             'apellido' => 'required|string',
@@ -155,14 +140,10 @@ class UsuarioController extends Controller
             'carnet' => 'required|string|max:20',
             'roles' => 'nullable|string', // Validar los roles (cadena separada por comas)
         ];
-
         if ($user->es_estudiante) {
             $rules['escuela'] = 'required|exists:escuelas,id';
         }
-
         $request->validate($rules);
-
-        // Guardar los datos actualizados del usuario
         $user->update([
             'email' => $request->email,
             'carnet' => $request->carnet,
@@ -173,52 +154,34 @@ class UsuarioController extends Controller
             $user->id_escuela = $request->escuela;
             $user->save();
         }
-
         $persona = Persona::findOrFail($user->id_persona);
-
         $persona->update([
             'nombre' => $request->nombre,
             'apellido' => $request->apellido
         ]);
-
-        // Obtener los roles actuales y los nuevos roles
-        $currentRoles = $user->roles->pluck('name')->toArray(); // Roles actuales antes de la sincronización
-        $newRoles = Role::whereIn('id', explode(',', $request->roles))->pluck('name')->toArray(); // Nuevos roles a asignar
-
-        // Sincronizar roles
+        $currentRoles = $user->roles->pluck('name')->toArray();
+        $newRoles = Role::whereIn('id', explode(',', $request->roles))->pluck('name')->toArray();
         $user->syncRoles($newRoles);
-
-        // Registrar la auditoría de los cambios en los roles
         Audit::create([
-            'user_id' => auth()->id(), // ID del usuario que realizó la actualización
-            'event' => 'updated_roles',
-            'auditable_type' => 'App\Models\Seguridad\User',  // Tipo de entidad auditada (User)
-            'auditable_id' => $user->id,  // ID del usuario que se actualiza
-            'old_values' =>  $currentRoles,  // Roles anteriores
-            'new_values' => $newRoles,  // Nuevos roles
+            'user_id' => auth()->id(),
+            'event' => 'Actualizar_roles',
+            'auditable_type' => 'App\Models\Seguridad\User',
+            'auditable_id' => $user->id,  //
+            'old_values' =>  $currentRoles,
+            'new_values' => $newRoles,
             'url' => request()->url(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->header('User-Agent'),
         ]);
-
         return redirect()->route('usuarios.index')->with('message', [
             'type' => 'success',
             'content' => 'Usuario actualizado y roles asignados correctamente.',
         ]);
     }
 
-
-
-
-
-    public function destroy(string $id)
-    {
-
-    }
-
     public function create(Request $request): View
     {
-        // Obtener los roles disponibles
+
         $roles = Role::all();
         $escuelas = Escuela::all()->pluck('nombre', 'id');
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
@@ -235,19 +198,12 @@ class UsuarioController extends Controller
 
         return view('seguridad.usuarios.create', compact('roles', 'entidades', 'puestos', 'escuelas'));
     }
-
-
-
     public function show(string $id)
     {
 
         $user = User::with('empleadosPuestos.puesto.entidad', 'empleadosPuestos.empleadosAcciones.reporte')->findOrFail($id);
         return view('seguridad.usuarios.show', compact('user'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $user = User::with('empleadosPuestos')->findOrFail($id);
@@ -257,10 +213,5 @@ class UsuarioController extends Controller
         $roles = Role::all();
 
         return view('seguridad.usuarios.edit', compact('user', 'roles', 'escuelas'));
-    }
-
-    public function toggleActivo(User $aula)
-    {
-
     }
 }

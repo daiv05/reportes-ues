@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Seguridad;
 
 use App\Http\Controllers\Controller;
+use BladeUI\Icons\Factory;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\View\View;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\RedirectResponse;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(): View
     {
 
@@ -21,78 +20,69 @@ class RoleController extends Controller
         // Retornar la vista y pasar los datos
         return view('seguridad.roles.index', compact('roles'));
     }
-
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function create():Factory|View
     {
-        // Validar los campos recibidos
+        $permissions = Permission::all();
+
+        return view('seguridad.roles.create', compact('permissions'));
+    }
+    public function store(Request $request): RedirectResponse
+    {
         $request->validate([
-            'name' => 'required|unique:roles|max:50',
-            'activo' => 'required|boolean', // Validación para el campo activo
+            'name' => 'required|unique:roles,name',
+            'permissions' => 'nullable|string',
+        ], [
+            'name.required' => 'El nombre del rol es obligatorio.',
+            'name.unique' => 'Ya existe un rol con ese nombre.',
+            'permissions.string' => 'Los permisos deben ser una lista de IDs separados por comas.'
         ]);
-
-        // Crear el nuevo rol con los campos validados
-        Role::create($request->only(['name', 'activo']));
-
-        // Redirigir al índice de roles con un mensaje de éxito
+              $role = Role::create([
+            'name' => $request->name,
+        ]);
+        $permissions = is_string($request->permissions)
+            ? explode(',', $request->permissions)
+            : $request->permissions;
+        if (empty($permissions)) {
+            $validPermissions = [];
+        } else {
+            $validPermissions = Permission::whereIn('id', $permissions)->pluck('id')->toArray();
+        }
+        $role->syncPermissions($validPermissions);
         return redirect()->route('roles.index')->with('message', [
             'type' => 'success',
-            'content' => 'Rol creado exitosamente.',
+            'content' => 'Rol creado correctamente.',
         ]);
     }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(string $id):Factory|View
     {
-        //
+        $role = Role::with('permissions')->findOrFail($id);
+        $permissions = Permission::all();
+        return view('seguridad.roles.edit', compact('role', 'permissions'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', Rule::unique('roles')->ignore($id), 'max:50'],
-            'activo' => 'required|boolean',
+            'name' => 'required|unique:roles,name,' . $id,
+            'permissions' => 'nullable|string',
+        ], [
+            'name.required' => 'El nombre del rol es obligatorio.',
+            'name.unique' => 'Ya existe un rol con ese nombre.',
+            'permissions.string' => 'Los permisos deben ser una lista de IDs separados por comas.'
         ]);
-
         $role = Role::findOrFail($id);
-        $role->update($request->all());
+        $permissions = is_string($request->permissions)
+            ? explode(',', $request->permissions)
+            : $request->permissions;
+
+        if (empty($permissions)) {
+            $validPermissions = [];
+        } else {
+            $validPermissions = Permission::whereIn('id', $permissions)->pluck('id')->toArray();
+        }
+        $role->syncPermissions($validPermissions);
         return redirect()->route('roles.index')->with('message', [
             'type' => 'success',
-            'content' => 'Rol actulizado exitosamente.',
+            'content' => 'Rol actualizado correctamente.',
         ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $rol = Role::findOrFail($id);
-        $rol->delete();
-        return redirect()->route('rol.index');
-    }
-
-    public function toggleActivo(role $role): RedirectResponse
-    {
-        $role->activo = !$role->activo;
-        $role->save();
-        return redirect()->route('role.index');
     }
 }
