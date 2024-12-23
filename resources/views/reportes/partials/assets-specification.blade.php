@@ -39,7 +39,7 @@
                     function fetchData() {
                         const tipoBien = tipoBienSelect.value;
                         const search = nombreBusquedaInput.value;
-                        const APP_URL = "{{ env('APP_URL') }}";
+                        const APP_URL = "{{ config('app.url') }}";
                         const url = new URL(`${APP_URL}/mantenimientos/bienes/filtro`);
                         if (tipoBien) {
                             url.searchParams.append('id_tipo_bien', tipoBien);

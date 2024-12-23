@@ -313,24 +313,30 @@
                                 </div>
                                 @include('reportes.partials.assets-specification')
                             @else
-                                <div class="overflow-x-auto mt-4">
-                                    {{-- TABLA --}}
-                                    @php
-                                        $headersBienesDetalle = [
-                                            ['text' => 'Código', 'align' => 'left'],
-                                            ['text' => 'Nombre', 'align' => 'left'],
-                                        ];
-                                    @endphp
-                                    <x-table.base :headers="$headersBienesDetalle">
-                                        @foreach ($reporte->reporteBienes as $reporteBien)
-                                            <x-table.tr>
-                                                <x-table.td>{{ $reporteBien->bien->codigo }}</x-table.td>
-                                                <x-table.td>{{ $reporteBien->bien->nombre }}</x-table.td>
-                                                <x-table.td>{{ $reporteBien->bien->descripcion }}</x-table.td>
-                                            </x-table.tr>
-                                        @endforeach
-                                    </x-table.base>
-                                </div>
+                                @if ($reporte->reporteBienes->isEmpty())
+                                    <div class="text-start text-gray-500">
+                                        <span>N/A</span>
+                                    </div>
+                                @else
+                                    <div class="overflow-x-auto mt-4">
+                                        {{-- TABLA --}}
+                                        @php
+                                            $headersBienesDetalle = [
+                                                ['text' => 'Código', 'align' => 'left'],
+                                                ['text' => 'Nombre', 'align' => 'left'],
+                                            ];
+                                        @endphp
+                                        <x-table.base :headers="$headersBienesDetalle">
+                                            @foreach ($reporte->reporteBienes as $reporteBien)
+                                                <x-table.tr>
+                                                    <x-table.td>{{ $reporteBien->bien->codigo }}</x-table.td>
+                                                    <x-table.td>{{ $reporteBien->bien->nombre }}</x-table.td>
+                                                    <x-table.td>{{ $reporteBien->bien->descripcion }}</x-table.td>
+                                                </x-table.tr>
+                                            @endforeach
+                                        </x-table.base>
+                                    </div>
+                                @endif
                             @endif
                         </x-reportes.detail.subheader-content>
                     </x-reportes.detail.block>
