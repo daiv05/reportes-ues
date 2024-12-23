@@ -1,5 +1,6 @@
 @php
     $headers = [
+        ['text' => 'ID', 'align' => 'left'],
         ['text' => 'Título', 'align' => 'left'],
         ['text' => 'Fecha y Hora', 'align' => 'left'],
         ['text' => 'Reportado por', 'align' => 'left'],
@@ -12,6 +13,7 @@
 @canany(['REPORTES_ASIGNAR'])
 @php
     $headers = [
+        ['text' => 'ID', 'align' => 'left'],
         ['text' => 'Título', 'align' => 'left'],
         ['text' => 'Fecha y Hora', 'align' => 'left'],
         ['text' => 'Reportado por', 'align' => 'left'],
@@ -44,6 +46,7 @@
             <x-table.base :headers="$headers">
                 @foreach ($reportes as $reporte)
                     <x-table.tr>
+                        <x-table.td>{{ $reporte->id }}</x-table.td>
                         <x-table.td>{{ $reporte->titulo }}</x-table.td>
                         <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte . ' ' . $reporte->hora_reporte)->format('d/m/Y, h:i A') }}</x-table.td>
                         <x-table.td>{{ $reporte->usuarioReporta?->persona?->nombre }}
