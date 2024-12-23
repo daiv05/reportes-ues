@@ -163,11 +163,8 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
         Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
         Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
         Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
-        Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
         Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
-        Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
         Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
-        Route::patch('roles/{rol}/toggle', [RoleController::class, 'toggleActivo'])->name('roles.toggleActivo');
 
         // Rutas para los usuarios
         Route::get('/usuarios', [UsuarioController::class, 'index'])->middleware('permission:USUARIOS_VER')->name('usuarios.index');
@@ -175,9 +172,7 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
         Route::get('/usuarios/create', [UsuarioController::class, 'create'])->middleware('permission:USUARIOS_CREAR')->name('usuarios.create');
         Route::get('/usuarios/{usuario}', [UsuarioController::class, 'show'])->middleware('permission:USUARIOS_VER')->name('usuarios.show');
         Route::put('/usuarios/{usuario}', [UsuarioController::class, 'update'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.update');
-        Route::patch('/usuarios/{usuario}', [UsuarioController::class, 'update'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.update');
         Route::get('/usuarios/{usuario}/edit', [UsuarioController::class, 'edit'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.edit');
-        Route::patch('usuarios/{usuario}/toggle', [UsuarioController::class, 'toggleActivo'])->middleware('permission:USUARIOS_EDITAR')->name('usuarios.toggleActivo');
     });
 
 
