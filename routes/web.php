@@ -161,11 +161,12 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
     Route::prefix('seguridad')->group(function () {
 
         // Rutas para los roles
-        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-        Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-        Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
-        Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
-        Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+        Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ROLES_VER')->name('roles.index');
+        Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:ROLES_CREAR')->name('roles.store');
+        Route::get('/roles/create', [RoleController::class, 'create'])->middleware('permission:ROLES_CREAR')->name('roles.create');
+        Route::put('/roles/{role}', [RoleController::class, 'update'])->middleware('permission:ROLES_EDITAR')->name('roles.update');
+        Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->middleware('permission:ROLES_EDITAR')->name('roles.edit');
+        Route::get('/roles/{role}', [RoleController::class, 'show'])->middleware('permission:ROLES_VER')->name('roles.show');
 
         // Rutas para los usuarios
         Route::get('/usuarios', [UsuarioController::class, 'index'])->middleware('permission:USUARIOS_VER')->name('usuarios.index');

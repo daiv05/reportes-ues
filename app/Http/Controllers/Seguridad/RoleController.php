@@ -86,4 +86,12 @@ class RoleController extends Controller
             'content' => 'Rol actualizado correctamente.',
         ]);
     }
+
+    public function show(string $id)
+    {
+        $role = Role::with('permissions')->findOrFail($id);
+        $permissions = $role->permissions()->paginate(GeneralEnum::PAGINACION->value/2);
+        return view('seguridad.roles.show', compact('role', 'permissions'));
+    }
+
 }
