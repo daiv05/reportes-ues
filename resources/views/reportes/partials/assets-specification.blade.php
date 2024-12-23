@@ -39,7 +39,8 @@
                     function fetchData() {
                         const tipoBien = tipoBienSelect.value;
                         const search = nombreBusquedaInput.value;
-                        const url = new URL('http://127.0.0.1:8000/mantenimientos/bienes/filtro');
+                        const APP_URL = "{{ env('APP_URL') }}";
+                        const url = new URL(`${APP_URL}/mantenimientos/bienes/filtro`);
                         if (tipoBien) {
                             url.searchParams.append('id_tipo_bien', tipoBien);
                         }
@@ -164,5 +165,5 @@
         </div>
     </div>
 
-    <input id="id_bienes" name="id_bienes" value="[]" >
+    <input id="id_bienes" name="id_bienes" value="[]">
 </div>
