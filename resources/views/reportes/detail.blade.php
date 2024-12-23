@@ -324,6 +324,7 @@
                                             $headersBienesDetalle = [
                                                 ['text' => 'Código', 'align' => 'left'],
                                                 ['text' => 'Nombre', 'align' => 'left'],
+                                                ['text' => 'Descripción', 'align' => 'left']
                                             ];
                                         @endphp
                                         <x-table.base :headers="$headersBienesDetalle">
