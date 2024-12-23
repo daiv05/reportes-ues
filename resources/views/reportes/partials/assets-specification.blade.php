@@ -165,5 +165,5 @@
         </div>
     </div>
 
-    <input id="id_bienes" name="id_bienes" value="[]">
+    <input hidden id="id_bienes" name="id_bienes" value="[]">
 </div>
