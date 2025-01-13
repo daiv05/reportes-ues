@@ -558,7 +558,7 @@ class ReporteController extends Controller
 
         if (isset($reporte)) {
             // Necesario para asignacion
-            $entidades = Entidades::all();
+            $entidades = Entidades::where('activo', true)->get();
             $empPuesto = new EmpleadoPuestoController();
             $empleadosPorEntidad = $empPuesto->listadoEmpleadosPorUnidad($request->query('entidad'));
             $empleadosPorEntidad = collect($empleadosPorEntidad)->map(function ($empleado) {
@@ -577,10 +577,10 @@ class ReporteController extends Controller
             $estadosHabilitados = $estController->estadosReporte($reporte);
 
             // Catalogos para el detalle
-            $fondos = DB::table('fondos')->get();
-            $recursos = DB::table('recursos')->get();
-            $unidades_medida = DB::table('unidades_medida')->get();
-            $tiposBienes = DB::table('tipos_bienes')->get();
+            $fondos = DB::table('fondos')->where('activo', true)->get();
+            $recursos = DB::table('recursos')->where('activo', true)->get();
+            $unidades_medida = DB::table('unidades_medida')->where('activo', true)->get();
+            $tiposBienes = DB::table('tipos_bienes')->where('activo', true)->get();
 
             return [
                 'reporte' => $reporte,
@@ -591,8 +591,8 @@ class ReporteController extends Controller
                 'estadosPermitidos' => $estadosHabilitados,
                 'fondos' => $fondos,
                 'recursos' => $recursos,
-                'unidades_medida' => $unidades_medida,
-                'tipos_bienes' => $tiposBienes,
+                'unidadesMedida' => $unidades_medida,
+                'tiposBienes' => $tiposBienes,
                 'reporteBienes' => $reporte->reporteBienes
             ];
         } else {

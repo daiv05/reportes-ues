@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Validator;
 
 class EmpleadoPuestoController extends Controller
 {
-    public function index(Request $request): View{
+    public function index(Request $request): View
+    {
 
         $entidadFiltro = $request->get('entidad-filtro');
         $puestoFiltro = $request->get('puesto-filtro');
@@ -49,7 +50,7 @@ class EmpleadoPuestoController extends Controller
         $empleados = User::with(('persona'))->where('activo', true)->get()->map(function ($empleado) {
             return [
                 'id' => $empleado->id,
-                'empleado' => $empleado->persona->nombre. ' ' . $empleado->persona->apellido,
+                'empleado' => $empleado->persona->nombre . ' ' . $empleado->persona->apellido,
             ];
         });
 
@@ -137,11 +138,11 @@ class EmpleadoPuestoController extends Controller
     public function listadoEmpleadosPorUnidad($idEntidad)
     {
         try {
-            $entidad = Entidades::find($idEntidad);
+            $entidad = Entidades::where('activo', true)->find($idEntidad);
             if (!isset($entidad)) {
                 return [];
             }
-            $empleadosPuestos = EmpleadoPuesto::whereHas('puesto.entidad', function ($query) use ($idEntidad) {
+            $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('puesto.entidad', function ($query) use ($idEntidad) {
                 $query->where('id', '=', $idEntidad);
             })->with('puesto', 'usuario', 'usuario.persona')->get();
 
@@ -166,7 +167,7 @@ class EmpleadoPuestoController extends Controller
     public function listadoSupervisores()
     {
         try {
-            $empleadosPuestos = EmpleadoPuesto::whereHas('usuario.roles', function ($query) {
+            $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('usuario.roles', function ($query) {
                 $query->where('name', RolesEnum::SUPERVISOR_REPORTE->value);
             })->with('puesto', 'usuario', 'usuario.persona')->get();
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
