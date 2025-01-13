@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -54,6 +56,22 @@ class Handler extends ExceptionHandler
                 "exception" => $e
             ], 403);
         }
+
+        if ($e instanceof NotFoundHttpException) {
+            return response()->view("errors.not-found", [
+                "exception" => $e
+            ], 404);
+        }
+
+        $exception = FlattenException::create($e);
+        $statusCode = $exception->getStatusCode($exception);
+
+        if ($statusCode === 500) {
+            return response()->view("errors.internal", [
+                "exception" => $e
+            ], 500);
+        }
+
         return parent::render($request, $e);
     }
 }
