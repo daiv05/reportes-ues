@@ -89,7 +89,7 @@
                     <div class="flex w-full flex-col items-center p-6">
                         <h2 class="text-lg font-medium text-escarlata-ues dark:text-gray-100">Listado de recursos
                             utilizados</h2>
-                        <div class="mt-4 w-full">
+                        <div class="mt-4 w-full overflow-x-auto">
                             @php
                                 $headers = [
                                     ['text' => 'Nombre', 'align' => 'left'],
