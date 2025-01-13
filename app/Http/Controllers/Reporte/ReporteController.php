@@ -604,8 +604,8 @@ class ReporteController extends Controller
                 'estadosPermitidos' => [],
                 'fondos' => [],
                 'recursos' => [],
-                'unidades_medida' => [],
-                'tipos_bienes' => [],
+                'unidadesMedida' => [],
+                'tiposBienes' => [],
                 'reporteBienes' => []
             ];
         }
