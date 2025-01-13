@@ -51,27 +51,6 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if ($e instanceof UnauthorizedException) {
-            return response()->view("errors.forbidden", [
-                "exception" => $e
-            ], 403);
-        }
-
-        if ($e instanceof NotFoundHttpException) {
-            return response()->view("errors.not-found", [
-                "exception" => $e
-            ], 404);
-        }
-
-        $exception = FlattenException::create($e);
-        $statusCode = $exception->getStatusCode($exception);
-
-        if (config('app.env') == 'production' && $statusCode === 500) {
-            return response()->view("errors.internal", [
-                "exception" => $e
-            ], 500);
-        }
-
         return parent::render($request, $e);
     }
 }
