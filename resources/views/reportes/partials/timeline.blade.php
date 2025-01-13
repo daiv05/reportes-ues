@@ -11,7 +11,7 @@
                 {{ \Carbon\Carbon::parse($historial->fecha_actualizacion)->format('d/m/Y') . '  -  ' . \Carbon\Carbon::parse($historial->hora_actualizacion)->format('h:i A') }}
             </div>
             @if ($historial->comentario)
-                <h3 class="text-lg font-semibold text-red-900 dark:text-white">Comentarios</h3>
+                <h3 class="text-md font-semibold text-red-900 dark:text-white mt-3">Comentarios</h3>
                 <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
                     {{ $historial->comentario }}
                 </p>

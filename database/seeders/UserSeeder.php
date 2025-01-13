@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
             [
                 'id_persona' => 3,
                 'carnet' => 'ss11001',
-                'email' => 'ss11001@ues.edu.sv',
+                'email' => 'ss11001@yopmail.com',
                 'password' => bcrypt('pass123'),
                 'es_estudiante' => 0,
                 'role' => 'SUPERVISOR'
