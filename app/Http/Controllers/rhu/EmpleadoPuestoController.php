@@ -38,15 +38,15 @@ class EmpleadoPuestoController extends Controller
             })
             ->paginate(GeneralEnum::PAGINACION->value);
         $entidades = [];
-        $entidadesBackup = \App\Models\rhu\Entidades::all();
+        $entidadesBackup = Entidades::where('activo', true)->get();
         foreach ($entidadesBackup as $entidad) {
             $entidades[$entidad->id] = $entidad->nombre;
         }
-        $puestos = Puesto::all()->groupBy('id_entidad')->map(function ($puestos) {
+        $puestos = Puesto::where('activo', true)->get()->groupBy('id_entidad')->map(function ($puestos) {
             return $puestos->pluck('nombre', 'id');
         });
 
-        $empleados = User::with(('persona'))->get()->map(function ($empleado) {
+        $empleados = User::with(('persona'))->where('activo', true)->get()->map(function ($empleado) {
             return [
                 'id' => $empleado->id,
                 'empleado' => $empleado->persona->nombre. ' ' . $empleado->persona->apellido,

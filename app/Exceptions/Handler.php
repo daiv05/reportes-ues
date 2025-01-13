@@ -66,7 +66,7 @@ class Handler extends ExceptionHandler
         $exception = FlattenException::create($e);
         $statusCode = $exception->getStatusCode($exception);
 
-        if ($statusCode === 500) {
+        if (config('app.env') == 'production' && $statusCode === 500) {
             return response()->view("errors.internal", [
                 "exception" => $e
             ], 500);
