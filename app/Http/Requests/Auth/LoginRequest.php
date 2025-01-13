@@ -46,29 +46,46 @@ class LoginRequest extends FormRequest
 
         // Verificar que el usuario esté activo y que tenga asignado un rol
         if (Auth::attemptWhen([
-            'carnet' => $this->only('carnet'),
-            'password' => $this->only('password'),
+            'carnet' => $this->string('carnet'),
+            'password' => $this->string('password'),
         ], function (User $user) use (&$message) {
+            // Usuario activo
             $validUser = true;
             if ($user->activo === 0) {
                 $message = 'El usuario no se encuentra activo dentro del sistema';
                 $validUser = false;
             }
-            if ($user->roles->isEmpty()) {
-                $message = 'El usuario no posee un rol activo dentro del sistema';
-                $validUser = false;
-            }
-            $valid = 0;
-            $user->roles->each(function ($rol) use (&$valid) {
+            // Posee al menos un rol activo
+            $validRole = 0;
+
+            $user->roles->each(function ($rol) use (&$validRole) {
                 if ($rol->activo === 1) {
-                    $valid++;
+                    $validRole++;
                 }
             });
-            if (! $valid) {
+            if (! $validRole) {
                 $message = 'El usuario no posee un rol activo dentro del sistema';
                 $validUser = false;
             }
-
+            if (! $user->es_estudiante) {
+                // Si es empleado: posee al menos un puesto activo
+                $validPuesto = 0;
+                $user->empleadosPuestos->each(function ($empPuesto) use (&$validPuesto) {
+                    if ($empPuesto->activo === 1) {
+                        $validPuesto++;
+                    }
+                });
+                if (! $validPuesto) {
+                    $message = 'El usuario no posee un puesto activo dentro del sistema';
+                    $validUser = false;
+                }
+            } else {
+                // Si es estudiante: la escuela a la que pertenece está activa
+                if ($user->escuela->activo === 0) {
+                    $message = 'La escuela a la que pertenece el usuario no se encuentra activa dentro del sistema';
+                    $validUser = false;
+                }
+            }
             return $validUser;
         }, $this->boolean('remember'))) {
             RateLimiter::clear($this->throttleKey());
