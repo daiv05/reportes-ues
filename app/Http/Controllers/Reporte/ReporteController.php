@@ -15,6 +15,7 @@ use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
+use App\Models\Reportes\Estado;
 use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\ReporteBien;
 use App\Models\rhu\EmpleadoPuesto;
@@ -134,25 +135,7 @@ class ReporteController extends Controller
 
     public function verInforme($id_reporte)
     {
-        $reporte = Reporte::with(
-            'aula',
-            'actividad',
-            'accionesReporte',
-            'accionesReporte.entidadAsignada',
-            'accionesReporte.usuarioSupervisor',
-            'accionesReporte.usuarioSupervisor.persona',
-            'accionesReporte.historialAccionesReporte',
-            'accionesReporte.historialAccionesReporte.estado',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario.persona',
-            'usuarioReporta',
-            'usuarioReporta.persona',
-            'empleadosAcciones',
-            'empleadosAcciones.empleadoPuesto',
-            'empleadosAcciones.empleadoPuesto.usuario',
-            'empleadosAcciones.empleadoPuesto.usuario.persona'
-        )->find($id_reporte);
+        $reporte = Reporte::find($id_reporte);
 
         if (isset($reporte)) {
             // Obtener fondos y recursos
@@ -162,7 +145,7 @@ class ReporteController extends Controller
             // Calcular la duración del reporte
             $fechaCreacion = \Carbon\Carbon::parse($reporte->fecha_reporte);
             $fechaFinalizacion = $reporte->accionesReporte->historialAccionesReporte
-                ->where('estado.nombre', 'FINALIZADO')
+                ->where('estado.id', EstadosEnum::FINALIZADO->value)
                 ->first()
                 ->created_at ?? null;
 
@@ -171,7 +154,7 @@ class ReporteController extends Controller
             // Obtener recursos usados
             $recursosUsados = RecursoReporte::whereHas('historialAccionesReporte', function ($query) use ($reporte) {
                 $query->where('id_acciones_reporte', $reporte->accionesReporte->id);
-            })->with('unidadMedida')->get();
+            })->get();
 
             // Obtener datos adicionales
             $entidad = $reporte->accionesReporte->entidadAsignada;
@@ -559,26 +542,7 @@ class ReporteController extends Controller
 
     public function infoDetalleReporte(Request $request, $id_reporte)
     {
-        $reporte = Reporte::with(
-            'aula',
-            'actividad',
-            'accionesReporte',
-            'accionesReporte.entidadAsignada',
-            'accionesReporte.usuarioSupervisor',
-            'accionesReporte.usuarioSupervisor.persona',
-            'accionesReporte.historialAccionesReporte',
-            'accionesReporte.historialAccionesReporte.estado',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario.persona',
-            'usuarioReporta',
-            'usuarioReporta.persona',
-            'empleadosAcciones',
-            'empleadosAcciones.empleadoPuesto',
-            'empleadosAcciones.empleadoPuesto.usuario',
-            'empleadosAcciones.empleadoPuesto.usuario.persona',
-            'reporteBienes.bien'
-        )->find($id_reporte);
+        $reporte = Reporte::find($id_reporte);
 
         if (isset($reporte)) {
             // Necesario para asignacion

@@ -138,13 +138,13 @@ class EmpleadoPuestoController extends Controller
     public function listadoEmpleadosPorUnidad($idEntidad)
     {
         try {
-            $entidad = Entidades::where('activo', true)->find($idEntidad);
-            if (!isset($entidad)) {
-                return [];
-            }
             $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('puesto.entidad', function ($query) use ($idEntidad) {
-                $query->where('id', '=', $idEntidad);
-            })->with('puesto', 'usuario', 'usuario.persona')->get();
+                $query->where('id', '=', $idEntidad)->where('activo', true);
+            })->whereHas('usuario', function ($query) {
+                $query->where('activo', true);
+            })->whereHas('usuario.roles', function ($query) {
+                $query->where('name', RolesEnum::EMPLEADO->value);
+            })->get();
 
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
                 return [
@@ -167,9 +167,11 @@ class EmpleadoPuestoController extends Controller
     public function listadoSupervisores()
     {
         try {
-            $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('usuario.roles', function ($query) {
+            $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('usuario', function ($query) {
+                $query->where('activo', true);
+            })->whereHas('usuario.roles', function ($query) {
                 $query->where('name', RolesEnum::SUPERVISOR_REPORTE->value);
-            })->with('puesto', 'usuario', 'usuario.persona')->get();
+            })->get();
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
                 return [
                     'id_empleado_puesto' => $empleado['id'],
