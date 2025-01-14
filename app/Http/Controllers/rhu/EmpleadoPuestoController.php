@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\rhu;
 
 use App\Enums\GeneralEnum;
-use App\Enums\RolesEnum;
+use App\Enums\PermisosEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Registro\Persona;
 use App\Models\rhu\EmpleadoPuesto;
 use App\Models\rhu\Entidades;
 use App\Models\rhu\Puesto;
 use App\Models\Seguridad\User;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class EmpleadoPuestoController extends Controller
 {
@@ -143,7 +142,13 @@ class EmpleadoPuestoController extends Controller
             })->whereHas('usuario', function ($query) {
                 $query->where('activo', true);
             })->whereHas('usuario.roles', function ($query) {
-                $query->where('name', RolesEnum::EMPLEADO->value);
+                // Verificar que al menos un rol tenga el permiso asignado de REPORTES_ACTUALIZAR_ESTADO
+                $rolesConPermiso = Role::whereHas('permissions', function ($query) {
+                    $query->where('name', PermisosEnum::REPORTES_ACTUALIZAR_ESTADO->value);
+                })->get()->pluck('id')->toArray();
+                $query->whereHas('roles', function ($query) use ($rolesConPermiso) {
+                    $query->whereIn('id', $rolesConPermiso);
+                });
             })->get();
 
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
@@ -170,7 +175,15 @@ class EmpleadoPuestoController extends Controller
             $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('usuario', function ($query) {
                 $query->where('activo', true);
             })->whereHas('usuario.roles', function ($query) {
-                $query->where('name', RolesEnum::SUPERVISOR_REPORTE->value);
+                // Verificar que al menos un rol tenga el permiso asignado de REPORTES_ACTUALIZAR_ESTADO
+                // y de REPORTES_REVISION_SOLUCION
+                $rolesConPermiso = Role::whereHas('permissions', function ($query) {
+                    $query->where('name', PermisosEnum::REPORTES_ACTUALIZAR_ESTADO->value)
+                    ->where('name', PermisosEnum::REPORTES_REVISION_SOLUCION->value);
+                })->get()->pluck('id')->toArray();
+                $query->whereHas('roles', function ($query) use ($rolesConPermiso) {
+                    $query->whereIn('id', $rolesConPermiso);
+                });
             })->get();
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
                 return [
