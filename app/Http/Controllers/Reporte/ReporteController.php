@@ -531,6 +531,30 @@ class ReporteController extends Controller
             $titulo = $request->input('titulo');
             $query->where('titulo', 'like', '%' . $titulo . '%');
         }
+
+        if ($request->has('estado')) {
+            $estado = $request->input('estado');
+            // Filtrar por el estado actual del reporte
+            $query->whereHas('accionesReporte.historialAccionesReporte', function ($query) use ($estado) {
+                $query->where('id', function ($query) {
+                    $query->select('id')
+                        ->from('historial_acciones_reportes')
+                        ->whereColumn('id_acciones_reporte', 'acciones_reportes.id')
+                        ->latest()
+                        ->limit(1);
+                })->where('id_estado', $estado);
+            });
+        }
+
+        if ($request->has('tipoReporte')) {
+            // 'incidencia' o 'actividad'
+            $tipo = $request->input('tipoReporte');
+            if ($tipo === 'incidencia') {
+                $query->whereNull('id_actividad');
+            } else if ($tipo === 'actividad') {
+                $query->whereNotNull('id_actividad');
+            }
+        }
     }
 
     public function infoDetalleReporte(Request $request, $id_reporte)

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Reporte extends Model implements Auditable
@@ -67,15 +68,18 @@ class Reporte extends Model implements Auditable
 
     public function getEstadoUltimoHistorialAttribute()
     {
-        return $this->accionesReporte()
-            ->with(['historialAccionesReporte' => function ($query) {
-                $query->orderBy('created_at', 'desc')->first();
-            }])
-            ->get()
-            ->pluck('historialAccionesReporte')
-            ->flatten()
-            ->sortByDesc('created_at')
-            ->first()?->estado;
+        if ($this->accionesReporte == null) {
+            return null;
+        } else {
+            return DB::selectOne(
+                'SELECT estado.id, estado.nombre FROM historial_acciones_reportes
+                INNER JOIN estados AS estado ON historial_acciones_reportes.id_estado = estado.id
+                WHERE historial_acciones_reportes.id_acciones_reporte = ?
+                ORDER BY historial_acciones_reportes.created_at DESC
+                LIMIT 1',
+                [$this->accionesReporte->id]
+            );
+        }
     }
 
     public function getRelacionUsuarioAttribute()
