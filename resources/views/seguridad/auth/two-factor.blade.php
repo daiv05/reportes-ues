@@ -64,16 +64,6 @@
         const submit = form.querySelector('button[type=submit]')
 
         const handleKeyDown = (e) => {
-            if (
-                !/^[0-9]{1}$/.test(e.key) &&
-                e.key !== 'Backspace' &&
-                e.key !== 'Delete' &&
-                e.key !== 'Tab' &&
-                !e.metaKey
-            ) {
-                e.preventDefault()
-            }
-
             if (e.key === 'Delete' || e.key === 'Backspace') {
                 const index = inputs.indexOf(e.target);
                 if (index > 0) {
