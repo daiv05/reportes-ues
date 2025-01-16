@@ -51,7 +51,7 @@
                 <div class="mx-auto max-w-[95%] lg:px-2">
                     <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                         <div class="py-6 px-2">
-                            <div class="overflow-auto">
+                            <div class="overflow-x-auto min-h-[350px]">
                                 {{ $slot }}
                             </div>
                         </div>

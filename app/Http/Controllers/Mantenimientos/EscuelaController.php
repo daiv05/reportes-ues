@@ -23,7 +23,7 @@ class EscuelaController extends Controller
         $escuelas = Escuela::when($nombreFilter, function ($query, $nombreFilter) {
             return $query->where('nombre', 'like', "%$nombreFilter%");
         })->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
-        $facultades = Facultades::all();
+        $facultades = Facultades::where('activo', true)->get();
         return view('mantenimientos.escuela.index', compact('escuelas', 'facultades'));
     }
 

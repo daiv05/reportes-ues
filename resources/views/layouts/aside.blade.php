@@ -15,13 +15,13 @@
             'active' => request()->is('seguridad/*'),
             'icon' => 'heroicon-s-lock-closed',
             'label' => 'Seguridad',
-            'permissions' => ['USUARIOS_VER'],
+            'permissions' => ['USUARIOS_VER','ROLES_VER'],
             'items' => [
                 [
                     'to' => 'roles.index',
-                    'active' => request()->is('seguridad/roles'),
+                    'active' => request()->is('seguridad/roles*'),
                     'label' => 'Roles',
-                    'permissions' => ['USUARIOS_VER'],
+                    'permissions' => ['ROLES_VER'],
                 ],
                 [
                     'to' => 'usuarios.index',

@@ -18,7 +18,7 @@ class PuestoController extends Controller
         $entidadFilter = $request->input('entidad-filter');
         $search = $request->input('nombre-filter');
 
-        $entidades = Entidades::all()->pluck('nombre', 'id');
+        $entidades = Entidades::where('activo', true)->get()->pluck('nombre', 'id');
 
         $puestos = Puesto::when($entidadFilter, function ($query, $entidadFilter) {
             return $query->where('id_entidad', $entidadFilter);
