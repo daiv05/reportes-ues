@@ -5,7 +5,6 @@
         ['text' => 'Fecha y Hora', 'align' => 'left'],
         ['text' => 'Tipo', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
-        ['text' => 'Acciones', 'align' => 'center'],
     ];
 @endphp
 
