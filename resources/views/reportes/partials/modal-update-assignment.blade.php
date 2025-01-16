@@ -1,4 +1,4 @@
-<x-modal name="actualizar-seguimiento-modal" :show="false" maxWidth="2xl">
+<x-modal name="actualizar-seguimiento-modal" :show="false" maxWidth="5xl">
     <form id="updateForm" method="POST" action="{{ route('reportes.actualizarEstado', ['id' => $reporte->id]) }}"
           enctype="multipart/form-data">
         @csrf
@@ -66,13 +66,13 @@
                     <input type="hidden" id="recursos_input" name="recursos">
                     <div class="relative overflow-x-auto">
                         <table id="recursos_table"
-                               class="mt-8 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 hidden">
+                               class="mt-8 min-w-[650px] w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 hidden">
                             <thead
                                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-2 py-1 w-[25%]">Nombre</th>
-                                <th scope="col" class="px-2 py-1 w-[20%]">Cantidad</th>
-                                <th scope="col" class="px-2 py-1 w-[25%]">Unidad de medida</th>
+                                <th scope="col" class="px-2 py-1 w-[30%]">Nombre</th>
+                                <th scope="col" class="px-2 py-1 w-[10%]">Cantidad</th>
+                                <th scope="col" class="px-2 py-1 w-[30%]">Unidad de medida</th>
                                 <th scope="col" class="px-2 py-1 w-[25%]">Fondo</th>
                                 <th scope="col" class="px-2 py-1 w-[5%]">Acciones</th>
                             </tr>
@@ -85,7 +85,7 @@
 
                     <script>
                         const recursosSeleccionados = [];
-                        const unidadesMedida = @json($unidades_medida);
+                        const unidadesMedida = @json($unidadesMedida);
                         const fondos = @json($fondos);
 
                         document.getElementById('recursos_utilizados').addEventListener('change', function () {

@@ -14,7 +14,6 @@ enum RolesEnum: string
     {
         $perm = [];
         $rolePermissions = [
-            self::SUPERADMIN->value => array_map(fn($per) => $per->value, PermisosEnum::cases()),
             self::ADMIN_REPORTE->value => [
                 PermisosEnum::REPORTES_CREAR->value,
                 PermisosEnum::REPORTES_ASIGNAR->value,

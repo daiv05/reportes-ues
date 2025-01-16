@@ -1,3 +1,6 @@
+@php
+    $roleRestricted = [1];
+@endphp
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Edición de roles" />
@@ -14,7 +17,8 @@
 
             <x-forms.row :fullRow="true">
                 <x-picklist.picklist :items="$permissions" :asignados="$role->permissions->pluck('id')->toArray()" tituloDisponibles="Permisos disponibles"
-                    tituloAsignados="Permisos asignados" placeholderDisponibles="Buscar permisos..." placeholderAsignados="Buscar permisos asignados..." inputName="permissions" />
+                    tituloAsignados="Permisos asignados" placeholderDisponibles="Buscar permisos..."
+                    placeholderAsignados="Buscar permisos asignados..." inputName="permissions" />
             </x-forms.row>
 
             <div class="flex justify-center mt-6">
@@ -22,10 +26,11 @@
                     <x-forms.cancel-button href="{{ route('roles.index') }}">
                         Cancelar
                     </x-forms.cancel-button>
-
-                    <x-forms.primary-button class="ml-3">
-                        Guardar Cambios
-                    </x-forms.primary-button>
+                    @if (!in_array($role->id, $roleRestricted))
+                        <x-forms.primary-button class="ml-3">
+                            Guardar Cambios
+                        </x-forms.primary-button>
+                    @endif
                 </x-forms.button-group>
             </div>
         </form>

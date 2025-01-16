@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\rhu;
 
 use App\Enums\GeneralEnum;
-use App\Enums\RolesEnum;
+use App\Enums\PermisosEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Registro\Persona;
 use App\Models\rhu\EmpleadoPuesto;
 use App\Models\rhu\Entidades;
 use App\Models\rhu\Puesto;
 use App\Models\Seguridad\User;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class EmpleadoPuestoController extends Controller
 {
-    public function index(Request $request): View{
+    public function index(Request $request): View
+    {
 
         $entidadFiltro = $request->get('entidad-filtro');
         $puestoFiltro = $request->get('puesto-filtro');
@@ -38,18 +38,18 @@ class EmpleadoPuestoController extends Controller
             })
             ->paginate(GeneralEnum::PAGINACION->value);
         $entidades = [];
-        $entidadesBackup = \App\Models\rhu\Entidades::all();
+        $entidadesBackup = Entidades::where('activo', true)->get();
         foreach ($entidadesBackup as $entidad) {
             $entidades[$entidad->id] = $entidad->nombre;
         }
-        $puestos = Puesto::all()->groupBy('id_entidad')->map(function ($puestos) {
+        $puestos = Puesto::where('activo', true)->get()->groupBy('id_entidad')->map(function ($puestos) {
             return $puestos->pluck('nombre', 'id');
         });
 
-        $empleados = User::with(('persona'))->get()->map(function ($empleado) {
+        $empleados = User::with(('persona'))->where('activo', true)->get()->map(function ($empleado) {
             return [
                 'id' => $empleado->id,
-                'empleado' => $empleado->persona->nombre. ' ' . $empleado->persona->apellido,
+                'empleado' => $empleado->persona->nombre . ' ' . $empleado->persona->apellido,
             ];
         });
 
@@ -137,13 +137,19 @@ class EmpleadoPuestoController extends Controller
     public function listadoEmpleadosPorUnidad($idEntidad)
     {
         try {
-            $entidad = Entidades::find($idEntidad);
-            if (!isset($entidad)) {
-                return [];
-            }
-            $empleadosPuestos = EmpleadoPuesto::whereHas('puesto.entidad', function ($query) use ($idEntidad) {
-                $query->where('id', '=', $idEntidad);
-            })->with('puesto', 'usuario', 'usuario.persona')->get();
+            $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('puesto.entidad', function ($query) use ($idEntidad) {
+                $query->where('id', '=', $idEntidad)->where('activo', true);
+            })->whereHas('usuario', function ($query) {
+                $query->where('activo', true);
+            })->whereHas('usuario.roles', function ($query) {
+                // Verificar que al menos un rol tenga el permiso asignado de REPORTES_ACTUALIZAR_ESTADO
+                $rolesConPermiso = Role::whereHas('permissions', function ($query) {
+                    $query->where('name', PermisosEnum::REPORTES_ACTUALIZAR_ESTADO->value);
+                })->get()->pluck('id')->toArray();
+                $query->whereHas('roles', function ($query) use ($rolesConPermiso) {
+                    $query->whereIn('id', $rolesConPermiso);
+                });
+            })->get();
 
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
                 return [
@@ -166,9 +172,19 @@ class EmpleadoPuestoController extends Controller
     public function listadoSupervisores()
     {
         try {
-            $empleadosPuestos = EmpleadoPuesto::whereHas('usuario.roles', function ($query) {
-                $query->where('name', RolesEnum::SUPERVISOR_REPORTE->value);
-            })->with('puesto', 'usuario', 'usuario.persona')->get();
+            $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('usuario', function ($query) {
+                $query->where('activo', true);
+            })->whereHas('usuario.roles', function ($query) {
+                // Verificar que al menos un rol tenga el permiso asignado de REPORTES_ACTUALIZAR_ESTADO
+                // y de REPORTES_REVISION_SOLUCION
+                $rolesConPermiso = Role::whereHas('permissions', function ($query) {
+                    $query->where('name', PermisosEnum::REPORTES_ACTUALIZAR_ESTADO->value)
+                    ->where('name', PermisosEnum::REPORTES_REVISION_SOLUCION->value);
+                })->get()->pluck('id')->toArray();
+                $query->whereHas('roles', function ($query) use ($rolesConPermiso) {
+                    $query->whereIn('id', $rolesConPermiso);
+                });
+            })->get();
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
                 return [
                     'id_empleado_puesto' => $empleado['id'],

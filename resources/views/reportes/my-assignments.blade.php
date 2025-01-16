@@ -5,10 +5,23 @@
         ['text' => 'Fecha y Hora', 'align' => 'left'],
         ['text' => 'Asignado como', 'align' => 'left'],
         ['text' => 'Unidad', 'align' => 'left'],
+        ['text' => 'Estado', 'align' => 'center']
+    ];
+@endphp
+
+@canany(['REPORTES_ACTUALIZAR_ESTADO', 'REPORTES_REVISION_SOLUCION'])
+@php
+    $headers = [
+        ['text' => 'ID', 'align' => 'left'],
+        ['text' => 'Título', 'align' => 'left'],
+        ['text' => 'Fecha y Hora', 'align' => 'left'],
+        ['text' => 'Asignado como', 'align' => 'left'],
+        ['text' => 'Unidad', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
 @endphp
+@endcanany
 
 <x-app-layout>
     <x-slot name="header">
@@ -45,6 +58,7 @@
                             @endif
                         </x-table.td>
                         <x-table.td>
+                            @canany(['REPORTES_ACTUALIZAR_ESTADO', 'REPORTES_REVISION_SOLUCION'])
                             <a href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
                                 class="font-medium text-gray-700 hover:underline">
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -53,6 +67,7 @@
                                         d="M4 6h16M4 12h16m-7 6h7"></path>
                                 </svg>
                             </a>
+                            @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach
