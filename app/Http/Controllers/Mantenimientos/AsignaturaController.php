@@ -31,7 +31,8 @@ class AsignaturaController extends Controller
                 return $query->where('nombre_completo', 'like', "%$nombreCompletoFilter%");
             })
             ->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
-        $escuelas = Escuela::all()->pluck('nombre', 'id');
+
+        $escuelas = Escuela::where('activo', 1)->get()->pluck('nombre', 'id');
         return view('mantenimientos.asignatura.index', compact('asignaturas', 'escuelas'))->with('message', [
             'type' => 'success',
             'content' => 'La asignatura se ha creado exitosamente.'

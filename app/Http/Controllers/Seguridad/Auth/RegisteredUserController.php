@@ -25,7 +25,7 @@ class RegisteredUserController extends Controller
 {
     public function create(): View
     {
-        $escuelas = Escuela::all();
+        $escuelas = Escuela::where('activo', 1)->get();
         return view('seguridad.auth.register', ['escuelas' => $escuelas]);
     }
 
