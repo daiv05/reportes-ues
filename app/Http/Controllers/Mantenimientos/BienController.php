@@ -21,7 +21,9 @@ class BienController extends Controller
         })->when($filtroNombre, function ($query, $filtroNombre) {
             return $query->where('nombre', 'like', '%' . $filtroNombre . '%');
         })->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
-        $tiposBienes = TipoBien::all();
+
+        $tiposBienes = TipoBien::where('activo', 1)->get();
+
         return view('mantenimientos.bienes.index', compact('tiposBienes', 'bienes'));
     }
 
