@@ -10,10 +10,15 @@
             <x-forms.row :columns="1">
                 <x-forms.field label="Nombre del Rol" name="name" :value="old('name')" :error="$errors->get('name')" required />
             </x-forms.row>
-
+            <x-forms.row :fullRow="true">
+                <div class="flex h-full items-center ml-2">
+                    <x-forms.checkbox label="Activo" name="activo" :checked="old('activo', true)" :error="$errors->get('activo')" required />
+                </div>
+            </x-forms.row>
             <x-forms.row :fullRow="true">
                 <x-picklist.picklist :items="$permissions" :asignados="[]" tituloDisponibles="Permisos disponibles"
-                    tituloAsignados="Permisos asignados" placeholderDisponibles="Buscar permisos..." placeholderAsignados="Buscar permisos asignados..." inputName="permissions" />
+                    tituloAsignados="Permisos asignados" placeholderDisponibles="Buscar permisos..."
+                    placeholderAsignados="Buscar permisos asignados..." inputName="permissions" />
             </x-forms.row>
 
             <div class="flex justify-center mt-6">

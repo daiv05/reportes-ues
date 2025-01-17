@@ -41,7 +41,8 @@ class UsuarioController extends Controller
             })
             ->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
 
-        $roles = Role::all();
+        $roles = Role::where('activo', 1)->get();
+
 
         $roles = $roles->pluck('name', 'id');
         return view('seguridad.usuarios.index', compact('usuarios', 'roles'));
@@ -138,7 +139,7 @@ class UsuarioController extends Controller
         $rules = [
             'nombre' => 'required|string',
             'apellido' => 'required|string',
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id), ],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id),],
             'carnet' => 'required|string|max:20',
             'roles' => 'nullable|string', // Validar los roles (cadena separada por comas)
         ];
@@ -169,7 +170,7 @@ class UsuarioController extends Controller
             'event' => 'Actualizar_roles',
             'auditable_type' => 'App\Models\Seguridad\User',
             'auditable_id' => $user->id,  //
-            'old_values' =>  $currentRoles,
+            'old_values' => $currentRoles,
             'new_values' => $newRoles,
             'url' => request()->url(),
             'ip_address' => request()->ip(),
@@ -184,7 +185,7 @@ class UsuarioController extends Controller
     public function create(Request $request): View
     {
 
-        $roles = Role::all();
+        $roles = Role::where('activo', 1)->get();
         $escuelas = Escuela::all()->pluck('nombre', 'id');
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
         $idEntidad = $request->input('entidad');
