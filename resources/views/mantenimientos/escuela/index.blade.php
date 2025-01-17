@@ -24,7 +24,7 @@
 
         {{-- Filtros --}}
         <div class="flex-col flex flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 w-full">
-            <form action="{{ route('escuelas.index') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
+            <form action="{{ route('escuela.index') }}" method="GET" class="flex-row flex flex-wrap items-center space-x-8 mt-4 w-full">
                 <div class="flex w-full flex-col md:w-2/6 px-4 md:px-0">
                     <x-forms.row :columns="1">
                         <x-forms.field
@@ -47,7 +47,7 @@
 
                     <button type="reset"
                             class="align-middle rounded-full inline-flex items-center px-3 py-3 shadow-sm text-sm font-medium bg-white border border-gray-500 text-gray-500 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                            onclick="window.location.href='{{ route('escuelas.index') }}';">
+                            onclick="window.location.href='{{ route('escuela.index') }}';">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="h-4 w-4">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -154,7 +154,6 @@
 
         if (hasErrors) {
             event.preventDefault();
-            document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
         }
     });
 
@@ -166,7 +165,6 @@
             method = document.querySelector('[name="_method"]')
             if (method) document.getElementById('add-escuela-form').removeChild(method);
             document.getElementById('add-escuela-form').reset();
-            document.getElementById('general-errors').innerHTML = '';
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
         });
     });

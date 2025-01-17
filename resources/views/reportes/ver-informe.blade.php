@@ -12,7 +12,7 @@
         </a>
     </div>
 
-    <div class="mt-12 mb-8">
+    <div class="mt-12 mb-8 mx-4">
         <h2 class="text-xl font-bold mb-4 lg:ml-8">Detalles del Reporte</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200">
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <div class="mt-12 mb-8">
+    <div class="mt-12 mb-8 mx-4">
         <h2 class="text-xl font-bold mb-4 lg:ml-8">Información de la Entidad</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200">
@@ -105,7 +105,7 @@
         </div>
     </div>
 
-    <div class="mt-12 mb-8">
+    <div class="mt-12 mb-8 mx-4">
         <h2 class="text-xl font-bold mb-4 lg:ml-8">Recursos Utilizados</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200">

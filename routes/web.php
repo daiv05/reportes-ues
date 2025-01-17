@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Actividades\ActividadController;
 use App\Http\Controllers\Mantenimientos\AsignaturaController;
 use App\Http\Controllers\Mantenimientos\AulasController;
@@ -21,17 +22,11 @@ use App\Http\Controllers\InicioController;
 use App\Http\Controllers\Mantenimientos\BienController;
 use App\Http\Controllers\Mantenimientos\TipoBienController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('landing');
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::middleware('auth', 'verified', 'two_factor')->group(function () {
 
     Route::get('/inicio', [InicioController::class, 'inicio'])->name('dashboard');
-
-    Route::get('/forbidden', function () {
-        return view('errors.forbidden');
-    })->name('errors.forbidden');
 
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

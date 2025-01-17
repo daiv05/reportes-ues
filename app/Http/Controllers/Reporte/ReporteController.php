@@ -15,6 +15,7 @@ use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
+use App\Models\Reportes\Estado;
 use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\ReporteBien;
 use App\Models\rhu\EmpleadoPuesto;
@@ -134,25 +135,7 @@ class ReporteController extends Controller
 
     public function verInforme($id_reporte)
     {
-        $reporte = Reporte::with(
-            'aula',
-            'actividad',
-            'accionesReporte',
-            'accionesReporte.entidadAsignada',
-            'accionesReporte.usuarioSupervisor',
-            'accionesReporte.usuarioSupervisor.persona',
-            'accionesReporte.historialAccionesReporte',
-            'accionesReporte.historialAccionesReporte.estado',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario.persona',
-            'usuarioReporta',
-            'usuarioReporta.persona',
-            'empleadosAcciones',
-            'empleadosAcciones.empleadoPuesto',
-            'empleadosAcciones.empleadoPuesto.usuario',
-            'empleadosAcciones.empleadoPuesto.usuario.persona'
-        )->find($id_reporte);
+        $reporte = Reporte::find($id_reporte);
 
         if (isset($reporte)) {
             // Obtener fondos y recursos
@@ -162,7 +145,7 @@ class ReporteController extends Controller
             // Calcular la duración del reporte
             $fechaCreacion = \Carbon\Carbon::parse($reporte->fecha_reporte);
             $fechaFinalizacion = $reporte->accionesReporte->historialAccionesReporte
-                ->where('estado.nombre', 'FINALIZADO')
+                ->where('estado.id', EstadosEnum::FINALIZADO->value)
                 ->first()
                 ->created_at ?? null;
 
@@ -171,7 +154,7 @@ class ReporteController extends Controller
             // Obtener recursos usados
             $recursosUsados = RecursoReporte::whereHas('historialAccionesReporte', function ($query) use ($reporte) {
                 $query->where('id_acciones_reporte', $reporte->accionesReporte->id);
-            })->with('unidadMedida')->get();
+            })->get();
 
             // Obtener datos adicionales
             $entidad = $reporte->accionesReporte->entidadAsignada;
@@ -531,34 +514,39 @@ class ReporteController extends Controller
             $titulo = $request->input('titulo');
             $query->where('titulo', 'like', '%' . $titulo . '%');
         }
+
+        if ($request->has('estado')) {
+            $estado = $request->input('estado');
+            // Filtrar por el estado actual del reporte
+            $query->whereHas('accionesReporte.historialAccionesReporte', function ($query) use ($estado) {
+                $query->where('id', function ($query) {
+                    $query->select('id')
+                        ->from('historial_acciones_reportes')
+                        ->whereColumn('id_acciones_reporte', 'acciones_reportes.id')
+                        ->latest()
+                        ->limit(1);
+                })->where('id_estado', $estado);
+            });
+        }
+
+        if ($request->has('tipoReporte')) {
+            // 'incidencia' o 'actividad'
+            $tipo = $request->input('tipoReporte');
+            if ($tipo === 'incidencia') {
+                $query->whereNull('id_actividad');
+            } else if ($tipo === 'actividad') {
+                $query->whereNotNull('id_actividad');
+            }
+        }
     }
 
     public function infoDetalleReporte(Request $request, $id_reporte)
     {
-        $reporte = Reporte::with(
-            'aula',
-            'actividad',
-            'accionesReporte',
-            'accionesReporte.entidadAsignada',
-            'accionesReporte.usuarioSupervisor',
-            'accionesReporte.usuarioSupervisor.persona',
-            'accionesReporte.historialAccionesReporte',
-            'accionesReporte.historialAccionesReporte.estado',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario',
-            'accionesReporte.historialAccionesReporte.empleadoPuesto.usuario.persona',
-            'usuarioReporta',
-            'usuarioReporta.persona',
-            'empleadosAcciones',
-            'empleadosAcciones.empleadoPuesto',
-            'empleadosAcciones.empleadoPuesto.usuario',
-            'empleadosAcciones.empleadoPuesto.usuario.persona',
-            'reporteBienes.bien'
-        )->find($id_reporte);
+        $reporte = Reporte::find($id_reporte);
 
         if (isset($reporte)) {
             // Necesario para asignacion
-            $entidades = Entidades::all();
+            $entidades = Entidades::where('activo', true)->get();
             $empPuesto = new EmpleadoPuestoController();
             $empleadosPorEntidad = $empPuesto->listadoEmpleadosPorUnidad($request->query('entidad'));
             $empleadosPorEntidad = collect($empleadosPorEntidad)->map(function ($empleado) {
@@ -577,10 +565,10 @@ class ReporteController extends Controller
             $estadosHabilitados = $estController->estadosReporte($reporte);
 
             // Catalogos para el detalle
-            $fondos = DB::table('fondos')->get();
-            $recursos = DB::table('recursos')->get();
-            $unidades_medida = DB::table('unidades_medida')->get();
-            $tiposBienes = DB::table('tipos_bienes')->get();
+            $fondos = DB::table('fondos')->where('activo', true)->get();
+            $recursos = DB::table('recursos')->where('activo', true)->get();
+            $unidades_medida = DB::table('unidades_medida')->where('activo', true)->get();
+            $tiposBienes = DB::table('tipos_bienes')->where('activo', true)->get();
 
             return [
                 'reporte' => $reporte,
@@ -591,8 +579,8 @@ class ReporteController extends Controller
                 'estadosPermitidos' => $estadosHabilitados,
                 'fondos' => $fondos,
                 'recursos' => $recursos,
-                'unidades_medida' => $unidades_medida,
-                'tipos_bienes' => $tiposBienes,
+                'unidadesMedida' => $unidades_medida,
+                'tiposBienes' => $tiposBienes,
                 'reporteBienes' => $reporte->reporteBienes
             ];
         } else {
@@ -604,8 +592,8 @@ class ReporteController extends Controller
                 'estadosPermitidos' => [],
                 'fondos' => [],
                 'recursos' => [],
-                'unidades_medida' => [],
-                'tipos_bienes' => [],
+                'unidadesMedida' => [],
+                'tiposBienes' => [],
                 'reporteBienes' => []
             ];
         }

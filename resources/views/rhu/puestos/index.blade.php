@@ -162,7 +162,7 @@
 
     document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
         button.addEventListener('click', function() {
-            updateModalTitle('Añadir Aula');
+            updateModalTitle('Añadir Puesto');
 
             resetForm();
 
@@ -181,7 +181,7 @@
             const entidad = this.getAttribute('data-entidad');
             const activo = this.getAttribute('data-activo');
 
-            updateModalTitle('Editar Aula');
+            updateModalTitle('Editar Puesto');
 
             document.getElementById('asignacion-form').action = `/recursos-humanos/puestos/${id}`;
             document.getElementById('asignacion-form').method = 'POST';

@@ -21,7 +21,7 @@ class AulasController extends Controller
                 return $query->where('nombre', 'like', "%$nombreFilter%");
             })
             ->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
-        $facultades = Facultades::all();
+        $facultades = Facultades::where('activo', true)->get();
         return view('mantenimientos.aulas.index', compact('aulas', 'facultades'));
     }
 

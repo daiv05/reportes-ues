@@ -1,6 +1,4 @@
 @php
-    $tiposBienes = App\Models\Reportes\TipoBien::all();
-
     $headersBienes = [
         ['text' => 'Código', 'align' => 'left'],
         ['text' => 'Nombre', 'align' => 'left'],
@@ -39,14 +37,7 @@
                     function fetchData() {
                         const tipoBien = tipoBienSelect.value;
                         const search = nombreBusquedaInput.value;
-                        const url = new URL('http://127.0.0.1:8000/mantenimientos/bienes/filtro');
-                        if (tipoBien) {
-                            url.searchParams.append('id_tipo_bien', tipoBien);
-                        }
-                        if (search) {
-                            url.searchParams.append('search', search);
-                        }
-
+                        const url = `/mantenimientos/bienes/filtro?id_tipo_bien=${tipoBien}&search=${search}`;
                         fetch(url)
                             .then(response => response.json())
                             .then(data => {
@@ -164,5 +155,5 @@
         </div>
     </div>
 
-    <input id="id_bienes" name="id_bienes" value="[]" >
+    <input hidden id="id_bienes" name="id_bienes" value="[]">
 </div>
