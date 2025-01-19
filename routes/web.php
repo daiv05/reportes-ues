@@ -85,7 +85,7 @@ Route::middleware('auth', 'verified', 'two_factor')->group(function () {
         Route::get('escuela/create', [EscuelaController::class, 'create'])->middleware('permission:ESCUELAS_CREAR')->name('escuela.create');
         Route::get('escuela/{escuela}', [EscuelaController::class, 'show'])->middleware('permission:ESCUELAS_VER')->name('escuela.show');
         Route::put('escuela/{escuela}', [EscuelaController::class, 'update'])->middleware('permission:ESCUELAS_EDITAR')->name('escuela.update');
-        Route::patch('escuela/{escuela}', [EscuelaController::class, 'update'])->middleware('permission:ESCUELAS_EDITAR')->name('escuela.update');
+        Route::patch('escuela/{escuela}', [EscuelaController::class, 'update'])->middleware('permission:ESCUELAS_EDITAR')->name('escuela.patch');
         Route::get('escuela/{escuela}/edit', [EscuelaController::class, 'edit'])->middleware('permission:ESCUELAS_EDITAR')->name('escuela.edit');
         Route::patch('escuelas/{escuela}/toggle', [EscuelaController::class, 'toggleActivo'])->middleware('permission:ESCUELAS_EDITAR')->name('escuelas.toggleActivo');
 
