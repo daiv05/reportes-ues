@@ -1,7 +1,6 @@
-
 @props(['ruta' => 'reportes-generales'])
 
-@php 
+@php
     $objFiltro = [
         'hoy' => 'Hoy',
         '7_dias' => 'Últimos 7 días',
@@ -11,6 +10,14 @@
     ];
 @endphp
 
+<style>
+    .truncate-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
 <div class="flex flex-col space-y-4 p-4 sm:flex-row sm:space-y-0 sm:space-x-4 overflow-y-visible">
     <form method="GET" action="{{ route($ruta) }}"
           class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
@@ -18,7 +25,7 @@
             <button
                 id="dropdownRadioButton"
                 data-dropdown-toggle="dropdownRadio"
-                class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+                class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700 truncate-text"
                 type="button"
             >
                 <svg class="me-3 h-3 w-3 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -89,6 +96,28 @@
                     </li>
                 </ul>
             </div>
+        </div>
+        <div class="relative">
+            <select id="tipoReporte" name="tipoReporte"
+                    class="block w-full sm:w-50 rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500">
+                <option value="" disabled selected>Seleccionar tipo de reporte</option>
+                <option value="incidencia" {{ request('tipoReporte') == 'incidencia' ? 'selected' : '' }}>Incidencia
+                </option>
+                <option value="actividad" {{ request('tipoReporte') == 'actividad' ? 'selected' : '' }}>Actividad
+                </option>
+            </select>
+        </div>
+        <div class="relative">
+            <select id="estado" name="estado"
+                    class="block w-full sm:w-50 rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500">
+                <option value="" disabled selected>Seleccionar estado del reporte</option>
+                <option value="1" {{ request('estado') == '1' ? 'selected' : '' }}>ASIGNADO</option>
+                <option value="3" {{ request('estado') == '3' ? 'selected' : '' }}>EN PROCESO</option>
+                <option value="4" {{ request('estado') == '4' ? 'selected' : '' }}>EN PAUSA</option>
+                <option value="5" {{ request('estado') == '5' ? 'selected' : '' }}>COMPLETADO</option>
+                <option value="6" {{ request('estado') == '6' ? 'selected' : '' }}>FINALIZADO</option>
+                <option value="7" {{ request('estado') == '7' ? 'selected' : '' }}>INCOMPLETO</option>
+            </select>
         </div>
         <div class="relative">
             <div
