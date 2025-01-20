@@ -146,9 +146,7 @@ class EmpleadoPuestoController extends Controller
                 $rolesConPermiso = Role::whereHas('permissions', function ($query) {
                     $query->where('name', PermisosEnum::REPORTES_ACTUALIZAR_ESTADO->value);
                 })->get()->pluck('id')->toArray();
-                $query->whereHas('roles', function ($query) use ($rolesConPermiso) {
-                    $query->whereIn('id', $rolesConPermiso);
-                });
+                $query->whereIn('id', $rolesConPermiso);
             })->get();
 
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
@@ -181,9 +179,7 @@ class EmpleadoPuestoController extends Controller
                     $query->where('name', PermisosEnum::REPORTES_ACTUALIZAR_ESTADO->value)
                     ->where('name', PermisosEnum::REPORTES_REVISION_SOLUCION->value);
                 })->get()->pluck('id')->toArray();
-                $query->whereHas('roles', function ($query) use ($rolesConPermiso) {
-                    $query->whereIn('id', $rolesConPermiso);
-                });
+                $query->whereIn('id', $rolesConPermiso);
             })->get();
             $mappedEmpleados = collect($empleadosPuestos)->map(function ($empleado) {
                 return [
