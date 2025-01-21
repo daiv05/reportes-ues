@@ -18,8 +18,9 @@ class EntidadesController extends Controller
 
         // entidades paginados
         $entidades = Entidades::when($nombreFilter, function ($query, $nombreFilter) {
-                return $query->where('nombre', 'like', "%$nombreFilter%");
-            })
+            return $query->where('nombre', 'like', "%$nombreFilter%");
+        })
+            ->where('activo', true)
             ->paginate(GeneralEnum::PAGINACION->value)->appends(request()->query());
 
         // Lista jerárquica de entidades para el select
@@ -32,6 +33,7 @@ class EntidadesController extends Controller
     {
         // Obtener entidades cuyo id_entidad (padre) coincide con $parentId
         $entidades = Entidades::where('id_entidad', $parentId)
+            ->where('activo', true)
             ->orderBy('id') // Ordenar para mantener el orden adecuado
             ->get();
 
@@ -92,7 +94,7 @@ class EntidadesController extends Controller
             'id_entidad' => 'nullable|exists:entidades,id', // Validar que el departamento padre exista si es seleccionado
         ]);
 
-        $entidad = Entidades::findOrFail($id);
+        $entidad = Entidades::findOrFail($id)->where('activo', true);
 
         // Actualizar los datos del departamento
         $entidad->nombre = $request->nombre;
@@ -101,7 +103,7 @@ class EntidadesController extends Controller
 
         // Ajustar jerarquía y entidad padre si se selecciona uno
         if ($request->filled('id_entidad')) {
-            $entidadPadre = Entidades::findOrFail($request->input('id_entidad'));
+            $entidadPadre = Entidades::findOrFail($request->input('id_entidad')->where('activo', true));
             $entidad->id_entidad = $request->input('id_entidad');
             $entidad->jerarquia = $entidadPadre->jerarquia + 1;
         } else {
@@ -119,7 +121,7 @@ class EntidadesController extends Controller
 
     public function destroy(string $id): RedirectResponse
     {
-        $entidad = Entidades::findOrFail($id);
+        $entidad = Entidades::findOrFail($id)->where('activo', true);
         $entidad->delete();
         return redirect()->route('entidades.index');
     }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Estadisticas;
+
 use App\Http\Controllers\Controller;
 use App\Models\Mantenimientos\Fondo;
 use App\Models\Mantenimientos\Recurso;
@@ -23,12 +24,12 @@ class EstadisticasController extends Controller
         /*************************************************
          * ESTADISTICAS DE REPORTES POR ESTADO
          ************************************************/
-        $estados = Estado::orderBy('id')->pluck('nombre');
+        $estados = Estado::orderBy('id')->where('activo', true)->pluck('nombre');
         $estados->push('NO ASIGNADO');
         $estados->push('NO PROCEDE');
 
-        $reportesNoProcede = Reporte::where('no_procede', true);
-        $reportes = Reporte::where('no_procede', false);
+        $reportesNoProcede = Reporte::where('no_procede', true)->where('activo', true);
+        $reportes = Reporte::where('no_procede', false)->where('activo', true);
 
         if ($request->has('filter-radio')) {
             $filtro = $request->input('filter-radio');
@@ -62,13 +63,13 @@ class EstadisticasController extends Controller
 
         $conteoReportesPorEstado = [];
 
-        foreach($estados as $estado) {
+        foreach ($estados as $estado) {
             $conteoReportesPorEstado[$estado] = 0;
         }
         $conteoReportesPorEstado['NO PROCEDE'] = $reportesNoProcede;
 
-        foreach($reportes as $reporte) {
-            if($reporte->estado_ultimo_historial == null) {
+        foreach ($reportes as $reporte) {
+            if ($reporte->estado_ultimo_historial == null) {
                 $conteoReportesPorEstado['NO ASIGNADO'] = $conteoReportesPorEstado['NO ASIGNADO'] + 1;
             } else {
                 $estado = Estado::find($reporte->estado_ultimo_historial->id)->nombre;
@@ -76,20 +77,23 @@ class EstadisticasController extends Controller
             }
         }
 
-        $chartReportesEstados = new Chart();
-
-        $chartReportesEstados->labels($estados);
-        $chartReportesEstados->dataset('', 'bar', $conteoReportesPorEstado)->backgroundColor([
-            '#BFDBFE',       // bg-blue-100
-            '#E9D5FF',     // bg-purple-100
-            '#FEF3C7',       // bg-amber-100
-            '#365314',     // bg-lime-800
-            '#D1FAE5',     // bg-green-100
-            '#FFEDD5',     // bg-orange-100
-            '#EA580C',    // bg-orange-600
-            '#1F2937',     // bg-gray-800
-        ]);
-
+        $chartReportesEstados = [
+            'type' => 'bar',
+            'labels' => $estados,
+            'datasets' => [
+                'data' => $conteoReportesPorEstado,
+                'backgroundColor' => [
+                    '#BFDBFE',       // bg-blue-100
+                    '#E9D5FF',     // bg-purple-100
+                    '#FEF3C7',       // bg-amber-100
+                    '#365314',     // bg-lime-800
+                    '#D1FAE5',     // bg-green-100
+                    '#FFEDD5',     // bg-orange-100
+                    '#EA580C',    // bg-orange-600
+                    '#1F2937',     // bg-gray-800
+                ],
+            ]
+        ];
 
         /*************************************************
          * ESTADISTICAS DE RECURSOS MAS UTILIZADOS
@@ -98,7 +102,7 @@ class EstadisticasController extends Controller
         $recursosUtilizados = [];
         $recursosMenosUtilizados = [];
 
-        $recursosRaw = Recurso::join('recursos_reportes', 'recursos.id', '=', 'recursos_reportes.id_recurso')
+        $recursosRaw = Recurso::where('recursos.activo', true)->join('recursos_reportes', 'recursos.id', '=', 'recursos_reportes.id_recurso')
             ->leftJoin('fondos', 'recursos_reportes.id_fondo', '=', 'fondos.id')
             ->leftJoin('unidades_medida', 'recursos_reportes.id_unidad_medida', '=', 'unidades_medida.id')
             ->select(
@@ -110,7 +114,7 @@ class EstadisticasController extends Controller
             )
             ->orderBy('recursos_reportes.id_recurso', 'asc');
 
-        if($request->has('filter-radio')) {
+        if ($request->has('filter-radio')) {
             $filtro = $request->input('filter-radio');
             switch ($filtro) {
                 case 'hoy':
@@ -177,55 +181,51 @@ class EstadisticasController extends Controller
         $recursosMenosUtilizados = collect($recursosMenosUtilizados)->take(8);
 
 
-        $chartRecursosUtilizados = new Chart();
-        $chartRecursosMenosUtilizados = new Chart();
+        $chartRecursosUtilizados = [
+            'type' => 'pie',
+            'labels' => $recursosUtilizados->pluck('recurso_nombre'),
+            'datasets' => [
+                'data' => $recursosUtilizados->pluck('cantidad'),
+                'backgroundColor' => [
+                    '#86E3CE',
+                    '#D0E6A5',
+                    '#FFDD94',
+                    '#FA897B',
+                    '#CCABD8',
+                    '#596EE2|',
+                    '#7FACD6',
+                    '#FEAEBB',
+                ],
+            ]
+        ];
 
-        $chartRecursosUtilizados->labels($recursosUtilizados->pluck('recurso_nombre'));
-        $chartRecursosMenosUtilizados->labels($recursosMenosUtilizados->pluck('recurso_nombre'));
-
-        $chartRecursosUtilizados->options([
-            'responsive' => true,
-            'maintainAspectRatio' => false,
-        ]);
-        $chartRecursosMenosUtilizados->options([
-            'responsive' => true,
-            'maintainAspectRatio' => false,
-        ]);
-
-        $chartRecursosUtilizados->displayLegend(false);
-        $chartRecursosMenosUtilizados->displayLegend(false);
-
-        $chartRecursosUtilizados->dataset('', 'pie', $recursosUtilizados->pluck('cantidad'))->backgroundColor([
-            '#86E3CE',
-            '#D0E6A5',
-            '#FFDD94',
-            '#FA897B',
-            '#CCABD8',
-            '#596EE2|',
-            '#7FACD6',
-            '#FEAEBB',
-        ]);
-
-        $chartRecursosMenosUtilizados->dataset('', 'pie', $recursosMenosUtilizados->pluck('cantidad'))->backgroundColor([
-            '#96151a',
-            '#e8c4bc',
-            '#d3484e',
-            '#ac7173',
-            '#c4091d',
-            '#450f10',
-            '#f7ded4',
-            '#6a1315',
-        ]);
+        $chartRecursosMenosUtilizados = [
+            'type' => 'pie',
+            'labels' => $recursosMenosUtilizados->pluck('recurso_nombre'),
+            'datasets' => [
+                'data' => $recursosMenosUtilizados->pluck('cantidad'),
+                'backgroundColor' => [
+                    '#96151a',
+                    '#e8c4bc',
+                    '#d3484e',
+                    '#ac7173',
+                    '#c4091d',
+                    '#450f10',
+                    '#f7ded4',
+                    '#6a1315',
+                ],
+            ]
+        ];
 
         /*************************************************
          * ESTADISTICAS DE RECURSOS POR FONDOS
          ************************************************/
 
-         $recursosPorFondos = RecursoReporte::join('fondos', 'recursos_reportes.id_fondo', '=', 'fondos.id')
+        $recursosPorFondos = RecursoReporte::join('fondos', 'recursos_reportes.id_fondo', '=', 'fondos.id')
             ->select('fondos.nombre as fondo_nombre', 'recursos_reportes.id_recurso')
             ->orderBy('fondo_nombre');
 
-        if($request->has('filter-radio')) {
+        if ($request->has('filter-radio')) {
             $filtro = $request->input('filter-radio');
             switch ($filtro) {
                 case 'hoy':
@@ -247,14 +247,14 @@ class EstadisticasController extends Controller
         };
 
         $recursosPorFondos = $recursosPorFondos->get()
-        ->groupBy('fondo_nombre') // Agrupar por nombre del fondo
-        ->map(function ($recursos, $fondoNombre) {
-            // Contar la cantidad de recursos por fondo
-            return [
-                'nombre' => $fondoNombre,
-                'cantidad' => $recursos->count()
-            ];
-        });
+            ->groupBy('fondo_nombre') // Agrupar por nombre del fondo
+            ->map(function ($recursos, $fondoNombre) {
+                // Contar la cantidad de recursos por fondo
+                return [
+                    'nombre' => $fondoNombre,
+                    'cantidad' => $recursos->count()
+                ];
+            });
 
         // Calcular el total de recursos para el cálculo de porcentaje
         $totalRecursos = $recursosPorFondos->sum('cantidad');
@@ -265,26 +265,25 @@ class EstadisticasController extends Controller
             return $fondoData;
         });
 
-        $chartRecursosPorFondos = new Chart();
-
-        $chartRecursosPorFondos->labels($recursosPorFondos->pluck('nombre'));
-        $chartRecursosPorFondos->options([
-            'responsive' => true,
-            'maintainAspectRatio' => false,
-        ]);
-        $chartRecursosPorFondos->displayLegend(false);
-
-        $chartRecursosPorFondos->dataset('', 'pie', $recursosPorFondos->pluck('porcentaje'))->backgroundColor([
-            '#5ca4a9',
-            '#ed6a5a',
-        ]);
+        $chartRecursosPorFondos = [
+            'type' => 'pie',
+            'labels' => $recursosPorFondos->pluck('nombre'),
+            'datasets' => [
+                'data' => $recursosPorFondos->pluck('porcentaje'),
+                'backgroundColor' => [
+                    '#5ca4a9',
+                    '#ed6a5a',
+                ],
+            ]
+        ];
 
 
         /*************************************************
          * EMPLEADOS CON MAS ASIGNACIONES
          ************************************************/
 
-         $empleadosAsignaciones = EmpleadoAccion::join('empleados_puestos', 'empleados_acciones.id_empleado_puesto', '=', 'empleados_puestos.id')
+        $empleadosAsignaciones = EmpleadoAccion::where('empleados_puestos.activo', true)
+            ->join('empleados_puestos', 'empleados_acciones.id_empleado_puesto', '=', 'empleados_puestos.id')
             ->join('users', 'empleados_puestos.id_usuario', '=', 'users.id')
             ->join('personas', 'users.id_persona', '=', 'personas.id')
             ->selectRaw("CONCAT(personas.nombre, ' ', personas.apellido) as empleado_nombre_completo, COUNT(empleados_acciones.id) as numero_asignaciones")
@@ -304,7 +303,7 @@ class EstadisticasController extends Controller
 
 
 
-        if($request->has('filter-radio')) {
+        if ($request->has('filter-radio')) {
             $filtro = $request->input('filter-radio');
             switch ($filtro) {
                 case 'hoy':
@@ -334,39 +333,39 @@ class EstadisticasController extends Controller
         $empleadosMenosAsignaciones = $empleadosMenosAsignaciones->get()->take(5);
 
 
-        $chartEmpleadosMasAsignaciones = new Chart();
-        $chartEmpleadosMenosAsignaciones = new Chart();
-
-        $chartEmpleadosMasAsignaciones->labels($empleadosMasAsignaciones->pluck('empleado_nombre_completo'));
-        $chartEmpleadosMenosAsignaciones->labels($empleadosMenosAsignaciones->pluck('empleado_nombre_completo'));
-
-        $chartEmpleadosMasAsignaciones->options([
-            'responsive' => true,
-            'maintainAspectRatio' => false,
-        ]);
-        $chartEmpleadosMenosAsignaciones->options([
-            'responsive' => true,
-            'maintainAspectRatio' => false,
-        ]);
-
-        $chartEmpleadosMasAsignaciones->dataset('', 'bar', $empleadosMasAsignaciones->pluck('numero_asignaciones'))->backgroundColor([
-            '#729ea1',
-            '#b5bd89',
-            '#dfbe99',
-            '#ec9192',
-            '#db5375',
-        ]);
-
-        $chartEmpleadosMenosAsignaciones->dataset('', 'bar', $empleadosMenosAsignaciones->pluck('numero_asignaciones'))->backgroundColor([
-            '#ffa37a',
-            '#064f7e',
-            '#1c282b',
-            '#c37dd9',
-            '#333333',
-        ]);
+        $chartEmpleadosMasAsignaciones = [
+            'type' => 'bar',
+            'labels' => $empleadosMasAsignaciones->pluck('empleado_nombre_completo'),
+            'datasets' => [
+                'data' => $empleadosMasAsignaciones->pluck('numero_asignaciones'),
+                'backgroundColor' => [
+                    '#729ea1',
+                    '#b5bd89',
+                    '#dfbe99',
+                    '#ec9192',
+                    '#db5375',
+                ],
+            ]
+        ];
 
 
-        return view('estadisticas.index',
+        $chartEmpleadosMenosAsignaciones = [
+            'type' => 'bar',
+            'labels' => $empleadosMenosAsignaciones->pluck('empleado_nombre_completo'),
+            'datasets' => [
+                'data' => $empleadosMenosAsignaciones->pluck('numero_asignaciones'),
+                'backgroundColor' => [
+                    '#ffa37a',
+                    '#064f7e',
+                    '#1c282b',
+                    '#c37dd9',
+                    '#333333',
+                ],
+            ]
+        ];
+
+        return view(
+            'estadisticas.index',
             [
                 // Estadisticas de reportes por estado
                 'chartReportesEstados' => $chartReportesEstados,
