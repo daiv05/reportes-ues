@@ -21,6 +21,7 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "@preline/select": "^2.5.1"
+        "@preline/select": "^2.5.1",
+        "chart.js": "^4.4.7"
     }
 }
