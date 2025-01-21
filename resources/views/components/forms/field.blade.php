@@ -49,32 +49,34 @@
     <div id="{{ $name }}-error" class="text-sm text-red-500">
         <x-forms.input-error :messages="$error" />
     </div>
-
-    <div id="{{ $name }}-pattern-error" class="py-1 text-[0.83rem] text-red-600 dark:text-red-400"></div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Seleccionar todos los inputs con patrones personalizados
-        const inputs = document.querySelectorAll('input[data-pattern]');
-        const errors = '{{ $errors }}';
+        function triggerValidation(input) {
+            const pattern = new RegExp(input.dataset.pattern); // Obtener el patrón
+            const patternMessage = input.dataset.patternMessage || 'El formato no es válido';
+            let errorElement = document.getElementById(`${input.name}-pattern-error`);
 
-        inputs.forEach((input) => {
-            const errorElement = document.getElementById(`${input.name}-pattern-error`);
-            const pattern = new RegExp(input.dataset.pattern); // Obtener el patrón desde el atributo
-            const patternMessage = input.dataset.patternMessage; // Mensaje personalizado
-
-            input.addEventListener('input', function () {
-                if (!pattern.test(this.value) && this.value !== '') {
-                    // Mostrar error si el valor no cumple el patrón
-                    errorElement.style.display = 'block';
-                    errorElement.textContent = patternMessage;
-                } else {
-                    // Ocultar error si el valor es válido
-                    errorElement.style.display = 'none';
-                    errorElement.textContent = '';
+            if (!pattern.test(input.value) && input.value.trim() !== '') {
+                if (!errorElement) {
+                    // Crear dinámicamente el contenedor de error si no existe
+                    errorElement = document.createElement('div');
+                    errorElement.id = `${input.name}-pattern-error`;
+                    errorElement.className = 'py-1 text-[0.83rem] text-red-600 dark:text-red-400';
+                    input.parentNode.appendChild(errorElement);
                 }
-            });
+                errorElement.textContent = patternMessage; // Mostrar el mensaje de error
+            } else if (errorElement) {
+                // Eliminar el mensaje si el valor es válido
+                errorElement.remove();
+            }
+        }
+        // Seleccionar todos los inputs con patrones personalizados
+        document.addEventListener('input', function (event) {
+            if (event.target.matches('input[data-pattern]')) {
+                triggerValidation(event.target); // Validar dinámicamente al escribir
+            }
         });
     });
 </script>

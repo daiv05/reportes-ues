@@ -171,6 +171,8 @@
                         <x-forms.field
                             id="nombre"
                             label="Código"
+                            pattern="^[a-zA-Z0-9]{1,10}$"
+                            patternMessage="Solo se permiten 10 caracteres que sean letras y números"
                             name="nombre"
                             :value="old('nombre')"
                             :error="$errors->get('nombre')"
@@ -182,6 +184,8 @@
                         <x-forms.field
                             id="nombre_completo"
                             label="Nombre"
+                            pattern="^[a-zA-Z0-9 ]{1,50}$"
+                            patternMessage="Solo se permiten 50 caracteres que sean letras, números y espacios"
                             name="nombre_completo"
                             :value="old('nombre_completo')"
                             :error="$errors->get('nombre')"
@@ -285,6 +289,8 @@
         const escuela = document.getElementById('id_escuela').value.trim();
         const estado = document.getElementById('activo').value.trim();
 
+        const patternErrors = document.querySelectorAll('div[id*="pattern-error"]');
+
         let hasErrors = false;
 
         document.getElementById('general-errors').innerHTML = '';
@@ -317,6 +323,10 @@
         if (hasErrors) {
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
+        }
+
+        if (patternErrors.length > 0) {
+            event.preventDefault();
         }
     });
 
