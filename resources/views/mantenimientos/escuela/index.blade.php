@@ -1,7 +1,6 @@
 @php
     $headers = [
         ['text' => 'Nombre', 'align' => 'left'],
-        ['text' => 'Facultad', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'center'],
     ];
@@ -64,7 +63,6 @@
                 @foreach ($escuelas as $escuela)
                     <x-table.tr>
                         <x-table.td>{{ $escuela->nombre }}</x-table.td>
-                        <x-table.td>{{ $escuela->facultad->nombre }}</x-table.td>
                         <x-table.td justify="center"><x-status.is-active :active="$escuela->activo" /></x-table.td>
                         <x-table.td justify="center">
                             @canany(['ESCUELAS_EDITAR'])

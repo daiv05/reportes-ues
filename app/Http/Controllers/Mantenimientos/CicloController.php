@@ -17,7 +17,7 @@ class CicloController extends Controller
     public function index(Request $request)
     {
         $ciclos = Ciclo::with('tipoCiclo')->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
-        $tiposCiclos = TipoCiclo::all();
+        $tiposCiclos = TipoCiclo::where('activo', 1)->get();
 
         $tiposCiclos = $tiposCiclos->pluck('nombre', 'id')->toArray();
 
@@ -25,7 +25,6 @@ class CicloController extends Controller
             1 => 'ACTIVO',
             0 => 'INACTIVO',
         ];
-
 
         return view('mantenimientos.ciclos.index', compact('ciclos', 'tiposCiclos', 'estados'));
     }
