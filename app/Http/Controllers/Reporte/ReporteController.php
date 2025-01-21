@@ -517,16 +517,22 @@ class ReporteController extends Controller
 
         if ($request->has('estado')) {
             $estado = $request->input('estado');
-            // Filtrar por el estado actual del reporte
-            $query->whereHas('accionesReporte.historialAccionesReporte', function ($query) use ($estado) {
-                $query->where('id', function ($query) {
-                    $query->select('id')
-                        ->from('historial_acciones_reportes')
-                        ->whereColumn('id_acciones_reporte', 'acciones_reportes.id')
-                        ->latest()
-                        ->limit(1);
-                })->where('id_estado', $estado);
-            });
+            if ($estado === 'no_procede') {
+                $query->where('no_procede', true);
+            } else if ($estado === 'no_asignado') {
+                $query->whereDoesntHave('accionesReporte')->where('no_procede', false);
+            } else {
+                // Filtrar por el estado actual del reporte
+                $query->whereHas('accionesReporte.historialAccionesReporte', function ($query) use ($estado) {
+                    $query->where('id', function ($query) {
+                        $query->select('id')
+                            ->from('historial_acciones_reportes')
+                            ->whereColumn('id_acciones_reporte', 'acciones_reportes.id')
+                            ->latest()
+                            ->limit(1);
+                    })->where('id_estado', $estado);
+                });
+            }
         }
 
         if ($request->has('tipoReporte')) {
