@@ -138,7 +138,7 @@ class EmpleadoPuestoController extends Controller
     {
         try {
             $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('puesto.entidad', function ($query) use ($idEntidad) {
-                $query->where('id', '=', $idEntidad)->where('activo', true);
+                $query->where('id', '=', $idEntidad)->orWhere('id_entidad', '=', $idEntidad)->where('activo', true);
             })->whereHas('usuario', function ($query) {
                 $query->where('activo', true);
             })->whereHas('usuario.roles', function ($query) {
@@ -176,8 +176,7 @@ class EmpleadoPuestoController extends Controller
                 // Verificar que al menos un rol tenga el permiso asignado de REPORTES_ACTUALIZAR_ESTADO
                 // y de REPORTES_REVISION_SOLUCION
                 $rolesConPermiso = Role::whereHas('permissions', function ($query) {
-                    $query->where('name', PermisosEnum::REPORTES_ACTUALIZAR_ESTADO->value)
-                    ->where('name', PermisosEnum::REPORTES_REVISION_SOLUCION->value);
+                    $query->where('name', PermisosEnum::REPORTES_REVISION_SOLUCION->value);
                 })->get()->pluck('id')->toArray();
                 $query->whereIn('id', $rolesConPermiso);
             })->get();
