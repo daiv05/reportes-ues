@@ -117,6 +117,8 @@
                 <option value="5" {{ request('estado') == '5' ? 'selected' : '' }}>COMPLETADO</option>
                 <option value="6" {{ request('estado') == '6' ? 'selected' : '' }}>FINALIZADO</option>
                 <option value="7" {{ request('estado') == '7' ? 'selected' : '' }}>INCOMPLETO</option>
+                <option value="no_asignado" {{ request('estado') == 'no_asignado' ? 'selected' : '' }}>NO ASIGNADO</option>
+                <option value="no_procede" {{ request('estado') == 'no_procede' ? 'selected' : '' }}>NO PROCEDE</option>
             </select>
         </div>
         <div class="relative">
