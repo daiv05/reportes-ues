@@ -22,15 +22,15 @@ class EventoRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'evaluacion' => 'required|string',
+            'evaluacion' => 'required|string|max:50|regex:/^[a-zA-Z0-9\s]+$/',
             'fecha' => 'required|date_format:d/m/Y',
-            'materia' => 'required|exists:asignaturas,nombre',
+            'materia' => 'required|exists:asignaturas,nombre|regex:/^[a-zA-Z0-9]+$/',
             'modalidad' => 'required|exists:modalidades,id',
             'hora_inicio' => 'date_format:H:i',
             'hora_fin' => 'date_format:H:i',
             'evaluacion' => 'required|string',
             'asistentes' => 'integer|min:1',
-            'responsable' => 'required|string',
+            'responsable' => 'required|string|max:50|regex:/^[a-zA-Z0-9\s]+$/',
             'estado' => 'required|in:0,1',
         ];
 
@@ -48,8 +48,14 @@ class EventoRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'evaluacion.required' => 'La evaluación es requerida',
+            'evaluacion.max' => 'La evaluación debe tener un máximo de 50 caracteres',
+            'evaluacion.regex' => 'La evaluación solo acepta letras, números y espacios',
             'materia.exists' => 'La materia ingresada no existe',
+            'materia.regex' => 'La materia solo acepta letras y números',
             'modalidad.exists' => 'La modalidad ingresada no existe',
+            'responsable.regex' => 'El responsable solo acepta letras, números y espacios',
+            'responsable.max' => 'El responsable debe tener un máximo de 50 caracteres',
             'hora_inicio.date_format' => 'La hora de inicio debe tener el formato HH:MM',
             'hora_fin.date_format' => 'La hora de fin debe tener el formato HH:MM',
             'hora_inicio.required' => 'La hora de inicio es requerida en modalidad presencial',
