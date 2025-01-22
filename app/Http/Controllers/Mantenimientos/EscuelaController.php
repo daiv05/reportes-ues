@@ -34,6 +34,18 @@ class EscuelaController extends Controller
 
     public function store(StoreEscuelaRequest $request): RedirectResponse
     {
+        $request->validate([
+            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9\s]+$/',
+            'facultad_id' => 'required|exists:facultades,id',
+            'activo' => 'required'
+        ], [
+            'nombre.required' => 'El campo nombre es obligatorio.',
+            'nombre.max' => 'El campo nombre no debe ser mayor a 50 caracteres.',
+            'nombre.regex' => 'El campo nombre solo acepta letras, números y espacios.',
+            'facultad_id.required' => 'El campo facultad es obligatorio.',
+            'facultad_id.exists' => 'La facultad seleccionada no existe.',
+            'activo.required' => 'El campo activo es obligatorio.'
+        ]);
         Escuela::create($request->all());
         return redirect()->route('escuela.index')->with('message', [
             'type' => 'success',
@@ -57,6 +69,19 @@ class EscuelaController extends Controller
 
     public function update(UpdateEscuelaRequest $request, string $id): RedirectResponse
     {
+        $request->validate([
+            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9\s]+$/',
+            'facultad_id' => 'required|exists:facultades,id',
+            'activo' => 'required'
+        ], [
+            'nombre.required' => 'El campo nombre es obligatorio.',
+            'nombre.max' => 'El campo nombre no debe ser mayor a 50 caracteres.',
+            'nombre.regex' => 'El campo nombre solo acepta letras, números y espacios.',
+            'facultad_id.required' => 'El campo facultad es obligatorio.',
+            'facultad_id.exists' => 'La facultad seleccionada no existe.',
+            'activo.required' => 'El campo activo es obligatorio.'
+        ]);
+
         $escuela = Escuela::findOrFail($id);
         $escuela->update($request->all());
 
