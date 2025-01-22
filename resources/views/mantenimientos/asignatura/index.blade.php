@@ -171,7 +171,7 @@
                         <x-forms.field
                             id="nombre"
                             label="Código"
-                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]{1,10}$"
+                            pattern="^[a-zA-Z0-9]{1,10}$"
                             patternMessage="Solo se permiten 10 caracteres que sean letras o números"
                             name="nombre"
                             :value="old('nombre')"
