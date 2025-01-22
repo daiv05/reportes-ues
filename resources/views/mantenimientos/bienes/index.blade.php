@@ -237,31 +237,43 @@
         if (!nombreField.value.trim()) {
             hasErrors = true;
             document.getElementById('nombre-error').innerHTML = 'El campo Nombre es obligatorio';
+        } else {
+            document.getElementById('nombre-error').innerHTML = '';
         }
 
         if (!descripcionField.value.trim()) {
             hasErrors = true;
             document.getElementById('descripcion-error').innerHTML = 'El campo Descripción es obligatorio';
+        } else {
+            document.getElementById('descripcion-error').innerHTML = '';
         }
 
         if (!codigoField.value.trim()) {
             hasErrors = true;
             document.getElementById('codigo-error').innerHTML = 'El campo Código es obligatorio';
+        } else {
+            document.getElementById('codigo-error').innerHTML = '';
         }
 
         if (!tipoBienField.value.trim()) {
             hasErrors = true;
             document.getElementById('id_tipo_bien-error').innerHTML = 'El campo Tipo de Bien es obligatorio';
+        } else {
+            document.getElementById('id_tipo_bien-error').innerHTML = '';
         }
 
         if (!estadoField.value.trim()) {
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo Estado es obligatorio';
+        } else {
+            document.getElementById('estado-error').innerHTML = '';
         }
 
         if (hasErrors) {
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
+        } else {
+            document.getElementById('general-errors').innerHTML = '';
         }
 
         if (patternErrors.length > 0) {

@@ -203,21 +203,29 @@
         if (!nombreField.value.trim()) {
             hasErrors = true;
             document.getElementById('nombre-error').innerHTML = 'El campo Nombre es obligatorio';
+        } else {
+            document.getElementById('nombre-error').innerHTML = '';
         }
 
         if (!facultadField.value.trim()) {
             hasErrors = true;
             document.getElementById('facultad-error').innerHTML = 'El campo Facultad es obligatorio';
+        } else {
+            document.getElementById('facultad-error').innerHTML = '';
         }
 
         if (!estadoField.value.trim()) {
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo Estado es obligatorio';
+        } else {
+            document.getElementById('estado-error').innerHTML = '';
         }
 
         if (hasErrors) {
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
+        } else {
+            document.getElementById('general-errors').innerHTML = '';
         }
 
         if (patternErrors.length > 0) {

@@ -300,29 +300,39 @@
             // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('nombre-error').innerHTML = 'El campo Código es obligatorio';
+        } else {
+            document.getElementById('nombre-error').innerHTML = '';
         }
 
         if (!nombreCompleto) {
             // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('nombre-completo-error').innerHTML = 'El campo Nombre es obligatorio';
+        } else {
+            document.getElementById('nombre-completo-error').innerHTML = '';
         }
 
         if (!escuela) {
             // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('escuela-error').innerHTML = 'El campo Escuela es obligatorio';
+        } else {
+            document.getElementById('escuela-error').innerHTML = '';
         }
 
         if (!estado) {
             // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo Estado es obligatorio';
+        } else {
+            document.getElementById('estado-error').innerHTML = '';
         }
 
         if (hasErrors) {
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
+        } else {
+            document.getElementById('general-errors').innerHTML = '';
         }
 
         if (patternErrors.length > 0) {

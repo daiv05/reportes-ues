@@ -168,6 +168,8 @@
         if (!estado) {
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo estado es obligatorio';
+        } else {
+            document.getElementById('estado-error').innerHTML = '';
         }
 
         if (hasErrors) {
