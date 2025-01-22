@@ -171,6 +171,8 @@
                         <x-forms.field
                             id="nombre"
                             label="Código"
+                            pattern="^[a-zA-Z0-9]{1,10}$"
+                            patternMessage="Solo se permiten 10 caracteres que sean letras o números"
                             name="nombre"
                             :value="old('nombre')"
                             :error="$errors->get('nombre')"
@@ -182,6 +184,8 @@
                         <x-forms.field
                             id="nombre_completo"
                             label="Nombre"
+                            pattern="^[a-zA-Z0-9 ]{1,50}$"
+                            patternMessage="Solo se permiten 50 caracteres que sean letras, números o espacios"
                             name="nombre_completo"
                             :value="old('nombre_completo')"
                             :error="$errors->get('nombre')"
@@ -285,6 +289,8 @@
         const escuela = document.getElementById('id_escuela').value.trim();
         const estado = document.getElementById('activo').value.trim();
 
+        const patternErrors = document.querySelectorAll('div[id*="pattern-error"]');
+
         let hasErrors = false;
 
         document.getElementById('general-errors').innerHTML = '';
@@ -294,29 +300,43 @@
             // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('nombre-error').innerHTML = 'El campo Código es obligatorio';
+        } else {
+            document.getElementById('nombre-error').innerHTML = '';
         }
 
         if (!nombreCompleto) {
             // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('nombre-completo-error').innerHTML = 'El campo Nombre es obligatorio';
+        } else {
+            document.getElementById('nombre-completo-error').innerHTML = '';
         }
 
         if (!escuela) {
             // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('escuela-error').innerHTML = 'El campo Escuela es obligatorio';
+        } else {
+            document.getElementById('escuela-error').innerHTML = '';
         }
 
         if (!estado) {
             // Cambiado: no usar .value ya que es un valor ya extraído
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo Estado es obligatorio';
+        } else {
+            document.getElementById('estado-error').innerHTML = '';
         }
 
         if (hasErrors) {
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
+        } else {
+            document.getElementById('general-errors').innerHTML = '';
+        }
+
+        if (patternErrors.length > 0) {
+            event.preventDefault();
         }
     });
 
