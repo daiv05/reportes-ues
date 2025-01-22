@@ -388,14 +388,15 @@
                 </x-forms.row>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.input-label for="aulas" value="Comentarios" />
-                        <textarea
-                            id="comentario"
+                        <x-forms.textarea
                             name="comentario"
+                            label="Comentarios"
                             rows="2"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,250}$"
+                            patternMessage="Solo se permiten 250 caracteres que sean letras, números, puntos o espacios"
                             :value="old('comentario')"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
-                        ></textarea>
+                            :error="$errors->get('comentario')"
+                        />
                     </div>
                 </x-forms.row>
             </form>
