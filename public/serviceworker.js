@@ -1,6 +1,7 @@
 var staticCacheName = "pwa-v" + new Date().getTime();
 var filesToCache = [
     '/offline',
+    '/assets/img/ues-logo.png',
     '/assets/js/jquery.min.js',
     '/assets/img/icons/icon-72x72.png',
     '/assets/img/icons/icon-96x96.png',
