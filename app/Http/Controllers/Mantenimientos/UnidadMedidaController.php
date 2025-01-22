@@ -13,12 +13,12 @@ class UnidadMedidaController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = UnidadMedida::query();
-        if ($request->has('nombre')) {
-            $filtro = $request->input('nombre');
-            $query->where('nombre', 'like', '%' . $filtro . '%');
-        }
-        $unidades = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
+        $nombreFilter = $request->get('nombre-filter');
+
+        $unidades = UnidadMedida::when($nombreFilter, function ($query, $nombreFilter) {
+            return $query->where('nombre', 'like', "%$nombreFilter%");
+        })->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
+
         return view('mantenimientos.unidad_medida.index', compact('unidades'));
     }
 
