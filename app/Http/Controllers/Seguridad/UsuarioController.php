@@ -69,7 +69,7 @@ class UsuarioController extends Controller
 
         if ($tipo == '1') {
             $rules['escuela'] = 'required|exists:escuelas,id';
-            $rules['email'] = 'required|string|email|max:255|unique:users|regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'; // Validar que el correo sea institucional
+            $rules['email'] = 'required|string|email|max:255|unique:users|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._%+-]+@ues\.edu\.sv$/'; // Validar que el correo sea institucional
             $messages['email.regex'] = 'El correo electrónico debe ser institucional (@ues.edu.sv).';
         } else {
             $rules['puesto'] = 'required|exists:puestos,id'; // Validar que puesto existe en la tabla puestos
@@ -138,7 +138,7 @@ class UsuarioController extends Controller
         $rules = [
             'nombre' => 'required|string',
             'apellido' => 'required|string',
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id), ],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id),],
             'carnet' => 'required|string|max:20',
             'roles' => 'nullable|string', // Validar los roles (cadena separada por comas)
         ];

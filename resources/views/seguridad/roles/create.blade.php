@@ -9,7 +9,7 @@
 
             <x-forms.row :columns="1">
                 <x-forms.field
-                    pattern="^[A-Za-z0-9 ]+$"
+                    pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$"
                     patternMessage="Solo se permiten letras y numeros en el nombre del rol."
                     label="Nombre del Rol"
                     name="name"

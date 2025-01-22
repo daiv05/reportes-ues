@@ -35,7 +35,7 @@ class EscuelaController extends Controller
     public function store(StoreEscuelaRequest $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9\s]+$/',
+            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'facultad_id' => 'required|exists:facultades,id',
             'activo' => 'required'
         ], [
@@ -70,7 +70,7 @@ class EscuelaController extends Controller
     public function update(UpdateEscuelaRequest $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9\s]+$/',
+            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'facultad_id' => 'required|exists:facultades,id',
             'activo' => 'required'
         ], [

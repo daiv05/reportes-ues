@@ -39,7 +39,7 @@ class RegisteredUserController extends Controller
             'fecha_nacimiento' => ['required', 'date_format:d/m/Y'],
             'escuela' => ['required', 'exists:' . Escuela::class . ',id'],
             'telefono' => ['required', 'string', 'max:15'],
-            // 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'],
+            // 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._%+-]+@ues\.edu\.sv$/'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
@@ -92,7 +92,6 @@ class RegisteredUserController extends Controller
             DeviceTracker::flagCurrentAsVerified();
 
             return redirect()->route('verificacion-email.comprobacion');
-
         } else {
             Session::flash('message', [
                 'type' => 'error',
@@ -100,6 +99,5 @@ class RegisteredUserController extends Controller
             ]);
             return redirect()->back();
         }
-
     }
 }

@@ -22,15 +22,15 @@ class EventoRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'evaluacion' => 'required|string|max:50|regex:/^[a-zA-Z0-9\s]+$/',
+            'evaluacion' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'fecha' => 'required|date_format:d/m/Y',
-            'materia' => 'required|exists:asignaturas,nombre|regex:/^[a-zA-Z0-9]+$/',
+            'materia' => 'required|exists:asignaturas,nombre|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]+$/',
             'modalidad' => 'required|exists:modalidades,id',
             'hora_inicio' => 'date_format:H:i',
             'hora_fin' => 'date_format:H:i',
             'evaluacion' => 'required|string',
             'asistentes' => 'integer|min:1',
-            'responsable' => 'required|string|max:50|regex:/^[a-zA-Z0-9\s]+$/',
+            'responsable' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'estado' => 'required|in:0,1',
         ];
 

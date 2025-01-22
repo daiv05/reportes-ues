@@ -232,7 +232,7 @@
                         <x-forms.field
                             label="Materia"
                             name="materia"
-                            pattern="^[a-zA-Z0-9]{1,10}$"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]{1,10}$"
                             patternMessage="Solo se permiten 10 caracteres que sean letras y números"
                             type="text"
                             :value="old('materia')"
@@ -247,7 +247,7 @@
                         <x-forms.field
                             label="Actividad"
                             name="evaluacion"
-                            pattern="^[a-zA-Z0-9 ]{1,50}$"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,50}$"
                             patternMessage="Solo se permiten 50 caracteres que sean letras, números o espacios"
                             :value="old('evaluacion')"
                             :error="$errors->get('evaluacion')"
@@ -301,7 +301,7 @@
                         <x-forms.field
                             label="Responsable"
                             name="responsable"
-                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,50}$"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ.ñÑáéíóúÁÉÍÓÚüÜ ]{1,50}$"
                             patternMessage="Solo se permiten 50 caracteres que sean letras, números, puntos o espacios"
                             :value="old('responsable')"
                             :error="$errors->get('responsable')"

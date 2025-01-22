@@ -144,7 +144,7 @@
                         <x-forms.field
                             label="Nombre"
                             name="nombre"
-                            pattern="^[a-zA-Z0-9 ]{1,50}$"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,50}$"
                             patternMessage="Solo se permiten 50 caracteres que sean letras, números o espacios"
                             type="text"
                             :value="old('name')"

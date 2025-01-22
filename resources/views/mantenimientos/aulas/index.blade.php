@@ -146,7 +146,7 @@
                             id="nombre"
                             label="Nombre"
                             name="nombre"
-                            pattern="^[a-zA-Z0-9]{1,30}$"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]{1,30}$"
                             patternMessage="Solo se permiten 30 caracteres que sean letras o números"
                             :value="old('nombre')"
                             :error="$errors->get('nombre')"
