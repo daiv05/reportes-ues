@@ -32,6 +32,7 @@ class EventoRequest extends FormRequest
             'asistentes' => 'integer|min:1',
             'responsable' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'estado' => 'required|in:0,1',
+            'comentario' => 'max:250',
         ];
 
         if ($this->input('modalidad') == 2) {
@@ -63,6 +64,7 @@ class EventoRequest extends FormRequest
             'evaluacion.string' => 'La evaluación debe ser una cadena de texto',
             'cantidad_estudiantes.integer' => 'La cantidad de estudiantes debe ser un número entero',
             'cantidad_estudiantes.min' => 'La cantidad de estudiantes no puede ser negativa',
+            'comentarios.max' => 'Los comentarios deben tener un máximo de 250 caracteres',
         ];
     }
 
