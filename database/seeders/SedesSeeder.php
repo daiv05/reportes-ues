@@ -16,19 +16,19 @@ class SedesSeeder extends Seeder
          $sedes = [
             [
                 'nombre' => 'Sede Central',
-                'direccion' => 'Entidadesa de San Salvador',
+                'direccion' => 'San Salvador',
             ],
             [
                 'nombre' => 'Sede Oriental',
-                'direccion' => 'Entidadesa de San Miguel/La Unión',
+                'direccion' => 'San Miguel/La Unión',
             ],
             [
                 'nombre' => 'Sede de Paracentral',
-                'direccion' => 'Entidadesa de San Vicente',
+                'direccion' => 'San Vicente',
             ],
             [
                 'nombre' => 'Sede Occidental',
-                'direccion' => 'Entidadesa de Santa Ana',
+                'direccion' => 'Santa Ana',
             ],
          ];
 
