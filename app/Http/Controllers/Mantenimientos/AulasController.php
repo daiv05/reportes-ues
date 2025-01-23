@@ -32,20 +32,6 @@ class AulasController extends Controller
 
     public function store(StoreAulaRequest  $request): RedirectResponse
     {
-        $request->validate([
-            'nombre' => 'required|unique:aulas|max:30|regex:/^[a-zA-Z0-9]$/',
-            'id_facultad' => 'required|exists:facultades,id',
-            'activo' => 'required',
-        ], [
-            'nombre.regex' => 'El nombre solo puede contener letras y números.',
-            'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.unique' => 'Ya existe un aula con este nombre en la facultad seleccionada.',
-            'nombre.max' => 'El nombre no debe exceder los 30 caracteres.',
-            'id_facultad.required' => 'La facultad es obligatoria.',
-            'id_facultad.exists' => 'La facultad seleccionada no existe en nuestra base de datos.',
-            'activo.required' => 'El campo de estado activo es obligatorio.',
-        ]);
-
         Aulas::create($request->all());
         return redirect()->route('aulas.index')->with('message', [
             'type' => 'success',
@@ -70,7 +56,7 @@ class AulasController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:30|regex:/^[a-zA-Z0-9]$/',
+            'nombre' => 'required|max:30|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]$/',
             'id_facultad' => 'required|exists:facultades,id',
             'activo' => 'required',
         ], [

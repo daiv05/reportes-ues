@@ -45,18 +45,22 @@ class PuestoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:50',
+            'nombre' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'id_entidad' => 'required|integer|exists:entidades,id',
             'activo' => 'required|boolean',
+        ], [
+            'nombre.regex' => 'El nombre solo acepta letras, números y espacios',
+            'id_entidad.exists' => 'La entidad seleccionada no existe.',
+            'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres.',
         ]);
 
         $existingPuesto = Puesto::where('nombre', $validated['nombre'])
-                                ->where('id_entidad', $validated['id_entidad'])
-                                ->first();
+            ->where('id_entidad', $validated['id_entidad'])
+            ->first();
 
         if ($existingPuesto) {
             return back()->withErrors(['nombre' => 'El puesto con ese nombre ya existe para esta entidad.'])
-                         ->withInput();
+                ->withInput();
         }
 
         $puesto = new Puesto();
@@ -94,19 +98,23 @@ class PuestoController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:50',
+            'nombre' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'id_entidad' => 'required|integer|exists:entidades,id',
             'activo' => 'required|boolean',
+        ], [
+            'nombre.regex' => 'El nombre solo acepta letras, números y espacios',
+            'id_entidad.exists' => 'La entidad seleccionada no existe.',
+            'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres.',
         ]);
 
         $existingPuesto = Puesto::where('nombre', $validated['nombre'])
-                                ->where('id_entidad', $validated['id_entidad'])
-                                ->where('id', '!=', $id)
-                                ->first();
+            ->where('id_entidad', $validated['id_entidad'])
+            ->where('id', '!=', $id)
+            ->first();
 
         if ($existingPuesto) {
             return back()->withErrors(['nombre' => 'El puesto con ese nombre ya existe para esta entidad.'])
-                         ->withInput();
+                ->withInput();
         }
 
         $puesto = Puesto::findOrFail($id);

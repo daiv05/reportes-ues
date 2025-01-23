@@ -18,7 +18,7 @@
                     name="name"
                     :value="old('name', $role->name)"
                     :error="$errors->get('name')"
-                    pattern="^[A-Za-z0-9 ]+$"
+                    pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$"
                     patternMessage="Solo se permiten letras y numeros en el nombre del rol."
                     required
                 />
