@@ -22,8 +22,8 @@ class AsignaturaController extends Controller
         $nombreCompletoFilter = request('nombre-completo-filter');
 
         $asignaturas = Asignatura::when($escuelaFilter, function ($query, $escuelaFilter) {
-                return $query->where('id_escuela', $escuelaFilter);
-            })
+            return $query->where('id_escuela', $escuelaFilter);
+        })
             ->when($nombreFilter, function ($query, $nombreFilter) {
                 return $query->where('nombre', 'like', "%$nombreFilter%");
             })
@@ -46,7 +46,8 @@ class AsignaturaController extends Controller
         ]);
     }
 
-    public function importarDatos(Request $request) {
+    public function importarDatos(Request $request)
+    {
         $request->validate([
             'excel_file' => 'required|mimes:xlsx,xls,csv',
         ], [
@@ -98,16 +99,19 @@ class AsignaturaController extends Controller
     {
         $request->validate([
             'id_escuela' => 'required|exists:escuelas,id',
-            'nombre' => 'required|max:50|unique:asignaturas,nombre',
-            'nombre_completo' => 'required|max:50',
+            'nombre' => 'required|max:10|unique:asignaturas,nombre|regex:/^[a-zA-Z0-9]$/',
+            'nombre_completo' => 'required|max:50|regex:/^[a-zA-Z0-9 ]$/',
             'activo' => 'required|boolean',
         ], [
             'id_escuela.required' => 'El campo de escuela es obligatorio.',
             'id_escuela.exists' => 'La escuela seleccionada no existe en nuestra base de datos.',
             'nombre.required' => 'El código de la asignatura es obligatorio.',
-            'nombre.max' => 'El código de la asignatura no debe exceder los 50 caracteres.',
+            'nombre.max' => 'El código de la asignatura no debe exceder los 10 caracteres.',
             'nombre.unique' => 'El código de la asignatura ya existe. Por favor, elige otro código.',
+            'nombre.regex' => 'El código de la asignatura solo puede contener letras y números.',
             'nombre_completo.required' => 'El nombre de la asignatura es obligatorio.',
+            'nombre_completo.max' => 'El nombre de la asignatura no debe exceder los 50 caracteres.',
+            'nombre_completo.regex' => 'El nombre de la asignatura solo puede contener letras, números y espacios.',
             'activo.required' => 'El campo de estado activo es obligatorio.',
             'activo.boolean' => 'El campo de estado activo debe ser verdadero o falso.',
         ]);
@@ -141,7 +145,7 @@ class AsignaturaController extends Controller
     {
         $asignatura = Asignatura::findOrFail($id);
 
-             $nombreRule = 'required|max:50';
+        $nombreRule = 'required|max:10|regex:/^[a-zA-Z0-9]$/';
         if ($asignatura->nombre !== $request->nombre) {
             $nombreRule .= '|unique:asignaturas,nombre';
         }
@@ -150,15 +154,18 @@ class AsignaturaController extends Controller
         $request->validate([
             'id_escuela' => 'required|exists:escuelas,id',
             'nombre' => $nombreRule,
-            'nombre_completo' => 'required',
+            'nombre_completo' => 'required|max:50|regex:/^[a-zA-Z0-9 ]$/',
             'activo' => 'required|boolean',
         ], [
             'id_escuela.required' => 'El campo de escuela es obligatorio.',
             'id_escuela.exists' => 'La escuela seleccionada no existe en nuestra base de datos.',
             'nombre.required' => 'El código de la asignatura es obligatorio.',
-            'nombre.max' => 'El código de la asignatura no debe exceder los 50 caracteres.',
+            'nombre.max' => 'El código de la asignatura no debe exceder los 10 caracteres.',
             'nombre.unique' => 'El código de la asignatura ya existe. Por favor, elige otro nombre.',
+            'nombre.regex' => 'El código de la asignatura solo puede contener letras y números.',
             'nombre_completo.required' => 'El nombre de la asignatura es obligatorio.',
+            'nombre_completo.max' => 'El nombre de la asignatura no debe exceder los 50 caracteres.',
+            'nombre_completo.regex' => 'El nombre de la asignatura solo puede contener letras, números y espacios.',
             'activo.required' => 'El campo de estado activo es obligatorio.',
             'activo.boolean' => 'El campo de estado activo debe ser verdadero o falso.',
         ]);
