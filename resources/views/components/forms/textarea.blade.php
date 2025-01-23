@@ -19,12 +19,13 @@
             name="{{ $name }}"
             rows="{{ $rows }}"
             placeholder="{{ $placeholder }}"
-            :value="old('{{ $name }}', $value)"
             class="{{ $readonly ? 'bg-gray-100' : 'border-gray-300' }} mt-1 block w-full rounded-md shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
             data-pattern="{{ $pattern ?? '' }}"
             data-pattern-message="{{ $patternMessage }}"
             {{ $readonly ? 'readonly' : '' }}
-        ></textarea>
+        >
+{{ $value }}</textarea
+        >
     </div>
 
     <div id="{{ $name }}-error" class="text-sm text-red-500">

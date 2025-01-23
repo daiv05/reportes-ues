@@ -25,7 +25,7 @@ class ImportActividadClaseRequest extends FormRequest
     {
         return [
             'materia' => 'required|array|min:1',
-            'materia.*' => 'exists:asignaturas,nombre',
+            'materia.*' => 'exists:asignaturas,nombre|max:10',
             'tipo' => 'required|array|min:1',
             'tipo.*' => 'exists:tipo_clases,id',
             'grupo' => 'required|array|min:1',
@@ -42,7 +42,7 @@ class ImportActividadClaseRequest extends FormRequest
             'diasActividad.*' => 'required|array|min:1',
             'diasActividad.*.*' => 'exists:dias,id',
             'responsable' => 'required|array|min:1',
-            'responsable.*' => 'required|string',
+            'responsable.*' => 'required|string|max:50',
         ];
     }
 
@@ -55,6 +55,7 @@ class ImportActividadClaseRequest extends FormRequest
     {
         return [
             'materia.*.exists' => 'La materia ingresada no existe',
+            'materia.*.max' => 'La materia no puede tener más de 10 caracteres',
             'tipo.*.exists' => 'El tipo de clase ingresado no existe',
             'modalidad.*.exists' => 'La modalidad ingresada no existe',
             'hora_inicio.*.date_format' => 'La hora de inicio debe tener el formato HH:MM',
@@ -73,6 +74,7 @@ class ImportActividadClaseRequest extends FormRequest
             'hora_fin.*.required' => 'Debe seleccionar al menos una hora de fin',
             'responsable.*.required' => 'Debe seleccionar al menos un responsable',
             'responsable.*.string' => 'El responsable debe ser una cadena de texto',
+            'responsable.*.max' => 'El responsable no puede tener más de 50 caracteres',
         ];
     }
 

@@ -25,7 +25,7 @@ class ImportActividadEventoRequest extends FormRequest
             'fecha' => 'required|array|min:1',
             'fecha.*' => 'date_format:d/m/Y',
             'materia' => 'required|array|min:1',
-            'materia.*' => 'exists:asignaturas,nombre',
+            'materia.*' => 'exists:asignaturas,nombre|max:10',
             'modalidad' => 'required|array|min:1',
             'modalidad.*' => 'exists:modalidades,id',
             'hora_inicio' => 'required|array|min:1',
@@ -33,11 +33,13 @@ class ImportActividadEventoRequest extends FormRequest
             'hora_fin' => 'required|array|min:1',
             'hora_fin.*' => 'date_format:H:i',
             'evaluacion' => 'required|array|min:1',
-            'evaluacion.*' => 'string',
+            'evaluacion.*' => 'required|string|max:50',
             'cantidad_estudiantes' => 'required|array|min:1',
             'cantidad_estudiantes.*' => 'integer|min:0',
             'responsable' => 'required|array|min:1',
-            'responsable.*' => 'required|string',
+            'responsable.*' => 'required|string|max:50',
+            'comentarios' => 'nullable|array',
+            'comentarios.*' => 'nullable|string|max:250',
         ];
 
         foreach ($this->input('modalidad', []) as $key => $value) {
@@ -62,15 +64,21 @@ class ImportActividadEventoRequest extends FormRequest
     {
         return [
             'materia.*.exists' => 'La materia ingresada no existe',
+            'materia.*.max' => 'La materia no puede tener más de 10 caracteres',
             'modalidad.*.exists' => 'La modalidad ingresada no existe',
             'hora_inicio.*.date_format' => 'La hora de inicio debe tener el formato HH:MM',
             'hora_fin.*.date_format' => 'La hora de fin debe tener el formato HH:MM',
             'hora_inicio.*.required' => 'La hora de inicio es requerida en modalidad presencial',
             'hora_fin.*.required' => 'La hora de fin es requerida en modalidad presencial',
             'evaluacion.*.string' => 'La evaluación debe ser una cadena de texto',
+            'evaluacion.*.max' => 'La evaluación no puede tener más de 50 caracteres',
             'cantidad_estudiantes.*.integer' => 'La cantidad de estudiantes debe ser un número entero',
             'cantidad_estudiantes.*.min' => 'La cantidad de estudiantes no puede ser negativa',
             'responsable.*.required' => 'El responsable es requerido',
+            'responsable.*.string' => 'El responsable debe ser una cadena de texto',
+            'responsable.*.max' => 'El responsable no puede tener más de 50 caracteres',
+            'comentarios.*.string' => 'El comentario debe ser una cadena de texto',
+            'comentarios.*.max' => 'El comentario no puede tener más de 250 caracteres',
         ];
     }
 

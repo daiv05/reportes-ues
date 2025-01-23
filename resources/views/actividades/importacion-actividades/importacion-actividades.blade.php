@@ -1,9 +1,10 @@
 @php
     // Si se presiona el botón "Limpiar datos", olvidar la sesión.
-    if (request()->has('clear_session')) {
-        session()->forget('excelData');
+    if (request()->has("clear_session")) {
+        session()->forget("excelData");
     }
 @endphp
+
 <x-app-layout>
     <x-slot name="header">
         <x-header.main
@@ -14,93 +15,143 @@
     </x-slot>
 
     <x-container>
-        <div class="max-w-7xl mx-auto sm:px-1 lg:px-3">
+        <div class="mx-auto max-w-7xl sm:px-1 lg:px-3">
             @php
-                $cicloActivo = \App\Models\Mantenimientos\Ciclo::with('tipoCiclo')->where('activo', 1)->first();
+                $cicloActivo = \App\Models\Mantenimientos\Ciclo::with("tipoCiclo")
+                    ->where("activo", 1)
+                    ->first();
                 $dias = \App\Models\General\Dia::all();
                 $aulas = \App\Models\Mantenimientos\Aulas::all();
             @endphp
-            @if(isset($cicloActivo))
-            <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
-                <h1 class="text-xl font-bold text-orange-900 mb-2">
-                    Ciclo activo: {{ $cicloActivo->anio . '-' . $cicloActivo->tipoCiclo->nombre }}
-                </h1>
-                <div class="grid grid-cols-1">
-                    <div class="col-span-1">
-                        <h2 class="text-lg font-semibold text-gray-700">Instrucciones</h2>
-                        <p class="text-sm text-gray-600">
-                            Utiliza la plantilla de actividades, llena la información y sube el archivo.
-                        </p>
-                    </div>
-                    <div class="col-span-1">
-                        <form id="import-excel" action="{{ route('importar-actividades-post') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @csrf
-                            <div class="mt-4">
-                                <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo de actividad</label>
-                                <select id="tipo_actividad" name="tipo_actividad" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    <option value="evento">Evento / Evaluación</option>
-                                    <option value="clase">Clase</option>
-                                </select>
-                            </div>
-                            <div class="flex items-center justify-center w-full">
-                                @canany(['ACTIVIDADES_CARGA_EXCEL'])
-                                <label for="file" class="w-64 flex flex-col items-center px-4 py-6 bg-white text-orange-900 rounded-lg shadow-lg tracking-wide uppercase border border-orange-900 cursor-pointer hover:bg-orange-900 hover:text-white">
-                                    <x-heroicon-o-cloud-arrow-up class="w-10 h-10" />
-                                    <span id="file-name" class="mt-2 text-base leading-normal">Selecciona un archivo</span>
-                                    <input type="file" name="excel_file" accept=".xls,.xlsx,.csv" id="file" class="hidden" onchange="updateFileName(this)" />
-                                    @if ($errors->has('excel_file'))
-                                        <span class="text-red-500 text-sm text-center">{{ $errors->first('excel_file') }}</span>
-                                    @endif
-                                </label>
-                                @endcanany
-                            </div>
-                            <div class="flex items-center py-2 gap-2 md:gap-4 justify-center w-full mt-4 md:col-span-2">
-                                @canany(['ACTIVIDADES_CARGA_EXCEL'])
-                                <x-forms.primary-button>
-                                    Subir archivo
-                                </x-forms.primary-button>
-                                @endcanany
-                            </div>
-                        </form>
 
-                        {{-- Formulario para limpiar sesión --}}
-                        @if(session()->has('excelData'))
-                            <form id="forget-session-form" action="{{ route('importar-actividades') }}" method="GET" class="mt-4 flex justify-center">
+            @if (isset($cicloActivo))
+                <div class="overflow-hidden bg-white p-6 shadow-md sm:rounded-lg">
+                    <h1 class="mb-2 text-xl font-bold text-orange-900">
+                        Ciclo activo: {{ $cicloActivo->anio . "-" . $cicloActivo->tipoCiclo->nombre }}
+                    </h1>
+                    <div class="grid grid-cols-1">
+                        <div class="col-span-1">
+                            <h2 class="text-lg font-semibold text-gray-700">Instrucciones</h2>
+                            <p class="text-sm text-gray-600">
+                                Utiliza la plantilla de actividades, llena la información y sube el archivo.
+                            </p>
+                        </div>
+                        <div class="col-span-1">
+                            <form
+                                id="import-excel"
+                                action="{{ route("importar-actividades-post") }}"
+                                method="POST"
+                                enctype="multipart/form-data"
+                                class="grid grid-cols-1 gap-4 md:grid-cols-2"
+                            >
                                 @csrf
-                                <input type="hidden" name="clear_session" value="true">
-                                <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-25 transition ease-in-out duration-150">
-                                    Limpiar datos
-                                </button>
+                                <div class="mt-4">
+                                    <label for="tipo" class="block text-sm font-medium text-gray-700">
+                                        Tipo de actividad
+                                    </label>
+                                    <select
+                                        id="tipo_actividad"
+                                        name="tipo_actividad"
+                                        class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                    >
+                                        <option value="evento">Evento / Evaluación</option>
+                                        <option value="clase">Clase</option>
+                                    </select>
+                                </div>
+                                <div class="flex w-full items-center justify-center">
+                                    @canany(["ACTIVIDADES_CARGA_EXCEL"])
+                                        <label
+                                            for="file"
+                                            class="flex w-64 cursor-pointer flex-col items-center rounded-lg border border-orange-900 bg-white px-4 py-6 uppercase tracking-wide text-orange-900 shadow-lg hover:bg-orange-900 hover:text-white"
+                                        >
+                                            <x-heroicon-o-cloud-arrow-up class="h-10 w-10" />
+                                            <span id="file-name" class="mt-2 text-base leading-normal">
+                                                Selecciona un archivo
+                                            </span>
+                                            <input
+                                                type="file"
+                                                name="excel_file"
+                                                accept=".xls,.xlsx,.csv"
+                                                id="file"
+                                                class="hidden"
+                                                onchange="updateFileName(this)"
+                                            />
+                                            @if ($errors->has("excel_file"))
+                                                <span class="text-center text-sm text-red-500">
+                                                    {{ $errors->first("excel_file") }}
+                                                </span>
+                                            @endif
+                                        </label>
+                                    @endcanany
+                                </div>
+                                <div
+                                    class="mt-4 flex w-full items-center justify-center gap-2 py-2 md:col-span-2 md:gap-4"
+                                >
+                                    @canany(["ACTIVIDADES_CARGA_EXCEL"])
+                                        <x-forms.primary-button>Subir archivo</x-forms.primary-button>
+                                    @endcanany
+                                </div>
                             </form>
-                        @endif
+
+                            {{-- Formulario para limpiar sesión --}}
+                            @if (session()->has("excelData"))
+                                <form
+                                    id="forget-session-form"
+                                    action="{{ route("importar-actividades") }}"
+                                    method="GET"
+                                    class="mt-4 flex justify-center"
+                                >
+                                    @csrf
+                                    <input type="hidden" name="clear_session" value="true" />
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800"
+                                    >
+                                        Limpiar datos
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
-
             @else
-                <div class="flex items-center justify-center min-h-[20rem] bg-gray-100">
-                    <div class="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden">
+                <div class="flex min-h-[20rem] items-center justify-center bg-gray-100">
+                    <div class="w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg">
                         <div class="px-4 py-5 sm:p-6">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                            <svg class="h-8 w-8 text-escarlata-ues" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <svg
+                                        class="h-8 w-8 text-escarlata-ues"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                        />
+                                    </svg>
+                                </div>
+                                <div class="ml-3 w-0 flex-1">
+                                    <h3 class="text-lg font-medium text-escarlata-ues">No hay ciclo activo</h3>
+                                    <div class="mt-2 text-sm text-gray-500">
+                                        <p>
+                                            Actualmente no hay ningún ciclo en curso. Por favor, inicia un nuevo ciclo
+                                            para comenzar.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="ml-3 w-0 flex-1">
-                            <h3 class="text-lg font-medium text-escarlata-ues">
-                                No hay ciclo activo
-                            </h3>
-                            <div class="mt-2 text-sm text-gray-500">
-                                <p>
-                                Actualmente no hay ningún ciclo en curso. Por favor, inicia un nuevo ciclo para comenzar.
-                                </p>
-                            </div>
-                            </div>
-                        </div>
                         </div>
                         <div class="flex justify-center bg-gray-50 px-4 py-4 sm:px-6">
-                            <a href={{ route('ciclos.index') }} class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-orange-900 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-900">
+                            <a
+                                href="{{ route("ciclos.index") }}"
+                                class="inline-flex items-center rounded-md border border-transparent bg-orange-100 px-4 py-2 text-sm font-medium text-orange-900 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-900 focus:ring-offset-2"
+                            >
                                 Iniciar nuevo ciclo
                             </a>
                         </div>
@@ -109,35 +160,43 @@
             @endif
 
             {{-- Vista previa de la información --}}
-            @if((session()->has('excelData') || isset($excelData)) && $cicloActivo)
+            @if ((session()->has("excelData") || isset($excelData)) && $cicloActivo)
                 @php
-                    $excelData = session('excelData', $excelData ?? []);
-                    $tipoActividad = session('tipoActividad');
+                    $excelData = session("excelData", $excelData ?? []);
+                    $tipoActividad = session("tipoActividad");
                     $tipoClases = \App\Models\General\TipoClase::all();
                     $modalidades = \App\Models\General\Modalidad::all();
                     $errorIndices = collect(array_keys($errors->toArray()))
-                    ->map(function ($key) {
-                        return explode('.', $key)[1] ?? null; // Extraer el índice después del punto
-                    })
-                    ->filter() // Eliminar nulos
-                    ->unique()
-                    ->values()
-                    ->sort()
-                    ->toArray();
+                        ->map(function ($key) {
+                            return explode(".", $key)[1] ?? null; // Extraer el índice después del punto
+                        })
+                        ->filter() // Eliminar nulos
+                        ->unique()
+                        ->values()
+                        ->sort()
+                        ->toArray();
                 @endphp
 
-                <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Vista previa de la información</h1>
+                <h1 class="mb-3 mt-5 text-xl font-bold text-orange-900">Vista previa de la información</h1>
 
-                @if(!empty($errorIndices))
-                    <div class="bg-white rounded-lg  w-full max-w-4xl mt-4 mx-auto overflow-hidden border-[1px] border-escarlata-ues">
-                        <div class="bg-escarlata-ues flex justify-center py-1">
+                @if (! empty($errorIndices))
+                    <div
+                        class="mx-auto mt-4 w-full max-w-4xl overflow-hidden rounded-lg border-[1px] border-escarlata-ues bg-white"
+                    >
+                        <div class="flex justify-center bg-escarlata-ues py-1">
                             <h2 class="text-lg font-semibold text-white">Errores Detectados</h2>
                         </div>
                         <div class="p-3">
-                            <p class="text-sm text-gray-600 mb-3">Estos son los registros que presentan errores. Haz clic en los chips para dirigirte a los detalles de cada error.</p>
+                            <p class="mb-3 text-sm text-gray-600">
+                                Estos son los registros que presentan errores. Haz clic en los chips para dirigirte a
+                                los detalles de cada error.
+                            </p>
                             <div class="flex flex-wrap gap-2">
-                                @foreach($errorIndices as $index)
-                                    <a href="#activity-{{ $index }}" class="px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors">
+                                @foreach ($errorIndices as $index)
+                                    <a
+                                        href="#activity-{{ $index }}"
+                                        class="rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-100"
+                                    >
                                         Registro {{ $index + 1 }}
                                     </a>
                                 @endforeach
@@ -146,31 +205,40 @@
                     </div>
                 @endif
 
-                @if($tipoActividad == 'evento')
-
+                @if ($tipoActividad == "evento")
                     {{-- Caso para eventos --}}
-                    <form class="p-5" method="POST" action="{{ route('importar-eventos') }}">
+                    <form class="p-5" method="POST" action="{{ route("importar-eventos") }}">
                         @csrf
-                        <div class="flex items-center justify-center w-full mt-4 md:col-span-2">
-                            <button type="submit" class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
+                        <div class="mt-4 flex w-full items-center justify-center md:col-span-2">
+                            <button
+                                type="submit"
+                                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
+                            >
                                 Guardar eventos
                             </button>
                         </div>
 
                         <div id="evento-records-container">
-                            @foreach($excelData as $row)
-                                <div class="record-block shadow-sm p-5 rounded-lg border-b border-gray-300 mb-5" id="activity-{{ $loop->index }}">
-                                    <div class="flex flex-wrap gap-3 md:gap-8 items-center my-4">
-                                        <h1 class="text-xl font-bold text-orange-900 mt-5 mb-3">Registro de actividad {{ $loop->iteration }} - Semana {{ $row['semana'] }}</h1>
+                            @foreach ($excelData as $row)
+                                <div
+                                    class="record-block mb-5 rounded-lg border-b border-gray-300 p-5 shadow-sm"
+                                    id="activity-{{ $loop->index }}"
+                                >
+                                    <div class="my-4 flex flex-wrap items-center gap-3 md:gap-8">
+                                        <h1 class="mb-3 mt-5 text-xl font-bold text-orange-900">
+                                            Registro de actividad {{ $loop->iteration }} - Semana {{ $row["semana"] }}
+                                        </h1>
                                         {{-- Botón para eliminar --}}
-                                        <button type="button" onclick="deleteRecord({{ $loop->index }})"
-                                                class="flex gap-2 text-sm h-fit text-gray-500 hover:text-red-500 hover:bg-red-100 p-3 rounded-full transition-colors duration-200 border-2 hover:border-red-100 border-gray-300">
+                                        <button
+                                            type="button"
+                                            onclick="deleteRecord({{ $loop->index }})"
+                                            class="flex h-fit gap-2 rounded-full border-2 border-gray-300 p-3 text-sm text-gray-500 transition-colors duration-200 hover:border-red-100 hover:bg-red-100 hover:text-red-500"
+                                        >
                                             <x-heroicon-o-trash class="h-[20px]" />
                                             Eliminar registro
                                         </button>
                                     </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-
+                                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
                                         {{-- Fecha --}}
                                         <div class="space-y-1">
                                             <x-forms.input-label for="fecha[]" :value="__('Fecha')" required />
@@ -179,15 +247,20 @@
                                                 name="fecha[]"
                                                 :value="old('fecha.' . $loop->index, $row['fecha'])"
                                                 required
-                                                class="w-full mt-1"
+                                                class="mt-1 w-full"
                                             />
-                                            <x-forms.input-error :messages="$errors->get('fecha.'. $loop->index)" class="mt-2" />
+                                            <x-forms.input-error
+                                                :messages="$errors->get('fecha.'. $loop->index)"
+                                                class="mt-2"
+                                            />
                                         </div>
 
                                         {{-- Materia --}}
                                         <x-forms.field
                                             label="Materia"
                                             name="materia[]"
+                                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]{1,10}$"
+                                            patternMessage="Solo se permiten 10 caracteres que sean letras y números"
                                             :value="old('materia.' . $loop->index, $row['materia'])"
                                             :error="$errors->get('materia.' . $loop->index)"
                                             required
@@ -203,7 +276,6 @@
                                             required
                                         />
 
-
                                         {{-- Hora Fin --}}
                                         <x-forms.field
                                             label="Hora Fin"
@@ -218,6 +290,8 @@
                                         <x-forms.field
                                             label="Evaluación"
                                             name="evaluacion[]"
+                                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,50}$"
+                                            patternMessage="Solo se permiten 50 caracteres que sean letras, números o espacios"
                                             :value="old('evaluacion.' . $loop->index, $row['evaluacion'])"
                                             :error="$errors->get('evaluacion.' . $loop->index)"
                                             required
@@ -250,32 +324,41 @@
                                                 <button
                                                     id="dropdownAulasButton{{ $loop->iteration }}"
                                                     data-dropdown-toggle="dropdownAulas{{ $loop->iteration }}"
-                                                    class="text-left w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 text-sm"
-                                                    type="button">
+                                                    class="w-full rounded-md border border-gray-300 px-3 py-2 text-left text-sm shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300"
+                                                    type="button"
+                                                >
                                                     Seleccionar aulas
                                                 </button>
 
                                                 <!-- Dropdown de aulas -->
                                                 <div
                                                     id="dropdownAulas{{ $loop->iteration }}"
-                                                    class="hidden z-20 w-full max-h-[180px] overflow-auto bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+                                                    class="z-20 hidden max-h-[180px] w-full divide-y divide-gray-100 overflow-auto rounded-lg bg-white shadow dark:bg-gray-700"
                                                     data-popper-reference-hidden
                                                     data-popper-escaped
-                                                    data-popper-placement="top">
-                                                    <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownAulasButton{{ $loop->iteration }}">
-                                                        @foreach($aulas as $aula)
+                                                    data-popper-placement="top"
+                                                >
+                                                    <ul
+                                                        class="space-y-2 p-3 text-sm text-gray-700 dark:text-gray-200"
+                                                        aria-labelledby="dropdownAulasButton{{ $loop->iteration }}"
+                                                    >
+                                                        @foreach ($aulas as $aula)
                                                             <li class="flex items-center">
                                                                 <input
                                                                     id="checkbox-{{ $aula->nombre }}-{{ $loop->parent->iteration }}"
                                                                     type="checkbox"
                                                                     value="{{ $aula->id }}"
                                                                     name="aulas[{{ $loop->parent->index }}][]"
-                                                                    @if(is_array(old('aulas.' . $loop->parent->index, $row['aulas'])) && in_array($aula->id, old('aulas.' . $loop->parent->index, $row['aulas'])))
+                                                                    @if (is_array(old("aulas." . $loop->parent->index, $row["aulas"])) && in_array($aula->id, old("aulas." . $loop->parent->index, $row["aulas"])))
                                                                         checked
                                                                     @endif
-                                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                                                    onclick="updateSelectedAulas({{ $loop->parent->iteration }})">
-                                                                <label for="checkbox-{{ $aula->nombre }}-{{ $loop->parent->iteration }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                                    onclick="updateSelectedAulas({{ $loop->parent->iteration }})"
+                                                                />
+                                                                <label
+                                                                    for="checkbox-{{ $aula->nombre }}-{{ $loop->parent->iteration }}"
+                                                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                                >
                                                                     {{ $aula->nombre }}
                                                                 </label>
                                                             </li>
@@ -283,7 +366,10 @@
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <x-forms.input-error :messages="$errors->get('aulas.' . $loop->index)" class="mt-2" />
+                                            <x-forms.input-error
+                                                :messages="$errors->get('aulas.' . $loop->index)"
+                                                class="mt-2"
+                                            />
                                         </div>
 
                                         {{-- Responsable --}}
@@ -291,62 +377,74 @@
                                             <x-forms.field
                                                 label="Responsable"
                                                 name="responsable[]"
+                                                pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,50}$"
+                                                patternMessage="Solo se permiten 50 caracteres que sean letras, números, puntos o espacios"
                                                 :value="old('responsable.' . $loop->index, $row['responsable'])"
                                                 :error="$errors->get('responsable.' . $loop->index)"
+                                                required
                                             />
                                         </div>
 
-                                        {{-- Comentarios--}}
+                                        {{-- Comentarios --}}
                                         <div class="col-span-1 sm:col-span-2 md:col-span-4">
-                                            <x-forms.input-label for="comentarios[]" :value="__('Comentarios')" />
-                                            <textarea
-                                                id="comentario[]"
+                                            <x-forms.textarea
                                                 name="comentarios[]"
+                                                label="Comentarios"
                                                 rows="2"
-                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
-                                            >{{ old('comentarios.' . $loop->index, $row['comentarios']) }}</textarea>
-                                            <x-forms.input-error :messages="$errors->get('comentarios.' . $loop->index)" />
+                                                pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,250}$"
+                                                patternMessage="Solo se permiten 250 caracteres que sean letras, números, puntos o espacios"
+                                                :value="old('comentarios.' . $loop->index, $row['comentarios'])"
+                                                :error="$errors->get('comentarios.' . $loop->index)"
+                                            />
                                         </div>
-
-
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-
                     </form>
                 @endif
 
-                @if($tipoActividad == 'clase')
-
+                @if ($tipoActividad == "clase")
                     {{-- Caso para clases --}}
-                    <form class="p-5" method="POST" action="{{ route('importar-clases') }}">
+                    <form class="p-5" method="POST" action="{{ route("importar-clases") }}">
                         @csrf
-                        @method('POST')
-                        <div class="flex items-center justify-center w-full mt-4 md:col-span-2">
-                            <button type="submit" class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
+                        @method("POST")
+                        <div class="mt-4 flex w-full items-center justify-center md:col-span-2">
+                            <button
+                                type="submit"
+                                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
+                            >
                                 Guardar clases
                             </button>
                         </div>
 
                         <div id="clase-records-container">
-                            @foreach($excelData as $row)
-                                <div class="record-block shadow-sm p-5 rounded-lg border-b border-gray-300 mb-5" id="activity-{{ $loop->index }}">
-                                    <div class="flex flex-wrap gap-3 md:gap-8 items-center my-4">
-                                        <h1 class="text-xl font-bold text-orange-900">Registro de actividad {{ $loop->iteration }}</h1>
+                            @foreach ($excelData as $row)
+                                <div
+                                    class="record-block mb-5 rounded-lg border-b border-gray-300 p-5 shadow-sm"
+                                    id="activity-{{ $loop->index }}"
+                                >
+                                    <div class="my-4 flex flex-wrap items-center gap-3 md:gap-8">
+                                        <h1 class="text-xl font-bold text-orange-900">
+                                            Registro de actividad {{ $loop->iteration }}
+                                        </h1>
                                         {{-- Botón para eliminar --}}
-                                        <button type="button" onclick="deleteRecord({{ $loop->index }})"
-                                                class="flex gap-2 text-sm h-fit text-gray-500 hover:text-red-500 hover:bg-red-100 p-3 rounded-full transition-colors duration-200 border-2 hover:border-red-100 border-gray-300">
+                                        <button
+                                            type="button"
+                                            onclick="deleteRecord({{ $loop->index }})"
+                                            class="flex h-fit gap-2 rounded-full border-2 border-gray-300 p-3 text-sm text-gray-500 transition-colors duration-200 hover:border-red-100 hover:bg-red-100 hover:text-red-500"
+                                        >
                                             <x-heroicon-o-trash class="h-[20px]" />
                                             Eliminar registro
                                         </button>
                                     </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-
+                                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
                                         {{-- Materia --}}
                                         <x-forms.field
                                             label="Materia"
                                             name="materia[]"
+                                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]{1,10}$"
+                                            patternMessage="Solo se permiten 10 caracteres que sean letras y números"
                                             :value="old('materia.' . $loop->index, $row['materia'])"
                                             :error="$errors->get('materia.' . $loop->index)"
                                             required
@@ -392,7 +490,6 @@
                                             required
                                         />
 
-
                                         {{-- Hora Fin --}}
                                         <x-forms.field
                                             label="Hora Fin"
@@ -407,6 +504,8 @@
                                         <x-forms.field
                                             label="Local"
                                             name="local[]"
+                                            pattern="^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚüÜ]{1,50}$"
+                                            patternMessage="Solo se permiten 50 caracteres que sean letras y números"
                                             :value="old('local.' . $loop->index, $row['local'])"
                                             :error="$errors->get('local.' . $loop->index)"
                                             required
@@ -414,37 +513,50 @@
 
                                         {{-- Selección de días --}}
                                         <div class="space-y-1">
-                                            <x-forms.input-label for="diasActividad[]" :value="__('Días de actividad')" required />
+                                            <x-forms.input-label
+                                                for="diasActividad[]"
+                                                :value="__('Días de actividad')"
+                                                required
+                                            />
                                             <div class="relative">
                                                 <button
                                                     id="dropdownDaysButton{{ $loop->iteration }}"
                                                     data-dropdown-toggle="dropdownDays{{ $loop->iteration }}"
-                                                    class="text-left w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 text-sm"
-                                                    type="button">
+                                                    class="w-full rounded-md border border-gray-300 px-3 py-2 text-left text-sm shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300"
+                                                    type="button"
+                                                >
                                                     Seleccionar días
                                                 </button>
 
                                                 <!-- Dropdown de días -->
                                                 <div
                                                     id="dropdownDays{{ $loop->iteration }}"
-                                                    class="hidden z-20 w-full max-h-[180px] overflow-auto bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+                                                    class="z-20 hidden max-h-[180px] w-full divide-y divide-gray-100 overflow-auto rounded-lg bg-white shadow dark:bg-gray-700"
                                                     data-popper-reference-hidden
                                                     data-popper-escaped
-                                                    data-popper-placement="top">
-                                                    <ul class="p-3 space-y-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDaysButton{{ $loop->iteration }}">
-                                                        @foreach($dias as $dia)
+                                                    data-popper-placement="top"
+                                                >
+                                                    <ul
+                                                        class="space-y-2 p-3 text-sm text-gray-700 dark:text-gray-200"
+                                                        aria-labelledby="dropdownDaysButton{{ $loop->iteration }}"
+                                                    >
+                                                        @foreach ($dias as $dia)
                                                             <li class="flex items-center">
                                                                 <input
                                                                     id="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}"
                                                                     type="checkbox"
                                                                     value="{{ $dia->id }}"
                                                                     name="diasActividad[{{ $loop->parent->index }}][]"
-                                                                    @if(is_array(old('diasActividad.' . $loop->parent->index, $row['diasActividad'])) && in_array($dia->id, old('diasActividad.' . $loop->parent->index, $row['diasActividad'])))
+                                                                    @if (is_array(old("diasActividad." . $loop->parent->index, $row["diasActividad"])) && in_array($dia->id, old("diasActividad." . $loop->parent->index, $row["diasActividad"])))
                                                                         checked
                                                                     @endif
-                                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                                                    onclick="updateSelectedDays({{ $loop->parent->iteration }})">
-                                                                <label for="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                                    onclick="updateSelectedDays({{ $loop->parent->iteration }})"
+                                                                />
+                                                                <label
+                                                                    for="checkbox-{{ $dia->nombre }}-{{ $loop->parent->iteration }}"
+                                                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                                >
                                                                     {{ $dia->nombre }}
                                                                 </label>
                                                             </li>
@@ -452,7 +564,10 @@
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <x-forms.input-error :messages="$errors->get('diasActividad.' . $loop->index)" class="mt-2" />
+                                            <x-forms.input-error
+                                                :messages="$errors->get('diasActividad.' . $loop->index)"
+                                                class="mt-2"
+                                            />
                                         </div>
 
                                         {{-- Responsable --}}
@@ -460,11 +575,13 @@
                                             <x-forms.field
                                                 label="Responsable"
                                                 name="responsable[]"
+                                                pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,50}$"
+                                                patternMessage="Solo se permiten 50 caracteres que sean letras, números, puntos o espacios"
                                                 :value="old('responsable.' . $loop->index, $row['responsable'])"
                                                 :error="$errors->get('responsable.' . $loop->index)"
+                                                required
                                             />
                                         </div>
-
                                     </div>
                                 </div>
                             @endforeach
@@ -538,6 +655,4 @@
         document.body.appendChild(form);
         form.submit();
     }
-
-
 </script>
