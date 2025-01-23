@@ -78,5 +78,12 @@
                 triggerValidation(event.target); // Validar dinámicamente al escribir
             }
         });
+
+        document.addEventListener('reset', function (event) {
+            // Eliminar todos los mensajes de error al reiniciar el formulario
+            document.querySelectorAll('div[id*="pattern-error"]').forEach(function (errorElement) {
+                errorElement.remove();
+            });
+        });
     });
 </script>
