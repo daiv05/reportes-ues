@@ -1,8 +1,7 @@
-var staticCacheName = "pwa-v" + new Date().getTime();
+var staticCacheName = "reportfia-pwa-v" + new Date().getTime();
+
 var filesToCache = [
     '/offline',
-    '/assets/img/ues-logo.png',
-    '/assets/js/jquery.min.js',
     '/assets/img/icons/icon-72x72.png',
     '/assets/img/icons/icon-96x96.png',
     '/assets/img/icons/icon-128x128.png',
@@ -30,7 +29,7 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(cacheName => (cacheName.startsWith("pwa-")))
+                    .filter(cacheName => (cacheName.startsWith("reportfia-pwa-")))
                     .filter(cacheName => (cacheName !== staticCacheName))
                     .map(cacheName => caches.delete(cacheName))
             );

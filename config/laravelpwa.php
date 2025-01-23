@@ -59,9 +59,27 @@ return [
         ],
         'custom' => [
             'description' => 'ReportFIA es una aplicación para el reporte de incidencias en la FIA.',
+            'display_override' => [
+                'minimal-ui',
+                'window-controls-overlay'
+            ],
             'screenshots' =>  [
                 [
+                    'src' => '/assets/img/screenshots/inicio.png',
+                    'sizes' => '1882x870',
+                    'type' => 'image/png',
+                    'form_factor' => 'wide',
+                    'label' => 'Detalle de reporte'
+                ],
+                [
                     'src' => '/assets/img/screenshots/detalle-reporte.png',
+                    'sizes' => '1882x870',
+                    'type' => 'image/png',
+                    'form_factor' => 'wide',
+                    'label' => 'Detalle de reporte'
+                ],
+                [
+                    'src' => '/assets/img/screenshots/listado-reporte.png',
                     'sizes' => '1882x870',
                     'type' => 'image/png',
                     'form_factor' => 'wide',
