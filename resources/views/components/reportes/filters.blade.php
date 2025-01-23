@@ -99,8 +99,8 @@
         </div>
         <div class="relative">
             <select id="tipoReporte" name="tipoReporte"
-                    class="block w-full sm:w-50 rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500">
-                <option value="" disabled selected>Seleccionar tipo de reporte</option>
+                    class="block w-full sm:w-50 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 p-2 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500">
+                <option value="" disabled selected>Tipo de reporte</option>
                 <option value="incidencia" {{ request('tipoReporte') == 'incidencia' ? 'selected' : '' }}>Incidencia
                 </option>
                 <option value="actividad" {{ request('tipoReporte') == 'actividad' ? 'selected' : '' }}>Actividad
@@ -109,8 +109,8 @@
         </div>
         <div class="relative">
             <select id="estado" name="estado"
-                    class="block w-full sm:w-50 rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500">
-                <option value="" disabled selected>Seleccionar estado del reporte</option>
+                    class="block w-full sm:w-50 rounded-lg border border-gray-300 bg-white px-3 py-2 font-medium text-gray-500 p-2 text-sm focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500">
+                <option value="" disabled selected>Estado</option>
                 <option value="1" {{ request('estado') == '1' ? 'selected' : '' }}>ASIGNADO</option>
                 <option value="3" {{ request('estado') == '3' ? 'selected' : '' }}>EN PROCESO</option>
                 <option value="4" {{ request('estado') == '4' ? 'selected' : '' }}>EN PAUSA</option>
@@ -132,7 +132,7 @@
                 </svg>
             </div>
             <input type="text" id="table-search" name="titulo" value="{{ request('titulo') }}"
-                   class="block w-full sm:w-80 rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
+                   class="block w-full sm:w-80 rounded-lg border border-gray-300 bg-white px-3 py-2 font-medium text-gray-500 p-2 ps-10 text-sm focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
                    placeholder="Buscar por titulo"/>
         </div>
 
