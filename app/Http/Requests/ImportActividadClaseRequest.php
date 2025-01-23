@@ -25,14 +25,14 @@ class ImportActividadClaseRequest extends FormRequest
     {
         return [
             'materia' => 'required|array|min:1',
-            'materia.*' => 'exists:asignaturas,nombre|max:10',
+            'materia.*' => 'exists:asignaturas,nombre|max:10|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚüÜ]+$/',
             'tipo' => 'required|array|min:1',
             'tipo.*' => 'exists:tipo_clases,id',
             'grupo' => 'required|array|min:1',
             'grupo.*' => 'integer|min:1',
             'modalidad' => 'required|array|min:1',
             'local' => 'required|array|min:1',
-            'local.*' => 'exists:aulas,nombre',
+            'local.*' => 'exists:aulas,nombre|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚüÜ]+$/',
             'modalidad.*' => 'exists:modalidades,id',
             'hora_inicio' => 'required|array|min:1',
             'hora_inicio.*' => 'date_format:H:i',
@@ -42,7 +42,7 @@ class ImportActividadClaseRequest extends FormRequest
             'diasActividad.*' => 'required|array|min:1',
             'diasActividad.*.*' => 'exists:dias,id',
             'responsable' => 'required|array|min:1',
-            'responsable.*' => 'required|string|max:50',
+            'responsable.*' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
         ];
     }
 
@@ -56,6 +56,7 @@ class ImportActividadClaseRequest extends FormRequest
         return [
             'materia.*.exists' => 'La materia ingresada no existe',
             'materia.*.max' => 'La materia no puede tener más de 10 caracteres',
+            'materia.*.regex' => 'La materia solo acepta letras y números',
             'tipo.*.exists' => 'El tipo de clase ingresado no existe',
             'modalidad.*.exists' => 'La modalidad ingresada no existe',
             'hora_inicio.*.date_format' => 'La hora de inicio debe tener el formato HH:MM',
@@ -63,6 +64,7 @@ class ImportActividadClaseRequest extends FormRequest
             'diasActividad.*.required' => 'Debe seleccionar al menos un día para la actividad',
             'diasActividad.*.*.exists' => 'El día seleccionado no existe',
             'local.*.exists' => 'El local ingresado no existe',
+            'local.*.regex' => 'El local solo acepta letras y números',
             'grupo.*.integer' => 'El grupo debe ser un número entero',
             'grupo.*.min' => 'El grupo debe ser un número entero positivo',
             'materia.*.required' => 'Debe seleccionar al menos una materia',
@@ -75,6 +77,7 @@ class ImportActividadClaseRequest extends FormRequest
             'responsable.*.required' => 'Debe seleccionar al menos un responsable',
             'responsable.*.string' => 'El responsable debe ser una cadena de texto',
             'responsable.*.max' => 'El responsable no puede tener más de 50 caracteres',
+            'responsable.*.regex' => 'El responsable solo acepta letras, números y espacios',
         ];
     }
 
