@@ -28,10 +28,11 @@ class ClaseRequest extends FormRequest
             'hora_inicio' => 'required|date_format:H:i',
             'hora_fin' => 'required|date_format:H:i',
             'grupo' => 'required|integer|min:1',
-            'responsable' => 'required|string',
+            'responsable' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'dias' => 'required|array',
             'dias.*' => 'required|integer|between:1,7',
             'estado' => 'required|in:0,1',
+            'local' => 'string|regex:/^[a-zA-Z0-9]+$/|exists:aulas,nombre',
         ];
     }
 
@@ -47,8 +48,11 @@ class ClaseRequest extends FormRequest
             'grupo.integer' => 'El grupo debe ser un número entero',
             'grupo.min' => 'El grupo no puede ser negativo',
             'responsable.string' => 'El responsable debe ser una cadena de texto',
+            'responsable.regex' => 'El responsable solo acepta letras, números y espacios',
+            'responsable.max' => 'El responsable debe tener un máximo de 50 caracteres',
             'dias.required' => 'Los días de la actividad son requeridos',
             'dias.array' => 'Los días deben ser un arreglo',
+            'local.exists' => 'El local ingresado no existe',
         ];
     }
 

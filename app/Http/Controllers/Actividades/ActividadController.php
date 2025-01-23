@@ -26,8 +26,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
-use function PHPUnit\Framework\isEmpty;
-
 class ActividadController extends Controller
 {
     public function importarActividadesView(Request $request)

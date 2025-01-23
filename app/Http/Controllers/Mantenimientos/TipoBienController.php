@@ -25,7 +25,7 @@ class TipoBienController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|unique:tipos_bienes,nombre|regex:/^[a-zA-Z0-9\s]+$/',
+            'nombre' => 'required|max:50|unique:tipos_bienes,nombre|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre del tipo de bien es requerido',
@@ -44,7 +44,7 @@ class TipoBienController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9\s]+$/|unique:bienes,nombre,' . $id,
+            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/|unique:bienes,nombre,' . $id,
             'activo' => 'nullable|boolean'
         ], [
             'nombre.required' => 'El nombre del tipo de bien es requerido',

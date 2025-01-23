@@ -30,7 +30,7 @@ class RoleController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|unique:roles,name|max:30|regex:/^[A-Za-z0-9 ]+$/',
+            'name' => 'required|unique:roles,name|max:30|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
             'permissions' => 'nullable|string',
         ], [
             'name.max' => 'El nombre del rol no puede ser mayor a 30 caracteres.',
@@ -65,7 +65,7 @@ class RoleController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|max:30|regex:/^[A-Za-z0-9 ]+$/|unique:roles,name,' . $id,
+            'name' => 'required|max:30|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/|unique:roles,name,' . $id,
             'permissions' => 'nullable|string',
         ], [
             'name.max' => 'El nombre del rol no puede ser mayor a 30 caracteres.',

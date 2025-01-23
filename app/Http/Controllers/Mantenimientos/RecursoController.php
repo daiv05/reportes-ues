@@ -30,7 +30,7 @@ class RecursoController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|unique:recursos,nombre|regex:/^[a-zA-Z0-9\s]+$/',
+            'nombre' => 'required|max:50|unique:recursos,nombre|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre del recurso es requerido',
@@ -54,7 +54,7 @@ class RecursoController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|regex:regex:/^[a-zA-Z0-9\s]+$/|unique:recursos,nombre,' . $id,
+            'nombre' => 'required|max:50|regex:regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/|unique:recursos,nombre,' . $id,
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre del recurso es requerido',

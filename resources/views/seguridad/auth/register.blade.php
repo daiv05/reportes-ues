@@ -7,6 +7,8 @@
             <x-forms.field
                 label="Nombre"
                 name="nombre"
+                pattern="^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ]{1,100}$"
+                patternMessage="Solo se permiten 100 caracteres que sean letras o espacios"
                 :value="old('nombre')"
                 :error="$errors->get('nombre')"
                 required
@@ -18,6 +20,8 @@
             <x-forms.field
                 label="Apellido"
                 name="apellido"
+                pattern="^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ]{1,100}$"
+                patternMessage="Solo se permiten 100 caracteres que sean letras o espacios"
                 :value="old('apellido')"
                 :error="$errors->get('apellido')"
                 required
@@ -52,6 +56,8 @@
             <x-forms.field
                 label="Teléfono"
                 name="telefono"
+                pattern="^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$"
+                patternMessage="El número de teléfono debe tener un formato válido"
                 :value="old('telefono')"
                 :error="$errors->get('telefono')"
                 required
@@ -63,6 +69,8 @@
             <x-forms.field
                 label="Usuario/Carnet"
                 name="carnet"
+                pattern="^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$"
+                patternMessage="El carnet debe tener entre 3 y 20 caracteres y solo puede contener letras, números, puntos y guiones bajos"
                 :value="old('carnet')"
                 :error="$errors->get('carnet')"
                 required
@@ -117,8 +125,7 @@
                 {{ __('Registrarse') }}
             </x-forms.primary-button>
         </div>
-        <a class="rounded-md text-sm text-gray-600 underline hover:text-gray-900"
-            href="{{ route('landing') }}">
+        <a class="rounded-md text-sm text-gray-600 underline hover:text-gray-900" href="{{ route('landing') }}">
             <x-heroicon-s-arrow-left class="h-4 w-4" />
         </a>
     </form>
