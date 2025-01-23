@@ -32,7 +32,7 @@
                         <x-table.td>{{ $reporte->titulo }}</x-table.td>
                         <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y') }}
                             {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</x-table.td>
-                        <x-table.td>{{ $reporte->actividad ? 'Actividad' : 'General' }}</x-table.td>
+                        <x-table.td>{{ $reporte->actividad ? 'Actividad' : 'Incidencia' }}</x-table.td>
                         <x-table.td justify="center">
                             @if ($reporte->no_procede === 0)
                                 <x-status.chips :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
