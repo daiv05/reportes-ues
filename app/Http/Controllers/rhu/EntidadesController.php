@@ -58,10 +58,16 @@ class EntidadesController extends Controller
     {
         // Validación de los campos del formulario
         $validatedData = $request->validate([
-            'nombre' => 'required|unique:entidades|max:50',
-            'descripcion' => 'required|max:100',
+            'nombre' => 'required|unique:entidades|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
+            'descripcion' => 'required|max:250',
             'id_entidad' => 'nullable|exists:entidades,id', // Asegura que el departamento padre exista si se selecciona
             'activo' => 'required|boolean',
+        ], [
+            'nombre.regex' => 'El nombre solo acepta letras, números y espacios',
+            'nombre.unique' => 'El nombre ya está en uso',
+            'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
+            'descripcion.max' => 'La descripción debe tener un máximo de 250 caracteres',
+            'id_entidad.exists' => 'La entidad padre seleccionado no existe',
         ]);
 
         // Determinar la jerarquía según el departamento padre
@@ -87,12 +93,21 @@ class EntidadesController extends Controller
 
     public function update(Request $request, string $id): RedirectResponse
     {
-        $request->validate([
-            'nombre' => ['required', Rule::unique('entidades')->ignore($id), 'max:50'],
-            'descripcion' => 'required|max:50',
-            'activo' => 'required|boolean',
-            'id_entidad' => 'nullable|exists:entidades,id', // Validar que el departamento padre exista si es seleccionado
-        ]);
+        $request->validate(
+            [
+                'nombre' => ['required', 'regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',  Rule::unique('entidades')->ignore($id), 'max:50'],
+                'descripcion' => 'required|max:250',
+                'activo' => 'required|boolean',
+                'id_entidad' => 'nullable|exists:entidades,id', // Validar que el departamento padre exista si es seleccionado
+            ],
+            [
+                'nombre.regex' => 'El nombre solo acepta letras, números y espacios',
+                'nombre.unique' => 'El nombre ya está en uso',
+                'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
+                'descripcion.max' => 'La descripción debe tener un máximo de 250 caracteres',
+                'id_entidad.exists' => 'La entidad padre seleccionada no existe',
+            ]
+        );
 
         $entidad = Entidades::findOrFail($id)->where('activo', true);
 

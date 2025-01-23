@@ -25,7 +25,7 @@ class UnidadMedidaController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|unique:unidades_medida,nombre|regex:/^[a-zA-Z0-9\s]+$/',
+            'nombre' => 'required|max:50|unique:unidades_medida,nombre|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre de la unidad es requerido',

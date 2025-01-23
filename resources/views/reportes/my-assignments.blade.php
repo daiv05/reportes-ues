@@ -45,7 +45,7 @@
                         <x-table.td>{{ \Carbon\Carbon::parse($reporte->fecha_reporte)->format('d/m/Y') }}
                             {{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</x-table.td>
                         <x-table.td>
-                            {{ $reporte->relacion_usuario['supervisor'] ? 'SUPERVISOR' : 'TRABAJADOR' }}
+                            {{ $reporte->relacion_usuario['supervisor'] ? 'SUPERVISOR' : 'SUBALTERNO' }}
                         </x-table.td>
                         <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
                         <x-table.td>

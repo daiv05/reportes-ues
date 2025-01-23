@@ -13,7 +13,7 @@ class UpdateEscuelaRequest extends FormRequest
 
     public function rules(): array
     {
-        $nombreRule = 'required|max:50';
+        $nombreRule = 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/';
         $escuela = $this->route('id');
         if ($escuela && $escuela != $this->nombre) {
             $nombreRule .= '|unique:escuelas,nombre,' . $escuela;
@@ -33,6 +33,7 @@ class UpdateEscuelaRequest extends FormRequest
             'id_facultad.exists' => 'La facultad seleccionada no existe en nuestra base de datos.',
             'nombre.required' => 'El nombre de la escuela es obligatorio.',
             'nombre.max' => 'El nombre de la escuela no debe exceder los 50 caracteres.',
+            'nombre.regex' => 'El campo nombre solo acepta letras, números y espacios.',
             'nombre.unique' => 'El nombre de la escuela ya existe. Por favor, elige otro nombre.',
             'activo.required' => 'El campo de estado activo es obligatorio.',
             'activo.boolean' => 'El campo de estado activo debe ser verdadero o falso.',

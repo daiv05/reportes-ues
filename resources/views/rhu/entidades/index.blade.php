@@ -145,6 +145,8 @@
                             label="Nombre"
                             name="nombre"
                             type="text"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,50}$"
+                            patternMessage="Solo se permiten 50 caracteres que sean letras, números, puntos o espacios"
                             :value="old('nombre')"
                             :error="$errors->get('nombre')"
                             required
@@ -154,15 +156,17 @@
                 </x-forms.row>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.input-label for="descripcion" :value="__('Descripcion')" required />
-                        <textarea
-                            id="descripcion"
+                        <x-forms.textarea
+                            required
                             name="descripcion"
+                            label="Descripción"
                             rows="4"
-                            class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,250}$"
+                            patternMessage="Solo se permiten 250 caracteres que sean letras, números, puntos o espacios"
+                            :value="old('descripcion')"
+                            :error="$errors->get('descripcion')"
                             placeholder="Describa brevemente las funciones..."
-                        ></textarea>
-                        <x-forms.input-error :messages="$errors->get('descripcion')" class="mt-2" />
+                        />
                         <div id="descripcion-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
@@ -221,30 +225,44 @@
         const nombre = document.getElementById('nombre').value.trim();
         const estado = document.getElementById('activo').value.trim();
 
+        const patternErrors = document.querySelectorAll('div[id*="pattern-error"]');
+
         let hasErrors = false;
 
-        if (entidadPadre === id) {
+        if (!!entidadPadre && entidadPadre === id) {
             hasErrors = true;
             document.getElementById('entidad-padre-error').innerHTML =
                 'No puedes seleccionar a la misma entidad como padre';
+        } else {
+            document.getElementById('entidad-padre-error').innerHTML = '';
         }
 
         if (!nombre) {
             hasErrors = true;
             document.getElementById('nombre-error').innerHTML = 'El campo nombre es obligatorio';
+        } else {
+            document.getElementById('nombre-error').innerHTML = '';
         }
 
         if (!descripcion) {
             hasErrors = true;
             document.getElementById('descripcion-error').innerHTML = 'El campo descripción es obligatorio';
+        } else {
+            document.getElementById('descripcion-error').innerHTML = '';
         }
 
         if (!estado) {
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo estado es obligatorio';
+        } else {
+            document.getElementById('estado-error').innerHTML = '';
         }
 
         if (hasErrors) {
+            event.preventDefault();
+        }
+
+        if (patternErrors.length > 0) {
             event.preventDefault();
         }
     });

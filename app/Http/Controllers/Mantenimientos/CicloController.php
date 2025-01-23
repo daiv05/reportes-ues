@@ -31,18 +31,6 @@ class CicloController extends Controller
 
     public function store(CicloRequest $request)
     {
-        $request->validate([
-            'anio' => 'required|numeric',
-            'id_tipo_ciclo' => 'required|exists:tipos_ciclos,id',
-            'activo' => 'required',
-        ], [
-            'anio.required' => 'El campo año es obligatorio',
-            'anio.numeric' => 'El campo año debe ser numérico',
-            'id_tipo_ciclo.required' => 'El campo tipo de ciclo es obligatorio',
-            'id_tipo_ciclo.exists' => 'El tipo de ciclo seleccionado no es válido',
-            'activo.required' => 'El campo estado es obligatorio',
-        ]);
-
         if ($request->activo) {
             Ciclo::where('activo', true)->update(['activo' => false]);
         }
@@ -59,18 +47,6 @@ class CicloController extends Controller
     public function update(CicloRequest $request, $id)
     {
         $ciclo = Ciclo::findOrFail($id);
-
-        $request->validate([
-            'anio' => 'required|numeric',
-            'id_tipo_ciclo' => 'required|exists:tipos_ciclos,id',
-            'activo' => 'required',
-        ], [
-            'anio.required' => 'El campo año es obligatorio',
-            'anio.numeric' => 'El campo año debe ser numérico',
-            'id_tipo_ciclo.required' => 'El campo tipo de ciclo es obligatorio',
-            'id_tipo_ciclo.exists' => 'El tipo de ciclo seleccionado no es válido',
-            'activo.required' => 'El campo estado es obligatorio',
-        ]);
 
         if ($request->activo) {
             Ciclo::where('activo', true)->where('id', '<>', $id)->update(['activo' => false]);
