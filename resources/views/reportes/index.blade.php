@@ -7,23 +7,9 @@
         ['text' => 'Entidad', 'align' => 'left'],
         ['text' => 'Tipo', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
-    ];
-@endphp
-
-@canany(['REPORTES_ASIGNAR', 'REPORTES_ACTUALIZAR_ESTADO', 'REPORTES_REVISION_SOLUCION'])
-@php
-    $headers = [
-        ['text' => 'ID', 'align' => 'left'],
-        ['text' => 'Título', 'align' => 'left'],
-        ['text' => 'Fecha y Hora', 'align' => 'left'],
-        ['text' => 'Reportado por', 'align' => 'left'],
-        ['text' => 'Entidad', 'align' => 'left'],
-        ['text' => 'Tipo', 'align' => 'left'],
-        ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
 @endphp
-@endcanany
 
 <x-app-layout>
     <x-slot name="header">
