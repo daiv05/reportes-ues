@@ -9,8 +9,8 @@ return [
         'background_color' => '#ffffff',
         'theme_color' => '#000000',
         'display' => 'standalone',
-        'orientation'=> 'any',
-        'status_bar'=> 'black',
+        'orientation' => 'any',
+        'status_bar' => 'black',
         'icons' => [
             '72x72' => [
                 'path' => '/assets/img/icons/icon-72x72.png',
@@ -57,22 +57,84 @@ return [
             '1668x2388' => '/assets/img/icons/splash-1668x2388.png',
             '2048x2732' => '/assets/img/icons/splash-2048x2732.png',
         ],
-        'shortcuts' => [
-            [
-                'name' => 'Inicio',
-                'description' => 'Inicio de la aplicación',
-                'url' => '/inicio',
-                'icons' => [
-                    "src" => "/assets/img/icons/icon-72x72.png",
-                    "purpose" => "any"
+        'custom' => [
+            'description' => 'ReportFIA es una aplicación para el reporte de incidencias en la FIA.',
+            'display_override' => [
+                'minimal-ui',
+                'window-controls-overlay'
+            ],
+            'screenshots' =>  [
+                [
+                    'src' => '/assets/img/screenshots/inicio.png',
+                    'sizes' => '1882x870',
+                    'type' => 'image/png',
+                    'form_factor' => 'wide',
+                    'label' => 'Detalle de reporte'
+                ],
+                [
+                    'src' => '/assets/img/screenshots/detalle-reporte.png',
+                    'sizes' => '1882x870',
+                    'type' => 'image/png',
+                    'form_factor' => 'wide',
+                    'label' => 'Detalle de reporte'
+                ],
+                [
+                    'src' => '/assets/img/screenshots/listado-reporte.png',
+                    'sizes' => '1882x870',
+                    'type' => 'image/png',
+                    'form_factor' => 'wide',
+                    'label' => 'Detalle de reporte'
+                ],
+                [
+                    'src' => '/assets/img/screenshots/inicio-mobile.png',
+                    'sizes' => '1170x2531',
+                    'type' => 'image/png',
+                    'form_factor' => 'narrow',
+                    'label' => 'Inicio'
+                ],
+                [
+                    'src' => '/assets/img/screenshots/listado-reporte-mobile.png',
+                    'sizes' => '1170x2531',
+                    'type' => 'image/png',
+                    'form_factor' => 'narrow',
+                    'label' => 'Listado de reportes'
+                ],
+                [
+                    'src' => '/assets/img/screenshots/detalle-reporte-mobile.png',
+                    'sizes' => '1170x2531',
+                    'type' => 'image/png',
+                    'form_factor' => 'narrow',
+                    'label' => 'Detalle de reporte'
                 ]
             ],
-            [
-                'name' => 'Reportes',
-                'description' => 'Listado de reportes',
-                'url' => '/reportes/listado-general'
-            ]
+            'shortcuts' => [
+                [
+                    'name' => 'Inicio',
+                    'description' => 'Inicio de la aplicación',
+                    'url' => '/inicio',
+                    'icons' => [
+                        [
+                            'src' => '/assets/img/icons/icon-96x96.png',
+                            'sizes' => '96x96',
+                            'type' => 'image/png',
+                            'purpose' => 'any'
+                        ]
+                    ]
+                ],
+                [
+                    'name' => 'Reportes',
+                    'description' => 'Listado de reportes',
+                    'url' => '/reportes/listado-general',
+                    'icons' => [
+                        [
+                            'src' => '/assets/img/icons/icon-96x96.png',
+                            'sizes' => '96x96',
+                            'type' => 'image/png',
+                            'purpose' => 'any'
+                        ]
+                    ]
+                ]
+            ],
         ],
-        'custom' => []
     ]
 ];

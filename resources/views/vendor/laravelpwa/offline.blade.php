@@ -8,16 +8,10 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net" />
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @laravelPWA
 </head>
 
-<body class="font-sans text-gray-900 antialiased bg-gray-100">
+{{-- <body class="font-sans text-gray-900 antialiased bg-gray-100">
     <main class="min-h-screen">
         <div class="flex flex-col items-center mt-6 justify-center">
             <a href="/">
@@ -58,6 +52,10 @@
             </div>
         </div>
     </main>
-</body>
+</body> --}}
+
+<h2>Actualmente no tienes conexión a
+    internet
+</h2>
 
 </html>
