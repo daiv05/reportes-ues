@@ -45,7 +45,7 @@ class ReporteController extends Controller
         $query = Reporte::query();
         $query->where('id_usuario_reporta', Auth::user()->id);
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10)->appends($request->query());
+        $reportes = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('reportes.my-reports', compact('reportes'));
     }
 
@@ -61,7 +61,7 @@ class ReporteController extends Controller
             });
         });
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10)->appends($request->query());
+        $reportes = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('reportes.my-assignments', compact('reportes'));
     }
 
