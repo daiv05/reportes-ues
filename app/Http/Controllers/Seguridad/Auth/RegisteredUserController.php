@@ -33,17 +33,16 @@ class RegisteredUserController extends Controller
     {
 
         $request->validate([
-            'carnet' => ['required', 'string', 'max:15', 'unique:users'],
-            'nombre' => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
+            'carnet' => ['required', 'string', 'max:20', 'unique:users', ''],
+            'nombre' => ['required', 'string', 'max:100'],
+            'apellido' => ['required', 'string', 'max:100'],
             'fecha_nacimiento' => ['required', 'date_format:d/m/Y'],
             'escuela' => ['required', 'exists:' . Escuela::class . ',id'],
             'telefono' => ['required', 'string', 'max:15'],
-            // 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._%+-]+@ues\.edu\.sv$/'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._%+-]+@ues\.edu\.sv$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            // 'email.regex' => 'El correo electrónico debe ser institucional (@ues.edu.sv).',
+            'email.regex' => 'El correo electrónico debe ser institucional (@ues.edu.sv).',
             'fecha_nacimiento.date_format' => 'El campo fecha de nacimiento no tiene un formato válido.',
             'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
