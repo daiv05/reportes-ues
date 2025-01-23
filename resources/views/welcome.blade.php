@@ -174,7 +174,7 @@
                     </div>
                     <div class="mt-8 w-full lg:mt-0 lg:w-1/2">
                         <img
-                            src="{{ Vite::asset('resources/img/inicio-photo.jpg') }}"
+                            src="{{ Vite::asset('resources/img/inicio-photo.webp') }}"
                             alt="Voluntarios"
                             class="h-auto w-full rounded-lg"
                         />
