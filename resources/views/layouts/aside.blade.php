@@ -13,7 +13,7 @@
             'type' => 2,
             'id' => 'seguridad-dropdown',
             'active' => request()->is('seguridad/*'),
-            'icon' => 'heroicon-s-lock-closed',
+            'icon' => request()->is('seguridad/*') ? 'heroicon-s-lock-open' : 'heroicon-s-lock-closed',
             'label' => 'Seguridad',
             'permissions' => ['USUARIOS_VER','ROLES_VER'],
             'items' => [
