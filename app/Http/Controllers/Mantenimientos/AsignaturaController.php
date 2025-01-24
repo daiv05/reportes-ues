@@ -99,8 +99,8 @@ class AsignaturaController extends Controller
     {
         $request->validate([
             'id_escuela' => 'required|exists:escuelas,id',
-            'nombre' => 'required|max:10|unique:asignaturas,nombre|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]$/',
-            'nombre_completo' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]$/',
+            'nombre' => 'required|max:10|unique:asignaturas,nombre|regex:/^[a-zA-Z0-9]+$/',
+            'nombre_completo' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
             'activo' => 'required|boolean',
         ], [
             'id_escuela.required' => 'El campo de escuela es obligatorio.',
