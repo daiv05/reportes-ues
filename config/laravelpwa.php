@@ -3,7 +3,7 @@
 return [
     'name' => 'ReportFIA',
     'manifest' => [
-        'name' => env('APP_NAME', 'My PWA App'),
+        'name' => env('APP_NAME', 'ReportFIA'),
         'short_name' => 'ReportFIA',
         'start_url' => '/',
         'background_color' => '#ffffff',
@@ -59,10 +59,6 @@ return [
         ],
         'custom' => [
             'description' => 'ReportFIA es una aplicación para el reporte de incidencias en la FIA.',
-            'display_override' => [
-                'minimal-ui',
-                'window-controls-overlay'
-            ],
             'screenshots' =>  [
                 [
                     'src' => '/assets/img/screenshots/inicio.png',
