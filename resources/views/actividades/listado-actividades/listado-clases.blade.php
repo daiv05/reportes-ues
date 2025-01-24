@@ -151,7 +151,7 @@
                             </x-table.td>
                             <x-table.td>{{ $clase->actividad->asignaturas[0]->escuela->nombre }}</x-table.td>
                             <x-table.td>
-                                {{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('H:i') . ' - ' . \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('H:i') }}
+                                {{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('h:i A') . ' - ' . \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('h:i A') }}
                             </x-table.td>
                             <x-table.td>
                                 <x-status.is-active :active="$clase->actividad->activo" />
@@ -174,12 +174,12 @@
                                         data-estado="{{ $clase->actividad->activo }}"
                                         data-responsable="{{ $clase->actividad->responsable }}"
                                     >
-                                        <x-heroicon-o-pencil class="h-5 w-5" />
+                                        <x-heroicon-s-pencil class="h-5 w-5" />
                                     </a>
                                     @if ($clase->actividad->activo)
                                         <a
-                                            href="{{ route('crear-reporte', ['actividad' => $clase->actividad->id]) }}"
-                                            class="font-medium text-gray-700 hover:underline"
+                                            href="{{ route('crear-reporte', ['clase' => $clase->actividad->id]) }}"
+                                            class="font-medium text-red-700 hover:underline"
                                         >
                                             <x-heroicon-s-flag class="mx-2 h-4" />
                                         </a>
