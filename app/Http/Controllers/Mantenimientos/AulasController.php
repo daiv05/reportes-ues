@@ -18,8 +18,8 @@ class AulasController extends Controller
     {
         $nombreFilter = request('nombre-filter');
         $aulas = Aulas::when($nombreFilter, function ($query, $nombreFilter) {
-                return $query->where('nombre', 'like', "%$nombreFilter%");
-            })
+            return $query->where('nombre', 'like', "%$nombreFilter%");
+        })
             ->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         $facultades = Facultades::where('activo', true)->get();
         return view('mantenimientos.aulas.index', compact('aulas', 'facultades'));
@@ -33,7 +33,7 @@ class AulasController extends Controller
     public function store(StoreAulaRequest  $request): RedirectResponse
     {
         Aulas::create($request->all());
-        return redirect()->route('aulas.index') ->with('message', [
+        return redirect()->route('aulas.index')->with('message', [
             'type' => 'success',
             'content' => 'Aula creada exitosamente'
         ]);
@@ -55,6 +55,18 @@ class AulasController extends Controller
 
     public function update(Request $request, string $id): RedirectResponse
     {
+        $request->validate([
+            'nombre' => 'required|max:30|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]$/',
+            'id_facultad' => 'required|exists:facultades,id',
+            'activo' => 'required',
+        ], [
+            'nombre.regex' => 'El nombre solo puede contener letras y números.',
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no debe exceder los 30 caracteres.',
+            'id_facultad.required' => 'La facultad es obligatoria.',
+            'id_facultad.exists' => 'La facultad seleccionada no existe en nuestra base de datos.',
+            'activo.required' => 'El campo de estado activo es obligatorio.',
+        ]);
 
         $aula = Aulas::findOrFail($id);
         if ($aula->nombre !== $request->input('nombre')) {

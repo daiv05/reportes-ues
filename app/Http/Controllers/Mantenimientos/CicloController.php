@@ -16,7 +16,7 @@ class CicloController extends Controller
 
     public function index(Request $request)
     {
-        $ciclos = Ciclo::with('tipoCiclo')->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
+        $ciclos = Ciclo::with('tipoCiclo')->orderBy('anio', 'desc')->orderBy('id_tipo_ciclo', 'desc')->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         $tiposCiclos = TipoCiclo::where('activo', 1)->get();
 
         $tiposCiclos = $tiposCiclos->pluck('nombre', 'id')->toArray();
@@ -35,7 +35,7 @@ class CicloController extends Controller
             Ciclo::where('activo', true)->update(['activo' => false]);
         }
 
-        $ciclo = Ciclo::create($request->validated());
+        Ciclo::create($request->validated());
 
         return redirect()->route('ciclos.index')
             ->with('message', [

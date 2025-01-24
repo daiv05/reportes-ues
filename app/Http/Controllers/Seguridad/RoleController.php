@@ -21,7 +21,7 @@ class RoleController extends Controller
         // Retornar la vista y pasar los datos
         return view('seguridad.roles.index', compact('roles'));
     }
-    public function create():Factory|View
+    public function create(): Factory|View
     {
         $permissions = Permission::all();
 
@@ -30,14 +30,16 @@ class RoleController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|unique:roles,name',
-            'permissions' => 'nullable|string'
+            'name' => 'required|unique:roles,name|max:30|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
+            'permissions' => 'nullable|string',
         ], [
+            'name.max' => 'El nombre del rol no puede ser mayor a 30 caracteres.',
+            'name.regex' => 'El nombre del rol solo puede contener letras, números y espacios.',
             'name.required' => 'El nombre del rol es obligatorio.',
             'name.unique' => 'Ya existe un rol con ese nombre.',
             'permissions.string' => 'Los permisos deben ser una lista de IDs separados por comas.'
         ]);
-              $role = Role::create([
+        $role = Role::create([
             'name' => $request->name,
             'activo'=> $request->has('activo'),
         ]);
@@ -56,7 +58,7 @@ class RoleController extends Controller
             'content' => 'Rol creado correctamente.',
         ]);
     }
-    public function edit(string $id):Factory|View
+    public function edit(string $id): Factory|View
     {
         $role = Role::with('permissions')->findOrFail($id);
         $permissions = Permission::all();
@@ -65,9 +67,11 @@ class RoleController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|unique:roles,name,' . $id,
-            'permissions' => 'nullable|string'
+            'name' => 'required|max:30|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/|unique:roles,name,' . $id,
+            'permissions' => 'nullable|string',
         ], [
+            'name.max' => 'El nombre del rol no puede ser mayor a 30 caracteres.',
+            'name.regex' => 'El nombre del rol solo puede contener letras, números y espacios.',
             'name.required' => 'El nombre del rol es obligatorio.',
             'name.unique' => 'Ya existe un rol con ese nombre.',
             'permissions.string' => 'Los permisos deben ser una lista de IDs separados por comas.'
@@ -95,8 +99,7 @@ class RoleController extends Controller
     public function show(string $id)
     {
         $role = Role::with('permissions')->findOrFail($id);
-        $permissions = $role->permissions()->paginate(GeneralEnum::PAGINACION->value/2);
+        $permissions = $role->permissions()->paginate(GeneralEnum::PAGINACION->value / 2);
         return view('seguridad.roles.show', compact('role', 'permissions'));
     }
-
 }

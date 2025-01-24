@@ -14,39 +14,39 @@ class EscuelaSeeder extends Seeder
     {
         $escuelas = [
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Arquitectura',
             ],
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Escuela de Ingeniería Civil',
             ],
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Escuela Ingeniería de Sistemas Informáticos',
             ],
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Escuela de Ingeniería Eléctrica',
             ],
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Escuela de Ingeniería Industrial',
             ],
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Escuela de Ingeniería Mecánica',
             ],
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Escuela Ingeniería Química e Ingeniería de Alimentos',
             ],
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Escuela de Posgrados',
             ],
             [
-                'id_facultad' => 3,
+                'id_facultad' => 1,
                 'nombre' => 'Unidad de Ciencias Básicas',
             ],
         ];

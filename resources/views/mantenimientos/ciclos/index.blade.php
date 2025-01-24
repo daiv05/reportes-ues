@@ -12,10 +12,15 @@
         <x-header.simple titulo="Gestión de Ciclos" />
         <div class="p-6">
             @canany(['CICLOS_CREAR'])
-            <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
-                type="button" id="add-button">
-                Añadir Ciclo
-            </x-forms.primary-button>
+                <x-forms.primary-button
+                    data-modal-target="static-modal"
+                    data-modal-toggle="static-modal"
+                    class="block"
+                    type="button"
+                    id="add-button"
+                >
+                    Añadir Ciclo
+                </x-forms.primary-button>
             @endcanany
         </div>
     </x-slot>
@@ -36,20 +41,26 @@
                         </x-table.td>
                         <x-table.td justify="center">
                             @canany(['CICLOS_EDITAR'])
-                            <a href="#"
-                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                data-id="{{ $ciclo->id }}" data-anio="{{ $ciclo->anio }}"
-                                data-tipo_ciclo="{{ $ciclo->id_tipo_ciclo }}" data-estado="{{ $ciclo->activo }}">
-                                <x-heroicon-o-pencil class="h-5 w-5" />
-                            </a>
+                                <a
+                                    href="#"
+                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                    data-id="{{ $ciclo->id }}"
+                                    data-anio="{{ $ciclo->anio }}"
+                                    data-tipo_ciclo="{{ $ciclo->id_tipo_ciclo }}"
+                                    data-estado="{{ $ciclo->activo }}"
+                                >
+                                    <x-heroicon-o-pencil class="h-5 w-5" />
+                                </a>
                             @endcanany
                         </x-table.td>
                     </x-table.tr>
                 @endforeach
             </x-table.base>
         </div>
-        <nav class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
-            aria-label="Table navigation">
+        <nav
+            class="flex-column flex flex-wrap items-center justify-center pt-4 md:flex-row"
+            aria-label="Table navigation"
+        >
             {{ $ciclos->links() }}
         </nav>
     </x-container>
@@ -63,31 +74,61 @@
                 @csrf
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.field label="Año" name="anio" :value="old('anio')" :error="$errors->get('anio')" required />
+                        <x-forms.field
+                            label="Año"
+                            name="anio"
+                            pattern="[0-9]{4}"
+                            patternMessage="El año debe contener 4 dígitos sin caracteres especiales"
+                            :value="old('anio')"
+                            :error="$errors->get('anio')"
+                            required
+                        />
                         <div id="anio-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.select label="Tipo de Ciclo" id="id_tipo_ciclo" name="id_tipo_ciclo" :options="$tiposCiclos" :value="old('id_tipo_ciclo')" :error="$errors->get('id_tipo_ciclo')" required />
+                        <x-forms.select
+                            label="Tipo de Ciclo"
+                            id="id_tipo_ciclo"
+                            name="id_tipo_ciclo"
+                            :options="$tiposCiclos"
+                            :value="old('id_tipo_ciclo')"
+                            :error="$errors->get('id_tipo_ciclo')"
+                            required
+                        />
                         <div id="tipo-ciclo-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
                 <x-forms.row :columns="1">
                     <div>
-                        <x-forms.select label="Estado" id="activo" name="activo" :options="$estados" :selected="1" :error="$errors->get('activo')" required />
+                        <x-forms.select
+                            label="Estado"
+                            id="activo"
+                            name="activo"
+                            :options="$estados"
+                            :selected="1"
+                            :error="$errors->get('activo')"
+                            required
+                        />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                 </x-forms.row>
             </form>
         </x-slot>
         <x-slot name="footer">
-            <button data-modal-hide="static-modal" type="button"
-                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4">
+            <button
+                data-modal-hide="static-modal"
+                type="button"
+                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4"
+            >
                 Cancelar
             </button>
-            <button type="submit" form="add-ciclo-form"
-                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
+            <button
+                type="submit"
+                form="add-ciclo-form"
+                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
+            >
                 Guardar
             </button>
         </x-slot>
@@ -95,7 +136,7 @@
 </x-app-layout>
 
 <script>
-    document.getElementById('add-ciclo-form').addEventListener('submit', function(event) {
+    document.getElementById('add-ciclo-form').addEventListener('submit', function (event) {
         const anio = document.getElementById('anio').value.trim();
         const tipoCiclo = document.getElementById('id_tipo_ciclo').value.trim();
         const estado = document.getElementById('activo').value.trim();
@@ -110,33 +151,39 @@
             // Validar que el año se pueda registrar al menos un año antes del valor del input
             if (anio < anioActual - 1) {
                 hasErrors = true;
+                console.log(anioActual);
                 document.getElementById('anio-error').innerHTML = 'El año no puede ser menor a ' + (anioActual - 1);
+            } else {
+                document.getElementById('anio-error').innerHTML = '';
             }
         }
 
         if (!tipoCiclo) {
             hasErrors = true;
             document.getElementById('tipo-ciclo-error').innerHTML = 'El campo tipo ciclo es obligatorio';
+        } else {
+            document.getElementById('tipo-ciclo-error').innerHTML = '';
         }
 
         if (!estado) {
             hasErrors = true;
             document.getElementById('estado-error').innerHTML = 'El campo estado es obligatorio';
+        } else {
+            document.getElementById('estado-error').innerHTML = '';
         }
 
         if (hasErrors) {
             event.preventDefault();
-            document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
         }
     });
 
     document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             updateTitle('Añadir Ciclo');
             document.getElementById('add-ciclo-form').action = '{{ route('ciclos.store') }}';
             document.getElementById('add-ciclo-form').method = 'POST';
-            method = document.querySelector('[name="_method"]')
-            if(method) document.getElementById('add-ciclo-form').removeChild(method);
+            method = document.querySelector('[name="_method"]');
+            if (method) document.getElementById('add-ciclo-form').removeChild(method);
             document.getElementById('add-ciclo-form').reset();
             document.getElementById('general-errors').innerHTML = '';
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
@@ -144,7 +191,7 @@
     });
 
     document.querySelectorAll('.edit-button').forEach((button) => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const id = this.getAttribute('data-id');
             const anio = this.getAttribute('data-anio');
             const tipoCiclo = this.getAttribute('data-tipo_ciclo');
@@ -152,12 +199,11 @@
 
             document.querySelectorAll('.text-red-500').forEach((error) => (error.innerHTML = ''));
 
-            updateTitle('Editar ciclo')
+            updateTitle('Editar ciclo');
 
             document.getElementById('add-ciclo-form').action = `/mantenimientos/ciclos/${id}`;
             document.getElementById('add-ciclo-form').method = 'POST';
-            document.getElementById('add-ciclo-form').innerHTML +=
-                '<input type="hidden" name="_method" value="PUT">';
+            document.getElementById('add-ciclo-form').innerHTML += '<input type="hidden" name="_method" value="PUT">';
 
             document.getElementById('anio').value = anio;
             document.getElementById('id_tipo_ciclo').value = tipoCiclo;

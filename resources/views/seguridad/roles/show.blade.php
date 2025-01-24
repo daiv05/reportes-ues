@@ -9,8 +9,11 @@
 
     <x-container>
         <!-- Información del rol -->
-        <x-view.description-list title="Información del rol" description="Detalles del rol y permisos asignados."
-            :columns="2">
+        <x-view.description-list
+            title="Información del rol"
+            description="Detalles del rol y permisos asignados."
+            :columns="2"
+        >
             <x-view.description-list-item label="Rol">
                 {{ ucwords(strtolower($role->name)) }}
             </x-view.description-list-item>
@@ -29,9 +32,9 @@
                 {{ $role->created_at->format('d/m/Y H:i:s') }}
             </x-view.description-list-item>
         </x-view.description-list>
-        <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg text-center">
-            <div class="px-4 py-2 sm:px-6 bg-gray-100">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Permisos asignados</h3>
+        <div class="mt-6 overflow-hidden bg-white text-center shadow sm:rounded-lg">
+            <div class="bg-gray-100 px-4 py-2 sm:px-6">
+                <h3 class="text-lg font-medium leading-6 text-gray-900">Permisos asignados</h3>
             </div>
 
             <div class="border-t border-gray-200">
@@ -47,9 +50,9 @@
                 </x-table.base>
             </div>
 
-            <nav class="flex justify-center mt-4">
+            <nav class="mt-4 flex justify-center">
                 {{ $permissions->links() }}
             </nav>
-
+        </div>
     </x-container>
 </x-app-layout>

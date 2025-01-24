@@ -29,5 +29,10 @@ class Entidades extends Model implements Auditable
     {
         return $this->belongsTo(Entidades::class, 'id_entidad', 'id');
     }
+
+    public function hijos()
+    {
+        return $this->hasMany(Entidades::class, 'id_entidad', 'id');
+    }
 }
 

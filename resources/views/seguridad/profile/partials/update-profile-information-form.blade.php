@@ -15,34 +15,28 @@
 
         <!-- Nombres -->
         <div>
-            <x-forms.input-label for="nombre" :value="__('Nombre')" />
-            <x-forms.text-input
-                id="nombre"
+            <x-forms.field
+                label="Nombre"
                 name="nombre"
-                type="text"
-                class="mt-1 block w-full"
+                pattern="^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ]{1,100}$"
+                patternMessage="Solo se permiten 100 caracteres que sean letras o espacios"
                 :value="old('nombre', $persona->nombre)"
+                :error="$errors->get('nombre')"
                 required
-                autofocus
-                autocomplete="nombre"
             />
-            <x-forms.input-error class="mt-2" :messages="$errors->get('nombre')" />
         </div>
 
         <!-- Apellidos -->
         <div>
-            <x-forms.input-label for="apellido" :value="__('Apellido')" />
-            <x-forms.text-input
-                id="apellido"
-                class="mt-1 block w-full"
-                type="text"
+            <x-forms.field
+                label="Apellido"
                 name="apellido"
+                pattern="^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ]{1,100}$"
+                patternMessage="Solo se permiten 100 caracteres que sean letras o espacios"
                 :value="old('apellido', $persona->apellido)"
+                :error="$errors->get('apellido')"
                 required
-                autofocus
-                autocomplete="apellido"
             />
-            <x-forms.input-error :messages="$errors->get('apellido')" class="mt-2" />
         </div>
 
         <!-- Fecha de nacimiento -->
@@ -58,49 +52,39 @@
 
         <!-- No. de teléfono -->
         <div>
-            <x-forms.input-label for="telefono" :value="__('Teléfono')" />
-            <x-forms.text-input
-                id="telefono"
-                class="mt-1 block w-full"
-                type="text"
+            <x-forms.field
+                label="Teléfono"
                 name="telefono"
+                pattern="^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$"
+                patternMessage="El número de teléfono debe tener un formato válido"
                 :value="old('telefono', $persona->telefono)"
+                :error="$errors->get('telefono')"
                 required
-                autofocus
-                autocomplete="telefono"
             />
-            <x-forms.input-error :messages="$errors->get('telefono')" class="mt-2" />
         </div>
 
         <!-- Carnet -->
         <div>
-            <x-forms.input-label for="username" value="Usuario/Carnet" />
-            <x-forms.text-input
-                id="carnet"
-                class="mt-1 block w-full"
-                type="text"
+            <x-forms.field
+                label="Usuario/Carnet"
                 name="carnet"
+                pattern="^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$"
+                patternMessage="El carnet debe tener entre 3 y 20 caracteres y solo puede contener letras, números, puntos y guiones bajos"
                 :value="old('carnet', $user->carnet)"
+                :error="$errors->get('carnet')"
                 required
-                autofocus
-                autocomplete="carnet"
             />
-            <x-forms.input-error :messages="$errors->get('carnet')" class="mt-2" />
         </div>
 
         <div>
-            <x-forms.input-label for="email" :value="__('Correo electrónico')" />
-            <x-forms.text-input
-                id="email"
+            <x-forms.field
+                label="Correo electrónico"
                 name="email"
                 type="email"
-                class="mt-1 block w-full"
                 :value="old('email', $user->email)"
+                :error="$errors->get('email')"
                 required
-                autocomplete="email"
             />
-            <x-forms.input-error class="mt-2" :messages="$errors->get('email')" />
-
         </div>
 
         <div class="flex items-center gap-4">

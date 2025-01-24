@@ -13,22 +13,23 @@ class UnidadMedidaController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = UnidadMedida::query();
-        if ($request->has('nombre')) {
-            $filtro = $request->input('nombre');
-            $query->where('nombre', 'like', '%' . $filtro . '%');
-        }
-        $unidades = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
+        $nombreFilter = $request->get('nombre-filter');
+
+        $unidades = UnidadMedida::when($nombreFilter, function ($query, $nombreFilter) {
+            return $query->where('nombre', 'like', "%$nombreFilter%");
+        })->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
+
         return view('mantenimientos.unidad_medida.index', compact('unidades'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|unique:unidades_medida,nombre',
+            'nombre' => 'required|max:50|unique:unidades_medida,nombre|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre de la unidad es requerido',
+            'nombre.regex' => 'El nombre solo acepta letras, números y espacios.',
             'nombre.unique' => 'Ya existe una unidad de medida con ese nombre',
             'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres'
         ]);

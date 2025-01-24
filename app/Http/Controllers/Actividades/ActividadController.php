@@ -26,8 +26,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
-use function PHPUnit\Framework\isEmpty;
-
 class ActividadController extends Controller
 {
     public function importarActividadesView(Request $request)
@@ -52,7 +50,7 @@ class ActividadController extends Controller
         }
         Excel::import($import, $request->file('excel_file'));
         $data = $import->getData();
-        if(empty($data)){
+        if (empty($data)) {
             session()->forget('excelData');
             session()->forget('tipoActividad');
             return redirect()->back()->with('message', [
@@ -121,7 +119,7 @@ class ActividadController extends Controller
 
         $cicloActivo = Ciclo::where('activo', 1)->first();
 
-        try{
+        try {
             DB::beginTransaction();
 
             foreach ($data['modalidad'] as $key => $modalidad) {
@@ -142,7 +140,6 @@ class ActividadController extends Controller
                 $clase->numero_grupo = $data['grupo'][$key];
                 $clase->dias_actividad = json_encode($data['diasActividad'][$key]);
                 $clase->save();
-
             }
 
             DB::commit();
@@ -154,7 +151,6 @@ class ActividadController extends Controller
                 'type' => 'success',
                 'content' => 'Las actividades se han guardado correctamente.'
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
@@ -190,11 +186,11 @@ class ActividadController extends Controller
                 $actividad->responsable = $data['responsable'][$key];
                 $actividad->save();
 
-                if($data['materia'][$key]) {
+                if ($data['materia'][$key]) {
                     $actividad->asignaturas()->attach($data['materia'][$key]);
                 }
 
-                if(isset($data['aulas'][$key])) {
+                if (isset($data['aulas'][$key])) {
                     $actividad->aulas()->attach($data['aulas'][$key]);
                 }
 
@@ -234,15 +230,15 @@ class ActividadController extends Controller
         $tipoClase = $request->input('tipo-filtro');
         $aula = $request->input('aula-filtro');
 
-        $escuelas = Escuela::all()->pluck('nombre', 'id');
-        $modalidades = Modalidad::all()->pluck('nombre', 'id');
-        $tiposClase = TipoClase::all()->pluck('nombre', 'id');
-        $dias = Dia::all();
+        $escuelas = Escuela::all()->where('activo', true)->pluck('nombre', 'id');
+        $modalidades = Modalidad::all()->where('activo', true)->pluck('nombre', 'id');
+        $tiposClase = TipoClase::all()->where('activo', true)->pluck('nombre', 'id');
+        $dias = Dia::all()->where('activo', true);
 
-        $cicloActivo = Ciclo::where('activo', 1)->first();
+        $cicloActivo = Ciclo::where('activo', true)->first();
         $clases = Clase::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas', 'tipoClase')
             ->whereHas('actividad', function ($query) use ($cicloActivo) {
-                if($cicloActivo){
+                if ($cicloActivo) {
                     $query->where('id_ciclo', $cicloActivo->id);
                 }
             })
@@ -293,11 +289,11 @@ class ActividadController extends Controller
             $materia = Asignatura::where('nombre', $request->input('materia'))->first()->id;
             $aula = Aulas::where('nombre', $request->input('local'))->first()->id;
 
-            if($request->input('materia')) {
+            if ($request->input('materia')) {
                 $actividad->asignaturas()->attach($materia);
             }
 
-            if($request->input('local') && !empty($request->input('local'))) {
+            if ($request->input('local') && !empty($request->input('local'))) {
                 $actividad->aulas()->attach($aula);
             }
 
@@ -364,17 +360,18 @@ class ActividadController extends Controller
         }
     }
 
-    public function listadoEventos(Request $request){
-        $escuelas = Escuela::all()->pluck('nombre', 'id');
-        $modalidades = Modalidad::all()->pluck('nombre', 'id');
-        $tiposClase = TipoClase::all()->pluck('nombre', 'id');
-        $aulas = Aulas::all();
+    public function listadoEventos(Request $request)
+    {
+        $escuelas = Escuela::all()->where('activo', true)->pluck('nombre', 'id');
+        $modalidades = Modalidad::all()->where('activo', true)->pluck('nombre', 'id');
+        $tiposClase = TipoClase::all()->where('activo', true)->pluck('nombre', 'id');
+        $aulas = Aulas::all()->where('activo', true);
 
         $cicloActivo = Ciclo::where('activo', 1)->first();
 
         $eventos = Evento::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas',)
             ->whereHas('actividad', function ($query) use ($cicloActivo) {
-                if($cicloActivo){
+                if ($cicloActivo) {
                     $query->where('id_ciclo', $cicloActivo->id);
                 }
             })
@@ -404,7 +401,8 @@ class ActividadController extends Controller
         return view('actividades.listado-actividades.listado-eventos-evaluaciones', compact('eventos', 'escuelas', 'modalidades', 'tiposClase', 'aulas'));
     }
 
-    public function storeOneEvent(EventoRequest $request){
+    public function storeOneEvent(EventoRequest $request)
+    {
         $cicloActivo = Ciclo::where('activo', 1)->first();
 
 
@@ -422,13 +420,12 @@ class ActividadController extends Controller
 
             $materia = Asignatura::where('nombre', $request->input('materia'))->first()->id;
 
-            if($request->input('materia')) {
+            if ($request->input('materia')) {
                 $actividad->asignaturas()->attach($materia);
             }
 
-            if($request->input('aulas') && !empty($request->input('aulas'))) {
+            if ($request->input('aulas') && !empty($request->input('aulas'))) {
                 $actividad->aulas()->attach($request->input('aulas'));
-
             }
 
             $evento = new Evento();

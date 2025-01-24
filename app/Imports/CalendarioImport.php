@@ -46,60 +46,60 @@ class CalendarioImport implements ToModel, WithHeadingRow, WithStartRow
         // row 14 -> Responsable
 
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $aulasCatalog = Aulas::all();
+        $aulasCatalog = Aulas::all()->where('activo', true);
         $aulas = [];
         $modalidad = null;
-        if(count($row) < 12){
+        if (count($row) < 12) {
             return null;
         }
 
-        if($row[0]){
+        if ($row[0]) {
             $this->week = $row[0];
         }
-        if($row[1]){
+        if ($row[1]) {
             $this->day = $row[1];
-            if($row[2]){
+            if ($row[2]) {
                 $this->date = $row[2];
             }
         }
 
-        if(gettype($this->date ?? null) == 'string' || gettype($this->date ?? null) == 'NULL'){
+        if (gettype($this->date ?? null) == 'string' || gettype($this->date ?? null) == 'NULL') {
             return null;
         }
 
         $this->index = $this->index + 1;
 
-        if(isset($row[4])){
+        if (isset($row[4])) {
             $row[4] = substr($row[4], 0, 6);
         }
 
-        if(strtolower($row[7]) == 'virtual' || strtolower($row[7]) == 'distancia' || strtolower($row[7]) == 'en línea' || strtolower($row[7]) == 'en linea'){
+        if (strtolower($row[7]) == 'virtual' || strtolower($row[7]) == 'distancia' || strtolower($row[7]) == 'en línea' || strtolower($row[7]) == 'en linea') {
             $modalidad = 1;
-        } elseif(strtolower($row[7]) == 'presencial' || !$row[7]){
+        } elseif (strtolower($row[7]) == 'presencial' || !$row[7]) {
             $modalidad = 2;
         }
 
-        if($row[13]){
+        if ($row[13]) {
             $aulasExcel = explode(',', $row[13]);
-            foreach($aulasExcel as $aula){
+            foreach ($aulasExcel as $aula) {
                 $aula = trim($aula);
                 $aula = mb_strtoupper($aula, 'utf-8');
                 $aula = str_replace('-', '', $aula);
                 $aula = str_replace(' ', '', $aula);
-                if(Str::contains($aula, 'AUDITORIO') || Str::contains($aula, 'A340') || Str::contains($aula, 'MARMOL')){
+                if (Str::contains($aula, 'AUDITORIO') || Str::contains($aula, 'A340') || Str::contains($aula, 'MARMOL')) {
                     $aula = 'AUDITORIOMARMOL';
                 }
                 // verifica si coincide con los nombres de las aulas en la base de datos
-                foreach($aulasCatalog as $aulaCatalog){
-                    if($aula == $aulaCatalog->nombre){
+                foreach ($aulasCatalog as $aulaCatalog) {
+                    if ($aula == $aulaCatalog->nombre) {
                         $aulas[] = $aulaCatalog->id;
                     }
                 }
             }
         }
 
-        if(!$row[4] && !$row[6] && !$row[7] && !$row[8] && !$row[10] && !$row[11]){
-            $out->writeln('Fila ' . $this->index . ' ->'. $row[0] . ' ' . $row[1] . ' ' . $row[2] . ' ' . $row[3] . ' ' . $row[4] . ' ' . $row[5] . ' ' . $row[6] . ' ' . $row[7] . ' ' . $row[8] . ' ' . $row[9] . ' ' . $row[10] . ' ' . $row[11] . ' ' . $row[12]);
+        if (!$row[4] && !$row[6] && !$row[7] && !$row[8] && !$row[10] && !$row[11]) {
+            $out->writeln('Fila ' . $this->index . ' ->' . $row[0] . ' ' . $row[1] . ' ' . $row[2] . ' ' . $row[3] . ' ' . $row[4] . ' ' . $row[5] . ' ' . $row[6] . ' ' . $row[7] . ' ' . $row[8] . ' ' . $row[9] . ' ' . $row[10] . ' ' . $row[11] . ' ' . $row[12]);
             return null;
         }
 
@@ -126,4 +126,3 @@ class CalendarioImport implements ToModel, WithHeadingRow, WithStartRow
         return $this->importedData;
     }
 }
-

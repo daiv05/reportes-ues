@@ -30,10 +30,11 @@ class RecursoController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|unique:recursos,nombre',
+            'nombre' => 'required|max:50|unique:recursos,nombre|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre del recurso es requerido',
+            'nombre.regex' => 'El nombre solo acepta letras, números y espacios.',
             'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
             'nombre.unique' => 'Ya existe un recurso con ese nombre.',
         ]);
@@ -53,11 +54,12 @@ class RecursoController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:50|unique:recursos,nombre,' . $id,
+            'nombre' => 'required|max:50|regex:regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/|unique:recursos,nombre,' . $id,
             'activo' => 'nullable|boolean',
         ], [
             'nombre.required' => 'El nombre del recurso es requerido',
             'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
+            'nombre.regex' => 'El nombre solo acepta letras, números y espacios.',
             'nombre.unique' => 'Ya existe un recurso con ese nombre.',
         ]);
 
@@ -68,5 +70,4 @@ class RecursoController extends Controller
             'content' => 'El recurso se ha actualizado exitosamente.'
         ]);
     }
-
 }

@@ -1,5 +1,6 @@
 <!-- resources/views/components/forms/checkbox.blade.php -->
 @props([
+    'disabled' => false,
     'label' => null,
     'name',
     'id' => null,
@@ -13,8 +14,7 @@
 
 <div>
     <div class="flex items-center mt-1">
-        <input type="checkbox" name="{{ $name }}" id="{{ $id }}" {{ $checked ? 'checked' : '' }}
-               class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded">
+        <input type="checkbox" name="{{ $name }}" id="{{ $id }}" class="form-checkbox h-4 w-4 text-red-600 border-gray-300 rounded" @disabled($disabled) {{ $checked ? 'checked' : '' }}>
         <label for="{{ $id }}" class="ml-2 block text-sm text-gray-900 dark:text-white">{{ $label }}</label>
     </div>
 

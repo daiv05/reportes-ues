@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Imports;
+
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -12,15 +13,13 @@ class HorarioImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln(json_encode(array_keys($row)));
-        $keys = ["materia","tipo","modalidad","grupo","local","lunes","martes","miercoles","jueves","viernes","sabado","domingo","responsable"];
+        $keys = ["materia", "tipo", "modalidad", "grupo", "local", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo", "responsable"];
         $modalidad = null;
         $horaInicio = null;
         $horaFin = null;
         // Extraer los horarios de cada día
 
-        if(!empty(array_diff($keys, array_keys($row)))){
+        if (!empty(array_diff($keys, array_keys($row)))) {
             return null;
         }
 
@@ -35,16 +34,18 @@ class HorarioImport implements ToModel, WithHeadingRow
         ];
 
         // Validar que no todas las celdas estén vacías
-        if (!$row['materia'] && !$row['tipo'] && !$row['modalidad'] && !$row['local'] &&
-            (!$row['lunes'] || !$row['martes'] || !$row['miercoles'] || !$row['jueves'] || !$row['viernes'] || !$row['sabado'] || !$row['domingo'])) {
+        if (
+            !$row['materia'] && !$row['tipo'] && !$row['modalidad'] && !$row['local'] &&
+            (!$row['lunes'] || !$row['martes'] || !$row['miercoles'] || !$row['jueves'] || !$row['viernes'] || !$row['sabado'] || !$row['domingo'])
+        ) {
             return null;
         }
 
-        if(strtolower($row['tipo']) == 'teórico' || strtolower($row['tipo']) == 'teorico' || strtolower($row['tipo']) == 'gt'){
+        if (strtolower($row['tipo']) == 'teórico' || strtolower($row['tipo']) == 'teorico' || strtolower($row['tipo']) == 'gt') {
             $row['tipo'] = 1;
-        } elseif(strtolower($row['tipo']) == 'laboratorio' || strtolower($row['tipo']) == 'gl'){
+        } elseif (strtolower($row['tipo']) == 'laboratorio' || strtolower($row['tipo']) == 'gl') {
             $row['tipo'] = 2;
-        } elseif(strtolower($row['tipo']) == 'discusión' || strtolower($row['tipo']) == 'discusion' || strtolower($row['tipo']) == 'gd'){
+        } elseif (strtolower($row['tipo']) == 'discusión' || strtolower($row['tipo']) == 'discusion' || strtolower($row['tipo']) == 'gd') {
             $row['tipo'] = 3;
         } else {
             $row['tipo'] = null;
@@ -67,9 +68,9 @@ class HorarioImport implements ToModel, WithHeadingRow
         $dayKeys = array_keys($horarios);
 
 
-        if(strtolower($row['modalidad']) == 'virtual' || strtolower($row['modalidad']) == 'distancia' || strtolower($row['modalidad']) == 'en línea' || strtolower($row['modalidad']) == 'en linea'){
+        if (strtolower($row['modalidad']) == 'virtual' || strtolower($row['modalidad']) == 'distancia' || strtolower($row['modalidad']) == 'en línea' || strtolower($row['modalidad']) == 'en linea') {
             $modalidad = 1;
-        } elseif(strtolower($row['modalidad']) == 'presencial' || !$row[2]){
+        } elseif (strtolower($row['modalidad']) == 'presencial' || !$row[2]) {
             $modalidad = 2;
         }
 
@@ -92,4 +93,3 @@ class HorarioImport implements ToModel, WithHeadingRow
         return $this->importedData;
     }
 }
-

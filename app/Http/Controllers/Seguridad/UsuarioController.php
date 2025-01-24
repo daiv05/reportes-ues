@@ -51,17 +51,27 @@ class UsuarioController extends Controller
     {
 
         $rules = [
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
+            'nombre' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
+            'apellido' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'fecha_nacimiento' => 'required|date_format:d/m/Y',
-            'telefono' => 'required|string|max:15',
+            'telefono' => 'required|string|max:15|regex:/^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/',
             'email' => 'required|string|email|max:255|unique:users',
-            'carnet' => 'required|string|max:20|unique:users',
+            'carnet' => 'required|string|min:3|max:20|unique:users|regex:/^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$/',
             'tipo_user' => 'required|boolean', // Validar que el tipo de usuario sea 1 o 2
             'roles' => 'nullable|string', // Roles como cadena separada por comas
         ];
 
         $messages = [
+            'nombre.regex' => 'El campo nombre solo puede contener letras y espacios.',
+            'apellido.regex' => 'El campo apellido solo puede contener letras y espacios.',
+            'telefono.regex' => 'El campo teléfono no tiene un formato válido.',
+            'carnet.regex' => 'El campo carnet no tiene un formato válido.',
+            'carnet.unique' => 'El carnet ya está en uso.',
+            'carnet.min' => 'El carnet debe tener al menos 3 caracteres.',
+            'carnet.max' => 'El carnet no debe tener más de 20 caracteres.',
+            'nombre.max' => 'El campo nombre no debe tener más de 100 caracteres.',
+            'apellido.required' => 'El campo apellido es obligatorio.',
+            'apellido.max' => 'El campo apellido no debe tener más de 100 caracteres.',
             'tipo_user.boolean' => 'El tipo de usuario debe ser un valor booleano.',
             'fecha_nacimiento.date_format' => 'El campo fecha de nacimiento no tiene un formato válido.',
             'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
@@ -70,7 +80,7 @@ class UsuarioController extends Controller
 
         if ($tipo == '1') {
             $rules['escuela'] = 'required|exists:escuelas,id';
-            $rules['email'] = 'required|string|email|max:255|unique:users|regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'; // Validar que el correo sea institucional
+            $rules['email'] = 'required|string|email|max:255|unique:users|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._%+-]+@ues\.edu\.sv$/'; // Validar que el correo sea institucional
             $messages['email.regex'] = 'El correo electrónico debe ser institucional (@ues.edu.sv).';
         } else {
             $rules['puesto'] = 'required|exists:puestos,id'; // Validar que puesto existe en la tabla puestos
@@ -137,16 +147,23 @@ class UsuarioController extends Controller
     {
         $user = User::findOrFail($id);
         $rules = [
-            'nombre' => 'required|string',
-            'apellido' => 'required|string',
+            'nombre' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
+            'apellido' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id),],
-            'carnet' => 'required|string|max:20',
+            'carnet' => 'required|string|max:20|regex:/^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$/',
             'roles' => 'nullable|string', // Validar los roles (cadena separada por comas)
         ];
         if ($user->es_estudiante) {
             $rules['escuela'] = 'required|exists:escuelas,id';
         }
-        $request->validate($rules);
+        $request->validate($rules, [
+            'nombre.regex' => 'El campo nombre solo puede contener letras y espacios.',
+            'apellido.regex' => 'El campo apellido solo puede contener letras y espacios.',
+            'carnet.regex' => 'El campo carnet no tiene un formato válido.',
+            'carnet.min' => 'El carnet debe tener al menos 3 caracteres.',
+            'carnet.max' => 'El carnet no debe tener más de 20 caracteres.',
+            'nombre.max' => 'El campo nombre no debe tener más de 100 caracteres.',
+        ]);
         $user->update([
             'email' => $request->email,
             'carnet' => $request->carnet,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seguridad\Auth;
 
+use App\Enums\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Mail\VerifyEmail;
 use App\Models\Mantenimientos\Escuela;
@@ -33,17 +34,24 @@ class RegisteredUserController extends Controller
     {
 
         $request->validate([
-            'carnet' => ['required', 'string', 'max:15', 'unique:users'],
-            'nombre' => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
+            'carnet' => 'required|string|min:3|max:20|unique:users|regex:/^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$/',
+            'nombre' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
+            'apellido' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'fecha_nacimiento' => ['required', 'date_format:d/m/Y'],
             'escuela' => ['required', 'exists:' . Escuela::class . ',id'],
-            'telefono' => ['required', 'string', 'max:15'],
-            // 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'telefono' => 'required|string|max:15|regex:/^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/',
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._%+-]+@ues\.edu\.sv$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            // 'email.regex' => 'El correo electrónico debe ser institucional (@ues.edu.sv).',
+            'nombre.regex' => 'El campo nombre solo puede contener letras y espacios.',
+            'apellido.regex' => 'El campo apellido solo puede contener letras y espacios.',
+            'telefono.regex' => 'El campo teléfono no tiene un formato válido.',
+            'carnet.regex' => 'El campo carnet no tiene un formato válido.',
+            'carnet.unique' => 'El carnet ya está en uso.',
+            'carnet.min' => 'El carnet debe tener al menos 3 caracteres.',
+            'carnet.max' => 'El carnet no debe tener más de 20 caracteres.',
+            'nombre.max' => 'El campo nombre no debe tener más de 100 caracteres.',
+            'email.regex' => 'El correo electrónico debe ser institucional (@ues.edu.sv).',
             'fecha_nacimiento.date_format' => 'El campo fecha de nacimiento no tiene un formato válido.',
             'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
@@ -69,7 +77,7 @@ class RegisteredUserController extends Controller
             'es_estudiante' => true,
         ]);
 
-        $user->assignRole('USUARIO');
+        $user->assignRole(RolesEnum::USUARIO->value);
 
         if ($user) {
             event(new Registered($user));
@@ -92,7 +100,6 @@ class RegisteredUserController extends Controller
             DeviceTracker::flagCurrentAsVerified();
 
             return redirect()->route('verificacion-email.comprobacion');
-
         } else {
             Session::flash('message', [
                 'type' => 'error',
@@ -100,6 +107,5 @@ class RegisteredUserController extends Controller
             ]);
             return redirect()->back();
         }
-
     }
 }

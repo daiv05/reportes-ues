@@ -18,8 +18,9 @@ class EntidadesController extends Controller
 
         // entidades paginados
         $entidades = Entidades::when($nombreFilter, function ($query, $nombreFilter) {
-                return $query->where('nombre', 'like', "%$nombreFilter%");
-            })
+            return $query->where('nombre', 'like', "%$nombreFilter%");
+        })
+            ->where('activo', true)
             ->paginate(GeneralEnum::PAGINACION->value)->appends(request()->query());
 
         // Lista jerárquica de entidades para el select
@@ -32,6 +33,7 @@ class EntidadesController extends Controller
     {
         // Obtener entidades cuyo id_entidad (padre) coincide con $parentId
         $entidades = Entidades::where('id_entidad', $parentId)
+            ->where('activo', true)
             ->orderBy('id') // Ordenar para mantener el orden adecuado
             ->get();
 
@@ -56,10 +58,16 @@ class EntidadesController extends Controller
     {
         // Validación de los campos del formulario
         $validatedData = $request->validate([
-            'nombre' => 'required|unique:entidades|max:50',
-            'descripcion' => 'required|max:100',
+            'nombre' => 'required|unique:entidades|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
+            'descripcion' => 'required|max:250',
             'id_entidad' => 'nullable|exists:entidades,id', // Asegura que el departamento padre exista si se selecciona
             'activo' => 'required|boolean',
+        ], [
+            'nombre.regex' => 'El nombre solo acepta letras, números y espacios',
+            'nombre.unique' => 'El nombre ya está en uso',
+            'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
+            'descripcion.max' => 'La descripción debe tener un máximo de 250 caracteres',
+            'id_entidad.exists' => 'La entidad padre seleccionado no existe',
         ]);
 
         // Determinar la jerarquía según el departamento padre
@@ -85,14 +93,23 @@ class EntidadesController extends Controller
 
     public function update(Request $request, string $id): RedirectResponse
     {
-        $request->validate([
-            'nombre' => ['required', Rule::unique('entidades')->ignore($id), 'max:50'],
-            'descripcion' => 'required|max:50',
-            'activo' => 'required|boolean',
-            'id_entidad' => 'nullable|exists:entidades,id', // Validar que el departamento padre exista si es seleccionado
-        ]);
+        $request->validate(
+            [
+                'nombre' => ['required', 'regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',  Rule::unique('entidades')->ignore($id), 'max:50'],
+                'descripcion' => 'required|max:250',
+                'activo' => 'required|boolean',
+                'id_entidad' => 'nullable|exists:entidades,id', // Validar que el departamento padre exista si es seleccionado
+            ],
+            [
+                'nombre.regex' => 'El nombre solo acepta letras, números y espacios',
+                'nombre.unique' => 'El nombre ya está en uso',
+                'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
+                'descripcion.max' => 'La descripción debe tener un máximo de 250 caracteres',
+                'id_entidad.exists' => 'La entidad padre seleccionada no existe',
+            ]
+        );
 
-        $entidad = Entidades::findOrFail($id);
+        $entidad = Entidades::findOrFail($id)->where('activo', true);
 
         // Actualizar los datos del departamento
         $entidad->nombre = $request->nombre;
@@ -101,7 +118,7 @@ class EntidadesController extends Controller
 
         // Ajustar jerarquía y entidad padre si se selecciona uno
         if ($request->filled('id_entidad')) {
-            $entidadPadre = Entidades::findOrFail($request->input('id_entidad'));
+            $entidadPadre = Entidades::findOrFail($request->input('id_entidad')->where('activo', true));
             $entidad->id_entidad = $request->input('id_entidad');
             $entidad->jerarquia = $entidadPadre->jerarquia + 1;
         } else {
@@ -119,7 +136,7 @@ class EntidadesController extends Controller
 
     public function destroy(string $id): RedirectResponse
     {
-        $entidad = Entidades::findOrFail($id);
+        $entidad = Entidades::findOrFail($id)->where('activo', true);
         $entidad->delete();
         return redirect()->route('entidades.index');
     }
