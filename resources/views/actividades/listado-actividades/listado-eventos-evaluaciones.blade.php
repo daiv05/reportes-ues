@@ -513,7 +513,7 @@
             document.getElementById('asistentes-error').innerHTML = 'El campo asistentes es obligatorio';
         } else if (asistentes < 1) {
             hasErrors = true;
-            document.getElementById('asistentes-error').innerHTML = 'El evento debe tener almenos un asistente';
+            document.getElementById('asistentes-error').innerHTML = 'El evento debe tener al menos un asistente';
         } else {
             document.getElementById('asistentes-error').innerHTML = '';
         }

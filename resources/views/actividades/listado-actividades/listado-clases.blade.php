@@ -268,6 +268,7 @@
                             type="time"
                             :value="old('hora_inicio')"
                             :error="$errors->get('hora_inicio')"
+                            required
                         />
                         <div id="hora-inicio-error" class="text-sm text-red-500"></div>
                     </div>
@@ -280,6 +281,7 @@
                             type="time"
                             :value="old('hora_fin')"
                             :error="$errors->get('hora_fin')"
+                            required
                         />
                         <div id="hora-fin-error" class="text-sm text-red-500"></div>
                     </div>
@@ -326,7 +328,7 @@
                     </div>
                     <div class="space-y-2">
                         <div class="space-y-1">
-                            <x-forms.input-label for="dias[]" :value="__('Días de actividad')" />
+                            <x-forms.input-label for="dias[]" :value="__('Días de actividad')" required />
                             <div class="relative">
                                 <button
                                     id="dropdownDiasButton"

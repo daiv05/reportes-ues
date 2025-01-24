@@ -56,7 +56,7 @@ class AulasController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'nombre' => 'required|max:30|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]$/',
+            'nombre' => 'required|max:30|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]+$/',
             'id_facultad' => 'required|exists:facultades,id',
             'activo' => 'required',
         ], [
