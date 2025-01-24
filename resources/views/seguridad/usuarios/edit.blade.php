@@ -42,6 +42,8 @@
                     class="bg-gray-100"
                 />
 
+                {{-- error="{{ $user->id === 1 ? '¡Cuidado con perder acceso al correo del usuario SUPERADMIN!' : '' }}" --}}
+
                 <x-forms.field
                     label="Usuario/Carnet"
                     name="carnet"
@@ -63,13 +65,13 @@
                         required
                     />
                 @endif
-
                 <div class="ml-2 flex h-full items-center">
-                    <x-forms.checkbox label="Activo" name="activo" :checked="$user->activo" />
+                    <x-forms.checkbox :disabled="$user->id === 1 ? true : false" label="Activo" name="activo" :checked="$user->activo" />
                 </div>
             </x-forms.row>
             <x-forms.row :fullRow="true">
                 <x-picklist.picklist
+                    :disabled="$user->id === 1 ? true : false"
                     :items="$roles"
                     :asignados="$user->roles->pluck('id')->toArray()"
                     tituloDisponibles="Roles disponibles"

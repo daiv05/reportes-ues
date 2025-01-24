@@ -1,5 +1,6 @@
 <!-- resources/views/components/picklist/picklist.blade.php -->
 @props([
+    'disabled' => false,
     'items',
     'asignados' => [],
     'empleados' => false,
@@ -15,8 +16,8 @@
     <div class="w-full">
         <h3 class="text-sm font-medium text-gray-700 mb-2">{{ $tituloDisponibles }}</h3>
         <input type="text"
-               class="search-available mb-2 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
-               placeholder="{{ $placeholderDisponibles }}">
+            class="search-available mb-2 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
+            placeholder="{{ $placeholderDisponibles }}">
 
         <ul class="available-items border border-gray-300 rounded p-2 h-48 overflow-y-auto w-full">
             @foreach ($items as $item)
@@ -34,34 +35,34 @@
     </div>
 
     @php
-        $controlsClass = 'bg-red text-black p-1 rounded-full shadow hover:bg-red-600 flex items-center justify-center rotate-90 sm:rotate-0'
+        $controlsClass =
+            'bg-red text-black p-1 rounded-full shadow hover:bg-red-600 flex items-center justify-center rotate-90 sm:rotate-0';
     @endphp
-    <!-- Controles para agregar y quitar items -->
-    <div class="flex flex-row sm:flex-col justify-center space-x-2 sm:space-x-0 sm:space-y-2">
-        <button type="button"
-                class="add-all-items {{ $controlsClass }}">
-            <x-heroicon-o-chevron-double-right class="h-4 w-4"/>
-        </button>
-        <button type="button"
-                class="add-item {{ $controlsClass }}">
-            <x-heroicon-o-chevron-right class="h-4 w-4"/>
-        </button>
-        <button type="button"
-                class="remove-item {{ $controlsClass }}">
-            <x-heroicon-o-chevron-left class="h-4 w-4"/>
-        </button>
-        <button type="button"
-                class="remove-all-items {{ $controlsClass }}">
-            <x-heroicon-o-chevron-double-left class="h-4 w-4"/>
-        </button>
-    </div>
+
+    @if (!$disabled)
+        <!-- Controles para agregar y quitar items -->
+        <div class="flex flex-row sm:flex-col justify-center space-x-2 sm:space-x-0 sm:space-y-2">
+            <button type="button" class="add-all-items {{ $controlsClass }}">
+                <x-heroicon-o-chevron-double-right class="h-4 w-4" />
+            </button>
+            <button type="button" class="add-item {{ $controlsClass }}">
+                <x-heroicon-o-chevron-right class="h-4 w-4" />
+            </button>
+            <button type="button" class="remove-item {{ $controlsClass }}">
+                <x-heroicon-o-chevron-left class="h-4 w-4" />
+            </button>
+            <button type="button" class="remove-all-items {{ $controlsClass }}">
+                <x-heroicon-o-chevron-double-left class="h-4 w-4" />
+            </button>
+        </div>
+    @endif
 
     <!-- Lista de items asignados con búsqueda -->
     <div class="w-full">
         <h3 class="text-sm font-medium text-gray-700 mb-2">{{ $tituloAsignados }}</h3>
         <input type="text"
-               class="search-assigned mb-2 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
-               placeholder="{{ $placeholderAsignados }}">
+            class="search-assigned mb-2 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
+            placeholder="{{ $placeholderAsignados }}">
 
         <ul class="assigned-items border border-gray-300 rounded p-2 h-48 overflow-y-auto w-full">
             @foreach ($items as $item)
@@ -70,7 +71,7 @@
                         data-item-name="{{ $item->name }}">
                         {{ $item->name }}
                         @if ($empleados)
-                        <div class="text-sm text-gray-500">{{ $item->puesto }} - {{ $item->correo }}</div>
+                            <div class="text-sm text-gray-500">{{ $item->puesto }} - {{ $item->correo }}</div>
                         @endif
                     </li>
                 @endif

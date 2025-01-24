@@ -188,7 +188,7 @@
                             patternMessage="Solo se permiten 50 caracteres que sean letras, números o espacios"
                             name="nombre_completo"
                             :value="old('nombre_completo')"
-                            :error="$errors->get('nombre')"
+                            :error="$errors->get('nombre_completo')"
                             required
                         />
                         <div id="nombre-completo-error" class="text-sm text-red-500"></div>
