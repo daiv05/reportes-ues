@@ -373,7 +373,7 @@ class ReporteController extends Controller
                 'comentario.max' => 'El comentario no debe exceder los 100 caracteres.',
                 'comentario.regex' => 'El comentario solo puede contener letras, números y espacios.',
                 'evidencia.image' => 'La evidencia debe ser un archivo de imagen.',
-                'evidencia.mimes' => 'La evidencia debe ser una imagen de tipo: png, jp o jpeg.',
+                'evidencia.mimes' => 'La evidencia debe ser una imagen de tipo: png, jpg o jpeg.',
                 'id_estado.required' => 'Debe seleccionar un estado para actualizar el reporte.',
                 'id_estado.integer' => 'El ID del estado debe ser un número entero.',
                 'id_estado.exists' => 'El estado seleccionado no existe.',
