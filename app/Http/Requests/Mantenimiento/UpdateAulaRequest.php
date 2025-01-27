@@ -15,7 +15,7 @@ class UpdateAulaRequest extends FormRequest
     {
         $rules = [
             'id_facultad' => 'required|exists:facultades,id',
-            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]$/|unique:aulas,nombre,' . $this->route('id') . ',id_facultad',
+            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]+$/|unique:aulas,nombre,' . $this->route('id') . ',id_facultad',
             'activo' => 'required|boolean',
         ];
 
