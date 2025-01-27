@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seguridad\Auth;
 
+use App\Enums\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Mail\VerifyEmail;
 use App\Models\Mantenimientos\Escuela;
@@ -25,7 +26,7 @@ class RegisteredUserController extends Controller
 {
     public function create(): View
     {
-        $escuelas = Escuela::all();
+        $escuelas = Escuela::where('activo', 1)->get();
         return view('seguridad.auth.register', ['escuelas' => $escuelas]);
     }
 
@@ -76,7 +77,7 @@ class RegisteredUserController extends Controller
             'es_estudiante' => true,
         ]);
 
-        $user->assignRole('USUARIO');
+        $user->assignRole(RolesEnum::USUARIO->value);
 
         if ($user) {
             event(new Registered($user));

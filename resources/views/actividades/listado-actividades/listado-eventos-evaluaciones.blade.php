@@ -170,8 +170,8 @@
                                         data-fecha="{{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}"
                                         data-materia="{{ $evento->actividad->asignaturas[0]->nombre }}"
                                         data-aulas="{{ $evento->actividad->aulas->pluck('nombre') }}"
-                                        data-hora-inicio="{{ \Carbon\Carbon::parse($evento->actividad->hora_inicio)->format('H:i') }}"
-                                        data-hora-fin="{{ \Carbon\Carbon::parse($evento->actividad->hora_fin)->format('H:i') }}"
+                                        data-hora-inicio="{{ \Carbon\Carbon::parse($evento->actividad->hora_inicio)->format('h:i A') }}"
+                                        data-hora-fin="{{ \Carbon\Carbon::parse($evento->actividad->hora_fin)->format('h:i A') }}"
                                         data-asistentes="{{ $evento->cantidad_asistentes }}"
                                         data-modalidad="{{ $evento->actividad->modalidad->id }}"
                                         data-descripcion="{{ $evento->descripcion }}"
@@ -179,12 +179,12 @@
                                         data-estado="{{ $evento->actividad->activo }}"
                                         data-responsable="{{ $evento->actividad->responsable }}"
                                     >
-                                        <x-heroicon-o-pencil class="h-5 w-5" />
+                                        <x-heroicon-s-pencil class="h-5 w-5" />
                                     </a>
                                     @if ($evento->actividad->activo)
                                         <a
-                                            href="{{ route('crear-reporte', ['actividad' => $evento->actividad->id]) }}"
-                                            class="font-medium text-gray-700 hover:underline"
+                                            href="{{ route('crear-reporte', ['evento' => $evento->actividad->id]) }}"
+                                            class="font-medium text-red-700 hover:underline"
                                         >
                                             <x-heroicon-s-flag class="mx-2 h-4" />
                                         </a>

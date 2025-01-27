@@ -43,6 +43,7 @@
                             data-hs-select='{
           "hasSearch": true,
           "searchPlaceholder": "Búsqueda de recursos",
+          "searchNoResultText": "No se encontraron coincidencias",
           "searchClasses": "block w-full text-sm border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500 before:absolute before:inset-0 before:z-[1] py-2 px-3",
           "searchWrapperClasses": "bg-white p-2 -mx-1 sticky top-0",
           "placeholder": "Seleccione un recurso...",

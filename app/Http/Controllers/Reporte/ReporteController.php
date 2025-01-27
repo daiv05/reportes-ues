@@ -45,7 +45,7 @@ class ReporteController extends Controller
         $query = Reporte::query();
         $query->where('id_usuario_reporta', Auth::user()->id);
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10)->appends($request->query());
+        $reportes = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('reportes.my-reports', compact('reportes'));
     }
 
@@ -61,19 +61,19 @@ class ReporteController extends Controller
             });
         });
         $this->filtrosGenerales($request, $query);
-        $reportes = $query->paginate(10)->appends($request->query());
+        $reportes = $query->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
         return view('reportes.my-assignments', compact('reportes'));
     }
 
     public function create(Request $request)
     {
-        $idActividad = $request['actividad'];
+        $idActividadEvento = $request['evento'];
+        $idActividadClase = $request['clase'];
         $clase = null;
         $evento = null;
-        if ($idActividad) {
-            $clase = Clase::where('id_actividad', $idActividad)->first();
-            $evento = Evento::where('id_actividad', $idActividad)->first();
-            if (!isset($clase) && !isset($evento)) {
+        if ($idActividadEvento) {
+            $evento = Evento::where('id_actividad', $idActividadEvento)->first();
+            if (!isset($evento)) {
                 Session::flash('message', [
                     'type' => 'error',
                     'content' => 'La actividad seleccionada no existe'
@@ -81,7 +81,17 @@ class ReporteController extends Controller
                 return redirect()->action([ReporteController::class, 'index']);
             }
         }
-        $aulas = Aulas::all(); // Obtener todas las aulas
+        if ($idActividadClase) {
+            $clase = Clase::where('id_actividad', $idActividadClase)->first();
+            if (!isset($clase)) {
+                Session::flash('message', [
+                    'type' => 'error',
+                    'content' => 'La actividad seleccionada no existe'
+                ]);
+                return redirect()->action([ReporteController::class, 'index']);
+            }
+        }
+        $aulas = Aulas::where('activo', true)->get();
         return view('reportes.create', compact('clase', 'evento', 'aulas'));
     }
 

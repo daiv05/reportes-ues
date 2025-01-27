@@ -26,6 +26,7 @@ class VerifyEmailController extends Controller
         ]);
 
         if ($validator->fails()) {
+            Session::flash('code-send', true);
             Session::flash('message', [
                 'type' => 'error',
                 'content' => 'Debe ingresar un código válido'
@@ -38,6 +39,7 @@ class VerifyEmailController extends Controller
             ->where('token', $request->input('code'));
 
         if ($select->get()->isEmpty()) {
+            Session::flash('code-send', true);
             Session::flash('message', [
                 'type' => 'error',
                 'content' => 'El código ingresado es inválido'
