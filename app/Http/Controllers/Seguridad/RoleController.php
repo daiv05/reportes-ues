@@ -41,6 +41,7 @@ class RoleController extends Controller
         ]);
         $role = Role::create([
             'name' => $request->name,
+            'activo'=> $request->has('activo'),
         ]);
         $permissions = is_string($request->permissions)
             ? explode(',', $request->permissions)
@@ -51,6 +52,7 @@ class RoleController extends Controller
             $validPermissions = Permission::whereIn('id', $permissions)->pluck('id')->toArray();
         }
         $role->syncPermissions($validPermissions);
+        $role->save();
         return redirect()->route('roles.index')->with('message', [
             'type' => 'success',
             'content' => 'Rol creado correctamente.',
@@ -75,6 +77,8 @@ class RoleController extends Controller
             'permissions.string' => 'Los permisos deben ser una lista de IDs separados por comas.'
         ]);
         $role = Role::findOrFail($id);
+        $role->activo = $request->has('activo') ? 1 : 0;
+
         $permissions = is_string($request->permissions)
             ? explode(',', $request->permissions)
             : $request->permissions;
@@ -85,6 +89,7 @@ class RoleController extends Controller
             $validPermissions = Permission::whereIn('id', $permissions)->pluck('id')->toArray();
         }
         $role->syncPermissions($validPermissions);
+        $role->save();
         return redirect()->route('roles.index')->with('message', [
             'type' => 'success',
             'content' => 'Rol actualizado correctamente.',
