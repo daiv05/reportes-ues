@@ -101,14 +101,18 @@ class ReporteController extends Controller
             [
                 'id_aula' => 'nullable|integer|exists:aulas,id',
                 'id_actividad' => 'nullable|integer|exists:actividades,id',
-                'descripcion' => 'required|string',
-                'titulo' => 'required|string|max:50',
+                'descripcion' => 'required|string|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
+                'titulo' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
             ],
             [
                 'id_aula.exists' => 'El aula no existe',
                 'id_actividad.exists' => 'La actividad no existe',
                 'descripcion.required' => 'La descripción es obligatoria',
                 'titulo.required' => 'Debe ingresar un titulo para el reporte',
+                'titulo.max' => 'El titulo no debe exceder los 50 caracteres',
+                'titulo.regex' => 'El titulo solo puede contener letras, números y espacios',
+                'descripcion.string' => 'La descripción debe ser un texto válido',
+                'descripcion.regex' => 'La descripción solo puede contener letras, números y espacios',
             ]
         );
 
@@ -237,7 +241,7 @@ class ReporteController extends Controller
             [
                 'id_empleados_puestos' => 'required|array',
                 'id_empleados_puestos.*' => 'integer|exists:empleados_puestos,id',
-                'comentario' => 'nullable|string',
+                'comentario' => 'nullable|string|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
                 'id_entidad' => 'required|integer|exists:entidades,id',
                 'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
                 'id_bienes' => 'required|array',
@@ -249,6 +253,7 @@ class ReporteController extends Controller
                 'id_empleados_puestos.*.integer' => 'Cada empleado debe tener un ID válido.',
                 'id_empleados_puestos.*.exists' => 'Uno o más empleados seleccionados no existen.',
                 'comentario.string' => 'El comentario debe ser un texto válido.',
+                'comentario.regex' => 'El comentario solo puede contener letras, números y espacios.',
                 'id_entidad.required' => 'Debe seleccionar una entidad.',
                 'id_entidad.integer' => 'El ID de la entidad debe ser un número entero.',
                 'id_entidad.exists' => 'La entidad seleccionada no existe.',
@@ -340,7 +345,7 @@ class ReporteController extends Controller
 
         $request->validate(
             [
-                'comentario' => 'required|string|max:100',
+                'comentario' => 'required|string|max:100|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
                 'id_estado' => 'required|integer|exists:estados,id',
                 'evidencia' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
                 'recursos' => 'nullable|array',
@@ -365,8 +370,10 @@ class ReporteController extends Controller
                 'recursos.*.id_unidad_medida.exists' => 'Unidad de medida no encontrada',
                 'comentario.required' => 'Debe especificar las acciones realizadas.',
                 'comentario.string' => 'El comentario debe ser un texto válido.',
+                'comentario.max' => 'El comentario no debe exceder los 100 caracteres.',
+                'comentario.regex' => 'El comentario solo puede contener letras, números y espacios.',
                 'evidencia.image' => 'La evidencia debe ser un archivo de imagen.',
-                'evidencia.mimes' => 'La evidencia debe ser una imagen de tipo: png, jp o jpeg.',
+                'evidencia.mimes' => 'La evidencia debe ser una imagen de tipo: png, jpg o jpeg.',
                 'id_estado.required' => 'Debe seleccionar un estado para actualizar el reporte.',
                 'id_estado.integer' => 'El ID del estado debe ser un número entero.',
                 'id_estado.exists' => 'El estado seleccionado no existe.',
