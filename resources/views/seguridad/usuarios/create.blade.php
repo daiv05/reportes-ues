@@ -147,10 +147,8 @@
             const entidadId = document.querySelector('[name="entidad"]').value;
             console.log(entidadId);
             const puestoSelect = document.querySelector('[name="puesto"]');
-
             // Limpiar el campo de puestos
             puestoSelect.innerHTML = '<option value="">Seleccionar Puesto</option>';
-
             if (entidadId && puestosPorEntidad[entidadId]) {
                 // Agregar puestos filtrados al select
                 Object.entries(puestosPorEntidad[entidadId]).forEach(([id, nombre]) => {

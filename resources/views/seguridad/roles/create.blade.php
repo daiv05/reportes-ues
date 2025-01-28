@@ -18,7 +18,11 @@
                     required
                 />
             </x-forms.row>
-
+            <x-forms.row :fullRow="true">
+                <div class="flex h-full items-center ml-2">
+                    <x-forms.checkbox label="Activo" name="activo" :checked="old('activo', true)" :error="$errors->get('activo')" required />
+                </div>
+            </x-forms.row>
             <x-forms.row :fullRow="true">
                 <x-picklist.picklist
                     :items="$permissions"
