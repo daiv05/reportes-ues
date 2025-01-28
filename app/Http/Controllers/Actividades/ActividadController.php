@@ -42,6 +42,11 @@ class ActividadController extends Controller
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls,csv',
             'tipo_actividad' => 'required'
+        ], [
+            'excel_file.required' => 'El archivo es requerido.',
+            'excel_file.file' => 'El archivo debe ser un archivo.',
+            'excel_file.mimes' => 'El archivo debe ser un archivo de tipo: xlsx, xls, csv.',
+            'tipo_actividad.required' => 'El tipo de actividad es requerido.'
         ]);
         if ($request->input('tipo_actividad') == 'evento') {
             $import = new CalendarioImport();
