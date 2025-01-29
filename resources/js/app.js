@@ -9,3 +9,12 @@ import.meta.glob(['../img/**']);
 window.Alpine = Alpine;
 
 Alpine.start();
+
+const originalSetAttribute = Element.prototype.setAttribute;
+Element.prototype.setAttribute = function (name, value) {
+    if (name === 'aria-hidden' && value === 'true') {
+        // console.warn("Se ha bloqueado la adición de aria-hidden='true'");
+        return;
+    }
+    return originalSetAttribute.apply(this, arguments);
+};
