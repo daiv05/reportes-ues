@@ -11,6 +11,7 @@ use App\Models\rhu\Entidades;
 use App\Models\rhu\Puesto;
 use App\Models\Seguridad\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class EmpleadoPuestoController extends Controller
@@ -25,6 +26,10 @@ class EmpleadoPuestoController extends Controller
         $empleadosPuestos = EmpleadoPuesto::with('puesto.entidad', 'usuario', 'usuario.persona')
             ->when($entidadFiltro, function ($query, $entidadFiltro) {
                 return $query->whereHas('puesto.entidad', function ($query) use ($entidadFiltro) {
+                    // $entidadesHijas = $this->obtenerEntidadesConHijos($entidadFiltro);
+                    // $query->whereIn('id', array_map(function ($entidad) {
+                    //     return $entidad->id;
+                    // }, $entidadesHijas));
                     $query->where('id', '=', $entidadFiltro);
                 });
             })
@@ -138,7 +143,10 @@ class EmpleadoPuestoController extends Controller
     {
         try {
             $empleadosPuestos = EmpleadoPuesto::where('activo', true)->whereHas('puesto.entidad', function ($query) use ($idEntidad) {
-                $query->where('id', '=', $idEntidad)->orWhere('id_entidad', '=', $idEntidad)->where('activo', true);
+                $entidadesHijas = $this->obtenerEntidadesConHijos($idEntidad);
+                $query->whereIn('id', array_map(function ($entidad) {
+                    return $entidad->id;
+                }, $entidadesHijas));
             })->whereHas('usuario', function ($query) {
                 $query->where('activo', true);
             })->whereHas('usuario.roles', function ($query) {
@@ -196,5 +204,19 @@ class EmpleadoPuestoController extends Controller
         } catch (\Exception $e) {
             return [];
         }
+    }
+
+    public static function obtenerEntidadesConHijos($idEntidad)
+    {
+        $entidadesHijas = DB::select("
+            WITH RECURSIVE entidades_hijas AS (
+                SELECT * FROM entidades WHERE id = ?
+                UNION ALL
+                SELECT e.* FROM entidades e
+                INNER JOIN entidades_hijas eh ON e.id_entidad = eh.id
+            )
+            SELECT * FROM entidades_hijas
+        ", [$idEntidad]);
+        return $entidadesHijas;
     }
 }

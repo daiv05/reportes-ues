@@ -15,7 +15,7 @@
             'active' => request()->is('seguridad/*'),
             'icon' => request()->is('seguridad/*') ? 'heroicon-s-lock-open' : 'heroicon-s-lock-closed',
             'label' => 'Seguridad',
-            'permissions' => ['USUARIOS_VER','ROLES_VER'],
+            'permissions' => ['USUARIOS_VER', 'ROLES_VER'],
             'items' => [
                 [
                     'to' => 'roles.index',
@@ -121,7 +121,14 @@
             'active' => request()->is('mantenimientos/*'),
             'icon' => 'heroicon-s-table-cells',
             'label' => 'Mantenimientos',
-            'permissions' => ['AULAS_VER', 'ESCUELAS_VER', 'ASIGNATURAS_VER', 'CICLOS_VER', 'RECURSOS_VER', 'UNIDADES_MEDIDA_VER'],
+            'permissions' => [
+                'AULAS_VER',
+                'ESCUELAS_VER',
+                'ASIGNATURAS_VER',
+                'CICLOS_VER',
+                'RECURSOS_VER',
+                'UNIDADES_MEDIDA_VER',
+            ],
             'items' => [
                 [
                     'to' => 'aulas.index',
@@ -175,22 +182,6 @@
         ],
         [
             'type' => 2,
-            'id' => 'auditorias-dropdown',
-            'active' => request()->is('bitacora'),
-            'icon' => 'heroicon-s-book-open',
-            'label' => 'Bitácora',
-            'permissions' => ['BITACORA_VER'],
-            'items' => [
-                [
-                    'to' => 'general.index',
-                    'active' => request()->is('bitacora'),
-                    'label' => 'General',
-                    'permissions' => ['BITACORA_VER'],
-                ],
-            ],
-        ],
-        [
-            'type' => 2,
             'id' => 'estadisticas-dropdown',
             'active' => request()->is('estadisticas/*'),
             'icon' => 'heroicon-s-chart-bar-square',
@@ -205,30 +196,40 @@
                 ],
             ],
         ],
+        [
+            'type' => 2,
+            'id' => 'auditorias-dropdown',
+            'active' => request()->is('bitacora'),
+            'icon' => 'heroicon-s-book-open',
+            'label' => 'Bitácora',
+            'permissions' => ['BITACORA_VER'],
+            'items' => [
+                [
+                    'to' => 'general.index',
+                    'active' => request()->is('bitacora'),
+                    'label' => 'General',
+                    'permissions' => ['BITACORA_VER'],
+                ],
+            ],
+        ],
     ];
 @endphp
 
 <aside id="logo-sidebar"
-       class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 lg:translate-x-0">
+    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 lg:translate-x-0">
     <div class="h-full overflow-y-auto bg-white px-3 pb-4 dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
             @foreach ($sidebarItems as $sit)
-                @if (
-                    !$sit['permissions'] ||
-                        auth()->user()->canany($sit['permissions']))
+                @if (!$sit['permissions'] || auth()->user()->canany($sit['permissions']))
                     @if ($sit['type'] === 1)
-                        <x-aside.base :to="$sit['to']" :active="$sit['active']" :icon="$sit['icon']"
-                                      :label="$sit['label']"/>
+                        <x-aside.base :to="$sit['to']" :active="$sit['active']" :icon="$sit['icon']" :label="$sit['label']" />
                     @elseif ($sit['type'] === 2)
                         <x-aside.dropdown id="{{ $sit['id'] }}" :active="$sit['active']" :icon="$sit['icon']"
-                                          :label="$sit['label']"/>
-                        <ul id="{{ $sit['id'] }}" class="{{ $sit['active'] ? '' : 'hidden'}} space-y-2 py-2">
+                            :label="$sit['label']" />
+                        <ul id="{{ $sit['id'] }}" class="{{ $sit['active'] ? '' : 'hidden' }} space-y-2 py-2">
                             @foreach ($sit['items'] as $item)
-                                @if (
-                                    !$item['permissions'] ||
-                                        auth()->user()->canany($item['permissions']))
-                                    <x-aside.dropdown-item :to="$item['to']" :active="$item['active']"
-                                                           :label="$item['label']"/>
+                                @if (!$item['permissions'] || auth()->user()->canany($item['permissions']))
+                                    <x-aside.dropdown-item :to="$item['to']" :active="$item['active']" :label="$item['label']" />
                                 @endif
                             @endforeach
                         </ul>
