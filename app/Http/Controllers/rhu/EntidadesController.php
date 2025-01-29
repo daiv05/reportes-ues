@@ -154,11 +154,9 @@ class EntidadesController extends Controller
 
     public function esDescendiente($idNuevoPadre, $idEntidad) : bool
     {
-        error_log('Nuevo padre: ' . $idNuevoPadre);
         $padre = Entidades::findOrFail($idNuevoPadre);
 
         while ($padre->id_entidad) {
-            error_log('Hijo: ' . $padre->id_entidad);
             if ($padre->id_entidad == $idEntidad) {
                 return true;
             }

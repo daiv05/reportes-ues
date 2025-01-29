@@ -151,7 +151,6 @@
             // Validar que el año se pueda registrar al menos un año antes del valor del input
             if (anio < anioActual - 1) {
                 hasErrors = true;
-                console.log(anioActual);
                 document.getElementById('anio-error').innerHTML = 'El año no puede ser menor a ' + (anioActual - 1);
             } else {
                 document.getElementById('anio-error').innerHTML = '';

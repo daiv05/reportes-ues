@@ -81,7 +81,3 @@
     </x-container>
 </x-app-layout>
 
-
-<script>
-    console.log(@json($reportes))
-</script>
