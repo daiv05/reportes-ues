@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\rhu\Entidades;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -60,7 +61,7 @@ class EntidadesController extends Controller
         $validatedData = $request->validate([
             'nombre' => 'required|unique:entidades|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'descripcion' => 'required|max:250',
-            'id_entidad' => 'nullable|exists:entidades,id', // Asegura que el departamento padre exista si se selecciona
+            'id_entidad' => 'nullable|exists:entidades,id',
             'activo' => 'required|boolean',
         ], [
             'nombre.regex' => 'El nombre solo acepta letras, números y espacios',
@@ -79,8 +80,6 @@ class EntidadesController extends Controller
             $validatedData['jerarquia'] = $departamentoPadre->jerarquia + 1;
         }
 
-        // Crear el departamento con los datos validados y la jerarquía calculada
-        // dd($validatedData);
         Entidades::create($validatedData);
 
         // Redirección a la vista de departamentos con un mensaje de éxito (opcional)
@@ -98,7 +97,7 @@ class EntidadesController extends Controller
                 'nombre' => ['required', 'regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',  Rule::unique('entidades')->ignore($id), 'max:50'],
                 'descripcion' => 'required|max:250',
                 'activo' => 'required|boolean',
-                'id_entidad' => 'nullable|exists:entidades,id', // Validar que el departamento padre exista si es seleccionado
+                'id_entidad' => 'nullable|exists:entidades,id|not_in:' . $id,
             ],
             [
                 'nombre.regex' => 'El nombre solo acepta letras, números y espacios',
@@ -106,26 +105,31 @@ class EntidadesController extends Controller
                 'nombre.max' => 'El nombre debe tener un máximo de 50 caracteres',
                 'descripcion.max' => 'La descripción debe tener un máximo de 250 caracteres',
                 'id_entidad.exists' => 'La entidad padre seleccionada no existe',
+                'id_entidad.not_in' => 'No puedes seleccionar la misma entidad como padre',
             ]
         );
-
-        $entidad = Entidades::findOrFail($id)->where('activo', true);
-
-        // Actualizar los datos del departamento
-        $entidad->nombre = $request->nombre;
-        $entidad->descripcion = $request->descripcion;
-        $entidad->activo = $request->activo;
-
+        $entidad = Entidades::findOrFail($id);
         // Ajustar jerarquía y entidad padre si se selecciona uno
         if ($request->filled('id_entidad')) {
-            $entidadPadre = Entidades::findOrFail($request->input('id_entidad')->where('activo', true));
-            $entidad->id_entidad = $request->input('id_entidad');
+            $entidadPadre = Entidades::findOrFail($request->input('id_entidad'));
+            // Verificar si se está generando un ciclo
+            if ($this->esDescendiente($entidadPadre->id, $entidad->id)) {
+                Session::flash('message', [
+                    'type' => 'warning',
+                    'content' => 'No puedes seleccionar un descendiente como padre'
+                ]);
+                return back()->withInput();
+            }
+            $entidad->id_entidad = $entidadPadre->id;
             $entidad->jerarquia = $entidadPadre->jerarquia + 1;
         } else {
             $entidad->id_entidad = null;
             $entidad->jerarquia = 0;
         }
 
+        $entidad->nombre = $request->nombre;
+        $entidad->descripcion = $request->descripcion;
+        $entidad->activo = $request->activo;
         $entidad->save();
 
         return redirect()->route('entidades.index')->with('message', [
@@ -146,5 +150,19 @@ class EntidadesController extends Controller
         $entidad->activo = !$entidad->activo;
         $entidad->save();
         return redirect()->route('entidades.index');
+    }
+
+    public function esDescendiente($idNuevoPadre, $idEntidad) : bool
+    {
+        $padre = Entidades::findOrFail($idNuevoPadre);
+
+        while ($padre->id_entidad) {
+            if ($padre->id_entidad == $idEntidad) {
+                return true;
+            }
+            $padre = Entidades::find($padre->id_entidad);
+        }
+
+        return false;
     }
 }

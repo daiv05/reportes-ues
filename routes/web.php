@@ -95,7 +95,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
         Route::get('aulas/create', [AulasController::class, 'create'])->middleware('permission:AULAS_CREAR')->name('aulas.create');
         Route::get('aulas/{aula}', [AulasController::class, 'show'])->middleware('permission:AULAS_VER')->name('aulas.show');
         Route::put('aulas/{aula}', [AulasController::class, 'update'])->middleware('permission:AULAS_EDITAR')->name('aulas.update');
-        Route::patch('aulas/{aula}', [AulasController::class, 'update'])->middleware('permission:AULAS_EDITAR')->name('aulas.update');
+        Route::patch('aulas/{aula}', [AulasController::class, 'update'])->middleware('permission:AULAS_EDITAR')->name('aulas.patch');
         Route::get('aulas/{aula}/edit', [AulasController::class, 'edit'])->middleware('permission:AULAS_EDITAR')->name('aulas.edit');
         Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('aulas.toggleActivo');
 
@@ -105,7 +105,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
         Route::get('asignatura/create', [AsignaturaController::class, 'create'])->middleware('permission:ASIGNATURAS_CREAR')->name('asignatura.create');
         Route::get('asignatura/{asignatura}', [AsignaturaController::class, 'show'])->middleware('permission:ASIGNATURAS_VER')->name('asignatura.show');
         Route::put('asignatura/{asignatura}', [AsignaturaController::class, 'update'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignatura.update');
-        Route::patch('asignatura/{asignatura}', [AsignaturaController::class, 'update'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignatura.update');
+        Route::patch('asignatura/{asignatura}', [AsignaturaController::class, 'update'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignatura.patch');
         Route::get('asignatura/{asignatura}/edit', [AsignaturaController::class, 'edit'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignatura.edit');
         Route::patch('asignatura/{asignatura}/toggle', [AsignaturaController::class, 'toggleActivo'])->middleware('permission:ASIGNATURAS_EDITAR')->name('asignatura.toggleActivo');
         Route::post('asignatura/importar', [AsignaturaController::class, 'importarDatos'])->middleware('permission:ASIGNATURAS_CREAR')->name('asignatura.importar');

@@ -276,7 +276,6 @@
                 option.disabled = false;
             });
 
-            console.log('click');
             document.getElementById('add-entidades-form').action = '{{ route('entidades.store') }}';
             document.getElementById('add-entidades-form').method = 'POST';
             let method = document.querySelector('[name="_method"]');
