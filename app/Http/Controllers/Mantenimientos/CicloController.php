@@ -16,10 +16,17 @@ class CicloController extends Controller
 
     public function index(Request $request)
     {
-        $ciclos = Ciclo::with('tipoCiclo')->orderBy('anio', 'desc')->orderBy('id_tipo_ciclo', 'desc')->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
-        $tiposCiclos = TipoCiclo::where('activo', 1)->get();
+        $nombreFilter = $request->get('nombre-filter');
+        $ciclos = Ciclo::with('tipoCiclo')
+            ->when($nombreFilter, function ($query, $nombreFilter) {
+                return $query->where('anio', 'like', "%$nombreFilter%");
+            })
+            ->orderBy('anio', 'desc')
+            ->orderBy('id_tipo_ciclo', 'desc')
+            ->paginate(GeneralEnum::PAGINACION->value)
+            ->appends($request->query());
 
-        $tiposCiclos = $tiposCiclos->pluck('nombre', 'id')->toArray();
+        $tiposCiclos = TipoCiclo::where('activo', 1)->pluck('nombre', 'id')->toArray();
 
         $estados = [
             1 => 'ACTIVO',
