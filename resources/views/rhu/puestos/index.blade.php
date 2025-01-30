@@ -102,7 +102,7 @@
                         <x-table.td>
                             {{ $puesto->entidad->nombre }}
                         </x-table.td>
-                        <x-table.td>
+                        <x-table.td justify="center">
                             <x-status.is-active :active="$puesto->activo" />
                         </x-table.td>
                         <x-table.td>
