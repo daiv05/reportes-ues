@@ -6,7 +6,6 @@ use App\Models\Reportes\RecursoReporte;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Normalizer;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Recurso extends Model implements Auditable
@@ -24,13 +23,16 @@ class Recurso extends Model implements Auditable
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+        $this->attributes['nombre'] = strtoupper(strtr($value, 'áéíóúñ', 'ÁÉÍÓÚÑ'));
     }
 
     public function getNombreUnaccentAttribute()
     {
-        $nombre_normalizado = Normalizer::normalize($this->nombre, Normalizer::FORM_D);
-        return preg_replace('/\pM/u', '', $nombre_normalizado);
+        $originales = array('Á', 'É', 'Í', 'Ó', 'Ú');
+        $modificadas = array('A', 'E', 'I', 'O', 'U');
+        $cadena = str_replace($originales, $modificadas, $this->nombre);
+        error_log($cadena);
+        return $cadena;
     }
 
     public function recursosReportes() : HasMany
