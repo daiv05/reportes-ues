@@ -1,7 +1,7 @@
 @php
     $headers = [
         ['text' => 'Nombre', 'align' => 'left'],
-        ['text' => 'Estado', 'align' => 'left'],
+        ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acción', 'align' => 'left'],
     ];
 @endphp
@@ -91,7 +91,7 @@
                         <x-table.td>
                             {{ $aula->nombre }}
                         </x-table.td>
-                        <x-table.td>
+                        <x-table.td justify="center">
                             <x-status.is-active :active="$aula->activo" />
                         </x-table.td>
                         <x-table.td>

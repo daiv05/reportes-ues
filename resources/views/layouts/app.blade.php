@@ -198,7 +198,8 @@
                 let locales = {
                     es: {
                         days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",
-                            "Sábado"],
+                            "Sábado"
+                        ],
                         daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
                         daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
                         months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",

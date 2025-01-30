@@ -74,7 +74,7 @@
                             <x-table.td>{{ $empPuesto->usuario->persona->nombre . ' ' . $empPuesto->usuario->persona->apellido }}</x-table.td>
                             <x-table.td>{{ $empPuesto->puesto->entidad->nombre }}</x-table.td>
                             <x-table.td>{{ $empPuesto->puesto->nombre }}</x-table.td>
-                            <x-table.td>
+                            <x-table.td justify="center">
                                 <x-status.is-active :active="$empPuesto->activo" />
                             </x-table.td>
                             <x-table.td>
