@@ -1,7 +1,7 @@
 <footer>
     <div class="mx-auto w-full md:px-4 md:flex md:items-center justify-center md:justify-between">
         <div class="flex items-center justify-center mb-2">
-            <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="logo" class="h-10 w-fit mr-2">
+            <img src="{{ Vite::asset('resources/img/ues-logo.webp') }}" alt="logo" class="h-10 w-fit mr-2">
             <span class="font-bold text-xl text-orange-900 mr-4">{{ config('app.name') }}</span>
             <span class="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
                 © 2024
