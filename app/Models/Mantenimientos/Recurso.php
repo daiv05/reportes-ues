@@ -31,7 +31,6 @@ class Recurso extends Model implements Auditable
         $originales = array('Á', 'É', 'Í', 'Ó', 'Ú');
         $modificadas = array('A', 'E', 'I', 'O', 'U');
         $cadena = str_replace($originales, $modificadas, $this->nombre);
-        error_log($cadena);
         return $cadena;
     }
 
