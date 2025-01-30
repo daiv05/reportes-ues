@@ -10,7 +10,7 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <x-header.main tituloMenor="Gestión de" tituloMayor="PUESTOS DE LOS EMPLEADOS"
+        <x-header.main tituloMenor="Gestión de" tituloMayor="EMPLEADOS"
             subtitulo="Gestiona de los puestos asignados a los empleados de la universidad">
             <x-slot name="acciones">
                 @canany(['ASIGNAR_PUESTOS_EMPLEADOS'])
