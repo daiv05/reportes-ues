@@ -56,11 +56,11 @@
                     <td class="py-4 px-6 text-sm text-gray-500">{{ \Carbon\Carbon::parse($reporte->hora_reporte)->format('h:i A') }}</td>
                 </tr>
                 <tr>
-                    <td class="py-4 px-6 text-sm font-medium text-gray-900">Usuario</td>
+                    <td class="py-4 px-6 text-sm font-medium text-gray-900">Reportado por</td>
                     <td class="py-4 px-6 text-sm text-gray-500">{{ $reporte->usuarioReporta?->persona?->nombre }} {{ $reporte->usuarioReporta?->persona?->apellido }}</td>
                 </tr>
                 <tr>
-                    <td class="py-4 px-6 text-sm font-medium text-gray-900">Duración</td>
+                    <td class="py-4 px-6 text-sm font-medium text-gray-900">Tiempo de resolución</td>
                     <td class="py-4 px-6 text-sm text-gray-500">{{ $duracion }}</td>
                 </tr>
                 </tbody>

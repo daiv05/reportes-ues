@@ -1,4 +1,4 @@
-var staticCacheName = "reportfia-pwa-v" + new Date().getTime();
+var staticCacheName = "rpfia-pwa-v" + new Date().getTime();
 
 var filesToCache = [
     '/offline',
@@ -29,7 +29,7 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(cacheName => (cacheName.startsWith("reportfia-pwa-")))
+                    .filter(cacheName => (cacheName.startsWith("rpfia-pwa-")))
                     .filter(cacheName => (cacheName !== staticCacheName))
                     .map(cacheName => caches.delete(cacheName))
             );

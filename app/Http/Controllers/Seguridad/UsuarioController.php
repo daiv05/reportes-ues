@@ -132,7 +132,7 @@ class UsuarioController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('message', [
-                'type' => 'danger',
+                'type' => 'error',
                 'content' => 'Ocurrió un error al crear el usuario. Por favor, inténtelo de nuevo.',
             ]);
         }
