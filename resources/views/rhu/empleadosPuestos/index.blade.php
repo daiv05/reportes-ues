@@ -11,7 +11,7 @@
 <x-app-layout>
     <x-slot name="header">
         <x-header.main tituloMenor="Gestión de" tituloMayor="EMPLEADOS"
-            subtitulo="Gestiona de los puestos asignados a los empleados de la universidad">
+            subtitulo="Gestiona los puestos asignados a los empleados de la universidad">
             <x-slot name="acciones">
                 @canany(['ASIGNAR_PUESTOS_EMPLEADOS'])
                 <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
