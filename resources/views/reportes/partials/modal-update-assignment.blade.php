@@ -8,7 +8,8 @@
             </h2>
             <div class="mt-4 w-full">
                 <label for="id_estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Actualizar
-                    a</label>
+                    a <x-forms.input-required/>
+                </label>
                 <select id="id_estado" name="id_estado"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     <option value="">Seleccionar estado</option>
@@ -21,7 +22,9 @@
             </div>
             <div class="mt-4 w-full">
                 <label for="comentarios"
-                       class="block text-sm font-medium text-gray-700 dark:text-gray-300">Comentarios</label>
+                       class="block text-sm font-medium text-gray-700 dark:text-gray-300">Comentarios
+                       <x-forms.input-required/>
+                </label>
                 <textarea id="comentarios" name="comentario" rows="3"
                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                 <span id="comentarios_error" class="text-red-500 text-sm"></span>
@@ -57,8 +60,8 @@
                             class="block">
                         <option value="">Seleccione un recurso</option>
                         @foreach ($recursos as $recurso)
-                            <option value="{{ $recurso->id }}" data-nombre="{{ $recurso->nombre }}">
-                                {{ $recurso->nombre }}
+                            <option value="{{ $recurso->id }}" data-nombre="{{ $recurso->nombre_unaccent }}">
+                                {{ $recurso->nombre_unaccent }}
                             </option>
                         @endforeach
                     </select>

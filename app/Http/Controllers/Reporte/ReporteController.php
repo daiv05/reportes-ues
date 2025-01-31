@@ -15,6 +15,7 @@ use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
+use App\Models\Mantenimientos\Recurso;
 use App\Models\Reportes\Estado;
 use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\ReporteBien;
@@ -590,7 +591,7 @@ class ReporteController extends Controller
 
             // Catalogos para el detalle
             $fondos = DB::table('fondos')->where('activo', true)->get();
-            $recursos = DB::table('recursos')->where('activo', true)->get();
+            $recursos = Recurso::where('activo', true)->get();
             $unidades_medida = DB::table('unidades_medida')->where('activo', true)->get();
             $tiposBienes = DB::table('tipos_bienes')->where('activo', true)->get();
 

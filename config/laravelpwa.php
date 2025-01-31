@@ -61,44 +61,44 @@ return [
             'description' => 'ReportFIA es una aplicación para el reporte de incidencias en la FIA.',
             'screenshots' =>  [
                 [
-                    'src' => '/assets/img/screenshots/inicio.png',
+                    'src' => '/assets/img/screenshots/inicio.webp',
                     'sizes' => '1882x870',
-                    'type' => 'image/png',
+                    'type' => 'image/webp',
                     'form_factor' => 'wide',
                     'label' => 'Detalle de reporte'
                 ],
                 [
-                    'src' => '/assets/img/screenshots/detalle-reporte.png',
+                    'src' => '/assets/img/screenshots/detalle-reporte.webp',
                     'sizes' => '1882x870',
-                    'type' => 'image/png',
+                    'type' => 'image/webp',
                     'form_factor' => 'wide',
                     'label' => 'Detalle de reporte'
                 ],
                 [
-                    'src' => '/assets/img/screenshots/listado-reporte.png',
+                    'src' => '/assets/img/screenshots/listado-reporte.webp',
                     'sizes' => '1882x870',
-                    'type' => 'image/png',
+                    'type' => 'image/webp',
                     'form_factor' => 'wide',
                     'label' => 'Detalle de reporte'
                 ],
                 [
-                    'src' => '/assets/img/screenshots/inicio-mobile.png',
+                    'src' => '/assets/img/screenshots/inicio-mobile.webp',
                     'sizes' => '1170x2531',
-                    'type' => 'image/png',
+                    'type' => 'image/webp',
                     'form_factor' => 'narrow',
                     'label' => 'Inicio'
                 ],
                 [
-                    'src' => '/assets/img/screenshots/listado-reporte-mobile.png',
+                    'src' => '/assets/img/screenshots/listado-reporte-mobile.webp',
                     'sizes' => '1170x2531',
-                    'type' => 'image/png',
+                    'type' => 'image/webp',
                     'form_factor' => 'narrow',
                     'label' => 'Listado de reportes'
                 ],
                 [
-                    'src' => '/assets/img/screenshots/detalle-reporte-mobile.png',
+                    'src' => '/assets/img/screenshots/detalle-reporte-mobile.webp',
                     'sizes' => '1170x2531',
-                    'type' => 'image/png',
+                    'type' => 'image/webp',
                     'form_factor' => 'narrow',
                     'label' => 'Detalle de reporte'
                 ]
