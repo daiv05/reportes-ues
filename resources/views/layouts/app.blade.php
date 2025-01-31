@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'ReportFIA') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
@@ -198,7 +198,8 @@
                 let locales = {
                     es: {
                         days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",
-                            "Sábado"],
+                            "Sábado"
+                        ],
                         daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
                         daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
                         months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",

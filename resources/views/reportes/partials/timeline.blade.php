@@ -132,8 +132,8 @@
             <div class="block items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:flex">
                 <img
                     class="mb-3 me-3 h-8 w-8 rounded-full sm:mb-0"
-                    src="/assets/img/profile_1.png"
-                    alt="Jese Leos image"
+                    src="/assets/img/profile_1.webp"
+                    alt="me"
                 />
                 <div class="text-gray-600 dark:text-gray-400">
                     @php

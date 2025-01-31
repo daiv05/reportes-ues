@@ -10,8 +10,8 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <x-header.main tituloMenor="Gestión de" tituloMayor="PUESTOS DE LOS EMPLEADOS"
-            subtitulo="Gestiona de los puestos asignados a los empleados de la universidad">
+        <x-header.main tituloMenor="Gestión de" tituloMayor="EMPLEADOS"
+            subtitulo="Gestiona los puestos asignados a los empleados de la universidad">
             <x-slot name="acciones">
                 @canany(['ASIGNAR_PUESTOS_EMPLEADOS'])
                 <x-forms.primary-button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block"
@@ -74,7 +74,7 @@
                             <x-table.td>{{ $empPuesto->usuario->persona->nombre . ' ' . $empPuesto->usuario->persona->apellido }}</x-table.td>
                             <x-table.td>{{ $empPuesto->puesto->entidad->nombre }}</x-table.td>
                             <x-table.td>{{ $empPuesto->puesto->nombre }}</x-table.td>
-                            <x-table.td>
+                            <x-table.td justify="center">
                                 <x-status.is-active :active="$empPuesto->activo" />
                             </x-table.td>
                             <x-table.td>

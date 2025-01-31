@@ -15,7 +15,7 @@ class StoreAulaRequest extends FormRequest
     {
         return [
             'id_facultad' => 'required|exists:facultades,id',
-            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]$/|unique:aulas,nombre,NULL,id,id_facultad,' . $this->id_facultad,
+            'nombre' => 'required|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ]+$/|unique:aulas,nombre,NULL,id,id_facultad,' . $this->id_facultad,
             'activo' => 'required|boolean',
         ];
     }

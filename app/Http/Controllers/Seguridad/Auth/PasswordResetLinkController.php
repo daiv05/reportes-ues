@@ -7,6 +7,7 @@ use App\Models\Seguridad\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use OwenIt\Auditing\Models\Audit;
 
@@ -27,6 +28,24 @@ class PasswordResetLinkController extends Controller
 
         // Encontrar el usuario por correo electrónico
         $user = User::where('email', $request->email)->first();
+
+        // Validar si el usuario existe
+        if (!$user) {
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'No se encontró un usuario con el correo electrónico proporcionado'
+            ]);
+            return back();
+        }
+
+        // Validar si el usuario está activo
+        if ($user->activo === 0) {
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'El usuario no se encuentra activo dentro del sistema'
+            ]);
+            return back();
+        }
 
         // Enviar el enlace de restablecimiento de contraseña
         $status = Password::sendResetLink(

@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Bienvenido</title>
+        <title>{{ config('app.name', 'ReportFIA') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net" />
@@ -24,8 +24,8 @@
             <nav class="container mx-auto flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                     <img
-                        src="{{ Vite::asset('resources/img/ues-logo.png') }}"
-                        alt="ReportFIA logo"
+                        src="{{ Vite::asset('resources/img/ues-logo.webp') }}"
+                        alt="{{ config('app.name') . ' logo' }}"
                         class="h-10 w-fit"
                     />
                     <span class="text-xl font-bold">{{ config('app.name') }}</span>
@@ -214,7 +214,7 @@
         <footer class="bg-gray-100 py-2">
             <div class="mx-auto w-full max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
                 <div class="mb-2 flex items-center">
-                    <img src="{{ Vite::asset('resources/img/ues-logo.png') }}" alt="logo" class="mr-2 h-10 w-fit" />
+                    <img src="{{ Vite::asset('resources/img/ues-logo.webp') }}" alt="logo" class="mr-2 h-10 w-fit" />
                     <span class="mr-4 text-xl font-bold text-orange-900">{{ config('app.name') }}</span>
                     <span class="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
                         © 2024

@@ -7,7 +7,7 @@
             contraseña para su cuenta.
         </p>
         <div class="flex-div">
-            <a class="btn-primary" href="{{ $token }}">Reestablecer</a>
+            <a class="btn-primary" href="{{ $token }}">Restablecer</a>
         </div>
         <p>
             Si no haz solicitado ningún reestablecimiento puedes ignorar este correo.

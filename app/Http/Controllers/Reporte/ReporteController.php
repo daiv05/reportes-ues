@@ -15,6 +15,7 @@ use App\Models\Reportes\HistorialAccionesReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Reportes\Reporte;
 use App\Models\Mantenimientos\Aulas;
+use App\Models\Mantenimientos\Recurso;
 use App\Models\Reportes\Estado;
 use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\ReporteBien;
@@ -244,7 +245,7 @@ class ReporteController extends Controller
                 'comentario' => 'nullable|string|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
                 'id_entidad' => 'required|integer|exists:entidades,id',
                 'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
-                'id_bienes' => 'required|array',
+                'id_bienes' => 'array',
                 'id_bienes.*' => 'integer|exists:bienes,id',
             ],
             [
@@ -260,7 +261,6 @@ class ReporteController extends Controller
                 'id_empleado_supervisor.required' => 'Debe seleccionar un supervisor para el reporte.',
                 'id_empleado_supervisor.integer' => 'El ID del supervisor debe ser un número entero.',
                 'id_empleado_supervisor.exists' => 'El empleado supervisor seleccionado no existe.',
-                'id_bienes.required' => 'Debe asignar al menos un bien al reporte.',
                 'id_bienes.array' => 'Estructura de bienes asignados inválida.',
                 'id_bienes.*.integer' => 'Cada bien debe tener un ID válido.',
                 'id_bienes.*.exists' => 'Uno o más bienes seleccionados no existen.',
@@ -297,12 +297,14 @@ class ReporteController extends Controller
                 $empAcciones->save();
             }
 
-            // Registro en REPORTE_BIENES
-            foreach ($validated['id_bienes'] as $bien) {
-                $repBien = new ReporteBien();
-                $repBien->id_bien = $bien;
-                $repBien->id_reporte = $id_reporte;
-                $repBien->save();
+            if ($validated['id_bienes']) {
+                // Registro en REPORTE_BIENES
+                foreach ($validated['id_bienes'] as $bien) {
+                    $repBien = new ReporteBien();
+                    $repBien->id_bien = $bien;
+                    $repBien->id_reporte = $id_reporte;
+                    $repBien->save();
+                }
             }
         });
 
@@ -589,7 +591,7 @@ class ReporteController extends Controller
 
             // Catalogos para el detalle
             $fondos = DB::table('fondos')->where('activo', true)->get();
-            $recursos = DB::table('recursos')->where('activo', true)->get();
+            $recursos = Recurso::where('activo', true)->get();
             $unidades_medida = DB::table('unidades_medida')->where('activo', true)->get();
             $tiposBienes = DB::table('tipos_bienes')->where('activo', true)->get();
 
