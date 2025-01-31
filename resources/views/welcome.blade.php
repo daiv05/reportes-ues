@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Bienvenido</title>
+        <title>{{ config('app.name', 'ReportFIA') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net" />
@@ -25,7 +25,7 @@
                 <div class="flex items-center space-x-4">
                     <img
                         src="{{ Vite::asset('resources/img/ues-logo.webp') }}"
-                        alt="ReportFIA logo"
+                        alt="{{ config('app.name') . ' logo' }}"
                         class="h-10 w-fit"
                     />
                     <span class="text-xl font-bold">{{ config('app.name') }}</span>
