@@ -96,12 +96,12 @@ class EmpleadoPuestoController extends Controller
             return redirect()->route('empleadosPuestos.index')
                 ->with('message', [
                     'type' => 'success',
-                    'content' => 'Asignación creado exitosamente'
+                    'content' => 'Puesto asignado exitosamente'
                 ]);
         } catch (\Exception $e) {
             return redirect()->route('empleadosPuestos.index')
                 ->with('message', [
-                    'type' => 'danger',
+                    'type' => 'error',
                     'content' => 'Error al crear la asignación'
                 ]);
         }
@@ -121,7 +121,7 @@ class EmpleadoPuestoController extends Controller
             return redirect()->route('empleadosPuestos.index')
                 ->with('message', [
                     'type' => 'success',
-                    'content' => 'Asignación actualizado exitosamente'
+                    'content' => 'Asignación actualizada exitosamente'
                 ]);
         } catch (\Exception $e) {
             return redirect()->route('empleadosPuestos.index')
