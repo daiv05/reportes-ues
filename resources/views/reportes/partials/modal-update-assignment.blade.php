@@ -65,7 +65,7 @@
                             </option>
                         @endforeach
                     </select>
-                    <p class="text-xs text-green-500">Seleccione un elemento de la lista para añadirlo</p>
+                    <p class="text-xs text-gray-500">Seleccione un elemento de la lista para añadirlo</p>
 
                     <input type="hidden" id="recursos_input" name="recursos">
                     <div class="relative overflow-x-auto">
@@ -82,7 +82,7 @@
                                             Fondo
                                             <button data-tooltip-target="tooltip-click" data-tooltip-trigger="click"
                                                 type="button"
-                                                class="ms-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm w-5 h-5 text-center">
+                                                class="ms-3 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-xl text-sm w-5 h-5 text-center">
                                                 <x-heroicon-o-information-circle class="w-5 h-5" />
                                             </button>
                                         </div>
