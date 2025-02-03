@@ -30,10 +30,9 @@
                                 </svg>
                             </div>
                             <input type="text" id="titulo" name="titulo"
-                                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                                class="block w-full rounded-lg border border-gray-300 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                 placeholder="Aula sin cuidado..." />
                         </div>
-                        @include('components.forms.input-error', ['messages' => $errors->get('titulo')])
                     </div>
                     <!-- Descripción -->
                     <div class="mb-5">
@@ -42,11 +41,8 @@
                             <x-forms.input-required />
                         </label>
                         <textarea id="descripcion" name="descripcion" rows="4"
-                            class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                            class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                             placeholder="Se ha observado..."></textarea>
-                        @include('components.forms.input-error', [
-                            'messages' => $errors->get('descripcion'),
-                        ])
                         <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="descripcion_hint">
                             Recuerda ser claro y conciso
                         </div>
@@ -144,13 +140,15 @@
                         <label for="id_aula" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                             Lugar
                         </label>
-                        <select id="id_aula" name="id_aula"
+                        <x-forms.search-select id="id_aula" name="id_aula"
+                         :options="$aulas" searchable id_key="id" name_key="nombre" />                        
+                        {{-- <select id="id_aula" name="id_aula"
                             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
                             <option value="">Seleccionar instalación</option>
                             @foreach ($aulas as $aula)
                                 <option value="{{ $aula->id }}">{{ $aula->nombre }}</option>
                             @endforeach
-                        </select>
+                        </select> --}}
                         @include('components.forms.input-error', ['messages' => $errors->get('id_aula')])
                         <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="descripcion_hint">
                             Especifique si considera necesario
@@ -159,12 +157,16 @@
 
                     <div class="flex justify-center pt-4">
                         @canany(['REPORTES_CREAR'])
-                            <button type="submit"
+                            <button type="button"
+                                data-modal-target="send-modal" data-modal-toggle="send-modal"
                                 class="w-full rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto">
                                 Enviar reporte
                             </button>
                         @endcanany
                     </div>
+
+                    @include('reportes.partials.modal-confirm-send-report')
+
                 </form>
             </div>
         </div>

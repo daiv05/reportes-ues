@@ -30,7 +30,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
 
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Tipos - Actividades
     // Route::prefix('actividad')->group(function () {
@@ -39,7 +39,6 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
     //     Route::put('/tipo/{id}', [TipoActividadController::class, 'update'])->name('actividad-tipo.update');
     //     Route::delete('/tipo/{id}', [TipoActividadController::class, 'destroy'])->name('actividad-tipo.destroy');
     // });
-
 
     /* ***************************************** */
     /*   ************* REPORTES *************    */
@@ -140,6 +139,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
             Route::get('filtro', [BienController::class, 'findByNameOrCode'])
                 ->middleware('permission:BIENES_VER|REPORTES_CREAR')
                 ->name('bienes.findByNameOrCode');
+            Route::get('detalle/{id}', [BienController::class, 'detailWithReports'])->middleware('permission:BIENES_VER')->name('bienes.detailWithReports');
         });
 
         // Tipos de bienes
