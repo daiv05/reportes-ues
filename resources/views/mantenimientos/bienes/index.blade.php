@@ -67,8 +67,7 @@
                         </x-table.td>
                         <x-table.td>
                             @canany(['BIENES_EDITAR'])
-                                <a href="#"
-                                    class="edit-button mx-1 font-medium text-green-600 hover:underline"
+                                <a href="#" class="edit-button mx-1 font-medium text-green-600 hover:underline"
                                     data-id="{{ $bien->id }}" data-nombre="{{ $bien->nombre }}"
                                     data-descripcion="{{ $bien->descripcion }}" data-codigo="{{ $bien->codigo }}"
                                     data-id_tipo_bien="{{ $bien->id_tipo_bien }}"
@@ -124,24 +123,38 @@
                         <div id="id_tipo_bien-error" class="text-sm text-red-500"></div>
                     </div>
                     <div>
-                        <x-forms.select label="Estado" id="id_estado_bien" name="id_estado_bien" :options="$estadoBienes->pluck('nombre', 'id')"
+                        <div class="flex items-center justify-start">
+                            <x-forms.input-label for="id_estado_bien" value="Estado" required />
+                            <button data-tooltip-target="tooltip-click" data-tooltip-trigger="click" type="button"
+                                class="ms-3 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-xl text-sm w-5 h-5 text-center">
+                                <x-heroicon-o-information-circle class="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div id="tooltip-click" role="tooltip"
+                            class="absolute z-21 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-xs opacity-0 tooltip">
+                            <div>
+                                <h2 class="mb-2 text-sm font-semibold text-gray-300 dark:text-white">Descripción de
+                                    estados:
+                                </h2>
+                                <ul
+                                    class="text-xs max-w-md space-y-1 text-gray-200 list-disc list-inside dark:text-gray-400">
+                                    @foreach ($estadoBienes as $estBien)
+                                        <li>
+                                            <span class="font-semibold">{{ $estBien->nombre }}:</span>
+                                            {{ $estBien->descripcion }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                            </div>
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
+                        <x-forms.select id="id_estado_bien" name="id_estado_bien" :options="$estadoBienes->pluck('nombre', 'id')"
                             :value="old('id_estado_bien', '1')" :error="$errors->get('id_estado_bien')" required />
                         <div id="estado-error" class="text-sm text-red-500"></div>
                     </div>
                     <hr class="h-px mt-2 bg-gray-200 border-0 dark:bg-gray-700">
-                    <div>
-                        <h2 class="mb-2 text-sm font-semibold text-gray-600 dark:text-white">Descripción de estados:
-                        </h2>
-                        <ul class="text-xs max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
-                            @foreach ($estadoBienes as $estBien)
-                                <li>
-                                    <span class="font-semibold">{{ $estBien->nombre }}:</span>
-                                    {{ $estBien->descripcion }}
-                                </li>
-                            @endforeach
-                        </ul>
 
-                    </div>
                 </x-forms.row>
             </form>
         </x-slot>

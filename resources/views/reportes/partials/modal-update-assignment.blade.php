@@ -98,7 +98,7 @@
                     <div id="tooltip-click" role="tooltip"
                         class="absolute z-21 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-xs opacity-0 tooltip">
                         <div>
-                            <h2 class="mb-2 text-sm font-semibold text-gray-400 dark:text-white">Descripción de
+                            <h2 class="mb-2 text-sm font-semibold text-gray-300 dark:text-white">Descripción de
                                 fondos:
                             </h2>
                             <ulW
