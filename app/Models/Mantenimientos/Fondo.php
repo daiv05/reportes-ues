@@ -16,6 +16,7 @@ class Fondo extends Model implements Auditable
 
     protected $fillable = [
         'nombre',
+        'descripcion',
         'activo',
     ];
 

@@ -16,15 +16,24 @@ class BienSeeder extends Seeder
         $bien = [
             [
                 'id_tipo_bien' => 6,
+                'id_estado_bien' => 1,
                 'nombre' => 'Silla Reclinable',
                 'descripcion' => 'Silla que se reclina, tipo secretarial',
                 'codigo' => 'S-6010'
             ],
             [
                 'id_tipo_bien' => 2,
+                'id_estado_bien' => 1,
                 'nombre' => 'Lámpara Zona B',
                 'descripcion' => 'Lámpara de la zona B, atrás del edifico B',
                 'codigo' => 'L-3015'
+            ],
+            [
+                'id_tipo_bien' => 7,
+                'id_estado_bien' => 1,
+                'nombre' => 'Baño 1 C11',
+                'descripcion' => 'Baño de la primera planta Edificio C, cerca del salón C11',
+                'codigo' => 'B-0011'
             ]
 
         ];
