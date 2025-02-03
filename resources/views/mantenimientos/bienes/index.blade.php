@@ -68,7 +68,7 @@
                         <x-table.td>
                             @canany(['BIENES_EDITAR'])
                                 <a href="#"
-                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                    class="edit-button mx-1 font-medium text-green-600 hover:underline"
                                     data-id="{{ $bien->id }}" data-nombre="{{ $bien->nombre }}"
                                     data-descripcion="{{ $bien->descripcion }}" data-codigo="{{ $bien->codigo }}"
                                     data-id_tipo_bien="{{ $bien->id_tipo_bien }}"
@@ -76,6 +76,9 @@
                                     <x-heroicon-o-pencil class="h-5 w-5" />
                                 </a>
                             @endcanany
+                            <a href="{{ route('bienes.detailWithReports', ['id' => $bien->id]) }}"
+                                class="font-medium mx-1 text-blue-600 hover:underline ">
+                                <x-heroicon-o-eye class="h-5 w-5" />
                         </x-table.td>
                     </x-table.tr>
                 @endforeach

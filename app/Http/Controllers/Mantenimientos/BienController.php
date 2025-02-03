@@ -95,7 +95,7 @@ class BienController extends Controller
 
     public function findByNameOrCode(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'search' => 'nullable|string|min:1',
             'id_tipo_bien' => 'nullable|exists:tipos_bienes,id',
         ]);
@@ -118,6 +118,14 @@ class BienController extends Controller
         $bienes = $query->get();
 
         return response()->json($bienes);
+    }
+
+    public function detailWithReports(string $id): View
+    {
+        $bien = Bien::findOrFail($id);
+        $reportes = $bien->reportes()->paginate(GeneralEnum::PAGINACION->value);
+
+        return view('mantenimientos.bienes.detail', compact('bien', 'reportes'));
     }
 
 }
