@@ -14,8 +14,14 @@ class FondoSeeder extends Seeder
     public function run(): void
     {
         $fondos = [
-            ['nombre' => 'Fondo circulante'],
-            ['nombre' => 'Fondo de emergencia'],
+            [
+                'nombre' => 'Fondo circulante',
+                'descripcion' => 'El recurso proviene de bodega'
+            ],
+            [
+                'nombre' => 'Fondo de emergencia',
+                'descripcion' => 'El recurso no fue encontrado en bodega y tuvo que comprarse'
+            ],
         ];
 
         foreach($fondos as $f) {
