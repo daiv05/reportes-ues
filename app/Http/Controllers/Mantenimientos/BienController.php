@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Mantenimientos;
 
+use App\Enums\EstadosBienEnum;
 use App\Enums\GeneralEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\General\EstadoBien;
 use App\Models\Reportes\Bien;
 use App\Models\Reportes\TipoBien;
 use Illuminate\Contracts\View\View;
@@ -23,8 +25,9 @@ class BienController extends Controller
         })->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
 
         $tiposBienes = TipoBien::where('activo', 1)->get();
+        $estadoBienes = EstadoBien::where('activo', 1)->get();
 
-        return view('mantenimientos.bienes.index', compact('tiposBienes', 'bienes'));
+        return view('mantenimientos.bienes.index', compact('tiposBienes', 'bienes', 'estadoBienes'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -32,6 +35,7 @@ class BienController extends Controller
         $request->validate([
             'nombre' => 'required|max:50|unique:bienes,nombre',
             'id_tipo_bien' => 'required|exists:tipos_bienes,id',
+            'id_estado_bien' => 'required|exists:estados_bienes,id',
             'descripcion' => 'required|max:250',
             'codigo' => 'required|max:50|unique:bienes,codigo',
             'activo' => 'nullable|boolean',
@@ -41,6 +45,8 @@ class BienController extends Controller
             'nombre.unique' => 'Ya existe un bien con ese nombre',
             'id_tipo_bien.required' => 'Debe específicar el tipo de bien',
             'id_tipo_bien.exists' => 'El tipo de bien no existe',
+            'id_estado_bien.required' => 'Debe específicar el estado del bien',
+            'id_estado_bien.exists' => 'El estado especificado no existe',
             'descripcion.required' => 'La descripción es requerida',
             'descripcion.max' => 'La descripción debe tener un máximo de 250 caracteres',
             'codigo.required' => 'El código del bien es requerido',
@@ -60,6 +66,7 @@ class BienController extends Controller
         $request->validate([
             'nombre' => 'required|max:50|unique:bienes,nombre,' . $id,
             'id_tipo_bien' => 'required|exists:tipos_bienes,id',
+            'id_estado_bien' => 'required|exists:estados_bienes,id',
             'descripcion' => 'required|max:250',
             'codigo' => 'required|max:50|unique:bienes,codigo,' . $id,
             'activo' => 'nullable|boolean',
@@ -69,6 +76,8 @@ class BienController extends Controller
             'nombre.unique' => 'Ya existe un bien con ese nombre',
             'id_tipo_bien.required' => 'Debe específicar el tipo de bien',
             'id_tipo_bien.exists' => 'El tipo de bien no existe',
+            'id_estado_bien.required' => 'Debe específicar el estado del bien',
+            'id_estado_bien.exists' => 'El estado especificado no existe',
             'descripcion.required' => 'La descripción es requerida',
             'descripcion.max' => 'La descripción debe tener un máximo de 250 caracteres',
             'codigo.required' => 'El código del bien es requerido',
@@ -92,6 +101,8 @@ class BienController extends Controller
         ]);
 
         $query = Bien::query();
+
+        $query->where('activo', 1)->where('id_estado_bien', EstadosBienEnum::ACTIVO->value);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('bienes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_tipo_bien')->constrained('tipos_bienes');
+            $table->foreignId('id_estado_bien')->constrained('estados_bienes');
             $table->string('codigo', 50);
             $table->string('nombre', 50);
             $table->text('descripcion');

@@ -24,7 +24,7 @@ use App\Http\Controllers\Mantenimientos\TipoBienController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
-Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(function () {
+Route::middleware('auth')->group(function () {
 
     Route::get('/inicio', [InicioController::class, 'inicio'])->name('dashboard');
 
