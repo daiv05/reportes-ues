@@ -9,7 +9,7 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <x-header.simple titulo="Gestión de Ciclos"/>
+        <x-header.simple titulo="Gestión de Ciclos" />
         <div class="p-6">
             @canany(['CICLOS_CREAR'])
                 <x-forms.primary-button
@@ -27,7 +27,6 @@
 
     <x-container>
         <div class="mx-auto mb-8 flex flex-col items-center justify-center overflow-x-auto sm:rounded-lg">
-
             <div
                 class="flex w-full flex-col flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0"
             >
@@ -49,6 +48,7 @@
                     <div class="flex flex-wrap space-x-4">
                         <button
                             type="submit"
+                            data-tooltip-target="tooltip-aplicar-filtros"
                             class="inline-flex items-center rounded-full border border-transparent bg-escarlata-ues px-3 py-3 align-middle text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                         >
                             <svg
@@ -67,10 +67,20 @@
                             </svg>
                         </button>
 
+                        <div
+                            id="tooltip-aplicar-filtros"
+                            role="tooltip"
+                            class="shadow-xs tooltip z-40 inline-block rounded-lg bg-escarlata-ues px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        >
+                            Aplicar filtros
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
+
                         <button
                             type="reset"
                             class="inline-flex items-center rounded-full border border-gray-500 bg-white px-3 py-3 align-middle text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                             onclick="window.location.href='{{ route('ciclos.index') }}';"
+                            data-tooltip-target="tooltip-limpiar-filtros"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -80,9 +90,18 @@
                                 stroke="currentColor"
                                 class="h-4 w-4"
                             >
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
+
+                        <div
+                            id="tooltip-limpiar-filtros"
+                            role="tooltip"
+                            class="shadow-xs tooltip z-40 inline-block rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        >
+                            Limpiar filtros
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -97,7 +116,7 @@
                             {{ $ciclo->tipoCiclo->nombre }}
                         </x-table.td>
                         <x-table.td justify="center">
-                            <x-status.is-active :active="$ciclo->activo"/>
+                            <x-status.is-active :active="$ciclo->activo" />
                         </x-table.td>
                         <x-table.td justify="center">
                             @canany(['CICLOS_EDITAR'])
@@ -108,9 +127,18 @@
                                     data-anio="{{ $ciclo->anio }}"
                                     data-tipo_ciclo="{{ $ciclo->id_tipo_ciclo }}"
                                     data-estado="{{ $ciclo->activo }}"
+                                    data-tooltip-target="tooltip-edit-{{ $ciclo->id }}"
                                 >
-                                    <x-heroicon-o-pencil class="h-5 w-5"/>
+                                    <x-heroicon-o-pencil class="h-5 w-5" />
                                 </a>
+                                <div
+                                    id="tooltip-edit-{{ $ciclo->id }}"
+                                    role="tooltip"
+                                    class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                >
+                                    Editar ciclo
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
                             @endcanany
                         </x-table.td>
                     </x-table.tr>
