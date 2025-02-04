@@ -174,7 +174,7 @@
                                         <x-table.td justify="center">
                                             <a
                                                 href="{{ route('detalle-reporte', ['id' => $empAccion->reporte->id]) }}"
-                                                data-tooltip-target="tooltip-edit-{{ $empAccion->reporte->id }}"
+                                                data-tooltip-target="tooltip-view-{{ $empAccion->reporte->id }}"
                                                 class="font-medium text-gray-700 hover:underline"
                                             >
                                                 <svg
