@@ -349,7 +349,7 @@ class ReporteController extends Controller
             [
                 'comentario' => 'required|string|max:100|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
                 'id_estado' => 'required|integer|exists:estados,id',
-                'evidencia' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+                'evidencia' => 'nullable|image|mimes:png,jpg,jpeg|max:10240',
                 'recursos' => 'nullable|array',
                 'recursos.*.cantidad' => 'required|integer|max:100',
                 'recursos.*.id_fondo' => 'required|integer|exists:fondos,id',
@@ -376,6 +376,7 @@ class ReporteController extends Controller
                 'comentario.regex' => 'El comentario solo puede contener letras, números y espacios.',
                 'evidencia.image' => 'La evidencia debe ser un archivo de imagen.',
                 'evidencia.mimes' => 'La evidencia debe ser una imagen de tipo: png, jpg o jpeg.',
+                'evidencia.max' => 'La evidencia no debe exceder los 10MB.',
                 'id_estado.required' => 'Debe seleccionar un estado para actualizar el reporte.',
                 'id_estado.integer' => 'El ID del estado debe ser un número entero.',
                 'id_estado.exists' => 'El estado seleccionado no existe.',
