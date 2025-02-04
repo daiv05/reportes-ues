@@ -128,9 +128,19 @@
                                     data-nombre-completo="{{ $asignatura->nombre_completo }}"
                                     data-escuela="{{ $asignatura->escuela->id }}"
                                     data-activo="{{ $asignatura->activo }}"
+                                    data-tooltip-target="tooltip-edit-{{ $asignatura->id }}"
                                 >
                                     <x-heroicon-o-pencil class="h-5 w-5" />
                                 </a>
+
+                                <div
+                                    id="tooltip-edit-{{ $asignatura->id }}"
+                                    role="tooltip"
+                                    class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                >
+                                    Editar asignatura
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
                             @endcanany
                         </x-table.td>
                     </x-table.tr>

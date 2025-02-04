@@ -108,9 +108,18 @@
                                     data-anio="{{ $ciclo->anio }}"
                                     data-tipo_ciclo="{{ $ciclo->id_tipo_ciclo }}"
                                     data-estado="{{ $ciclo->activo }}"
+                                    data-tooltip-target="tooltip-edit-{{ $ciclo->id }}"
                                 >
                                     <x-heroicon-o-pencil class="h-5 w-5"/>
                                 </a>
+                                <div
+                                    id="tooltip-edit-{{ $ciclo->id }}"
+                                    role="tooltip"
+                                    class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                >
+                                    Editar ciclo
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
                             @endcanany
                         </x-table.td>
                     </x-table.tr>

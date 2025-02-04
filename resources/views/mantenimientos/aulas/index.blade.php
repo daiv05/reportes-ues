@@ -103,9 +103,19 @@
                                     data-nombre="{{ $aula->nombre }}"
                                     data-facultad="{{ $aula->facultad->id }}"
                                     data-activo="{{ $aula->activo }}"
+                                    data-tooltip-target="tooltip-edit-{{ $aula->id }}"
                                 >
                                     <x-heroicon-o-pencil class="h-5 w-5" />
                                 </a>
+
+                                <div
+                                    id="tooltip-edit-{{ $aula->id }}"
+                                    role="tooltip"
+                                    class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                >
+                                    Editar aula
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
                             @endcanany
                         </x-table.td>
                     </x-table.tr>
