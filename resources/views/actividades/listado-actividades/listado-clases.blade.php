@@ -176,6 +176,26 @@
                                     >
                                         <x-heroicon-s-pencil class="h-5 w-5" />
                                     </a>
+
+                                    <button
+                                        data-modal-target="static-modal-details"
+                                        data-modal-toggle="static-modal-details"
+                                        class="details-button font-medium text-blue-600 hover:underline dark:text-blue-400"
+                                        data-id="{{ $clase->id }}"
+                                        data-fecha="{{ \Carbon\Carbon::parse($clase->fecha)->format('d/m/Y') }}"
+                                        data-materia="{{ $clase->actividad->asignaturas[0]->nombre }}"
+                                        data-aulas="{{ $clase->actividad->aulas->pluck('nombre')->implode(', ') }}"
+                                        data-hora-inicio="{{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('H:i') }}"
+                                        data-hora-fin="{{ \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('H:i') }}"
+                                        data-tipo-clase="{{ $clase->tipoClase->id }}"
+                                        data-modalidad="{{ $clase->actividad->modalidad->id }}"
+                                        data-grupo="{{ $clase->numero_grupo }}"
+                                        data-dias="{{ $clase->dias_actividad }}"
+                                        data-estado="{{ $clase->actividad->activo }}"
+                                        data-responsable="{{ $clase->actividad->responsable }}"
+                                    >
+                                        <x-heroicon-s-eye class="h-5 w-5" />
+                                    </button>
                                     @if ($clase->actividad->activo)
                                         <a
                                             href="{{ route('crear-reporte', ['clase' => $clase->actividad->id]) }}"
@@ -198,6 +218,99 @@
             </nav>
         </div>
     </x-container>
+
+    <x-form-modal id="static-modal-details">
+        <x-slot name="header">
+            <div class="flex items-center space-x-4">
+                <x-heroicon-s-book-open class="h-10 w-10 text-escarlata-ues" />
+                <div>
+                    <h2 id="materia-info" class="text-2xl font-bold text-escarlata-ues"></h2>
+                    <h3 class="text-lg font-normal opacity-90">
+                        Detalle de la clase
+                    </h3>
+                </div>
+            </div>
+        </x-slot>
+        <x-slot name="body">
+            <div class="w-full max-w-4xl bg-white rounded-lg overflow-hidden">
+                <div class="bg-primary text-primary-foreground flex flex-col md:flex-row items-center justify-center">
+
+                    <div class="mt-4 md:mt-0 flex items-center justify-center space-x-2">
+                        <span id="estado-info" class="bg-green-100 border border-green-600 text-green-900 px-3 py-1 rounded-full text-sm font-medium flex items-center"></span>
+                        <span id="modalidad-info" class="bg-blue-100 border border-blue-600 text-blue-900 px-3 py-1 rounded-full text-sm font-medium"></span>
+                    </div>
+                </div>
+                <div class="p-1 mt-2">
+                    <div class="grid gap-2 md:gap-6 md:grid-cols-2">
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                                <x-heroicon-s-user-group class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Grupo</p>
+                                <p id="grupo-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                                <x-heroicon-s-clock class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Horario</p>
+                                <p id="horario-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                                <x-heroicon-s-academic-cap class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Tipo de clase</p>
+                                <p id="tipo-clase-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                                <x-heroicon-s-map-pin class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Local</p>
+                                <p id="local-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                                <x-heroicon-s-user class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Responsable</p>
+                                <p id="responsable-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                                <x-heroicon-s-calendar class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Días</p>
+                                <p id="dias-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </x-slot>
+        <x-slot name="footer">
+            <button
+                data-modal-hide="static-modal-details"
+                type="button"
+                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4"
+            >
+                Salir
+            </button>
+        </x-slot>
+    </x-form-modal>
+
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
@@ -399,6 +512,9 @@
 </x-app-layout>
 
 <script>
+    const modalidades = @json($modalidades);
+    const tiposClase = @json($tiposClase);
+
     document.getElementById('clase-form').addEventListener('submit', function (event) {
         const materia = document.getElementById('materia').value.trim();
         const estado = document.getElementById('estado').value;
@@ -581,8 +697,77 @@
             document.querySelector('[data-modal-target="static-modal"]').click();
         });
     });
+
+    document.querySelectorAll('.details-button').forEach((button) => {
+        button.addEventListener('click', function (event) {
+
+            const materia = this.getAttribute('data-materia');
+            const tipoClase = this.getAttribute('data-tipo-clase');
+            const hora_inicio = this.getAttribute('data-hora-inicio');
+            const hora_fin = this.getAttribute('data-hora-fin');
+            const grupo = this.getAttribute('data-grupo');
+            const modalidad = this.getAttribute('data-modalidad');
+            const local = this.getAttribute('data-aulas');
+            const dias = JSON.parse(this.getAttribute('data-dias'));
+            const estado = this.getAttribute('data-estado');
+            const responsable = this.getAttribute('data-responsable');
+
+            document.getElementById('materia-info').textContent = materia;
+
+            if(estado == '1') {
+                document.getElementById('estado-info').textContent = 'ACTIVO';
+                document.getElementById('estado-info').classList.remove('bg-red-100', 'border-red-600', 'text-red-900');
+                document.getElementById('estado-info').classList.add('bg-green-100', 'border-green-600', 'text-green-900');
+            } else {
+                document.getElementById('estado-info').textContent = 'INACTIVO';
+                document.getElementById('estado-info').classList.remove('bg-green-100', 'border-green-600', 'text-green-900');
+                document.getElementById('estado-info').classList.add('bg-red-100', 'border-red-600', 'text-red-900');
+            }
+
+            document.getElementById('modalidad-info').textContent = modalidades[modalidad];
+
+            if(modalidades[modalidad] == 'PRESENCIAL') {
+                document.getElementById('modalidad-info').classList.remove('bg-violet-100', 'border-violet-600', 'text-violet-900');
+                document.getElementById('modalidad-info').classList.add('bg-blue-100', 'border-blue-600', 'text-blue-900');
+            } else {
+                document.getElementById('modalidad-info').classList.remove('bg-blue-100', 'border-blue-600', 'text-blue-900');
+                document.getElementById('modalidad-info').classList.add('bg-violet-100', 'border-violet-600', 'text-violet-900');
+            }
+
+            document.getElementById('tipo-clase-info').textContent = tiposClase[tipoClase];
+            document.getElementById('horario-info').textContent = convertirHora12H(hora_inicio) + ' - ' + convertirHora12H(hora_fin);
+            document.getElementById('grupo-info').textContent = 'Grupo ' + grupo;
+            document.getElementById('responsable-info').textContent = responsable;
+            document.getElementById('local-info').textContent = local;
+            document.getElementById('dias-info').textContent = dias.map((dia) => numeroADia(dia)).join(', ');
+        });
+    });
+
     function updateTitle(title) {
         document.getElementById('modal-title').textContent = title;
+    }
+
+    function numeroADia(numero) {
+        const dias = {
+            0: 'Domingo',
+            1: 'Lunes',
+            2: 'Martes',
+            3: 'Miércoles',
+            4: 'Jueves',
+            5: 'Viernes',
+            6: 'Sábado',
+        };
+        return dias[numero] || 'Número inválido';
+    }
+
+    function convertirHora12H(hora) {
+        let [horas, minutos] = hora.split(':').map(Number);
+        let periodo = horas >= 12 ? 'PM' : 'AM';
+
+        // Convertir a formato de 12 horas
+        horas = horas % 12 || 12;
+
+        return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')} ${periodo}`;
     }
 </script>
 
