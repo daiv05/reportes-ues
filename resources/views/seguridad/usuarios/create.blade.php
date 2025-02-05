@@ -12,6 +12,7 @@
                     name="nombre"
                     pattern="^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ]{1,100}$"
                     patternMessage="Solo se permiten 100 caracteres que sean letras o espacios"
+                    maxlength="100"
                     :value="old('nombre')"
                     :error="$errors->get('nombre')"
                     required
@@ -21,6 +22,7 @@
                     name="apellido"
                     pattern="^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ]{1,100}$"
                     patternMessage="Solo se permiten 100 caracteres que sean letras o espacios"
+                    maxlength="100"
                     :value="old('apellido')"
                     :error="$errors->get('apellido')"
                     required
@@ -41,6 +43,7 @@
                     name="telefono"
                     pattern="^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$"
                     patternMessage="El número de teléfono debe tener un formato válido"
+                    maxlength="20"
                     :value="old('telefono')"
                     :error="$errors->get('telefono')"
                     required
@@ -52,6 +55,7 @@
                     name="email"
                     type="email"
                     :value="old('email')"
+                    maxlength="255"
                     :error="$errors->get('email')"
                     required
                 />
@@ -60,6 +64,7 @@
                     name="carnet"
                     pattern="^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$"
                     patternMessage="El carnet debe tener entre 3 y 20 caracteres y solo puede contener letras, números, puntos y guiones bajos"
+                    maxlength="20"
                     :value="old('carnet')"
                     :error="$errors->get('carnet')"
                     required

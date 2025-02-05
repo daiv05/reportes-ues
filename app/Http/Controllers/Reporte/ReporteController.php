@@ -102,18 +102,20 @@ class ReporteController extends Controller
             [
                 'id_aula' => 'nullable|integer|exists:aulas,id',
                 'id_actividad' => 'nullable|integer|exists:actividades,id',
-                'descripcion' => 'required|string|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
+                'descripcion' => 'required|string|max:255|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ- ]+$/',
                 'titulo' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
             ],
             [
                 'id_aula.exists' => 'El aula no existe',
                 'id_actividad.exists' => 'La actividad no existe',
                 'descripcion.required' => 'La descripción es obligatoria',
+                'descripcion.string' => 'La descripción debe ser un texto válido',
+                'descripcion.max' => 'La descripción no debe exceder los 255 caracteres',
                 'titulo.required' => 'Debe ingresar un titulo para el reporte',
                 'titulo.max' => 'El titulo no debe exceder los 50 caracteres',
                 'titulo.regex' => 'El titulo solo puede contener letras, números y espacios',
                 'descripcion.string' => 'La descripción debe ser un texto válido',
-                'descripcion.regex' => 'La descripción solo puede contener letras, números y espacios',
+                'descripcion.regex' => 'La descripción solo puede contener letras, números, espacios y guiones',
             ]
         );
 
@@ -242,7 +244,7 @@ class ReporteController extends Controller
             [
                 'id_empleados_puestos' => 'required|array',
                 'id_empleados_puestos.*' => 'integer|exists:empleados_puestos,id',
-                'comentario' => 'nullable|string|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
+                'comentario' => 'nullable|string|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ- ]+$/',
                 'id_entidad' => 'required|integer|exists:entidades,id',
                 'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
                 'id_bienes' => 'array',
@@ -254,7 +256,7 @@ class ReporteController extends Controller
                 'id_empleados_puestos.*.integer' => 'Cada empleado debe tener un ID válido.',
                 'id_empleados_puestos.*.exists' => 'Uno o más empleados seleccionados no existen.',
                 'comentario.string' => 'El comentario debe ser un texto válido.',
-                'comentario.regex' => 'El comentario solo puede contener letras, números y espacios.',
+                'comentario.regex' => 'El comentario solo puede contener letras, números, espacios y guiones',
                 'id_entidad.required' => 'Debe seleccionar una entidad.',
                 'id_entidad.integer' => 'El ID de la entidad debe ser un número entero.',
                 'id_entidad.exists' => 'La entidad seleccionada no existe.',
@@ -507,6 +509,18 @@ class ReporteController extends Controller
 
     public function filtrosGenerales(Request $request, Builder $query): void
     {
+        $validated = $request->validate([
+            'filter-radio' => 'nullable|string|in:hoy,7_dias,30_dias,mes,anio',
+            'titulo' => 'nullable|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
+            'estado' => 'nullable|string|in:no_procede,no_asignado,1,2,3,4,5,6,7,8,9,10',
+            'tipoReporte' => 'nullable|string|in:incidencia,actividad',
+        ], [
+            'filter-radio.in' => 'El filtro seleccionado no es válido',
+            'titulo.max' => 'El título no debe exceder los 50 caracteres',
+            'titulo.regex' => 'El título solo puede contener letras, números y espacios',
+            'estado.in' => 'El estado seleccionado no es válido',
+            'tipoReporte.in' => 'El tipo de reporte seleccionado no es válido',
+        ]);
         if ($request->has('filter-radio')) {
             $filtro = $request->input('filter-radio');
 

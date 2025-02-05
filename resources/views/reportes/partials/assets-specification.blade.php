@@ -25,6 +25,7 @@
             type="text"
             id="nombre-busqueda-bienes"
             name="nombre"
+            maxlength="50"
             class="block w-full rounded-lg border border-gray-300 p-2 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500 sm:w-80"
             placeholder="Nombre/Código"
         />
@@ -35,6 +36,7 @@
             {{-- TABLA --}}
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
+                    let timeout = null;
                     const tipoBienSelect = document.getElementById('tipoBien');
                     const nombreBusquedaInput = document.getElementById('nombre-busqueda-bienes');
                     const idBienes = [];
@@ -42,40 +44,42 @@
 
                     initializeTooltips();
 
-                    function fetchData() {
+                    async function fetchData() {
                         const tipoBien = tipoBienSelect.value;
                         const search = nombreBusquedaInput.value;
                         const url = `/mantenimientos/bienes/filtro?id_tipo_bien=${tipoBien}&search=${search}`;
-                        fetch(url)
-                            .then((response) => response.json())
-                            .then((data) => {
-                                const tableBody = document.getElementById('bienes-table-body');
+                        try {
+                            const response = await fetch(url);
+                            if (!response.ok) {
+                                throw new Error('Error al obtener los datos');
+                            }
+                            const responseJson = await response.json();
+                            const tableBody = document.getElementById('bienes-table-body');
                                 tableBody.innerHTML = '';
-
-                                data.forEach((item) => {
+                                responseJson.forEach((item) => {
                                     const row = document.createElement('tr');
                                     row.classList.add('bg-white', 'border-b');
                                     row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.codigo}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.nombre}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.descripcion}</td>
-                        <td class="px-6 py-4 text-center">
-                            <button type="button" class="text-green-500 hover:text-green-700 cursor-pointer" data-id="${item.id}" data-tooltip-target="tooltip-add-${item.id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.codigo}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.nombre}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.descripcion}</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button type="button" class="text-green-500 hover:text-green-700 cursor-pointer" data-id="${item.id}" data-tooltip-target="tooltip-add-${item.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
 
-                            <div
-                                id="tooltip-add-${item.id}"
-                                role="tooltip"
-                                class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-800 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
-                            >
-                                Agregar bien
-                                <div class="tooltip-arrow" data-popper-arrow></div>
-                            </div>
-                        </td>
-                    `;
+                                        <div
+                                            id="tooltip-add-${item.id}"
+                                            role="tooltip"
+                                            class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-800 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                        >
+                                            Agregar bien
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
+                                    </td>
+                                `;
                                     tableBody.appendChild(row);
                                 });
 
@@ -93,10 +97,16 @@
                                     });
                                 });
                                 initializeTooltips();
-                            })
-                            .catch((error) => {
-                                console.error('Error');
-                            });
+                        } catch (error) {
+                            console.log(error);
+                            if (error.id_tipo_bien) {
+                                noty(error.id_tipo_bien[0], 'warning');
+                            }
+                            if (error.search) {
+                                console.log(error.search[0]);
+                                noty(error.search[0], 'warning');
+                            }
+                        }
                     }
 
                     function updateSelectedTable() {
@@ -162,7 +172,10 @@
                     }
 
                     tipoBienSelect.addEventListener('change', fetchData);
-                    nombreBusquedaInput.addEventListener('input', fetchData);
+                    nombreBusquedaInput.addEventListener('input', () => {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(fetchData, 500);
+                    });
 
                     fetchData();
                 });
