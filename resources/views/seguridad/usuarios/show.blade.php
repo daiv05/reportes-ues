@@ -83,7 +83,7 @@
                 <h3 class="text-lg font-medium leading-6 text-gray-900">Roles asignados</h3>
             </div>
 
-            <div class="border-t border-gray-200">
+            <div class="overflow-auto border-t border-gray-200">
                 <x-table.base :headers="$headersRoles">
                     @foreach ($user->roles as $role)
                         <x-table.tr>
@@ -104,7 +104,7 @@
                     <h3 class="text-lg font-medium leading-6 text-gray-900">Puestos asignados</h3>
                 </div>
 
-                <div class="border-t border-gray-200">
+                <div class="overflow-auto border-t border-gray-200">
                     <x-table.base :headers="$headersPuestos">
                         @foreach ($user->empleadosPuestos as $empPuesto)
                             <x-table.tr>
@@ -114,7 +114,7 @@
                                     <x-status.is-active :active="$empPuesto->activo" />
                                 </x-table.td>
                                 <x-table.td justify="center">
-                                    <div class="flex flex-wrap justify-center gap-2">
+                                    <div class="relative flex justify-center space-x-2">
                                         <a
                                             href="{{ url('recursos-humanos/empleados-puestos/' . $empPuesto->id) }}"
                                             data-tooltip-target="tooltip-view-{{ $empPuesto->id }}"
@@ -126,7 +126,7 @@
                                         <div
                                             id="tooltip-view-{{ $empPuesto->id }}"
                                             role="tooltip"
-                                            class="shadow-xs tooltip z-40 inline-block rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                            class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-blue-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                                         >
                                             Ver puesto asignado
                                             <div class="tooltip-arrow" data-popper-arrow></div>
@@ -144,7 +144,7 @@
                     <h3 class="text-lg font-medium leading-6 text-gray-900">Reportes asignados</h3>
                 </div>
 
-                <div class="border-t border-gray-200">
+                <div class="overflow-auto border-t border-gray-200">
                     <x-table.base :headers="$headersReports">
                         @foreach ($user->empleadosPuestos as $empPuesto)
                             @if ($empPuesto->activo)
@@ -172,34 +172,36 @@
                                             />
                                         </x-table.td>
                                         <x-table.td justify="center">
-                                            <a
-                                                href="{{ route('detalle-reporte', ['id' => $empAccion->reporte->id]) }}"
-                                                data-tooltip-target="tooltip-view-{{ $empAccion->reporte->id }}"
-                                                class="font-medium text-gray-700 hover:underline"
-                                            >
-                                                <svg
-                                                    class="h-6 w-6"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                    xmlns="http://www.w3.org/2000/svg"
+                                            <div class="relative flex justify-center space-x-2">
+                                                <a
+                                                    href="{{ route('detalle-reporte', ['id' => $empAccion->reporte->id]) }}"
+                                                    data-tooltip-target="tooltip-view-{{ $empAccion->reporte->id }}"
+                                                    class="font-medium text-gray-700 hover:underline"
                                                 >
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M4 6h16M4 12h16m-7 6h7"
-                                                    ></path>
-                                                </svg>
-                                            </a>
+                                                    <svg
+                                                        class="h-6 w-6"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4 6h16M4 12h16m-7 6h7"
+                                                        ></path>
+                                                    </svg>
+                                                </a>
 
-                                            <div
-                                                id="tooltip-view-{{ $empAccion->reporte->id }}"
-                                                role="tooltip"
-                                                class="shadow-xs tooltip z-40 inline-block rounded-lg bg-gray-800 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
-                                            >
-                                                Ver detalle del reporte
-                                                <div class="tooltip-arrow" data-popper-arrow></div>
+                                                <div
+                                                    id="tooltip-view-{{ $empAccion->reporte->id }}"
+                                                    role="tooltip"
+                                                    class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-800 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                                >
+                                                    Ver detalle del reporte
+                                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                                </div>
                                             </div>
                                         </x-table.td>
                                     </x-table.tr>

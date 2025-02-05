@@ -39,7 +39,7 @@
                     />
                 </x-forms.row>
             </div>
-            <div class="flex flex-wrap space-x-4">
+            <div class="relative flex flex-wrap space-x-4">
                 <button
                     type="submit"
                     data-tooltip-target="tooltip-aplicar-filtros"
@@ -64,7 +64,7 @@
                 <div
                     id="tooltip-aplicar-filtros"
                     role="tooltip"
-                    class="shadow-xs tooltip z-40 inline-block rounded-lg bg-escarlata-ues px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                    class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-escarlata-ues px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                 >
                     Aplicar filtros
                     <div class="tooltip-arrow" data-popper-arrow></div>
@@ -91,7 +91,7 @@
                 <div
                     id="tooltip-limpiar-filtros"
                     role="tooltip"
-                    class="shadow-xs tooltip z-40 inline-block rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                    class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-200 px-3 py-2 !text-center text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                 >
                     Limpiar filtros
                     <div class="tooltip-arrow" data-popper-arrow></div>
@@ -108,27 +108,29 @@
                         <x-status.is-active :active="$unidad->activo" />
                     </x-table.td>
                     <x-table.td>
-                        @canany(['UNIDADES_MEDIDA_EDITAR'])
-                            <a
-                                href="#"
-                                class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                data-id="{{ $unidad->id }}"
-                                data-nombre="{{ $unidad->nombre }}"
-                                data-activo="{{ $unidad->activo }}"
-                                data-tooltip-target="tooltip-edit-{{ $unidad->id }}"
-                            >
-                                <x-heroicon-o-pencil class="h-5 w-5" />
-                            </a>
+                        <div class="relative flex justify-center space-x-2">
+                            @canany(['UNIDADES_MEDIDA_EDITAR'])
+                                <a
+                                    href="#"
+                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                    data-id="{{ $unidad->id }}"
+                                    data-nombre="{{ $unidad->nombre }}"
+                                    data-activo="{{ $unidad->activo }}"
+                                    data-tooltip-target="tooltip-edit-{{ $unidad->id }}"
+                                >
+                                    <x-heroicon-o-pencil class="h-5 w-5" />
+                                </a>
 
-                            <div
-                                id="tooltip-edit-{{ $unidad->id }}"
-                                role="tooltip"
-                                class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
-                            >
-                                Editar unidad de medida
-                                <div class="tooltip-arrow" data-popper-arrow></div>
-                            </div>
-                        @endcanany
+                                <div
+                                    id="tooltip-edit-{{ $unidad->id }}"
+                                    role="tooltip"
+                                    class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-green-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                >
+                                    Editar unidad de medida
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            @endcanany
+                        </div>
                     </x-table.td>
                 </x-table.tr>
             @endforeach

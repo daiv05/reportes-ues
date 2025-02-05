@@ -36,7 +36,7 @@
                             <x-status.is-active :active="$rol->activo" />
                         </x-table.td>
                         <x-table.td>
-                            <div class="flex space-x-2">
+                            <div class="relative flex justify-center space-x-2">
                                 @if (! in_array($rol->id, $roleRestricted))
                                     @canany(['ROLES_EDITAR'])
                                         <a
@@ -50,7 +50,7 @@
                                         <div
                                             id="tooltip-edit-{{ $rol->id }}"
                                             role="tooltip"
-                                            class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                            class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-green-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                                         >
                                             Editar rol
                                             <div class="tooltip-arrow" data-popper-arrow></div>
@@ -71,7 +71,7 @@
                                     <div
                                         id="tooltip-view-{{ $rol->id }}"
                                         role="tooltip"
-                                        class="shadow-xs tooltip z-40 inline-block rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-blue-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                                     >
                                         Ver rol
                                         <div class="tooltip-arrow" data-popper-arrow></div>

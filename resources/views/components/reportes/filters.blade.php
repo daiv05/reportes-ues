@@ -24,7 +24,7 @@
         action="{{ route($ruta) }}"
         class="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0"
     >
-        <div class="relative">
+        <div class="relative pt-1">
             <button
                 id="dropdownRadioButton"
                 data-dropdown-toggle="dropdownRadio"
@@ -161,7 +161,7 @@
                 </ul>
             </div>
         </div>
-        <div class="relative">
+        <div class="relative pt-1">
             <select
                 id="tipoReporte"
                 name="tipoReporte"
@@ -176,7 +176,7 @@
                 </option>
             </select>
         </div>
-        <div class="relative">
+        <div class="relative pt-1">
             <select
                 id="estado"
                 name="estado"
@@ -197,7 +197,7 @@
                 </option>
             </select>
         </div>
-        <div class="relative">
+        <div class="relative pt-1">
             <div class="rtl:inset-r-0 pointer-events-none absolute inset-y-0 left-0 flex items-center ps-3 rtl:right-0">
                 <svg
                     class="h-4 w-5 text-gray-500 dark:text-gray-400"
@@ -223,7 +223,7 @@
             />
         </div>
 
-        <div class="flex space-x-2">
+        <div class="relative flex space-x-2 pt-1">
             <button
                 type="submit"
                 data-tooltip-target="tooltip-aplicar-filtros"
@@ -248,7 +248,7 @@
             <div
                 id="tooltip-aplicar-filtros"
                 role="tooltip"
-                class="shadow-xs tooltip z-40 inline-block rounded-lg bg-escarlata-ues px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-escarlata-ues px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
             >
                 Aplicar filtros
                 <div class="tooltip-arrow" data-popper-arrow></div>
@@ -275,7 +275,7 @@
             <div
                 id="tooltip-limpiar-filtros"
                 role="tooltip"
-                class="shadow-xs tooltip z-40 inline-block rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-200 px-3 py-2 !text-center text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
             >
                 Limpiar filtros
                 <div class="tooltip-arrow" data-popper-arrow></div>
