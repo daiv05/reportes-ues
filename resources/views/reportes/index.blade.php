@@ -14,8 +14,8 @@
 <x-app-layout>
     <x-slot name="header">
         <x-header.main
-            tituloMenor="Últimos reportes de"
-            tituloMayor="INCIDENCIAS EN LA FACULTAD"
+            tituloMenor="Listado general"
+            tituloMayor="DE REPORTES EN LA FACULTAD"
             subtitulo="Mantente pendiente de los últimos reportes notificados de tu facultad"
         >
             <x-slot name="acciones">
