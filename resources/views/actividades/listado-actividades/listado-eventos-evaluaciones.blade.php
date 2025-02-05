@@ -33,6 +33,8 @@
                         >
                             Añadir
                         </x-forms.primary-button>
+
+                        <x-button-redirect to="timeline-eventos-evaluaciones" label="Línea de tiempo" />
                     @endif
                 </div>
             </x-slot>
