@@ -26,10 +26,8 @@
         </x-header.main>
     </x-slot>
     <x-container>
-        <div>
-            {{-- FILTROS --}}
-            <x-reportes.filters ruta="reportes-generales" />
-        </div>
+        {{-- FILTROS --}}
+        <x-reportes.filters ruta="reportes-generales" />
         <div class="overflow-x-auto">
             {{-- TABLA --}}
             <x-table.base :headers="$headers">
