@@ -45,7 +45,7 @@
         {{-- FILTROS --}}
         <div class="flex-column flex flex-wrap items-center gap-3 space-y-4 pb-4 sm:flex-row sm:space-y-0">
             <div
-                class="flex w-full flex-col flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0"
+                class="flex w-full flex-col flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 relative"
             >
                 <form
                     action="{{ route('listado-eventos-evaluaciones') }}"
@@ -88,9 +88,10 @@
                             />
                         </x-forms.row>
                     </div>
-                    <div class="flex flex-wrap space-x-4">
+                    <div class="flex flex-wrap space-x-4 relative">
                         <button
                             type="submit"
+                            data-tooltip-target="tooltip-aplicar-filtros"
                             class="inline-flex items-center rounded-full border border-transparent bg-escarlata-ues px-3 py-3 align-middle text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                         >
                             <svg
@@ -109,10 +110,20 @@
                             </svg>
                         </button>
 
+                        <div
+                            id="tooltip-aplicar-filtros"
+                            role="tooltip"
+                            class="shadow-xs tooltip z-40 inline-block rounded-lg !text-nowrap !text-center bg-escarlata-ues px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        >
+                            Aplicar filtros
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
+
                         <button
                             type="reset"
                             class="inline-flex items-center rounded-full border border-gray-500 bg-white px-3 py-3 align-middle text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                             onclick="window.location.href='{{ route('listado-eventos-evaluaciones') }}';"
+                            data-tooltip-target="tooltip-limpiar-filtros"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -125,6 +136,15 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
+
+                        <div
+                            id="tooltip-limpiar-filtros"
+                            role="tooltip"
+                            class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        >
+                            Limpiar filtros
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -163,11 +183,11 @@
                             <x-table.td justify="center">
                                 <x-status.is-active :active="$evento->actividad->activo" />
                             </x-table.td>
-                            <x-table.td>
-                                <div class="flex justify-center space-x-2">
+                            <x-table.td justify="center">
+                                <div class="flex justify-center space-x-2 relative">
                                     <a
                                         href="#"
-                                        class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                        class="flex edit-button font-medium text-green-600 hover:underline dark:text-green-400"
                                         data-id="{{ $evento->id }}"
                                         data-fecha="{{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}"
                                         data-materia="{{ $evento->actividad->asignaturas[0]->nombre }}"
@@ -180,15 +200,25 @@
                                         data-comentarios="{{ $evento->comentarios }}"
                                         data-estado="{{ $evento->actividad->activo }}"
                                         data-responsable="{{ $evento->actividad->responsable }}"
+                                        data-tooltip-target="tooltip-edit-{{ $evento->id }}"
                                     >
                                         <x-heroicon-s-pencil class="h-5 w-5" />
                                     </a>
+
+                                    <div
+                                        id="tooltip-edit-{{ $evento->id }}"
+                                        role="tooltip"
+                                        class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-700 px-3 py-2 text-sm !text-nowrap !text-center font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                    >
+                                        Editar evento
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
 
                                     <button
                                         href="#"
                                         data-modal-target="static-modal-details"
                                         data-modal-toggle="static-modal-details"
-                                        class="details-button font-medium text-blue-600 hover:underline dark:text-blue-400"
+                                        class="flex details-button font-medium text-blue-600 hover:underline dark:text-blue-400"
                                         data-id="{{ $evento->id }}"
                                         data-fecha="{{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}"
                                         data-materia="{{ $evento->actividad->asignaturas[0]->nombre }}"
@@ -201,16 +231,36 @@
                                         data-comentarios="{{ $evento->comentarios }}"
                                         data-estado="{{ $evento->actividad->activo }}"
                                         data-responsable="{{ $evento->actividad->responsable }}"
+                                        data-tooltip-target="tooltip-view-{{ $evento->id }}"
                                     >
                                         <x-heroicon-s-eye class="h-5 w-5" />
                                     </button>
+
+                                    <div
+                                        id="tooltip-view-{{ $evento->id }}"
+                                        role="tooltip"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                    >
+                                        Ver evento
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
                                     @if ($evento->actividad->activo)
                                         <a
                                             href="{{ route('crear-reporte', ['evento' => $evento->actividad->id]) }}"
-                                            class="font-medium text-red-700 hover:underline"
+                                            class="flex font-medium text-red-700 hover:underline"
+                                            data-tooltip-target="tooltip-report-{{ $evento->id }}"
                                         >
                                             <x-heroicon-s-flag class="mx-2 h-4" />
                                         </a>
+
+                                        <div
+                                            id="tooltip-report-{{ $evento->id }}"
+                                            role="tooltip"
+                                            class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-red-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                        >
+                                            Crear reporte
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
                                     @endif
                                 </div>
                             </x-table.td>
