@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
 
 class BienController extends Controller
 {
@@ -130,10 +131,18 @@ class BienController extends Controller
 
     public function findByNameOrCode(Request $request)
     {
-        $request->validate([
-            'search' => 'nullable|string|min:1',
-            'id_tipo_bien' => 'nullable|exists:tipos_bienes,id',
+        $validated = Validator::make($request->all(), [
+            'search' => 'nullable|string|min:1|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\- ]+$/',
+            'id_tipo_bien' => 'nullable|integer|exists:tipos_bienes,id',
+        ], [
+            'search.regex' => 'El campo de búsqueda solo puede contener letras, números, espacios y guiones',
+            'id_tipo_bien.exists' => 'El tipo de bien no existe',
         ]);
+
+        if ($validated->fails()) {
+            error_log($validated->errors());
+            return response()->json($validated->errors(), 400);
+        }
 
         $query = Bien::query();
 

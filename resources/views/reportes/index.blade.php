@@ -14,8 +14,8 @@
 <x-app-layout>
     <x-slot name="header">
         <x-header.main
-            tituloMenor="Últimos reportes de"
-            tituloMayor="INCIDENCIAS EN LA FACULTAD"
+            tituloMenor="Listado general"
+            tituloMayor="DE REPORTES EN LA FACULTAD"
             subtitulo="Mantente pendiente de los últimos reportes notificados de tu facultad"
         >
             <x-slot name="acciones">
@@ -26,10 +26,8 @@
         </x-header.main>
     </x-slot>
     <x-container>
-        <div>
-            {{-- FILTROS --}}
-            <x-reportes.filters ruta="reportes-generales" />
-        </div>
+        {{-- FILTROS --}}
+        <x-reportes.filters ruta="reportes-generales" />
         <div class="overflow-x-auto">
             {{-- TABLA --}}
             <x-table.base :headers="$headers">

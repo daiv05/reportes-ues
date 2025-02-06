@@ -16,6 +16,7 @@
                 <x-forms.field
                     label="Nombre del Rol"
                     name="name"
+                    maxlength="30"
                     :value="old('name', $role->name)"
                     :error="$errors->get('name')"
                     pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$"

@@ -7,11 +7,16 @@
                 Actualizar seguimiento de reporte
             </h2>
             <div class="mt-4 w-full">
-                <label for="id_estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Actualizar
-                    a <x-forms.input-required />
+                <label for="id_estado" class="text-sm font-medium text-gray-700 flex items-center dark:text-gray-300">Actualizar
+                    a &nbsp; <x-forms.input-required />
+                    <button data-tooltip-target="tooltip-estados" data-tooltip-trigger="click"
+                        type="button"
+                        class="ms-3 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-xl text-sm w-5 h-5 text-center">
+                        <x-heroicon-o-information-circle class="w-5 h-5" />
+                    </button>
                 </label>
                 <select id="id_estado" name="id_estado"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                     <option value="">Seleccionar estado</option>
                     @foreach ($estadosPermitidos as $estado)
                         <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
@@ -19,20 +24,39 @@
                 </select>
                 <span id="id_estado_error" class="text-red-500 text-sm"></span>
                 @include('components.forms.input-error', ['messages' => $errors->get('id_estado')])
+                <div id="tooltip-estados" role="tooltip"
+                    class="absolute z-21 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-xs opacity-0 tooltip">
+                    <div>
+                        <h2 class="mb-2 text-sm font-semibold text-gray-300 dark:text-white">Descripción de
+                            estados:
+                        </h2>
+                        <ul
+                            class="text-xs max-w-md space-y-1 text-gray-200 list-disc list-inside">
+                            @foreach ($estadosPermitidos as $estado)
+                                <li>
+                                    <span class="font-semibold">{{ $estado->nombre }}:</span>
+                                    {{ $estado->descripcion ?: 'Sin descripción' }}
+                                </li>
+                            @endforeach
+                        </ul>
+
+                    </div>
+                    <div class="tooltip-arrow" data-popper-arrow></div>
+                </div>
             </div>
             <div class="mt-4 w-full">
                 <label for="comentarios" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Comentarios
                     <x-forms.input-required />
                 </label>
-                <textarea id="comentarios" name="comentario" rows="3"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                <textarea id="comentarios" name="comentario" rows="3" maxlength="255"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"></textarea>
                 <span id="comentarios_error" class="text-red-500 text-sm"></span>
                 @include('components.forms.input-error', ['messages' => $errors->get('comentario')])
             </div>
             <div class="mt-4 w-full">
                 <label for="evidencia"
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Evidencia</label>
-                <input type="file" id="evidencia" name="evidencia"
+                <input type="file" id="evidencia" name="evidencia" accept="image/png, image/jpeg, image/jpg"
                     class="mt-1 block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:border-indigo-500 focus:ring-indigo-500">
                 <span id="evidencia_error" class="text-red-500 text-sm"></span>
                 @include('components.forms.input-error', ['messages' => $errors->get('evidencia')])
@@ -80,7 +104,7 @@
                                     <th scope="col" class="px-2 py-1 w-[25%]">
                                         <div class="flex items-center justify-start">
                                             Fondo
-                                            <button data-tooltip-target="tooltip-click" data-tooltip-trigger="click"
+                                            <button data-tooltip-target="tooltip-fondos" data-tooltip-trigger="click"
                                                 type="button"
                                                 class="ms-3 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-xl text-sm w-5 h-5 text-center">
                                                 <x-heroicon-o-information-circle class="w-5 h-5" />
@@ -95,13 +119,13 @@
                             </tbody>
                         </table>
                     </div>
-                    <div id="tooltip-click" role="tooltip"
+                    <div id="tooltip-fondos" role="tooltip"
                         class="absolute z-21 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-xs opacity-0 tooltip">
                         <div>
                             <h2 class="mb-2 text-sm font-semibold text-gray-300 dark:text-white">Descripción de
                                 fondos:
                             </h2>
-                            <ulW
+                            <ul
                                 class="text-xs max-w-md space-y-1 text-gray-200 list-disc list-inside">
                                 @foreach ($fondos as $fond)
                                     <li>

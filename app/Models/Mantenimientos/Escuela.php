@@ -15,7 +15,7 @@ class Escuela extends Model implements Auditable
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+        $this->attributes['nombre'] = strtoupper(strtr($value, 'áéíóúñ', 'ÁÉÍÓÚÑ'));
 
     }
     public function asignaturas()

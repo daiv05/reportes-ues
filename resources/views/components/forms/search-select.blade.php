@@ -9,6 +9,7 @@
     'readonly' => false,
     'id_key' => 'id',
     'name_key' => 'nombre',
+    'maxlength' => '',
 ])
 
 @php
@@ -23,6 +24,7 @@
 
     <!-- Campo de búsqueda -->
     <input type="text" id="search-{{ $id }}" placeholder="Buscar..." {{ $readonly ? 'readonly' : '' }}
+           maxlength="{{ $maxlength }}"
            class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm {{ $readonly ? 'bg-gray-200' : 'border-gray-100' }}">
 
     <!-- Contenedor de opciones -->

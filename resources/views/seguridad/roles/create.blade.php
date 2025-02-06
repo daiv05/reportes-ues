@@ -11,6 +11,7 @@
                 <x-forms.field
                     pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$"
                     patternMessage="Solo se permiten letras y numeros en el nombre del rol."
+                    maxlength="30"
                     label="Nombre del Rol"
                     name="name"
                     :value="old('name')"

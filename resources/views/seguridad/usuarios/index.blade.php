@@ -37,10 +37,11 @@
             >
                 <div class="flex w-full flex-col px-4 md:w-5/6 md:px-0">
                     <x-forms.row :columns="3">
-                        <x-forms.field id="" label="Nombre" name="nombre-filter" :value="request('nombre-filter')" />
+                        <x-forms.field maxlength="100" id="" label="Nombre" name="nombre-filter" :value="request('nombre-filter')" />
 
                         <x-forms.field
                             id="email"
+                            maxlength="255"
                             label="Correo Electrónico"
                             name="email-filter"
                             :value="request('email-filter')"
