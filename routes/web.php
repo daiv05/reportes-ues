@@ -66,8 +66,9 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
         Route::post('/eventos-y-evaluaciones', [ActividadController::class, 'storeOneEvent'])->middleware('permission:EVENTOS_CREAR')->name('evento.store');
         Route::put('/eventos-y-evaluaciones/{id}', [ActividadController::class, 'updateEvent'])->middleware('permission:CLASES_EDITAR')->name('evento.update');
         Route::get('/eventos-y-evaluaciones', [ActividadController::class, 'listadoEventos'])->middleware('permission:EVENTOS_VER')->name('listado-eventos-evaluaciones');
-        Route::get('/eventos-y-evaluaciones/linea-de-tiempo', [ActividadController::class, 'lineaDeTiempoEventosView'])->middleware('permission:EVENTOS_VER')->name('timeline-eventos-evaluaciones');
+        Route::get('/linea-de-tiempo', [ActividadController::class, 'lineaDeTiempoEventosView'])->middleware('permission:EVENTOS_VER')->name('timeline-eventos-evaluaciones');
         Route::get('/eventos-y-evaluaciones/linea-de-tiempo/obtener-eventos', [ActividadController::class, 'lineaDeTiempoEventos'])->middleware('permission:EVENTOS_VER')->name('timeline-obtener-eventos');
+        Route::get('/eventos-y-evaluaciones/linea-de-tiempo/obtener-actividades', [ActividadController::class, 'lineaDeTiempoActividades'])->middleware('permission:EVENTOS_VER')->name('timeline-obtener-actividades');
         Route::get('/importar-actividades', [ActividadController::class, 'importarActividadesView'])->middleware('permission:ACTIVIDADES_CARGA_EXCEL')->name('importar-actividades');
         Route::delete('/eliminar-evento-sesion/{index}', [ActividadController::class, 'eliminarDeSesion'])->middleware('permission:ACTIVIDADES_CARGA_EXCEL')->name('eliminar-evento-sesion');
         Route::post('/importar-actividades', [ActividadController::class, 'importarExcel'])->middleware('permission:ACTIVIDADES_CARGA_EXCEL')->name('importar-actividades-post');

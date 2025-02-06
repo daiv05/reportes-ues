@@ -33,6 +33,8 @@
                         >
                             Añadir
                         </x-forms.primary-button>
+
+                        <x-button-redirect to="timeline-eventos-evaluaciones" label="Línea de tiempo" />
                     @endif
                 </div>
             </x-slot>
@@ -43,7 +45,7 @@
         {{-- FILTROS --}}
         <div class="flex-column flex flex-wrap items-center gap-3 space-y-4 pb-4 sm:flex-row sm:space-y-0">
             <div
-                class="flex w-full flex-col flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0 relative"
+                class="relative flex w-full flex-col flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0"
             >
                 <form
                     action="{{ route('listado-clases') }}"
@@ -88,7 +90,7 @@
                             />
                         </x-forms.row>
                     </div>
-                    <div class="flex flex-wrap space-x-4 relative">
+                    <div class="relative flex flex-wrap space-x-4">
                         <button
                             type="submit"
                             data-tooltip-target="tooltip-aplicar-filtros"
@@ -113,7 +115,7 @@
                         <div
                             id="tooltip-aplicar-filtros"
                             role="tooltip"
-                            class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-escarlata-ues px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                            class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-escarlata-ues px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                         >
                             Aplicar filtros
                             <div class="tooltip-arrow" data-popper-arrow></div>
@@ -140,7 +142,7 @@
                         <div
                             id="tooltip-limpiar-filtros"
                             role="tooltip"
-                            class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                            class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-200 px-3 py-2 !text-center text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                         >
                             Limpiar filtros
                             <div class="tooltip-arrow" data-popper-arrow></div>
@@ -177,7 +179,7 @@
                                 <x-status.is-active :active="$clase->actividad->activo" />
                             </x-table.td>
                             <x-table.td justify="center">
-                                <div class="flex justify-center space-x-2 relative">
+                                <div class="relative flex justify-center space-x-2">
                                     <a
                                         href="#"
                                         class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
@@ -201,7 +203,7 @@
                                     <div
                                         id="tooltip-edit-{{ $clase->id }}"
                                         role="tooltip"
-                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-green-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                                     >
                                         Editar clase
                                         <div class="tooltip-arrow" data-popper-arrow></div>
@@ -231,7 +233,7 @@
                                     <div
                                         id="tooltip-view-{{ $clase->id }}"
                                         role="tooltip"
-                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-blue-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                                     >
                                         Ver clase
                                         <div class="tooltip-arrow" data-popper-arrow></div>
@@ -248,7 +250,7 @@
                                         <div
                                             id="tooltip-report-{{ $clase->id }}"
                                             role="tooltip"
-                                            class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-red-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                            class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-red-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                                         >
                                             Crear reporte
                                             <div class="tooltip-arrow" data-popper-arrow></div>
@@ -275,25 +277,28 @@
                 <x-heroicon-s-book-open class="h-10 w-10 text-escarlata-ues" />
                 <div>
                     <h2 id="materia-info" class="text-2xl font-bold text-escarlata-ues"></h2>
-                    <h3 class="text-lg font-normal opacity-90">
-                        Detalle de la clase
-                    </h3>
+                    <h3 class="text-lg font-normal opacity-90">Detalle de la clase</h3>
                 </div>
             </div>
         </x-slot>
         <x-slot name="body">
-            <div class="w-full max-w-4xl bg-white rounded-lg overflow-hidden">
-                <div class="bg-primary text-primary-foreground flex flex-col md:flex-row items-center justify-center">
-
-                    <div class="mt-4 md:mt-0 flex items-center justify-center space-x-2">
-                        <span id="estado-info" class="bg-green-100 border border-green-600 text-green-900 px-3 py-1 rounded-full text-sm font-medium flex items-center"></span>
-                        <span id="modalidad-info" class="bg-blue-100 border border-blue-600 text-blue-900 px-3 py-1 rounded-full text-sm font-medium"></span>
+            <div class="w-full max-w-4xl overflow-hidden rounded-lg bg-white">
+                <div class="bg-primary text-primary-foreground flex flex-col items-center justify-center md:flex-row">
+                    <div class="mt-4 flex items-center justify-center space-x-2 md:mt-0">
+                        <span
+                            id="estado-info"
+                            class="flex items-center rounded-full border border-green-600 bg-green-100 px-3 py-1 text-sm font-medium text-green-900"
+                        ></span>
+                        <span
+                            id="modalidad-info"
+                            class="rounded-full border border-blue-600 bg-blue-100 px-3 py-1 text-sm font-medium text-blue-900"
+                        ></span>
                     </div>
                 </div>
-                <div class="p-1 mt-2">
-                    <div class="grid gap-2 md:gap-6 md:grid-cols-2">
+                <div class="mt-2 p-1">
+                    <div class="grid gap-2 md:grid-cols-2 md:gap-6">
                         <div class="flex items-center space-x-4 p-4">
-                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
                                 <x-heroicon-s-user-group class="h-5 w-5" />
                             </div>
                             <div>
@@ -302,7 +307,7 @@
                             </div>
                         </div>
                         <div class="flex items-center space-x-4 p-4">
-                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
                                 <x-heroicon-s-clock class="h-5 w-5" />
                             </div>
                             <div>
@@ -311,7 +316,7 @@
                             </div>
                         </div>
                         <div class="flex items-center space-x-4 p-4">
-                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
                                 <x-heroicon-s-academic-cap class="h-5 w-5" />
                             </div>
                             <div>
@@ -320,7 +325,7 @@
                             </div>
                         </div>
                         <div class="flex items-center space-x-4 p-4">
-                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
                                 <x-heroicon-s-map-pin class="h-5 w-5" />
                             </div>
                             <div>
@@ -329,7 +334,7 @@
                             </div>
                         </div>
                         <div class="flex items-center space-x-4 p-4">
-                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
                                 <x-heroicon-s-user class="h-5 w-5" />
                             </div>
                             <div>
@@ -338,7 +343,7 @@
                             </div>
                         </div>
                         <div class="flex items-center space-x-4 p-4">
-                            <div class="bg-gray-400/20 p-2 rounded-full text-escarlata-ues">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
                                 <x-heroicon-s-calendar class="h-5 w-5" />
                             </div>
                             <div>
@@ -360,7 +365,6 @@
             </button>
         </x-slot>
     </x-form-modal>
-
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
@@ -750,7 +754,6 @@
 
     document.querySelectorAll('.details-button').forEach((button) => {
         button.addEventListener('click', function (event) {
-
             const materia = this.getAttribute('data-materia');
             const tipoClase = this.getAttribute('data-tipo-clase');
             const hora_inicio = this.getAttribute('data-hora-inicio');
@@ -764,28 +767,41 @@
 
             document.getElementById('materia-info').textContent = materia;
 
-            if(estado == '1') {
+            if (estado == '1') {
                 document.getElementById('estado-info').textContent = 'ACTIVO';
                 document.getElementById('estado-info').classList.remove('bg-red-100', 'border-red-600', 'text-red-900');
-                document.getElementById('estado-info').classList.add('bg-green-100', 'border-green-600', 'text-green-900');
+                document
+                    .getElementById('estado-info')
+                    .classList.add('bg-green-100', 'border-green-600', 'text-green-900');
             } else {
                 document.getElementById('estado-info').textContent = 'INACTIVO';
-                document.getElementById('estado-info').classList.remove('bg-green-100', 'border-green-600', 'text-green-900');
+                document
+                    .getElementById('estado-info')
+                    .classList.remove('bg-green-100', 'border-green-600', 'text-green-900');
                 document.getElementById('estado-info').classList.add('bg-red-100', 'border-red-600', 'text-red-900');
             }
 
             document.getElementById('modalidad-info').textContent = modalidades[modalidad];
 
-            if(modalidades[modalidad] == 'PRESENCIAL') {
-                document.getElementById('modalidad-info').classList.remove('bg-violet-100', 'border-violet-600', 'text-violet-900');
-                document.getElementById('modalidad-info').classList.add('bg-blue-100', 'border-blue-600', 'text-blue-900');
+            if (modalidades[modalidad] == 'PRESENCIAL') {
+                document
+                    .getElementById('modalidad-info')
+                    .classList.remove('bg-violet-100', 'border-violet-600', 'text-violet-900');
+                document
+                    .getElementById('modalidad-info')
+                    .classList.add('bg-blue-100', 'border-blue-600', 'text-blue-900');
             } else {
-                document.getElementById('modalidad-info').classList.remove('bg-blue-100', 'border-blue-600', 'text-blue-900');
-                document.getElementById('modalidad-info').classList.add('bg-violet-100', 'border-violet-600', 'text-violet-900');
+                document
+                    .getElementById('modalidad-info')
+                    .classList.remove('bg-blue-100', 'border-blue-600', 'text-blue-900');
+                document
+                    .getElementById('modalidad-info')
+                    .classList.add('bg-violet-100', 'border-violet-600', 'text-violet-900');
             }
 
             document.getElementById('tipo-clase-info').textContent = tiposClase[tipoClase];
-            document.getElementById('horario-info').textContent = convertirHora12H(hora_inicio) + ' - ' + convertirHora12H(hora_fin);
+            document.getElementById('horario-info').textContent =
+                convertirHora12H(hora_inicio) + ' - ' + convertirHora12H(hora_fin);
             document.getElementById('grupo-info').textContent = 'Grupo ' + grupo;
             document.getElementById('responsable-info').textContent = responsable;
             document.getElementById('local-info').textContent = local;
