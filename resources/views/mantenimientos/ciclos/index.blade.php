@@ -170,6 +170,7 @@
                             label="Año"
                             name="anio"
                             pattern="[0-9]{4}"
+                            maxlength="4"
                             patternMessage="El año debe contener 4 dígitos sin caracteres especiales"
                             :value="old('anio')"
                             :error="$errors->get('anio')"

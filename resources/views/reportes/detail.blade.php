@@ -384,7 +384,7 @@
                             icon="heroicon-o-chat-bubble-bottom-center-text" />
                         <x-reportes.detail.subheader-content>
                             @if (!$reporte->estado_ultimo_historial?->nombre)
-                                <textarea id="comentario" name="comentario" rows="8"
+                                <textarea id="comentario" name="comentario" rows="8" maxlength="255"
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"></textarea>
                                 @include('components.forms.input-error', [
                                     'messages' => $errors->get('comentario'),

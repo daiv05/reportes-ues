@@ -15,6 +15,7 @@ class Estado extends Model implements Auditable
 
     protected $fillable = [
         'nombre',
+        'descripcion',
         'activo',
     ];
 
@@ -24,6 +25,6 @@ class Estado extends Model implements Auditable
     }
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóúñ', 'ÁÉÍÓÚÑ'));
     }
 }

@@ -25,6 +25,7 @@
             type="text"
             id="nombre-busqueda-bienes"
             name="nombre"
+            maxlength="50"
             class="block w-full rounded-lg border border-gray-300 p-2 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500 sm:w-80"
             placeholder="Nombre/Código"
         />
@@ -35,6 +36,7 @@
             {{-- TABLA --}}
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
+                    let timeout = null;
                     const tipoBienSelect = document.getElementById('tipoBien');
                     const nombreBusquedaInput = document.getElementById('nombre-busqueda-bienes');
                     const idBienes = [];
@@ -42,17 +44,19 @@
 
                     initializeTooltips();
 
-                    function fetchData() {
+                    async function fetchData() {
                         const tipoBien = tipoBienSelect.value;
                         const search = nombreBusquedaInput.value;
                         const url = `/mantenimientos/bienes/filtro?id_tipo_bien=${tipoBien}&search=${search}`;
-                        fetch(url)
-                            .then((response) => response.json())
-                            .then((data) => {
-                                const tableBody = document.getElementById('bienes-table-body');
+                        try {
+                            const response = await fetch(url);
+                            if (!response.ok) {
+                                throw new Error('Error al obtener los datos');
+                            }
+                            const responseJson = await response.json();
+                            const tableBody = document.getElementById('bienes-table-body');
                                 tableBody.innerHTML = '';
-
-                                data.forEach((item) => {
+                                responseJson.forEach((item) => {
                                     const row = document.createElement('tr');
                                     row.classList.add('bg-white', 'border-b');
                                     row.innerHTML = `
@@ -84,7 +88,7 @@
                                 document.querySelectorAll('button[data-id]').forEach((button) => {
                                     button.addEventListener('click', function () {
                                         const id = parseInt(this.getAttribute('data-id'), 10);
-                                        const item = data.find((bien) => bien.id === id);
+                                        const item = responseJson.find((bien) => bien.id === id);
 
                                         if (!idBienes.includes(id)) {
                                             idBienes.push(id);
@@ -95,10 +99,16 @@
                                     });
                                 });
                                 initializeTooltips();
-                            })
-                            .catch((error) => {
-                                console.error('Error');
-                            });
+                        } catch (error) {
+                            console.log(error);
+                            if (error.id_tipo_bien) {
+                                noty(error.id_tipo_bien[0], 'warning');
+                            }
+                            if (error.search) {
+                                console.log(error.search[0]);
+                                noty(error.search[0], 'warning');
+                            }
+                        }
                     }
 
                     function updateSelectedTable() {
@@ -166,7 +176,10 @@
                     }
 
                     tipoBienSelect.addEventListener('change', fetchData);
-                    nombreBusquedaInput.addEventListener('input', fetchData);
+                    nombreBusquedaInput.addEventListener('input', () => {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(fetchData, 500);
+                    });
 
                     fetchData();
                 });

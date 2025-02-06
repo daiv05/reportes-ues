@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-
     <title>{{ config('app.name', 'ReportFIA') }}</title>
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @laravelPWA
 </head>
@@ -69,7 +63,7 @@
     </div>
     <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         var notyf = new Notyf({
             types: [{
@@ -114,7 +108,6 @@
                 },
             ]
         });
-
         const noty = (content, type = 'info') => {
             notyf.open({
                 type: type,
@@ -123,7 +116,6 @@
                 dismissible: true
             });
         }
-
         @if (!empty(session()->has('message')))
             noty(@json(session('message')['content']), @json(session('message')['type']) ?? 'success');
         @endif
@@ -136,103 +128,44 @@
             }
         @endif
     </script>
-
     <script>
         let activeNotifications = 0;
         const MAX_NOTIFICATIONS = 4;
         const TIME_DISPLAY_NOTY = 5000;
-
-        document.addEventListener('DOMContentLoaded', function(e) {
-            const loader = document.getElementById('loader');
-
-            window.addEventListener('beforeunload', function() {
-                // Mostrar el loader al salir de la página
-                loader.classList.remove('hidden');
-            });
-
-            document.addEventListener('submit', function() {
-                // Mostrar el loader al enviar un formulario
-                loader.classList.remove('hidden');
-
-                if (event.defaultPrevented) {
-                    // Si el evento fue prevenido, ocultar el loader
-                    loader.classList.add('hidden');
-                    limitedNoty('Los datos del formulario no son válidos', 'warning');
-                }
-            });
-
-            // Ocultar el loader al regresar a la página
-            window.addEventListener('pageshow', function(event) {
-                if (event.persisted) { // Si la página está cargada desde caché
-                    loader.classList.add('hidden');
-                }
-            });
-        });
-
         const limitedNoty = (content, type = 'info') => {
             if (activeNotifications >= MAX_NOTIFICATIONS) {
                 return;
             }
-
-            // Crear la notificación
             notyf.open({
                 type: type,
                 message: content,
                 duration: TIME_DISPLAY_NOTY,
                 dismissible: true
             });
-
-            // Incrementar contador de notificaciones activas
             activeNotifications++;
-
-            // Restar del contador cuando la notificación desaparezca
             setTimeout(() => {
                 activeNotifications--;
-            }, TIME_DISPLAY_NOTY); // Duración de la notificación
+            }, TIME_DISPLAY_NOTY);
         };
-    </script>
-
-    <script>
-        window.addEventListener("load", () => {
-            setTimeout(() => {
-                let locales = {
-                    es: {
-                        days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes",
-                            "Sábado"
-                        ],
-                        daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
-                            "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-                        ],
-                        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep",
-                            "Oct", "Nov", "Dic"
-                        ],
-                        today: "Hoy",
-                        monthsTitle: "Meses",
-                        clear: "Borrar",
-                        weekStart: 1,
-                        format: "dd/mm/yyyy"
-                    }
-                };
-                let flowbitePickers = Object.values(FlowbiteInstances.getInstances("Datepicker")).map((
-                    instance) => {
-                    return instance.getDatepickerInstance();
-                });
-                for (const flowbitePicker of flowbitePickers) {
-                    for (const picker of flowbitePicker.datepickers || [flowbitePicker]) {
-                        Object.assign(picker.constructor.locales, locales);
-                        picker.setOptions({
-                            language: "es"
-                        });
-                    }
+        document.addEventListener('DOMContentLoaded', function(e) {
+            const loader = document.getElementById('loader');
+            window.addEventListener('beforeunload', function() {
+                loader.classList.remove('hidden');
+            });
+            document.addEventListener('submit', function() {
+                loader.classList.remove('hidden');
+                if (event.defaultPrevented) {
+                    loader.classList.add('hidden');
+                    limitedNoty('Los datos del formulario no son válidos', 'warning');
                 }
-            }, 100);
+            });
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    loader.classList.add('hidden');
+                }
+            });
         });
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </body>
 
 </html>

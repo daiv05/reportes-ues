@@ -8,6 +8,8 @@
     'readonly' => false,
     'pattern' => null,
     'patternMessage' => 'El formato no es válido',
+    'maxlength' => '',
+    'placeholder' => '',
 ])
 
 <div>
@@ -32,6 +34,8 @@
             type="{{ $type }}"
             name="{{ $name }}"
             id="{{ $name }}"
+            maxlength="{{ $maxlength }}"
+            placeholder="{{ $placeholder }}"
             value="{{ $value }}"
             data-pattern="{{ $pattern ?? '' }}"
             data-pattern-message="{{ $patternMessage }}"

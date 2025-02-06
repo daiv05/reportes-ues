@@ -43,4 +43,12 @@ class CicloRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'anio.required' => 'El campo año es obligatorio.',
+            'anio.integer' => 'El campo año debe ser un número entero.',
+        ];
+    }
+
 }

@@ -15,7 +15,7 @@
     <!-- Lista de items disponibles con búsqueda -->
     <div class="w-full">
         <h3 class="text-sm font-medium text-gray-700 mb-2">{{ $tituloDisponibles }}</h3>
-        <input type="text"
+        <input type="text" maxlength="50"
             class="search-available mb-2 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
             placeholder="{{ $placeholderDisponibles }}">
 
@@ -60,7 +60,7 @@
     <!-- Lista de items asignados con búsqueda -->
     <div class="w-full">
         <h3 class="text-sm font-medium text-gray-700 mb-2">{{ $tituloAsignados }}</h3>
-        <input type="text"
+        <input type="text" maxlength="50"
             class="search-assigned mb-2 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-500 dark:bg-gray-700 dark:text-gray-300 sm:text-sm"
             placeholder="{{ $placeholderAsignados }}">
 
