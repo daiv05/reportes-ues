@@ -130,7 +130,7 @@
                 </option>
             </select>
         </div>
-        <div class="relative">
+        <div class="relative pt-1">
             <div class="rtl:inset-r-0 pointer-events-none absolute inset-y-0 left-0 flex items-center ps-3 rtl:right-0">
                 <svg class="h-4 w-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor"
                     viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -144,7 +144,7 @@
                 class="block w-full rounded-lg border border-gray-300 bg-white p-2 px-3 py-2 ps-10 text-sm font-medium text-gray-500 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500 sm:w-80"
                 placeholder="Buscar por titulo" />
         </div>
-        <div class="flex space-x-2 justify-center">
+        <div class="relative flex space-x-2 justify-center pt-1">
             <button type="submit" data-tooltip-target="tooltip-aplicar-filtros"
                 class="inline-flex items-center rounded-full border border-transparent bg-escarlata-ues px-3 py-3 align-middle text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -155,7 +155,7 @@
             </button>
 
             <div id="tooltip-aplicar-filtros" role="tooltip"
-                class="shadow-xs tooltip z-40 inline-block rounded-lg bg-escarlata-ues px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700">
+                class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-escarlata-ues px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700">
                 Aplicar filtros
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
@@ -170,7 +170,7 @@
             </button>
 
             <div id="tooltip-limpiar-filtros" role="tooltip"
-                class="shadow-xs tooltip z-40 inline-block rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700">
+                class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-200 px-3 py-2 !text-center text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700">
                 Limpiar filtros
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>

@@ -406,6 +406,27 @@ class ActividadController extends Controller
         return view('actividades.listado-actividades.listado-eventos-evaluaciones', compact('eventos', 'escuelas', 'modalidades', 'tiposClase', 'aulas'));
     }
 
+    public function lineaDeTiempoEventosView(Request $request)
+    {
+        return view('actividades.listado-actividades.linea-de-tiempo-eventos');
+    }
+
+    public function lineaDeTiempoEventos(Request $request)
+    {
+        $cicloActivo = Ciclo::where('activo', 1)->first();
+
+        $eventos = Evento::with('actividad', 'actividad.asignaturas.escuela', 'actividad.modalidad', 'actividad.aulas',)
+            ->whereHas('actividad', function ($query) use ($cicloActivo) {
+                if ($cicloActivo) {
+                    $query->where('id_ciclo', $cicloActivo->id);
+                }
+            })
+            ->orderBy('fecha', 'asc')
+            ->paginate(10)->appends($request->query());
+
+        return response()->json($eventos);
+    }
+
     public function storeOneEvent(EventoRequest $request)
     {
         $cicloActivo = Ciclo::where('activo', 1)->first();

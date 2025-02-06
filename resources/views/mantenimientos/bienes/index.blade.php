@@ -45,7 +45,7 @@
                         />
                     </x-forms.row>
                 </div>
-                <div class="flex flex-wrap space-x-4">
+                <div class="relative flex flex-wrap space-x-4">
                     <button
                         type="submit"
                         data-tooltip-target="tooltip-aplicar-filtros"
@@ -70,7 +70,7 @@
                     <div
                         id="tooltip-aplicar-filtros"
                         role="tooltip"
-                        class="shadow-xs tooltip z-40 inline-block rounded-lg bg-escarlata-ues px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-escarlata-ues px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                     >
                         Aplicar filtros
                         <div class="tooltip-arrow" data-popper-arrow></div>
@@ -97,7 +97,7 @@
                     <div
                         id="tooltip-limpiar-filtros"
                         role="tooltip"
-                        class="shadow-xs tooltip z-40 inline-block rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-200 px-3 py-2 !text-center text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                     >
                         Limpiar filtros
                         <div class="tooltip-arrow" data-popper-arrow></div>
@@ -119,46 +119,48 @@
                             <x-status.is-bien-active :text="$bien->estadoBien->nombre" />
                         </x-table.td>
                         <x-table.td>
-                            @canany(['BIENES_EDITAR'])
+                            <div class="relative flex justify-center space-x-2">
+                                @canany(['BIENES_EDITAR'])
+                                    <a
+                                        href="#"
+                                        class="edit-button mx-1 font-medium text-green-600 hover:underline"
+                                        data-id="{{ $bien->id }}"
+                                        data-nombre="{{ $bien->nombre }}"
+                                        data-descripcion="{{ $bien->descripcion }}"
+                                        data-codigo="{{ $bien->codigo }}"
+                                        data-id_tipo_bien="{{ $bien->id_tipo_bien }}"
+                                        data-id_estado_bien="{{ $bien->id_estado_bien }}"
+                                        data-tooltip-target="tooltip-edit-{{ $bien->id }}"
+                                    >
+                                        <x-heroicon-o-pencil class="h-5 w-5" />
+                                    </a>
+
+                                    <div
+                                        id="tooltip-edit-{{ $bien->id }}"
+                                        role="tooltip"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-green-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                    >
+                                        Editar bien
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+                                @endcanany
+
                                 <a
-                                    href="#"
-                                    class="edit-button mx-1 font-medium text-green-600 hover:underline"
-                                    data-id="{{ $bien->id }}"
-                                    data-nombre="{{ $bien->nombre }}"
-                                    data-descripcion="{{ $bien->descripcion }}"
-                                    data-codigo="{{ $bien->codigo }}"
-                                    data-id_tipo_bien="{{ $bien->id_tipo_bien }}"
-                                    data-id_estado_bien="{{ $bien->id_estado_bien }}"
-                                    data-tooltip-target="tooltip-edit-{{ $bien->id }}"
+                                    href="{{ route('bienes.detailWithReports', ['id' => $bien->id]) }}"
+                                    class="mx-1 font-medium text-blue-600 hover:underline"
+                                    data-tooltip-target="tooltip-view-{{ $bien->id }}"
                                 >
-                                    <x-heroicon-o-pencil class="h-5 w-5" />
+                                    <x-heroicon-o-eye class="h-5 w-5" />
                                 </a>
 
                                 <div
-                                    id="tooltip-edit-{{ $bien->id }}"
+                                    id="tooltip-view-{{ $bien->id }}"
                                     role="tooltip"
-                                    class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                    class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-blue-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
                                 >
-                                    Editar bien
+                                    Ver detalles del bien
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
-                            @endcanany
-
-                            <a
-                                href="{{ route('bienes.detailWithReports', ['id' => $bien->id]) }}"
-                                class="mx-1 font-medium text-blue-600 hover:underline"
-                                data-tooltip-target="tooltip-view-{{ $bien->id }}"
-                            >
-                                <x-heroicon-o-eye class="h-5 w-5" />
-                            </a>
-
-                            <div
-                                id="tooltip-view-{{ $bien->id }}"
-                                role="tooltip"
-                                class="shadow-xs tooltip z-40 inline-block rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
-                            >
-                                Ver detalles del bien
-                                <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
                         </x-table.td>
                     </x-table.tr>

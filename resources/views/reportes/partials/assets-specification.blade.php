@@ -60,26 +60,28 @@
                                     const row = document.createElement('tr');
                                     row.classList.add('bg-white', 'border-b');
                                     row.innerHTML = `
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.codigo}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.nombre}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.descripcion}</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button type="button" class="text-green-500 hover:text-green-700 cursor-pointer" data-id="${item.id}" data-tooltip-target="tooltip-add-${item.id}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                                            </svg>
-                                        </button>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.codigo}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.nombre}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.descripcion}</td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex justify-center space-x-2 relative">
+                                <button type="button" class="text-green-500 hover:text-green-700 cursor-pointer" data-id="${item.id}" data-tooltip-target="tooltip-add-${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
 
-                                        <div
-                                            id="tooltip-add-${item.id}"
-                                            role="tooltip"
-                                            class="shadow-xs tooltip z-40 inline-block rounded-lg bg-green-800 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
-                                        >
-                                            Agregar bien
-                                            <div class="tooltip-arrow" data-popper-arrow></div>
-                                        </div>
-                                    </td>
-                                `;
+                                <div
+                                    id="tooltip-add-${item.id}"
+                                    role="tooltip"
+                                    class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-green-800 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                >
+                                    Agregar bien
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </div>
+                        </td>
+                    `;
                                     tableBody.appendChild(row);
                                 });
 
@@ -121,19 +123,21 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.nombre}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.descripcion}</td>
                 <td class="px-6 py-4 text-center">
-                    <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer" data-id="${item.id}" data-tooltip-target="tooltip-remove-${item.id}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M6.293 4.293a1 1 0 011.414 0L10 6.586l2.293-2.293a1 1 0 111.414 1.414L11.414 8l2.293 2.293a1 1 0 11-1.414 1.414L10 9.414l-2.293 2.293a1 1 0 11-1.414-1.414L8.586 8 6.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
+                    <div class="flex justify-center space-x-2 relative">
+                        <button type="button" class="text-red-500 hover:text-red-700 cursor-pointer" data-id="${item.id}" data-tooltip-target="tooltip-remove-${item.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M6.293 4.293a1 1 0 011.414 0L10 6.586l2.293-2.293a1 1 0 111.414 1.414L11.414 8l2.293 2.293a1 1 0 11-1.414 1.414L10 9.414l-2.293 2.293a1 1 0 11-1.414-1.414L8.586 8 6.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
 
-                    <div
-                        id="tooltip-remove-${item.id}"
-                        role="tooltip"
-                        class="shadow-xs tooltip z-40 inline-block rounded-lg bg-red-800 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
-                    >
-                        Remover bien
-                        <div class="tooltip-arrow" data-popper-arrow></div>
+                        <div
+                            id="tooltip-remove-${item.id}"
+                            role="tooltip"
+                            class="shadow-xs tooltip z-40 inline-block !text-nowrap !text-center rounded-lg bg-red-800 px-3 py-2 text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        >
+                            Remover bien
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
                     </div>
                 </td>
             `;
