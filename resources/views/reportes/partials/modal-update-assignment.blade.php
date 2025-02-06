@@ -28,7 +28,7 @@
                     class="absolute z-21 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-xs opacity-0 tooltip">
                     <div>
                         <h2 class="mb-2 text-sm font-semibold text-gray-300 dark:text-white">Descripción de
-                            fondos:
+                            estados:
                         </h2>
                         <ul
                             class="text-xs max-w-md space-y-1 text-gray-200 list-disc list-inside">
