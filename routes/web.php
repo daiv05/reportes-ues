@@ -100,6 +100,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
         Route::patch('aulas/{aula}', [AulasController::class, 'update'])->middleware('permission:AULAS_EDITAR')->name('aulas.patch');
         Route::get('aulas/{aula}/edit', [AulasController::class, 'edit'])->middleware('permission:AULAS_EDITAR')->name('aulas.edit');
         Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('aulas.toggleActivo');
+        Route::post('aulas/importar', [AulasController::class, 'importarDatos'])->middleware('permission:AULAS_CREAR')->name('aulas.importar');
 
         // Rutas de Asignaturas
         Route::get('asignatura', [AsignaturaController::class, 'index'])->middleware('permission:ASIGNATURAS_VER')->name('asignatura.index');
