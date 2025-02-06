@@ -23,7 +23,7 @@ class UsuarioController extends Controller
     {
         $validated = $request->validate([
             'nombre-filter' => 'nullable|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
-            'email-filter' => 'nullable|string|email|max:255|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._+-@]+$/',
+            'email-filter' => 'nullable|string|email|max:255|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._+\-@]+$/',
             'role-filter' => 'nullable|exists:roles,id',
         ], [
             'nombre-filter.regex' => 'El filtro por nombre solo puede contener letras y espacios.',

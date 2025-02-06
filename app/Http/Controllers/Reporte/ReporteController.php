@@ -102,7 +102,7 @@ class ReporteController extends Controller
             [
                 'id_aula' => 'nullable|integer|exists:aulas,id',
                 'id_actividad' => 'nullable|integer|exists:actividades,id',
-                'descripcion' => 'required|string|max:255|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ- ]+$/',
+                'descripcion' => 'required|string|max:255|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ_\- ]+$/',
                 'titulo' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
             ],
             [
@@ -244,7 +244,7 @@ class ReporteController extends Controller
             [
                 'id_empleados_puestos' => 'required|array',
                 'id_empleados_puestos.*' => 'integer|exists:empleados_puestos,id',
-                'comentario' => 'nullable|string|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ- ]+$/',
+                'comentario' => 'nullable|string|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\- ]+$/',
                 'id_entidad' => 'required|integer|exists:entidades,id',
                 'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
                 'id_bienes' => 'array',

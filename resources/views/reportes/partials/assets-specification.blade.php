@@ -86,7 +86,7 @@
                                 document.querySelectorAll('button[data-id]').forEach((button) => {
                                     button.addEventListener('click', function () {
                                         const id = parseInt(this.getAttribute('data-id'), 10);
-                                        const item = data.find((bien) => bien.id === id);
+                                        const item = responseJson.find((bien) => bien.id === id);
 
                                         if (!idBienes.includes(id)) {
                                             idBienes.push(id);
