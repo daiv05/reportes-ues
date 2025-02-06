@@ -6,11 +6,15 @@ use App\Enums\EstadosBienEnum;
 use App\Enums\GeneralEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Imports\BienImport;
 use App\Models\General\EstadoBien;
 use App\Models\Reportes\Bien;
 use App\Models\Reportes\TipoBien;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BienController extends Controller
 {
@@ -59,6 +63,37 @@ class BienController extends Controller
             'type' => 'success',
             'content' => 'El bien se ha creado exitosamente.'
         ]);
+    }
+
+    public function importarDatos(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'archivo.required' => 'El archivo es obligatorio.',
+            'archivo.mimes' => 'El archivo debe ser de tipo xlsx, xls o cvs.',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $import = new BienImport();
+            Excel::import($import, $request->file('excel_file'));
+
+            DB::commit();
+
+            return redirect()->route('bienes.index')->with('message', [
+                'type' => 'success',
+                'content' => 'Los bienes se han importado exitosamente.'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error al importar bienes: ' . $e);
+            DB::rollBack();
+            return redirect()->route('bienes.index')->with('message', [
+                'type' => 'error',
+                'content' => 'Ha ocurrido un error al importar los bienes: ' . $e->getMessage()
+            ]);
+        }
     }
 
     public function update(Request $request, string $id): RedirectResponse
@@ -127,5 +162,4 @@ class BienController extends Controller
 
         return view('mantenimientos.bienes.detail', compact('bien', 'reportes'));
     }
-
 }

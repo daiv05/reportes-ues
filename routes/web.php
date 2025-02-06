@@ -132,6 +132,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
             Route::get('/', [RecursoController::class, 'index'])->middleware('permission:RECURSOS_VER')->name('recursos.index');
             Route::post('/', [RecursoController::class, 'store'])->middleware('permission:RECURSOS_CREAR')->name('recursos.store');
             Route::put('/{id}', [RecursoController::class, 'update'])->middleware('permission:RECURSOS_EDITAR')->name('recursos.update');
+            Route::post('/importar', [RecursoController::class, 'importarDatos'])->middleware('permission:RECURSPS_CREAR')->name('recursos.importar');
         });
 
         // Bienes
@@ -139,6 +140,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
             Route::get('/', [BienController::class, 'index'])->middleware('permission:BIENES_VER')->name('bienes.index');
             Route::post('/', [BienController::class, 'store'])->middleware('permission:BIENES_CREAR')->name('bienes.store');
             Route::put('/{id}', [BienController::class, 'update'])->middleware('permission:BIENES_EDITAR')->name('bienes.update');
+            Route::post('/importar', [BienController::class, 'importarDatos'])->middleware('permission:BIENES_CREAR')->name('bienes.importar');
             Route::get('filtro', [BienController::class, 'findByNameOrCode'])
                 ->middleware('permission:BIENES_VER|REPORTES_CREAR')
                 ->name('bienes.findByNameOrCode');
