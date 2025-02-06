@@ -100,6 +100,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
         Route::patch('aulas/{aula}', [AulasController::class, 'update'])->middleware('permission:AULAS_EDITAR')->name('aulas.patch');
         Route::get('aulas/{aula}/edit', [AulasController::class, 'edit'])->middleware('permission:AULAS_EDITAR')->name('aulas.edit');
         Route::patch('aulas/{aula}/toggle', [AulasController::class, 'toggleActivo'])->middleware('permission:AULAS_EDITAR')->name('aulas.toggleActivo');
+        Route::post('aulas/importar', [AulasController::class, 'importarDatos'])->middleware('permission:AULAS_CREAR')->name('aulas.importar');
 
         // Rutas de Asignaturas
         Route::get('asignatura', [AsignaturaController::class, 'index'])->middleware('permission:ASIGNATURAS_VER')->name('asignatura.index');
@@ -132,6 +133,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
             Route::get('/', [RecursoController::class, 'index'])->middleware('permission:RECURSOS_VER')->name('recursos.index');
             Route::post('/', [RecursoController::class, 'store'])->middleware('permission:RECURSOS_CREAR')->name('recursos.store');
             Route::put('/{id}', [RecursoController::class, 'update'])->middleware('permission:RECURSOS_EDITAR')->name('recursos.update');
+            Route::post('/importar', [RecursoController::class, 'importarDatos'])->middleware('permission:RECURSPS_CREAR')->name('recursos.importar');
         });
 
         // Bienes
@@ -139,6 +141,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
             Route::get('/', [BienController::class, 'index'])->middleware('permission:BIENES_VER')->name('bienes.index');
             Route::post('/', [BienController::class, 'store'])->middleware('permission:BIENES_CREAR')->name('bienes.store');
             Route::put('/{id}', [BienController::class, 'update'])->middleware('permission:BIENES_EDITAR')->name('bienes.update');
+            Route::post('/importar', [BienController::class, 'importarDatos'])->middleware('permission:BIENES_CREAR')->name('bienes.importar');
             Route::get('filtro', [BienController::class, 'findByNameOrCode'])
                 ->middleware('permission:BIENES_VER|REPORTES_CREAR')
                 ->name('bienes.findByNameOrCode');
