@@ -16,6 +16,6 @@ class Role extends Model  implements Auditable
 
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+        $this->attributes['name'] = strtoupper(strtr($value, 'áéíóúñ', 'ÁÉÍÓÚÑ'));
     }
 }

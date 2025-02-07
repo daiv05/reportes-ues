@@ -19,6 +19,15 @@
                 >
                     Añadir
                 </x-forms.primary-button>
+
+                <x-forms.primary-button
+                    data-modal-target="static-modal-excel"
+                    data-modal-toggle="static-modal-excel"
+                    class="block"
+                    type="button"
+                >
+                    Importar datos
+                </x-forms.primary-button>
             @endcanany
         </div>
     </x-slot>
@@ -42,9 +51,10 @@
                         />
                     </x-forms.row>
                 </div>
-                <div class="flex flex-wrap space-x-4">
+                <div class="relative flex flex-wrap space-x-4">
                     <button
                         type="submit"
+                        data-tooltip-target="tooltip-aplicar-filtros"
                         class="inline-flex items-center rounded-full border border-transparent bg-escarlata-ues px-3 py-3 align-middle text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     >
                         <svg
@@ -63,10 +73,20 @@
                         </svg>
                     </button>
 
+                    <div
+                        id="tooltip-aplicar-filtros"
+                        role="tooltip"
+                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-escarlata-ues px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                    >
+                        Aplicar filtros
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
+
                     <button
                         type="reset"
                         class="inline-flex items-center rounded-full border border-gray-500 bg-white px-3 py-3 align-middle text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                         onclick="window.location.href='{{ route('aulas.index') }}';"
+                        data-tooltip-target="tooltip-limpiar-filtros"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -79,6 +99,15 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
+
+                    <div
+                        id="tooltip-limpiar-filtros"
+                        role="tooltip"
+                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-200 px-3 py-2 !text-center text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                    >
+                        Limpiar filtros
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -95,18 +124,30 @@
                             <x-status.is-active :active="$aula->activo" />
                         </x-table.td>
                         <x-table.td>
-                            @canany(['AULAS_EDITAR'])
-                                <a
-                                    href="#"
-                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                    data-id="{{ $aula->id }}"
-                                    data-nombre="{{ $aula->nombre }}"
-                                    data-facultad="{{ $aula->facultad->id }}"
-                                    data-activo="{{ $aula->activo }}"
-                                >
-                                    <x-heroicon-o-pencil class="h-5 w-5" />
-                                </a>
-                            @endcanany
+                            <div class="relative flex justify-center space-x-2">
+                                @canany(['AULAS_EDITAR'])
+                                    <a
+                                        href="#"
+                                        class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                        data-id="{{ $aula->id }}"
+                                        data-nombre="{{ $aula->nombre }}"
+                                        data-facultad="{{ $aula->facultad->id }}"
+                                        data-activo="{{ $aula->activo }}"
+                                        data-tooltip-target="tooltip-edit-{{ $aula->id }}"
+                                    >
+                                        <x-heroicon-o-pencil class="h-5 w-5" />
+                                    </a>
+
+                                    <div
+                                        id="tooltip-edit-{{ $aula->id }}"
+                                        role="tooltip"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-green-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                    >
+                                        Editar aula
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+                                @endcanany
+                            </div>
                         </x-table.td>
                     </x-table.tr>
                 @endforeach
@@ -186,6 +227,62 @@
             </button>
         </x-slot>
     </x-form-modal>
+
+    <!-- Modal Importación de Excel-->
+    <x-form-modal id="static-modal-excel" class="hidden">
+        <x-slot name="header">
+            <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Importar locales</h3>
+        </x-slot>
+        <x-slot name="body">
+            <form
+                id="import-excel-aulas"
+                action="{{ route('aulas.importar') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                class="grid grid-cols-1 gap-4"
+            >
+                @csrf
+                <div class="mx-auto flex w-full flex-col items-center justify-center gap-3">
+                    <label
+                        for="file"
+                        class="flex w-64 cursor-pointer flex-col items-center rounded-lg border border-orange-900 bg-white px-4 py-6 uppercase tracking-wide text-orange-900 shadow-lg hover:bg-orange-900 hover:text-white"
+                        onclick="uploadFile()"
+                    >
+                        <x-heroicon-o-cloud-arrow-up class="h-10 w-10" />
+                        <span id="file-name" class="mt-2 text-base leading-normal">Selecciona un archivo</span>
+                        <input
+                            type="file"
+                            name="excel_file"
+                            accept=".xls,.xlsx,.csv"
+                            id="excel_file"
+                            class="hidden"
+                            onchange="updateFileName(this)"
+                        />
+                        @if ($errors->has('excel_file'))
+                            <span class="text-center text-sm text-red-500">{{ $errors->first('excel_file') }}</span>
+                        @endif
+                    </label>
+                    <div id="excel-error" class="text-sm text-red-500"></div>
+                </div>
+            </form>
+        </x-slot>
+        <x-slot name="footer">
+            <button
+                data-modal-hide="static-modal-excel"
+                type="button"
+                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4"
+            >
+                Cancelar
+            </button>
+            <button
+                type="submit"
+                form="import-excel-aulas"
+                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
+            >
+                Guardar
+            </button>
+        </x-slot>
+    </x-form-modal>
 </x-app-layout>
 <script>
     document.getElementById('asignacion-form').addEventListener('submit', function (event) {
@@ -229,6 +326,27 @@
         }
 
         if (patternErrors.length > 0) {
+            event.preventDefault();
+        }
+    });
+
+    document.getElementById('import-excel-aulas').addEventListener('submit', function (event) {
+        const excelFile = document.getElementById('excel_file').value.trim();
+        let hasErrors = false;
+
+        if (!excelFile) {
+            // Cambiado: no usar .value ya que es un valor ya extraído
+            hasErrors = true;
+            document.getElementById('excel-error').innerHTML = 'El archivo es obligatorio';
+        } else {
+            const extension = excelFile.split('.').pop().toLowerCase();
+            if (extension !== 'xls' && extension !== 'xlsx' && extension !== 'csv') {
+                hasErrors = true;
+                document.getElementById('excel-error').innerHTML = 'El archivo debe ser de tipo Excel o CSV';
+            }
+        }
+
+        if (hasErrors) {
             event.preventDefault();
         }
     });
@@ -284,5 +402,14 @@
         document.querySelectorAll('select').forEach((select) => {
             select.selectedIndex = 0;
         });
+    }
+
+    function updateFileName(input) {
+        const fileName = input.files[0] ? input.files[0].name : 'Selecciona un archivo';
+        document.getElementById('file-name').textContent = fileName;
+    }
+
+    function uploadFile() {
+        document.getElementById('excel_file').click();
     }
 </script>

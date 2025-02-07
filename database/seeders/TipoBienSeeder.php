@@ -20,6 +20,7 @@ class TipoBienSeeder extends Seeder
             ['nombre' => 'Equipos Electrónicos'],
             ['nombre' => 'Pizarras Digitales'],
             ['nombre' => 'Equipos de oficina'],
+            ['nombre' => 'Baños'],
         ];
 
         foreach($tipoBien as $tb) {

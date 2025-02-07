@@ -33,13 +33,13 @@ class ImportActividadEventoRequest extends FormRequest
             'hora_fin' => 'required|array|min:1',
             'hora_fin.*' => 'date_format:H:i',
             'evaluacion' => 'required|array|min:1',
-            'evaluacion.*' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
+            'evaluacion.*' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s\/-]+$/',
             'cantidad_estudiantes' => 'required|array|min:1',
             'cantidad_estudiantes.*' => 'integer|min:0',
             'responsable' => 'required|array|min:1',
             'responsable.*' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'comentarios' => 'nullable|array',
-            'comentarios.*' => 'nullable|string|max:250|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
+            'comentarios.*' => 'nullable|string|max:250|regex:/^[a-zA-Z0-9.,ñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
         ];
 
         foreach ($this->input('modalidad', []) as $key => $value) {
@@ -73,7 +73,7 @@ class ImportActividadEventoRequest extends FormRequest
             'hora_fin.*.required' => 'La hora de fin es requerida en modalidad presencial',
             'evaluacion.*.string' => 'La evaluación debe ser una cadena de texto',
             'evaluacion.*.required' => 'La evaluación es requerida',
-            'evaluacion.*.regex' => 'La evaluación solo acepta letras, números y espacios',
+            'evaluacion.*.regex' => 'La evaluación solo acepta letras, números, plecas, guiones y espacios',
             'evaluacion.*.max' => 'La evaluación no puede tener más de 50 caracteres',
             'cantidad_estudiantes.*.integer' => 'La cantidad de estudiantes debe ser un número entero',
             'cantidad_estudiantes.*.min' => 'La cantidad de estudiantes no puede ser negativa',

@@ -33,6 +33,8 @@
                         >
                             Añadir
                         </x-forms.primary-button>
+
+                        <x-button-redirect to="timeline-eventos-evaluaciones" label="Línea de tiempo" />
                     @endif
                 </div>
             </x-slot>
@@ -43,7 +45,7 @@
         {{-- FILTROS --}}
         <div class="flex-column flex flex-wrap items-center gap-3 space-y-4 pb-4 sm:flex-row sm:space-y-0">
             <div
-                class="flex w-full flex-col flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0"
+                class="relative flex w-full flex-col flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0"
             >
                 <form
                     action="{{ route('listado-clases') }}"
@@ -88,9 +90,10 @@
                             />
                         </x-forms.row>
                     </div>
-                    <div class="flex flex-wrap space-x-4">
+                    <div class="relative flex flex-wrap space-x-4">
                         <button
                             type="submit"
+                            data-tooltip-target="tooltip-aplicar-filtros"
                             class="inline-flex items-center rounded-full border border-transparent bg-escarlata-ues px-3 py-3 align-middle text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                         >
                             <svg
@@ -109,10 +112,20 @@
                             </svg>
                         </button>
 
+                        <div
+                            id="tooltip-aplicar-filtros"
+                            role="tooltip"
+                            class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-escarlata-ues px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        >
+                            Aplicar filtros
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
+
                         <button
                             type="reset"
                             class="inline-flex items-center rounded-full border border-gray-500 bg-white px-3 py-3 align-middle text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                             onclick="window.location.href='{{ route('listado-clases') }}';"
+                            data-tooltip-target="tooltip-limpiar-filtros"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -125,6 +138,15 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
+
+                        <div
+                            id="tooltip-limpiar-filtros"
+                            role="tooltip"
+                            class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-200 px-3 py-2 !text-center text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                        >
+                            Limpiar filtros
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -156,8 +178,8 @@
                             <x-table.td>
                                 <x-status.is-active :active="$clase->actividad->activo" />
                             </x-table.td>
-                            <x-table.td>
-                                <div class="flex justify-center space-x-2">
+                            <x-table.td justify="center">
+                                <div class="relative flex justify-center space-x-2">
                                     <a
                                         href="#"
                                         class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
@@ -173,16 +195,66 @@
                                         data-dias="{{ $clase->dias_actividad }}"
                                         data-estado="{{ $clase->actividad->activo }}"
                                         data-responsable="{{ $clase->actividad->responsable }}"
+                                        data-tooltip-target="tooltip-edit-{{ $clase->id }}"
                                     >
                                         <x-heroicon-s-pencil class="h-5 w-5" />
                                     </a>
+
+                                    <div
+                                        id="tooltip-edit-{{ $clase->id }}"
+                                        role="tooltip"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-green-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                    >
+                                        Editar clase
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+
+                                    <button
+                                        data-modal-target="static-modal-details"
+                                        data-modal-toggle="static-modal-details"
+                                        class="details-button font-medium text-blue-600 hover:underline dark:text-blue-400"
+                                        data-id="{{ $clase->id }}"
+                                        data-fecha="{{ \Carbon\Carbon::parse($clase->fecha)->format('d/m/Y') }}"
+                                        data-materia="{{ $clase->actividad->asignaturas[0]->nombre }}"
+                                        data-aulas="{{ $clase->actividad->aulas->pluck('nombre')->implode(', ') }}"
+                                        data-hora-inicio="{{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('H:i') }}"
+                                        data-hora-fin="{{ \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('H:i') }}"
+                                        data-tipo-clase="{{ $clase->tipoClase->id }}"
+                                        data-modalidad="{{ $clase->actividad->modalidad->id }}"
+                                        data-grupo="{{ $clase->numero_grupo }}"
+                                        data-dias="{{ $clase->dias_actividad }}"
+                                        data-estado="{{ $clase->actividad->activo }}"
+                                        data-responsable="{{ $clase->actividad->responsable }}"
+                                        data-tooltip-target="tooltip-view-{{ $clase->id }}"
+                                    >
+                                        <x-heroicon-s-eye class="h-5 w-5" />
+                                    </button>
+
+                                    <div
+                                        id="tooltip-view-{{ $clase->id }}"
+                                        role="tooltip"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-blue-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                    >
+                                        Ver clase
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
                                     @if ($clase->actividad->activo)
                                         <a
                                             href="{{ route('crear-reporte', ['clase' => $clase->actividad->id]) }}"
                                             class="font-medium text-red-700 hover:underline"
+                                            data-tooltip-target="tooltip-report-{{ $clase->id }}"
                                         >
                                             <x-heroicon-s-flag class="mx-2 h-4" />
                                         </a>
+
+                                        <div
+                                            id="tooltip-report-{{ $clase->id }}"
+                                            role="tooltip"
+                                            class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-red-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                        >
+                                            Crear reporte
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
                                     @endif
                                 </div>
                             </x-table.td>
@@ -198,6 +270,101 @@
             </nav>
         </div>
     </x-container>
+
+    <x-form-modal id="static-modal-details">
+        <x-slot name="header">
+            <div class="flex items-center space-x-4">
+                <x-heroicon-s-book-open class="h-10 w-10 text-escarlata-ues" />
+                <div>
+                    <h2 id="materia-info" class="text-2xl font-bold text-escarlata-ues"></h2>
+                    <h3 class="text-lg font-normal opacity-90">Detalle de la clase</h3>
+                </div>
+            </div>
+        </x-slot>
+        <x-slot name="body">
+            <div class="w-full max-w-4xl overflow-hidden rounded-lg bg-white">
+                <div class="bg-primary text-primary-foreground flex flex-col items-center justify-center md:flex-row">
+                    <div class="mt-4 flex items-center justify-center space-x-2 md:mt-0">
+                        <span
+                            id="estado-info"
+                            class="flex items-center rounded-full border border-green-600 bg-green-100 px-3 py-1 text-sm font-medium text-green-900"
+                        ></span>
+                        <span
+                            id="modalidad-info"
+                            class="rounded-full border border-blue-600 bg-blue-100 px-3 py-1 text-sm font-medium text-blue-900"
+                        ></span>
+                    </div>
+                </div>
+                <div class="mt-2 p-1">
+                    <div class="grid gap-2 md:grid-cols-2 md:gap-6">
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
+                                <x-heroicon-s-user-group class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Grupo</p>
+                                <p id="grupo-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
+                                <x-heroicon-s-clock class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Horario</p>
+                                <p id="horario-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
+                                <x-heroicon-s-academic-cap class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Tipo de clase</p>
+                                <p id="tipo-clase-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
+                                <x-heroicon-s-map-pin class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Local</p>
+                                <p id="local-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
+                                <x-heroicon-s-user class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Responsable</p>
+                                <p id="responsable-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 p-4">
+                            <div class="rounded-full bg-gray-400/20 p-2 text-escarlata-ues">
+                                <x-heroicon-s-calendar class="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Días</p>
+                                <p id="dias-info" class="text-[1.1rem] font-semibold uppercase"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </x-slot>
+        <x-slot name="footer">
+            <button
+                data-modal-hide="static-modal-details"
+                type="button"
+                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4"
+            >
+                Salir
+            </button>
+        </x-slot>
+    </x-form-modal>
 
     <x-form-modal id="static-modal">
         <x-slot name="header">
@@ -399,6 +566,9 @@
 </x-app-layout>
 
 <script>
+    const modalidades = @json($modalidades);
+    const tiposClase = @json($tiposClase);
+
     document.getElementById('clase-form').addEventListener('submit', function (event) {
         const materia = document.getElementById('materia').value.trim();
         const estado = document.getElementById('estado').value;
@@ -581,8 +751,89 @@
             document.querySelector('[data-modal-target="static-modal"]').click();
         });
     });
+
+    document.querySelectorAll('.details-button').forEach((button) => {
+        button.addEventListener('click', function (event) {
+            const materia = this.getAttribute('data-materia');
+            const tipoClase = this.getAttribute('data-tipo-clase');
+            const hora_inicio = this.getAttribute('data-hora-inicio');
+            const hora_fin = this.getAttribute('data-hora-fin');
+            const grupo = this.getAttribute('data-grupo');
+            const modalidad = this.getAttribute('data-modalidad');
+            const local = this.getAttribute('data-aulas');
+            const dias = JSON.parse(this.getAttribute('data-dias'));
+            const estado = this.getAttribute('data-estado');
+            const responsable = this.getAttribute('data-responsable');
+
+            document.getElementById('materia-info').textContent = materia;
+
+            if (estado == '1') {
+                document.getElementById('estado-info').textContent = 'ACTIVO';
+                document.getElementById('estado-info').classList.remove('bg-red-100', 'border-red-600', 'text-red-900');
+                document
+                    .getElementById('estado-info')
+                    .classList.add('bg-green-100', 'border-green-600', 'text-green-900');
+            } else {
+                document.getElementById('estado-info').textContent = 'INACTIVO';
+                document
+                    .getElementById('estado-info')
+                    .classList.remove('bg-green-100', 'border-green-600', 'text-green-900');
+                document.getElementById('estado-info').classList.add('bg-red-100', 'border-red-600', 'text-red-900');
+            }
+
+            document.getElementById('modalidad-info').textContent = modalidades[modalidad];
+
+            if (modalidades[modalidad] == 'PRESENCIAL') {
+                document
+                    .getElementById('modalidad-info')
+                    .classList.remove('bg-violet-100', 'border-violet-600', 'text-violet-900');
+                document
+                    .getElementById('modalidad-info')
+                    .classList.add('bg-blue-100', 'border-blue-600', 'text-blue-900');
+            } else {
+                document
+                    .getElementById('modalidad-info')
+                    .classList.remove('bg-blue-100', 'border-blue-600', 'text-blue-900');
+                document
+                    .getElementById('modalidad-info')
+                    .classList.add('bg-violet-100', 'border-violet-600', 'text-violet-900');
+            }
+
+            document.getElementById('tipo-clase-info').textContent = tiposClase[tipoClase];
+            document.getElementById('horario-info').textContent =
+                convertirHora12H(hora_inicio) + ' - ' + convertirHora12H(hora_fin);
+            document.getElementById('grupo-info').textContent = 'Grupo ' + grupo;
+            document.getElementById('responsable-info').textContent = responsable;
+            document.getElementById('local-info').textContent = local;
+            document.getElementById('dias-info').textContent = dias.map((dia) => numeroADia(dia)).join(', ');
+        });
+    });
+
     function updateTitle(title) {
         document.getElementById('modal-title').textContent = title;
+    }
+
+    function numeroADia(numero) {
+        const dias = {
+            0: 'Domingo',
+            1: 'Lunes',
+            2: 'Martes',
+            3: 'Miércoles',
+            4: 'Jueves',
+            5: 'Viernes',
+            6: 'Sábado',
+        };
+        return dias[numero] || 'Número inválido';
+    }
+
+    function convertirHora12H(hora) {
+        let [horas, minutos] = hora.split(':').map(Number);
+        let periodo = horas >= 12 ? 'PM' : 'AM';
+
+        // Convertir a formato de 12 horas
+        horas = horas % 12 || 12;
+
+        return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')} ${periodo}`;
     }
 </script>
 

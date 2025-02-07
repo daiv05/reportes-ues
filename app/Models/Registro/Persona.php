@@ -23,12 +23,12 @@ class Persona extends Model implements Auditable
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóúñ', 'ÁÉÍÓÚÑ'));
     }
 
     public function setApellidoAttribute($value)
     {
-        $this->attributes['apellido'] =strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+        $this->attributes['apellido'] =strtoupper(strtr($value, 'áéíóúñ', 'ÁÉÍÓÚÑ'));
     }
     public function usuario() : HasOne
     {

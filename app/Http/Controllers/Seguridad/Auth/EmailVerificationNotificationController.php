@@ -33,7 +33,8 @@ class EmailVerificationNotificationController extends Controller
             ->insert(
                 [
                     'email' => $request->user()->email,
-                    'token' => $code
+                    'token' => $code,
+                    'created_at' => now()
                 ]
             );
 

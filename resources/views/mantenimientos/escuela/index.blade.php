@@ -43,9 +43,10 @@
                         />
                     </x-forms.row>
                 </div>
-                <div class="flex flex-wrap space-x-4">
+                <div class="relative flex flex-wrap space-x-4">
                     <button
                         type="submit"
+                        data-tooltip-target="tooltip-aplicar-filtros"
                         class="inline-flex items-center rounded-full border border-transparent bg-escarlata-ues px-3 py-3 align-middle text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     >
                         <svg
@@ -64,10 +65,20 @@
                         </svg>
                     </button>
 
+                    <div
+                        id="tooltip-aplicar-filtros"
+                        role="tooltip"
+                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-escarlata-ues px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                    >
+                        Aplicar filtros
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
+
                     <button
                         type="reset"
                         class="inline-flex items-center rounded-full border border-gray-500 bg-white px-3 py-3 align-middle text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                         onclick="window.location.href='{{ route('escuela.index') }}';"
+                        data-tooltip-target="tooltip-limpiar-filtros"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -80,6 +91,15 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
+
+                    <div
+                        id="tooltip-limpiar-filtros"
+                        role="tooltip"
+                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-200 px-3 py-2 !text-center text-sm font-medium text-escarlata-ues opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                    >
+                        Limpiar filtros
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -92,18 +112,29 @@
                         <x-table.td>{{ $escuela->nombre }}</x-table.td>
                         <x-table.td justify="center"><x-status.is-active :active="$escuela->activo" /></x-table.td>
                         <x-table.td justify="center">
-                            @canany(['ESCUELAS_EDITAR'])
-                                <a
-                                    href="#"
-                                    class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
-                                    data-id="{{ $escuela->id }}"
-                                    data-nombre="{{ $escuela->nombre }}"
-                                    data-facultad="{{ $escuela->facultad->id }}"
-                                    data-estado="{{ $escuela->activo }}"
-                                >
-                                    <x-heroicon-o-pencil class="h-5 w-5" />
-                                </a>
-                            @endcanany
+                            <div class="relative flex justify-center space-x-2">
+                                @canany(['ESCUELAS_EDITAR'])
+                                    <a
+                                        href="#"
+                                        class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
+                                        data-id="{{ $escuela->id }}"
+                                        data-nombre="{{ $escuela->nombre }}"
+                                        data-facultad="{{ $escuela->facultad->id }}"
+                                        data-estado="{{ $escuela->activo }}"
+                                        data-tooltip-target="tooltip-edit-{{ $escuela->id }}"
+                                    >
+                                        <x-heroicon-o-pencil class="h-5 w-5" />
+                                    </a>
+                                    <div
+                                        id="tooltip-edit-{{ $escuela->id }}"
+                                        role="tooltip"
+                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-green-700 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                    >
+                                        Editar escuela
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+                                @endcanany
+                            </div>
                         </x-table.td>
                     </x-table.tr>
                 @endforeach

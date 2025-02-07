@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'name' => 'ReportFIA',
+    'name' => env('APP_NAME', 'ReportFIA'),
     'manifest' => [
         'name' => env('APP_NAME', 'ReportFIA'),
-        'short_name' => 'ReportFIA',
+        'short_name' => env('APP_NAME', 'ReportFIA'),
         'start_url' => '/',
         'background_color' => '#ffffff',
         'theme_color' => '#000000',
@@ -58,7 +58,7 @@ return [
             '2048x2732' => '/assets/img/icons/splash-2048x2732.png',
         ],
         'custom' => [
-            'description' => 'ReportFIA es una aplicación para el reporte de incidencias en la FIA.',
+            'description' => env('APP_NAME', 'ReportFIA') . ' es una aplicación para el reporte de incidencias y control de actividades en la FIA.',
             'screenshots' =>  [
                 [
                     'src' => '/assets/img/screenshots/inicio.webp',

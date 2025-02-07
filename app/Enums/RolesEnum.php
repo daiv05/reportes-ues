@@ -30,6 +30,9 @@ enum RolesEnum: string
                 PermisosEnum::UNIDADES_MEDIDA_EDITAR->value,
                 PermisosEnum::CLASES_VER->value,
                 PermisosEnum::EVENTOS_VER->value,
+                PermisosEnum::BIENES_VER->value,
+                PermisosEnum::BIENES_CREAR->value,
+                PermisosEnum::BIENES_EDITAR->value,
             ],
             self::SUPERVISOR_REPORTE->value => [
                 PermisosEnum::REPORTES_CREAR->value,
@@ -49,9 +52,6 @@ enum RolesEnum: string
                 PermisosEnum::BIENES_VER->value,
                 PermisosEnum::BIENES_CREAR->value,
                 PermisosEnum::BIENES_EDITAR->value,
-                PermisosEnum::TIPOS_BIENES_VER->value,
-                PermisosEnum::TIPOS_BIENES_CREAR->value,
-                PermisosEnum::TIPOS_BIENES_EDITAR->value,
             ],
             self::EMPLEADO->value => [
                 PermisosEnum::REPORTES_CREAR->value,
@@ -60,19 +60,9 @@ enum RolesEnum: string
                 PermisosEnum::REPORTES_VER_ASIGNACIONES->value,
                 PermisosEnum::ACTIVIDADES_CREAR_REPORTE->value,
                 PermisosEnum::RECURSOS_VER->value,
-                PermisosEnum::RECURSOS_CREAR->value,
-                PermisosEnum::RECURSOS_EDITAR->value,
-                PermisosEnum::UNIDADES_MEDIDA_VER->value,
-                PermisosEnum::UNIDADES_MEDIDA_CREAR->value,
-                PermisosEnum::UNIDADES_MEDIDA_EDITAR->value,
                 PermisosEnum::CLASES_VER->value,
                 PermisosEnum::EVENTOS_VER->value,
-                PermisosEnum::BIENES_VER->value,
-                PermisosEnum::BIENES_CREAR->value,
-                PermisosEnum::BIENES_EDITAR->value,
-                PermisosEnum::TIPOS_BIENES_VER->value,
-                PermisosEnum::TIPOS_BIENES_CREAR->value,
-                PermisosEnum::TIPOS_BIENES_EDITAR->value,
+                PermisosEnum::BIENES_VER->value
 
             ],
             self::USUARIO->value => [

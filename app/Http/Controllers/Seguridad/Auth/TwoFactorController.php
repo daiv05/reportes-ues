@@ -69,6 +69,15 @@ class TwoFactorController extends Controller
             return back()->withInput();
         }
 
+        if ($select->first()->expires_at < now()) {
+            Session::flash('code-send', true);
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'El código ingresado ha expirado'
+            ]);
+            return back()->withInput();
+        }
+
         $select = DB::table('two_factor_tokens')
             ->where('user_id', $request->user()->id)
             ->where('token', $request->input('code'))

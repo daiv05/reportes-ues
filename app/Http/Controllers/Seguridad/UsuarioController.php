@@ -21,6 +21,14 @@ class UsuarioController extends Controller
 {
     public function index(Request $request): View
     {
+        $validated = $request->validate([
+            'nombre-filter' => 'nullable|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
+            'email-filter' => 'nullable|string|email|max:255|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._+\-@]+$/',
+            'role-filter' => 'nullable|exists:roles,id',
+        ], [
+            'nombre-filter.regex' => 'El filtro por nombre solo puede contener letras y espacios.',
+            'email-filter.regex' => 'El filtro por email tiene caracteres no válidos.',
+        ]);
         $nombreFilter = $request->get('nombre-filter');
         $emailFilter = $request->get('email-filter');
         $rolFilter = $request->get('role-filter');
@@ -80,7 +88,7 @@ class UsuarioController extends Controller
 
         if ($tipo == '1') {
             $rules['escuela'] = 'required|exists:escuelas,id';
-            $rules['email'] = 'required|string|email|max:255|unique:users|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._%+-]+@ues\.edu\.sv$/'; // Validar que el correo sea institucional
+            $rules['email'] = 'required|string|email|max:255|unique:users|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._+-]+@ues\.edu\.sv$/'; // Validar que el correo sea institucional
             $messages['email.regex'] = 'El correo electrónico debe ser institucional (@ues.edu.sv).';
         } else {
             $rules['puesto'] = 'required|exists:puestos,id'; // Validar que puesto existe en la tabla puestos
@@ -132,7 +140,7 @@ class UsuarioController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('message', [
-                'type' => 'danger',
+                'type' => 'error',
                 'content' => 'Ocurrió un error al crear el usuario. Por favor, inténtelo de nuevo.',
             ]);
         }

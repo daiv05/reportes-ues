@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Mantenimientos;
 
 use App\Enums\GeneralEnum;
 use App\Http\Controllers\Controller;
+use App\Imports\RecursoImport;
 use App\Models\Mantenimientos\Recurso;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RecursoController extends Controller
 {
@@ -45,6 +48,35 @@ class RecursoController extends Controller
         ]);
     }
 
+    public function importarDatos(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'archivo.required' => 'El archivo es obligatorio.',
+            'archivo.mimes' => 'El archivo debe ser de tipo xlsx, xls o cvs.',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $import = new RecursoImport();
+            Excel::import($import, $request->file('excel_file'));
+
+            DB::commit();
+
+            return redirect()->route('recursos.index')->with('message', [
+                'type' => 'success',
+                'content' => 'Los recursos se han importado exitosamente.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('recursos.index')->with('message', [
+                'type' => 'error',
+                'content' => 'Ha ocurrido un error al importar los recursos: ' . $e->getMessage()
+            ]);
+        }
+    }
 
     public function edit(Recurso $recurso): View
     {

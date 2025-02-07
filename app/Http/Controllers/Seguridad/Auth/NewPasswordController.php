@@ -38,11 +38,11 @@ class NewPasswordController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $verify_timestamp =  DB::table('password_reset_tokens')->where([
+        $last_reset_token =  DB::table('password_reset_tokens')->where([
             ['email', $request->email]
         ])->first();
 
-        if (isset($verify_timestamp) && Carbon::parse($verify_timestamp->created_at)->diffInMinutes(now()) > 60) {
+        if (isset($last_reset_token) && Carbon::parse($last_reset_token->created_at)->diffInMinutes(now()) > 60) {
             return back()->withInput($request->only('email'))
                 ->withErrors(['email' => __('El token ha expirado.')]);
         }
