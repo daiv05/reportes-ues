@@ -19,7 +19,9 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $persona = $request->user()->persona;
-        $persona->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $persona->fecha_nacimiento)->format('m/d/Y');
+        if ($persona->fecha_nacimiento) {
+            $persona->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $persona->fecha_nacimiento)->format('d/m/Y');
+        }
         return view('seguridad.profile.edit', [
             'user' => $request->user(),
             'persona' => $request->user()->persona
@@ -31,9 +33,26 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-         $request->merge([
-            'fecha_nacimiento' => Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
-        ]);
+        if ($request->has('fecha_nacimiento') && $request->filled('fecha_nacimiento')) {
+            $request->merge([
+                'fecha_nacimiento' => Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
+            ]);
+        } else {
+            $request->merge([
+                'fecha_nacimiento' => null
+            ]);
+        }
+
+        if ($request->has('telefono') && $request->filled('telefono')) {
+            $request->merge([
+                'telefono' => preg_replace('/[^0-9]/', '', $request->input('telefono'))
+            ]);
+        } else {
+            $request->merge([
+                'telefono' => null
+            ]);
+        }
+
         $user = $request->user();
         $persona = $user->persona;
 
