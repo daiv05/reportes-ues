@@ -59,7 +59,6 @@
                 patternMessage="El número de teléfono debe tener un formato válido"
                 :value="old('telefono', $persona->telefono)"
                 :error="$errors->get('telefono')"
-                required
             />
         </div>
 
