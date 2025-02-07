@@ -16,12 +16,13 @@ class Fondo extends Model implements Auditable
 
     protected $fillable = [
         'nombre',
+        'descripcion',
         'activo',
     ];
 
     public function setNombreAttribute($value)
     {
-        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóú', 'ÁÉÍÓÚ'));
+        $this->attributes['nombre'] =strtoupper(strtr($value, 'áéíóúñ', 'ÁÉÍÓÚÑ'));
     }
     public function recursosReportes() : HasMany
     {

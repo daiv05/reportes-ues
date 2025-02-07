@@ -14,12 +14,30 @@ class EstadoSeeder extends Seeder
     public function run(): void
     {
         $estados = [
-            ['nombre' => 'ASIGNADO'],
-            ['nombre' => 'EN PROCESO'],
-            ['nombre' => 'EN PAUSA'],
-            ['nombre' => 'COMPLETADO'],
-            ['nombre' => 'FINALIZADO'],
-            ['nombre' => 'INCOMPLETO']
+            [
+                'nombre' => 'ASIGNADO',
+                'descripcion' => 'Reporte asignado para su solución'
+            ],
+            [  
+                'nombre' => 'EN PROCESO',
+                'descripcion' => 'Se ha realizado un nuevo avance en la solución del reporte'
+            ],
+            [
+                'nombre' => 'EN PAUSA',
+                'descripcion' => 'Se ha detenido la solución del reporte temporalmente'
+            ],
+            [
+                'nombre' => 'COMPLETADO',
+                'descripcion' => 'Se ha completado la solución del reporte'
+            ],
+            [
+                'nombre' => 'FINALIZADO',
+                'descripcion' => 'Se ha verificado y se da por finalizado la solución del reporte'
+            ],
+            [
+                'nombre' => 'INCOMPLETO',
+                'descripcion' => 'Se han encontrado problemas en la solución del reporte'
+            ]
         ];
 
         foreach($estados as $estado) {

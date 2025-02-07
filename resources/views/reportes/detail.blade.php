@@ -30,7 +30,7 @@
     <div class="mt-12 mb-8">
         @if ($reporte->estado_ultimo_historial?->nombre === 'FINALIZADO')
             <div class="flex justify-center">
-                @canany(['REPORTES_REVISION_SOLUCION'])
+                @canany(['REPORTES_REVISION_SOLUCION', 'REPORTES_ASIGNAR'])
                     <a href="{{ route('reportes.verInforme', ['id' => $reporte->id]) }}"
                         class="bg-green-500 text-white text-sm py-2 px-10 rounded hover:bg-green-700 cursor-pointer">
                         Ver informe del reporte
@@ -214,12 +214,13 @@
 
         <x-general.divider />
 
-        @if ($reporte->no_procede === 0)
+        @if (($reporte->no_procede === 0 && auth()->user()->can('REPORTES_ASIGNAR') && !$reporte->estado_ultimo_historial?->nombre) ||
+            ($reporte->no_procede === 0 && $reporte->estado_ultimo_historial?->nombre))
             <x-reportes.detail.container>
                 <x-reportes.detail.header title="Asignación">
-                    @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                    @if (!$reporte->estado_ultimo_historial?->nombre)
                         <div>
-                            @canany(['REPORTES_ACTUALIZAR_ESTADO'])
+                            @canany(['REPORTES_ASIGNAR'])
                                 <button id="marcarNoProcede"
                                     class="bg-red-700 text-white text-sm py-2 px-4 rounded hover:bg-red-500" x-data
                                     x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')">
@@ -238,7 +239,7 @@
                     <x-reportes.detail.block>
                         <x-reportes.detail.subheader subtitle="Entidad" icon="heroicon-o-briefcase" />
                         <x-reportes.detail.subheader-content>
-                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                            @if (!$reporte->estado_ultimo_historial?->nombre)
                                 <select id="entidad"
                                     class="border border-gray-300 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                                     onchange="document.getElementById('id_entidad').value = this.value; location.href='?entidad=' + this.value;">
@@ -281,7 +282,7 @@
                     <x-reportes.detail.block>
                         <x-reportes.detail.subheader subtitle="Subalternos" icon="heroicon-o-shopping-bag" />
                         <x-reportes.detail.subheader-content>
-                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                            @if (!$reporte->estado_ultimo_historial?->nombre)
                                 <x-picklist.picklist :items="$empleadosPorEntidad" :asignados="[]" :empleados="true"
                                     tituloDisponibles="Empleados disponibles" tituloAsignados="Empleados asignados"
                                     placeholderDisponibles="Buscar empleados..."
@@ -311,7 +312,7 @@
                     <x-reportes.detail.block>
                         <x-reportes.detail.subheader subtitle="Supervisor" icon="heroicon-o-check-badge" />
                         <x-reportes.detail.subheader-content>
-                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                            @if (!$reporte->estado_ultimo_historial?->nombre)
                                 <select id="supervisor" name="id_empleado_supervisor"
                                     class="border border-gray-300 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                                     <option value="" disabled selected>Selecciona un supervisor</option>
@@ -343,7 +344,7 @@
                     <x-reportes.detail.block>
                         <x-reportes.detail.subheader subtitle="Bienes" icon="heroicon-o-clipboard-document-list" />
                         <x-reportes.detail.subheader-content>
-                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                            @if (!$reporte->estado_ultimo_historial?->nombre)
                                 <div class="pb-4">
                                     <span class="text-gray-600">Si el reporte involucra la reparación/mantenimiento de
                                         un bien de la facultad, especificarlo aqui</span>
@@ -382,8 +383,8 @@
                         <x-reportes.detail.subheader subtitle="Comentario de administración"
                             icon="heroicon-o-chat-bubble-bottom-center-text" />
                         <x-reportes.detail.subheader-content>
-                            @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
-                                <textarea id="comentario" name="comentario" rows="8"
+                            @if (!$reporte->estado_ultimo_historial?->nombre)
+                                <textarea id="comentario" name="comentario" rows="8" maxlength="255"
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"></textarea>
                                 @include('components.forms.input-error', [
                                     'messages' => $errors->get('comentario'),
@@ -397,9 +398,9 @@
                     </x-reportes.detail.block>
                 </x-reportes.detail.container>
 
-                @if (!$reporte->estado_ultimo_historial?->nombre && $reporte->no_procede == 0)
+                @if (!$reporte->estado_ultimo_historial?->nombre)
                     <div class="flex flex-col lg:flex-row w-full justify-center mt-8">
-                        @canany(['REPORTES_ACTUALIZAR_ESTADO', 'REPORTES_ASIGNAR'])
+                        @canany(['REPORTES_ASIGNAR'])
                             <button id="enviarAsignacion"
                                 class="bg-escarlata-ues text-white text-sm py-2 px-4 rounded hover:bg-red-700">
                                 Enviar Asignación

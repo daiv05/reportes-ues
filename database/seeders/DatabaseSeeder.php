@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RecursoSeeder::class);
         $this->call(UnidadMedidaSeeder::class);
         $this->call(TipoBienSeeder::class);
+        $this->call(EstadoBienSeeder::class);
         $this->call(BienSeeder::class);
     }
 

@@ -47,6 +47,21 @@ class VerifyEmailController extends Controller
             return back()->withInput();
         }
 
+        // Verificar si se creo el código hace más de 10 minutos
+        $token = $select->first();
+        $created_at = strtotime($token->created_at);
+        $now = strtotime(now());
+        $diff = $now - $created_at;
+        
+        if ($diff > 600) {
+            Session::flash('code-send', true);
+            Session::flash('message', [
+                'type' => 'error',
+                'content' => 'El código ingresado ha expirado'
+            ]);
+            return back()->withInput();
+        }
+
         $select = DB::table('password_reset_tokens')
             ->where('email', $request->user()->email)
             ->where('token', $request->input('code'))
