@@ -109,11 +109,12 @@ class UsuarioController extends Controller
                 'fecha_nacimiento' => $request->fecha_nacimiento ?? null,
                 'telefono' => $request->telefono ?? null,
             ]);
+            $tempPass = Str::random(16);
             $usuario = User::create([
                 'email' => $request->input('email'),
                 'carnet' => $request->input('carnet'),
                 'activo' => $request->has('activo'),
-                'password' => Hash::make(Str::random(16)),
+                'password' => Hash::make($tempPass),
                 'id_persona' => $persona->id,
             ]);
             if ($tipo == '1') {
@@ -137,6 +138,10 @@ class UsuarioController extends Controller
             } else {
                 $usuario->assignRole('USUARIO');
             }
+
+            // Enviar correo con las credenciales
+            $usuario->sendNewCredentials('Registro: ' .  config('app.name'), $tempPass, $usuario->carnet);
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
