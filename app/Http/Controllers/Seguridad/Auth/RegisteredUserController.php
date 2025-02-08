@@ -37,9 +37,9 @@ class RegisteredUserController extends Controller
             'carnet' => 'required|string|min:3|max:20|unique:users|regex:/^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$/',
             'nombre' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'apellido' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
-            'fecha_nacimiento' => ['required', 'date_format:d/m/Y'],
+            'fecha_nacimiento' => ['nullable', 'date_format:d/m/Y'],
             'escuela' => ['required', 'exists:' . Escuela::class . ',id'],
-            'telefono' => 'required|string|max:15|regex:/^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/',
+            'telefono' => 'nullable|string|max:15|regex:/^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, 'regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ._%+-]+@ues\.edu\.sv$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
@@ -53,13 +53,29 @@ class RegisteredUserController extends Controller
             'nombre.max' => 'El campo nombre no debe tener más de 100 caracteres.',
             'email.regex' => 'El correo electrónico debe ser institucional (@ues.edu.sv).',
             'fecha_nacimiento.date_format' => 'El campo fecha de nacimiento no tiene un formato válido.',
-            'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
             'password.required' => 'El campo contraseña es obligatorio.',
         ]);
-        $request->merge([
-            'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
-        ]);
+
+        if ($request->filled('fecha_nacimiento')) {
+            $request->merge([
+                'fecha_nacimiento' => \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('fecha_nacimiento'))->format('Y-m-d')
+            ]);
+        } else {
+            $request->merge([
+                'fecha_nacimiento' => null
+            ]);
+        }
+
+        if ($request->filled('telefono')) {
+            $request->merge([
+                'telefono' => preg_replace('/[^0-9]/', '', $request->input('telefono'))
+            ]);
+        } else {
+            $request->merge([
+                'telefono' => null
+            ]);
+        }
 
         $persona = Persona::create([
             'nombre' => $request->nombre,

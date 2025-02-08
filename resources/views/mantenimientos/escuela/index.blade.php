@@ -1,5 +1,6 @@
 @php
     $headers = [
+        ['text' => 'ID', 'align' => 'center'],
         ['text' => 'Nombre', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'center'],
@@ -109,6 +110,7 @@
             <x-table.base :headers="$headers">
                 @foreach ($escuelas as $escuela)
                     <x-table.tr>
+                        <x-table.td justify="center">{{ $escuela->id }}</x-table.td>
                         <x-table.td>{{ $escuela->nombre }}</x-table.td>
                         <x-table.td justify="center"><x-status.is-active :active="$escuela->activo" /></x-table.td>
                         <x-table.td justify="center">
