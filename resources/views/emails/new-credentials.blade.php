@@ -1,13 +1,10 @@
 <x-emails.email-container>
     <x-emails.email-body>
         <x-emails.email-header
-            title="{{ 'Registro en plataforma ' . ' ' . config('app.name') }}"
+            title="{{ $title }}"
             logoSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3JjWq5hKtAVSofTTo72ynt7SlCxi2G6WXmA&s" />
         <p>
-            Has sido registrado en la plataforma <strong>{{ config('app.name') }}</strong>.
-        </p>
-        <p>
-            Tus credenciales de acceso son:
+            Tus nuevas credenciales de acceso a <a href=" {{ config('app.url') }}"> {{ config('app.name') }}</a> son:
         </p>
         <p>
             <strong>Usuario:</strong>
@@ -15,7 +12,14 @@
         </p>
         <p>
             <strong>Contraseña:</strong>
-            <strong>{{ $password }}</strong>
+            <strong>{{ $tempPass }}</strong>
+        </p>
+        <p>
+            Recomendaos cambiar tu contraseña en tu primer inicio de sesión.
+        </p>
+        <p>
+            <strong>Nota:</strong>
+            <strong>Este correo es generado automáticamente, por favor no responder a este mensaje.</strong>
         </p>
     </x-emails.email-body>
 
