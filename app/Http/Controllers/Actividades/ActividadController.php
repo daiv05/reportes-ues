@@ -427,6 +427,28 @@ class ActividadController extends Controller
         return response()->json($eventos);
     }
 
+    public function lineaDeTiempoActividades(Request $request)
+    {
+        $cicloActivo = Ciclo::where('activo', 1)->first();
+        $fecha = Carbon::createFromFormat('d/m/Y', $request->query('fecha-actividades'))->format('Y-m-d');
+
+        //convertir una fecha un numero del dia de la semana
+        $diaSemana = Carbon::createFromFormat('d/m/Y', $request->query('fecha-actividades'))->dayOfWeek;
+
+        $actividades = Actividad::with('asignaturas', 'modalidad', 'evento', 'clase.tipoClase')
+            ->where('id_ciclo', $cicloActivo->id)
+            ->whereHas('evento', function ($query) use ($fecha) {
+                $query->where('fecha', $fecha);
+            })
+            ->orWhereHas('clase', function ($query) use ($diaSemana) {
+                $query->whereJsonContains('dias_actividad', strval($diaSemana));
+            })
+            ->orderBy('hora_inicio', 'asc')
+            ->paginate(5)->appends($request->query());
+
+        return response()->json($actividades);
+    }
+
     public function storeOneEvent(EventoRequest $request)
     {
         $cicloActivo = Ciclo::where('activo', 1)->first();

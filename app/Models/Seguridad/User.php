@@ -16,6 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\SendTwoFactorCode;
+use App\Notifications\CredentialsNotification;
 use Illuminate\Support\Facades\DB;
 use IvanoMatteo\LaravelDeviceTracking\Facades\DeviceTracker;
 use IvanoMatteo\LaravelDeviceTracking\Traits\UseDevices;
@@ -77,6 +78,11 @@ class User extends Authenticatable implements Auditable
     public function sendTwoFactorCode($code): void
     {
         $this->notify(new SendTwoFactorCode($code));
+    }
+
+    public function sendNewCredentials($title, $tempPass, $username): void
+    {
+        $this->notify(new CredentialsNotification($title, $tempPass, $username));
     }
 
     public function markDeviceAsVerified(): void
