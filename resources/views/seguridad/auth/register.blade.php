@@ -30,7 +30,7 @@
 
         <!-- Fecha de nacimiento -->
         <div>
-            <x-forms.input-label for="fecha_nacimiento" :value="__('Fecha de nacimiento')" required />
+            <x-forms.input-label for="fecha_nacimiento" :value="__('Fecha de nacimiento')" />
             <x-forms.date-input
                 name="fecha_nacimiento"
                 :value="old('fecha_nacimiento')"
@@ -60,7 +60,6 @@
                 patternMessage="El número de teléfono debe tener un formato válido"
                 :value="old('telefono')"
                 :error="$errors->get('telefono')"
-                required
             />
         </div>
 
