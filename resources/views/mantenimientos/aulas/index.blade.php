@@ -29,6 +29,15 @@
                     Importar datos
                 </x-forms.primary-button>
             @endcanany
+
+            <x-forms.primary-button
+            data-modal-target="static-modal"
+            data-modal-toggle="static-modal"
+            class="block"
+            type="button"
+        >
+            Descargar formato
+        </x-forms.primary-button>
         </div>
     </x-slot>
     <x-container>
