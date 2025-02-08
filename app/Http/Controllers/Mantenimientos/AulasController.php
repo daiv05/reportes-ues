@@ -10,7 +10,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Http\Requests\Mantenimiento\StoreAulaRequest;
-
+use App\Imports\AulaImport;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AulasController extends Controller
 {
@@ -37,6 +39,36 @@ class AulasController extends Controller
             'type' => 'success',
             'content' => 'Aula creada exitosamente'
         ]);
+    }
+
+    public function importarDatos(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'archivo.required' => 'El archivo es obligatorio.',
+            'archivo.mimes' => 'El archivo debe ser de tipo xlsx, xls o cvs.',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $import = new AulaImport();
+            Excel::import($import, $request->file('excel_file'));
+
+            DB::commit();
+
+            return redirect()->route('aulas.index')->with('message', [
+                'type' => 'success',
+                'content' => 'Los locales se han importado exitosamente.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('aulas.index')->with('message', [
+                'type' => 'error',
+                'content' => 'Ha ocurrido un error al importar los locales: ' . $e->getMessage()
+            ]);
+        }
     }
 
 
