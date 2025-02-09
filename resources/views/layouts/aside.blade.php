@@ -155,6 +155,12 @@
                     'permissions' => ['CICLOS_VER'],
                 ],
                 [
+                    'to' => 'fondos.index',
+                    'active' => request()->is('mantenimientos/fondos'),
+                    'label' => 'Fondos',
+                    'permissions' => ['FONDOS_VER'],
+                ],
+                [
                     'to' => 'recursos.index',
                     'active' => request()->is('mantenimientos/recursos'),
                     'label' => 'Recursos',
@@ -178,6 +184,7 @@
                     'label' => 'Bienes',
                     'permissions' => ['BIENES_VER'],
                 ],
+
             ],
         ],
         [
@@ -216,20 +223,22 @@
 @endphp
 
 <aside id="logo-sidebar"
-    class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 lg:translate-x-0">
+       class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-24 transition-transform dark:border-gray-700 dark:bg-gray-800 lg:translate-x-0">
     <div class="h-full overflow-y-auto bg-white px-3 pb-4 dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
             @foreach ($sidebarItems as $sit)
                 @if (!$sit['permissions'] || auth()->user()->canany($sit['permissions']))
                     @if ($sit['type'] === 1)
-                        <x-aside.base :to="$sit['to']" :active="$sit['active']" :icon="$sit['icon']" :label="$sit['label']" />
+                        <x-aside.base :to="$sit['to']" :active="$sit['active']" :icon="$sit['icon']"
+                                      :label="$sit['label']"/>
                     @elseif ($sit['type'] === 2)
                         <x-aside.dropdown id="{{ $sit['id'] }}" :active="$sit['active']" :icon="$sit['icon']"
-                            :label="$sit['label']" />
+                                          :label="$sit['label']"/>
                         <ul id="{{ $sit['id'] }}" class="{{ $sit['active'] ? '' : 'hidden' }} space-y-2 py-2">
                             @foreach ($sit['items'] as $item)
                                 @if (!$item['permissions'] || auth()->user()->canany($item['permissions']))
-                                    <x-aside.dropdown-item :to="$item['to']" :active="$item['active']" :label="$item['label']" />
+                                    <x-aside.dropdown-item :to="$item['to']" :active="$item['active']"
+                                                           :label="$item['label']"/>
                                 @endif
                             @endforeach
                         </ul>
