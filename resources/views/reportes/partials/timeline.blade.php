@@ -95,7 +95,7 @@
                                     ['text' => 'Nombre', 'align' => 'left'],
                                     ['text' => 'Cantidad', 'align' => 'left'],
                                     ['text' => 'Unidad de Medida', 'align' => 'left'],
-                                    ['text' => 'Fondo', 'align' => 'left'],
+                                    ['text' => 'Origen', 'align' => 'left'],
                                 ];
                             @endphp
 

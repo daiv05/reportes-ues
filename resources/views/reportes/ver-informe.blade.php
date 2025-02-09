@@ -121,7 +121,7 @@
                         Unidad de medida
                     </th>
                     <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                        Fondo
+                        Origen
                     </th>
                 </tr>
                 </thead>

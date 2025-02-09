@@ -103,7 +103,7 @@
                                     <th scope="col" class="px-2 py-1 w-[30%]">Unidad de medida</th>
                                     <th scope="col" class="px-2 py-1 w-[25%]">
                                         <div class="flex items-center justify-start">
-                                            Fondo
+                                            Origen
                                             <button data-tooltip-target="tooltip-fondos" data-tooltip-trigger="click"
                                                 type="button"
                                                 class="ms-3 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-xl text-sm w-5 h-5 text-center">
@@ -123,7 +123,7 @@
                         class="absolute z-21 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-xs opacity-0 tooltip">
                         <div>
                             <h2 class="mb-2 text-sm font-semibold text-gray-300 dark:text-white">Descripción de
-                                fondos:
+                                orígenes:
                             </h2>
                             <ul
                                 class="text-xs max-w-md space-y-1 text-gray-200 list-disc list-inside">
