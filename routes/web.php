@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Actividades\ActividadController;
+use App\Http\Controllers\ArchivoController;
 use App\Http\Controllers\Mantenimientos\AsignaturaController;
 use App\Http\Controllers\Mantenimientos\AulasController;
 use App\Http\Controllers\Mantenimientos\EscuelaController;
@@ -210,6 +211,9 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
     Route::prefix('estadisticas')->group(function () {
         Route::get('/', [EstadisticasController::class, 'index'])->middleware('permission:BITACORA_VER')->name('estadisticas.index');
     });
+
+    Route::get('/descargar/archivo/{seccion}', [ArchivoController::class, 'descargarArchivo']);
+
 });
 
 

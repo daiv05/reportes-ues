@@ -12,6 +12,11 @@
             tituloMayor="Actividades"
             subtitulo="Crea actividades que se llevaran a cabo en el ciclo a tráves de una hoja de cálculo"
         />
+        <div class="p-6">
+        <x-forms.primary-button id="descargarActividadesBtn" class="block" type="button">
+            Descargar Formato
+        </x-forms.primary-button>
+    </div>
     </x-slot>
 
     <x-container>
@@ -655,4 +660,35 @@
         document.body.appendChild(form);
         form.submit();
     }
+</script>
+
+
+<script>
+    document.getElementById('descargarActividadesBtn').addEventListener('click', function() {
+        fetch('/descargar/archivo/importacion_actividades', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('No se pudo descargar el archivo');
+                }
+            })
+            .then(blob => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'EVENTOSYEVALUACIONES.xlsx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => {
+                console.error('Error al descargar el archivo:', error);
+            });
+    });
 </script>
