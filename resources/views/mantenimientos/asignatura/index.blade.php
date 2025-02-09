@@ -31,6 +31,10 @@
                 >
                     Importar datos
                 </x-forms.primary-button>
+
+                <x-forms.primary-button id="descargarAsiganturasBtn" class="block" type="button">
+                    Descargar Formato
+                </x-forms.primary-button>
             @endcanany
         </div>
     </x-slot>
@@ -457,4 +461,33 @@
     function uploadFile() {
         document.getElementById('excel_file').click();
     }
+</script>
+<script>
+    document.getElementById('descargarAsiganturasBtn').addEventListener('click', function() {
+        fetch('/descargar/archivo/asignaturas', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('No se pudo descargar el archivo');
+                }
+            })
+            .then(blob => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'ASIGNATURAS.xlsx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => {
+                console.error('Error al descargar el archivo:', error);
+            });
+    });
 </script>
