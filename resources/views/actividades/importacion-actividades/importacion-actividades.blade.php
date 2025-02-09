@@ -14,7 +14,10 @@
         />
         <div class="p-6">
         <x-forms.primary-button id="descargarActividadesBtn" class="block" type="button">
-            Descargar Formato
+            Descargar Formato eventos y evaluaciones
+        </x-forms.primary-button>
+        <x-forms.primary-button id="descargarClasesBtn" class="block" type="button">
+            Descargar Formato de clase
         </x-forms.primary-button>
     </div>
     </x-slot>
@@ -683,6 +686,35 @@
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = 'EVENTOSYEVALUACIONES.xlsx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => {
+                console.error('Error al descargar el archivo:', error);
+            });
+    });
+</script>
+<script>
+    document.getElementById('descargarClasesBtn').addEventListener('click', function() {
+        fetch('/descargar/archivo/clases', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('No se pudo descargar el archivo');
+                }
+            })
+            .then(blob => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'CLASES.xlsx';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
