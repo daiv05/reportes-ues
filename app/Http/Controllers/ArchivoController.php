@@ -11,13 +11,13 @@ class ArchivoController extends Controller
     {
 
         $archivos = [
-            'importacion_actividades' => 'public/formatos/EVENTOSYEVALUACIONES.xlsx',
-            'bienes' => 'public/formatos/BIENES.xlsx',
-            'recursos' => 'public/formatos/RECURSOS.xlsx',
-            'asignaturas' => 'public/formatos/ASIGNATURAS.xlsx',
-            'clases' => 'public/formatos/CLASES.xlsx',
-            'empleados' => 'public/formatos/EMPLEADOS.xlsx',
-            'locales' => 'public/formatos/LOCALES.xlsx'
+            'importacion_actividades' => 'private/formatos/EVENTOSYEVALUACIONES.xlsx',
+            'bienes' => 'private/formatos/BIENES.xlsx',
+            'recursos' => 'private/formatos/RECURSOS.xlsx',
+            'asignaturas' => 'private/formatos/ASIGNATURAS.xlsx',
+            'clases' => 'private/formatos/CLASES.xlsx',
+            'empleados' => 'private/formatos/EMPLEADOS.xlsx',
+            'locales' => 'private/formatos/LOCALES.xlsx'
         ];
 
 
