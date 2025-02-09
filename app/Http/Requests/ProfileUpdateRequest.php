@@ -18,8 +18,8 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'nombre' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'apellido' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
-            'fecha_nacimiento' => 'required|date_format:d/m/Y',
-            'telefono' => 'required|string|max:50|regex:/^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/',
+            'fecha_nacimiento' => 'nullable|date_format:d/m/Y',
+            'telefono' => 'nullable|string|max:50|regex:/^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/',
             'carnet' => 'required|string|max:50|regex:/^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$/|unique:users,carnet,' . $this->user()->id,
             'email' => 'required|email|max:255|unique:users,email,' . $this->user()->id,
         ];

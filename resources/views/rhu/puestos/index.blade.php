@@ -1,5 +1,6 @@
 @php
     $headers = [
+        ['text' => 'ID', 'align' => 'center'],
         ['text' => 'Puesto', 'align' => 'left'],
         ['text' => 'Entidad', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
@@ -116,6 +117,9 @@
             <x-table.base :headers="$headers">
                 @foreach ($puestos as $puesto)
                     <x-table.tr>
+                        <x-table.td justify="center">
+                            {{ $puesto->id }}
+                        </x-table.td>
                         <x-table.td>
                             {{ $puesto->nombre }}
                         </x-table.td>

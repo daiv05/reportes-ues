@@ -13,8 +13,10 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use OwenIt\Auditing\Models\Audit;
+use Illuminate\Support\Str;
 
 
 class UsuarioController extends Controller
@@ -61,8 +63,8 @@ class UsuarioController extends Controller
         $rules = [
             'nombre' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
             'apellido' => 'required|string|max:100|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ\s]+$/',
-            'fecha_nacimiento' => 'required|date_format:d/m/Y',
-            'telefono' => 'required|string|max:15|regex:/^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/',
+            'fecha_nacimiento' => 'nullable|date_format:d/m/Y',
+            'telefono' => 'nullable|string|max:15|regex:/^\+?(\d{1,4})?[-.\s]?(\(?\d{2,4}\)?)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/',
             'email' => 'required|string|email|max:255|unique:users',
             'carnet' => 'required|string|min:3|max:20|unique:users|regex:/^(?!.*[._])?[a-zA-Z0-9](?:[a-zA-Z0-9._]{2,18}[a-zA-Z0-9])?$/',
             'tipo_user' => 'required|boolean', // Validar que el tipo de usuario sea 1 o 2
@@ -82,7 +84,6 @@ class UsuarioController extends Controller
             'apellido.max' => 'El campo apellido no debe tener más de 100 caracteres.',
             'tipo_user.boolean' => 'El tipo de usuario debe ser un valor booleano.',
             'fecha_nacimiento.date_format' => 'El campo fecha de nacimiento no tiene un formato válido.',
-            'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
         ];
         $tipo = $request->input('tipo_user');
 
@@ -105,14 +106,15 @@ class UsuarioController extends Controller
             $persona = Persona::create([
                 'nombre' => $request->nombre,
                 'apellido' => $request->apellido,
-                'fecha_nacimiento' => $request->fecha_nacimiento,
-                'telefono' => $request->telefono,
+                'fecha_nacimiento' => $request->fecha_nacimiento ?? null,
+                'telefono' => $request->telefono ?? null,
             ]);
+            $tempPass = Str::random(16);
             $usuario = User::create([
                 'email' => $request->input('email'),
                 'carnet' => $request->input('carnet'),
                 'activo' => $request->has('activo'),
-                'password' => bcrypt('password123'),
+                'password' => Hash::make($tempPass),
                 'id_persona' => $persona->id,
             ]);
             if ($tipo == '1') {
@@ -136,6 +138,10 @@ class UsuarioController extends Controller
             } else {
                 $usuario->assignRole('USUARIO');
             }
+
+            // Enviar correo con las credenciales
+            $usuario->sendNewCredentials('Registro: ' .  config('app.name'), $tempPass, $usuario->carnet);
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
