@@ -432,7 +432,7 @@
         }
     });
 
-    document.getElementById('import-excel-recursos').addEventListener('submit', function (event) {
+    document.getElementById('import-excel-bienes').addEventListener('submit', function (event) {
         const excelFile = document.getElementById('excel_file').value.trim();
         let hasErrors = false;
 
