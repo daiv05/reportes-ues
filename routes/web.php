@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Actividades\ActividadController;
+use App\Http\Controllers\ArchivoController;
 use App\Http\Controllers\Mantenimientos\AsignaturaController;
 use App\Http\Controllers\Mantenimientos\AulasController;
 use App\Http\Controllers\Mantenimientos\EscuelaController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\Estadisticas\EstadisticasController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\Mantenimientos\BienController;
 use App\Http\Controllers\Mantenimientos\TipoBienController;
+use App\Http\Controllers\Mantenimientos\FondoController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
@@ -154,6 +156,13 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
             Route::post('/', [TipoBienController::class, 'store'])->middleware('permission:TIPOS_BIENES_CREAR')->name('tiposBienes.store');
             Route::put('/{id}', [TipoBienController::class, 'update'])->middleware('permission:TIPOS_BIENES_EDITAR')->name('tiposBienes.update');
         });
+
+        // Fondos
+        Route::prefix('fondos')->group(function () {
+            Route::get('/', [FondoController::class, 'index'])->middleware('permission:FONDOS_VER')->name('fondos.index');
+            Route::post('/', [FondoController::class, 'store'])->middleware('permission:FONDOS_CREAR')->name('fondos.store');
+            Route::put('/{id}', [FondoController::class, 'update'])->middleware('permission:FONDOS_EDITAR')->name('fondos.update');
+        });
     });
 
     /* ****************************************** */
@@ -210,6 +219,9 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
     Route::prefix('estadisticas')->group(function () {
         Route::get('/', [EstadisticasController::class, 'index'])->middleware('permission:BITACORA_VER')->name('estadisticas.index');
     });
+
+    Route::get('/descargar/archivo/{seccion}', [ArchivoController::class, 'descargarArchivo']);
+
 });
 
 

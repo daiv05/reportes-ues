@@ -8,11 +8,11 @@
         ['text' => 'Recurso', 'align' => 'left'],
         ['text' => 'Utilizado', 'align' => 'left'],
         ['text' => 'Medidas utilizadas', 'align' => 'left'],
-        ['text' => 'Fondo utilizados', 'align' => 'left'],
+        ['text' => 'Provenientes de', 'align' => 'left'],
     ];
 
     $headersRecursosPorFondos = [
-        ['text' => 'Fondo', 'align' => 'left'],
+        ['text' => 'Origen', 'align' => 'left'],
         ['text' => 'Cantidad de uso', 'align' => 'center'],
         ['text' => 'Porcentaje', 'align' => 'center'],
     ];
@@ -366,7 +366,7 @@
         <div class="mt-24 grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div class="col-span-1 bg-white p-2 shadow-sm dark:bg-gray-800 sm:rounded-lg md:p-4">
                 <div class="bg-white pb-3">
-                    <h3 class="text-2xl font-bold text-escarlata-ues dark:text-gray-300">Fondos utilizados</h3>
+                    <h3 class="text-2xl font-bold text-escarlata-ues dark:text-gray-300">Orígenes/fondos utilizados</h3>
                 </div>
                 <div class="m-8 h-auto lg:h-[30rem]">
                     <canvas id="recursosPorFondos"></canvas>

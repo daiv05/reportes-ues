@@ -15,12 +15,16 @@ class FondoSeeder extends Seeder
     {
         $fondos = [
             [
-                'nombre' => 'Fondo circulante',
+                'nombre' => 'Bodega',
                 'descripcion' => 'El recurso proviene de bodega'
             ],
             [
-                'nombre' => 'Fondo de emergencia',
+                'nombre' => 'Fondo circulante',
                 'descripcion' => 'El recurso no fue encontrado en bodega y tuvo que comprarse'
+            ],
+            [
+                'nombre' => 'Material reciclado',
+                'descripcion' => 'El recurso proviene de material reciclado'
             ],
         ];
 

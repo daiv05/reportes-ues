@@ -26,6 +26,10 @@
                     >
                         Asignar puesto
                     </x-forms.primary-button>
+                    <x-forms.primary-button id="descargarEmpleadosBtn" class="block" type="button">
+                        Descargar Formato
+                    </x-forms.primary-button>
+
                 @endcanany
             </x-slot>
         </x-header.main>
@@ -415,4 +419,34 @@
     function updateTitle(title) {
         document.getElementById('modal-title').textContent = title;
     }
+</script>
+
+<script>
+    document.getElementById('descargarEmpleadosBtn').addEventListener('click', function() {
+        fetch('/descargar/archivo/empleados', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('No se pudo descargar el archivo');
+                }
+            })
+            .then(blob => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'EMPLEADOS.xlsx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => {
+                console.error('Error al descargar el archivo:', error);
+            });
+    });
 </script>

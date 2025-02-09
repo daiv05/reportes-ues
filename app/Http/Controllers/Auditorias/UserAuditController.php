@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Jenssegers\Agent\Agent;
 use App\Models\Registro\Persona;
+use Carbon\Carbon;
 
 class UserAuditController extends Controller
 {
@@ -42,10 +43,14 @@ class UserAuditController extends Controller
             }
         }
 
+
         if ($request->has('start_date') && $request->has('end_date') && $request->start_date && $request->end_date) {
-            $query->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$request->start_date, $request->end_date]);
+            $startDate = Carbon::parse($request->start_date)->format('Y-m-d');
+            $endDate = Carbon::parse($request->end_date)->format('Y-m-d');
+            $query->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$startDate, $endDate]);
             $filtersApplied = true;
         }
+
 
 
         if (!$filtersApplied) {

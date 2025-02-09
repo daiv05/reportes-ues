@@ -31,6 +31,10 @@
                 >
                     Importar datos
                 </x-forms.primary-button>
+
+                <x-forms.primary-button id="descargarBienesBtn" class="block" type="button">
+                    Descargar Formato
+                </x-forms.primary-button>
             @endcanany
         </div>
     </x-slot>
@@ -428,7 +432,7 @@
         }
     });
 
-    document.getElementById('import-excel-recursos').addEventListener('submit', function (event) {
+    document.getElementById('import-excel-bienes').addEventListener('submit', function (event) {
         const excelFile = document.getElementById('excel_file').value.trim();
         let hasErrors = false;
 
@@ -514,4 +518,34 @@
     function uploadFile() {
         document.getElementById('excel_file').click();
     }
+</script>
+
+<script>
+    document.getElementById('descargarBienesBtn').addEventListener('click', function() {
+        fetch('/descargar/archivo/bienes', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('No se pudo descargar el archivo');
+                }
+            })
+            .then(blob => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'BIENES.xlsx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => {
+                console.error('Error al descargar el archivo:', error);
+            });
+    });
 </script>
