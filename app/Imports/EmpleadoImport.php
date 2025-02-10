@@ -56,6 +56,7 @@ class EmpleadoImport implements ToModel, WithHeadingRow
             'activo' => true,
             'password' => Hash::make($tempPass),
             'id_persona' => $persona->id,
+            'es_estudiante' => false,
         ]);
 
         $usuario->assignRole('EMPLEADO');
