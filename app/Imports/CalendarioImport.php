@@ -53,12 +53,12 @@ class CalendarioImport implements ToModel, WithHeadingRow, WithStartRow
             return null;
         }
 
-        if ($row[0]) {
+        if (isset($row[0])) {
             $this->week = $row[0];
         }
-        if ($row[1]) {
+        if (isset($row[1])) {
             $this->day = $row[1];
-            if ($row[2]) {
+            if (isset($row[2])) {
                 $this->date = $row[2];
             }
         }
@@ -79,7 +79,7 @@ class CalendarioImport implements ToModel, WithHeadingRow, WithStartRow
             $modalidad = 2;
         }
 
-        if ($row[13]) {
+        if (isset($row[13])) {
             $aulasExcel = explode(',', $row[13]);
             foreach ($aulasExcel as $aula) {
                 $aula = trim($aula);

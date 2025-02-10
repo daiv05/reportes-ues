@@ -6,12 +6,15 @@ use App\Enums\GeneralEnum;
 use App\Enums\PermisosEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Imports\EmpleadoImport;
 use App\Models\rhu\EmpleadoPuesto;
 use App\Models\rhu\Entidades;
 use App\Models\rhu\Puesto;
 use App\Models\Seguridad\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 
 class EmpleadoPuestoController extends Controller
@@ -104,6 +107,43 @@ class EmpleadoPuestoController extends Controller
                     'type' => 'error',
                     'content' => 'Error al crear la asignación'
                 ]);
+        }
+    }
+
+    public function importarDatos(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'archivo.required' => 'El archivo es obligatorio.',
+            'archivo.mimes' => 'El archivo debe ser de tipo xlsx, xls o cvs.',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $import = new EmpleadoImport();
+            Excel::import($import, $request->file('excel_file'));
+
+            DB::commit();
+
+            $empleados = $import->getData();
+
+            foreach ($empleados as $empleado) {
+                $usuario = $empleado['usuario'];
+                $usuario->sendNewCredentials('Registro: ' .  config('app.name'), $empleado['password'], $usuario->carnet);
+            }
+
+            return redirect()->route('empleadosPuestos.index')->with('message', [
+                'type' => 'success',
+                'content' => 'Los empleados se han importado y se han enviado sus credenciaes exitosamente.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('empleadosPuestos.index')->with('message', [
+                'type' => 'error',
+                'content' => 'Ha ocurrido un error al importar los empleados: ' . $e->getMessage()
+            ]);
         }
     }
 
