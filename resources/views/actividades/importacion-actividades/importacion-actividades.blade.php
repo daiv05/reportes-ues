@@ -12,14 +12,14 @@
             tituloMayor="Actividades"
             subtitulo="Crea actividades que se llevaran a cabo en el ciclo a tráves de una hoja de cálculo"
         />
-        <div class="p-6">
-        <x-forms.primary-button id="descargarActividadesBtn" class="block" type="button">
-            Descargar Formato eventos y evaluaciones
-        </x-forms.primary-button>
-        <x-forms.primary-button id="descargarClasesBtn" class="block" type="button">
-            Descargar Formato de clase
-        </x-forms.primary-button>
-    </div>
+        <div class="flex flex-wrap gap-2 p-6">
+            <x-forms.primary-button id="descargarActividadesBtn" class="relative block" type="button">
+                Descargar Formato eventos y evaluaciones
+            </x-forms.primary-button>
+            <x-forms.primary-button id="descargarClasesBtn" class="relative block" type="button">
+                Descargar Formato de clase
+            </x-forms.primary-button>
+        </div>
     </x-slot>
 
     <x-container>
@@ -665,24 +665,29 @@
     }
 </script>
 
-
 <script>
-    document.getElementById('descargarActividadesBtn').addEventListener('click', function() {
+    document.getElementById('descargarActividadesBtn').addEventListener('click', function () {
+        this.innerHTML =
+            document.getElementById('descargarActividadesBtn').textContent +
+            `<div class="loader absolute transform left-[45%]"></div>`;
+        this.disabled = true;
+        this.classList.add('!text-escarlata-ues');
+
         fetch('/descargar/archivo/importacion_actividades', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-            })
-            .then(response => {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => {
                 if (response.ok) {
                     return response.blob();
                 } else {
                     throw new Error('No se pudo descargar el archivo');
                 }
             })
-            .then(blob => {
+            .then((blob) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = 'EVENTOSYEVALUACIONES.xlsx';
@@ -690,28 +695,39 @@
                 link.click();
                 document.body.removeChild(link);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error al descargar el archivo:', error);
+            })
+            .finally(() => {
+                this.innerHTML = document.getElementById('descargarActividadesBtn').textContent;
+                this.disabled = false;
+                this.classList.remove('!text-escarlata-ues');
             });
     });
 </script>
 <script>
-    document.getElementById('descargarClasesBtn').addEventListener('click', function() {
+    document.getElementById('descargarClasesBtn').addEventListener('click', function () {
+        this.innerHTML =
+            document.getElementById('descargarClasesBtn').textContent +
+            `<div class="loader absolute transform left-[45%]"></div>`;
+        this.disabled = true;
+        this.classList.add('!text-escarlata-ues');
+
         fetch('/descargar/archivo/clases', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-            })
-            .then(response => {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => {
                 if (response.ok) {
                     return response.blob();
                 } else {
                     throw new Error('No se pudo descargar el archivo');
                 }
             })
-            .then(blob => {
+            .then((blob) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = 'CLASES.xlsx';
@@ -719,8 +735,13 @@
                 link.click();
                 document.body.removeChild(link);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error al descargar el archivo:', error);
+            })
+            .finally(() => {
+                this.innerHTML = document.getElementById('descargarClasesBtn').textContent;
+                this.disabled = false;
+                this.classList.remove('!text-escarlata-ues');
             });
     });
 </script>
