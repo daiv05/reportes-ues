@@ -128,6 +128,12 @@
         {{-- TABLA --}}
         <div class="mx-auto mb-6 flex flex-col overflow-x-auto sm:rounded-lg">
             <x-table.base :headers="$headers">
+                @if ($asignaturas->isEmpty())
+                    <x-table.td colspan="{{ count($headers) }}" justify="center">
+                        <span class="text-gray-500">No se encontraron registros</span>
+                    </x-table.td>
+                @endif
+
                 @foreach ($asignaturas as $asignatura)
                     <x-table.tr>
                         <x-table.td>
