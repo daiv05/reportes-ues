@@ -36,7 +36,7 @@
                         Importar datos
                     </x-forms.primary-button>
 
-                    <x-forms.primary-button id="descargarEmpleadosBtn" class="block" type="button">
+                    <x-forms.primary-button id="descargarEmpleadosBtn" class="relative block" type="button">
                         Descargar Formato
                     </x-forms.primary-button>
                 @endcanany
@@ -144,6 +144,12 @@
         <div>
             <div class="overflow-x-auto">
                 <x-table.base :headers="$headers">
+                    @if ($empleadosPuestos->isEmpty())
+                        <x-table.td colspan="{{ count($headers) }}" justify="center">
+                            <span class="text-gray-500">No se encontraron registros</span>
+                        </x-table.td>
+                    @endif
+
                     @foreach ($empleadosPuestos as $empPuesto)
                         <x-table.tr>
                             <x-table.td>
@@ -518,6 +524,12 @@
 
 <script>
     document.getElementById('descargarEmpleadosBtn').addEventListener('click', function () {
+        this.innerHTML =
+            document.getElementById('descargarEmpleadosBtn').textContent +
+            `<div class="loader absolute transform left-[45%]"></div>`;
+        this.disabled = true;
+        this.classList.add('!text-escarlata-ues');
+
         fetch('/descargar/archivo/empleados', {
             method: 'GET',
             headers: {
@@ -542,6 +554,11 @@
             })
             .catch((error) => {
                 console.error('Error al descargar el archivo:', error);
+            })
+            .finally(() => {
+                this.innerHTML = 'Descargar Formato';
+                this.disabled = false;
+                this.classList.remove('!text-escarlata-ues');
             });
     });
 </script>

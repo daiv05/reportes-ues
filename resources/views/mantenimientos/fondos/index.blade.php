@@ -108,6 +108,12 @@
         {{-- TABLA --}}
         <div class="mx-auto mb-6 flex flex-col overflow-x-auto sm:rounded-lg">
             <x-table.base :headers="$headers">
+                @if ($fondos->isEmpty())
+                    <x-table.td colspan="{{ count($headers) }}" justify="center">
+                        <span class="text-gray-500">No se encontraron registros</span>
+                    </x-table.td>
+                @endif
+
                 @foreach ($fondos as $fondo)
                     <x-table.tr>
                         <x-table.td justify="center">
@@ -290,8 +296,7 @@
             document.getElementById('fondo-form').method = 'POST';
 
             if (!document.querySelector('input[name="_method"]')) {
-                document.getElementById('fondo-form').innerHTML +=
-                    '<input type="hidden" name="_method" value="PUT">';
+                document.getElementById('fondo-form').innerHTML += '<input type="hidden" name="_method" value="PUT">';
             }
 
             document.getElementById('nombre').value = nombre;

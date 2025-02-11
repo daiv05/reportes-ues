@@ -12,7 +12,7 @@
 <x-app-layout>
     <x-slot name="header">
         <x-header.simple titulo="Gestión de bienes" />
-        <div class="p-6">
+        <div class="flex flex-wrap gap-2 p-6">
             @canany(['BIENES_CREAR'])
                 <x-forms.primary-button
                     data-modal-target="static-modal"
@@ -32,7 +32,7 @@
                     Importar datos
                 </x-forms.primary-button>
 
-                <x-forms.primary-button id="descargarBienesBtn" class="block" type="button">
+                <x-forms.primary-button id="descargarBienesBtn" class="relative block" type="button">
                     Descargar Formato
                 </x-forms.primary-button>
             @endcanany
@@ -48,13 +48,36 @@
                 method="GET"
                 class="mt-4 flex w-full flex-row flex-wrap items-center space-x-8"
             >
-                <div class="flex w-full flex-col px-4 md:w-2/6 md:px-0">
-                    <x-forms.row :columns="1">
+                <div class="flex w-full flex-col px-4 md:w-4/6 md:px-0">
+                    <x-forms.row :columns="2">
                         <x-forms.field
                             id="nombre"
                             label="Nombre"
                             name="nombre-filter"
                             :value="request('nombre-filter')"
+                        />
+
+                        <x-forms.field
+                            id="codigo"
+                            label="Código"
+                            name="codigo-filter"
+                            :value="request('codigo-filter')"
+                        />
+                    </x-forms.row>
+
+                    <x-forms.row :columns="2">
+                        <x-forms.select
+                            label="Tipo de Bien"
+                            name="tipo-bien-filter"
+                            :options="$tiposBienes->pluck('nombre', 'id')"
+                            :selected="request('tipo-bien-filter')"
+                        />
+
+                        <x-forms.select
+                            label="Estado"
+                            name="estado-bien-filter"
+                            :options="$estadoBienes->pluck('nombre', 'id')"
+                            :selected="request('estado-bien-filter')"
                         />
                     </x-forms.row>
                 </div>
@@ -122,6 +145,12 @@
         {{-- TABLA --}}
         <div class="mx-auto mb-6 flex flex-col overflow-x-auto sm:rounded-lg">
             <x-table.base :headers="$headers">
+                @if ($bienes->isEmpty())
+                    <x-table.td colspan="{{ count($headers) }}" justify="center">
+                        <span class="text-gray-500">No se encontraron registros</span>
+                    </x-table.td>
+                @endif
+
                 @foreach ($bienes as $bien)
                     <x-table.tr>
                         <x-table.td>{{ $bien->nombre }}</x-table.td>
@@ -521,22 +550,28 @@
 </script>
 
 <script>
-    document.getElementById('descargarBienesBtn').addEventListener('click', function() {
+    document.getElementById('descargarBienesBtn').addEventListener('click', function () {
+        this.innerHTML =
+            document.getElementById('descargarBienesBtn').textContent +
+            `<div class="loader absolute transform left-[45%]"></div>`;
+        this.disabled = true;
+        this.classList.add('!text-escarlata-ues');
+
         fetch('/descargar/archivo/bienes', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-            })
-            .then(response => {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => {
                 if (response.ok) {
                     return response.blob();
                 } else {
                     throw new Error('No se pudo descargar el archivo');
                 }
             })
-            .then(blob => {
+            .then((blob) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = 'BIENES.xlsx';
@@ -544,8 +579,13 @@
                 link.click();
                 document.body.removeChild(link);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error al descargar el archivo:', error);
+            })
+            .finally(() => {
+                this.innerHTML = 'Descargar Formato';
+                this.disabled = false;
+                this.classList.remove('!text-escarlata-ues');
             });
     });
 </script>

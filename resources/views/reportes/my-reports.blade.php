@@ -29,6 +29,12 @@
         {{-- TABLA --}}
         <div class="overflow-x-auto">
             <x-table.base :headers="$headers">
+                @if ($reportes->isEmpty())
+                    <x-table.td colspan="{{ count($headers) }}" justify="center">
+                        <span class="text-gray-500">No se encontraron registros</span>
+                    </x-table.td>
+                @endif
+
                 @foreach ($reportes as $reporte)
                     <x-table.tr>
                         <x-table.td>{{ $reporte->id }}</x-table.td>

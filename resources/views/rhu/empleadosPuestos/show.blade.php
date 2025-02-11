@@ -67,6 +67,12 @@
 
             <div class="overflow-auto border-t border-gray-200">
                 <x-table.base :headers="$headersReports">
+                    @if ($empPuesto->empleadosAcciones->isEmpty())
+                        <x-table.td colspan="{{ count($headersReports) }}" justify="center">
+                            <span class="text-gray-500">No se encontraron registros</span>
+                        </x-table.td>
+                    @endif
+
                     @foreach ($empPuesto->empleadosAcciones as $empAccion)
                         <x-table.tr>
                             <x-table.td>{{ $empAccion->reporte->titulo }}</x-table.td>

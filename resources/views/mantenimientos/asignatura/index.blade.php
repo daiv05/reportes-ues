@@ -12,7 +12,7 @@
     <x-slot name="header">
         <x-header.simple titulo="Gestión de Asignaturas" />
 
-        <div class="p-6">
+        <div class="flex flex-wrap gap-2 p-6">
             @canany(['ASIGNATURAS_CREAR'])
                 <x-forms.primary-button
                     data-modal-target="static-modal"
@@ -32,7 +32,7 @@
                     Importar datos
                 </x-forms.primary-button>
 
-                <x-forms.primary-button id="descargarAsiganturasBtn" class="block" type="button">
+                <x-forms.primary-button id="descargarAsignaturasBtn" class="relative block" type="button">
                     Descargar Formato
                 </x-forms.primary-button>
             @endcanany
@@ -128,6 +128,12 @@
         {{-- TABLA --}}
         <div class="mx-auto mb-6 flex flex-col overflow-x-auto sm:rounded-lg">
             <x-table.base :headers="$headers">
+                @if ($asignaturas->isEmpty())
+                    <x-table.td colspan="{{ count($headers) }}" justify="center">
+                        <span class="text-gray-500">No se encontraron registros</span>
+                    </x-table.td>
+                @endif
+
                 @foreach ($asignaturas as $asignatura)
                     <x-table.tr>
                         <x-table.td>
@@ -463,22 +469,28 @@
     }
 </script>
 <script>
-    document.getElementById('descargarAsiganturasBtn').addEventListener('click', function() {
+    document.getElementById('descargarAsignaturasBtn').addEventListener('click', function () {
+        this.innerHTML =
+            document.getElementById('descargarAsignaturasBtn').textContent +
+            `<div class="loader absolute transform left-[45%]"></div>`;
+        this.disabled = true;
+        this.classList.add('!text-escarlata-ues');
+
         fetch('/descargar/archivo/asignaturas', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-            })
-            .then(response => {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => {
                 if (response.ok) {
                     return response.blob();
                 } else {
                     throw new Error('No se pudo descargar el archivo');
                 }
             })
-            .then(blob => {
+            .then((blob) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = 'ASIGNATURAS.xlsx';
@@ -486,8 +498,13 @@
                 link.click();
                 document.body.removeChild(link);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error al descargar el archivo:', error);
+            })
+            .finally(() => {
+                this.innerHTML = 'Descargar Formato';
+                this.disabled = false;
+                this.classList.remove('!text-escarlata-ues');
             });
     });
 </script>
