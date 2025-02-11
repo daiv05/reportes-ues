@@ -144,6 +144,12 @@
         <div>
             <div class="overflow-x-auto">
                 <x-table.base :headers="$headers">
+                    @if ($empleadosPuestos->isEmpty())
+                        <x-table.td colspan="{{ count($headers) }}" justify="center">
+                            <span class="text-gray-500">No se encontraron registros</span>
+                        </x-table.td>
+                    @endif
+
                     @foreach ($empleadosPuestos as $empPuesto)
                         <x-table.tr>
                             <x-table.td>

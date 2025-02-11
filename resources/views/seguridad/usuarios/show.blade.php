@@ -85,6 +85,12 @@
 
             <div class="overflow-auto border-t border-gray-200">
                 <x-table.base :headers="$headersRoles">
+                    @if ($user->roles->isEmpty())
+                        <x-table.td colspan="{{ count($headersRoles) }}" justify="center">
+                            <span class="text-gray-500">No se encontraron registros</span>
+                        </x-table.td>
+                    @endif
+
                     @foreach ($user->roles as $role)
                         <x-table.tr>
                             <x-table.td>{{ $role->name }}</x-table.td>
@@ -106,6 +112,12 @@
 
                 <div class="overflow-auto border-t border-gray-200">
                     <x-table.base :headers="$headersPuestos">
+                        @if ($user->empleadosPuestos->isEmpty())
+                            <x-table.td colspan="{{ count($headersPuestos) }}" justify="center">
+                                <span class="text-gray-500">No se encontraron registros</span>
+                            </x-table.td>
+                        @endif
+
                         @foreach ($user->empleadosPuestos as $empPuesto)
                             <x-table.tr>
                                 <x-table.td>{{ $empPuesto->puesto->entidad->nombre }}</x-table.td>
@@ -148,6 +160,12 @@
                     <x-table.base :headers="$headersReports">
                         @foreach ($user->empleadosPuestos as $empPuesto)
                             @if ($empPuesto->activo)
+                                @if ($empPuesto->empleadosAcciones->isEmpty())
+                                    <x-table.td colspan="{{ count($headersReports) }}" justify="center">
+                                        <span class="text-gray-500">No se encontraron registros</span>
+                                    </x-table.td>
+                                @endif
+
                                 @foreach ($empPuesto->empleadosAcciones as $empAccion)
                                     <x-table.tr>
                                         <x-table.td>{{ $empAccion->reporte->titulo }}</x-table.td>
