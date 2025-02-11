@@ -48,13 +48,36 @@
                 method="GET"
                 class="mt-4 flex w-full flex-row flex-wrap items-center space-x-8"
             >
-                <div class="flex w-full flex-col px-4 md:w-2/6 md:px-0">
-                    <x-forms.row :columns="1">
+                <div class="flex w-full flex-col px-4 md:w-4/6 md:px-0">
+                    <x-forms.row :columns="2">
                         <x-forms.field
                             id="nombre"
                             label="Nombre"
                             name="nombre-filter"
                             :value="request('nombre-filter')"
+                        />
+
+                        <x-forms.field
+                            id="codigo"
+                            label="Código"
+                            name="codigo-filter"
+                            :value="request('codigo-filter')"
+                        />
+                    </x-forms.row>
+
+                    <x-forms.row :columns="2">
+                        <x-forms.select
+                            label="Tipo de Bien"
+                            name="tipo-bien-filter"
+                            :options="$tiposBienes->pluck('nombre', 'id')"
+                            :selected="request('tipo-bien-filter')"
+                        />
+
+                        <x-forms.select
+                            label="Estado"
+                            name="estado-bien-filter"
+                            :options="$estadoBienes->pluck('nombre', 'id')"
+                            :selected="request('estado-bien-filter')"
                         />
                     </x-forms.row>
                 </div>
