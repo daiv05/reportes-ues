@@ -172,6 +172,7 @@
                             <button
                                 id="cargarMasActividades"
                                 class="absolute bottom-0 left-1/2 z-20 flex h-9 w-28 -translate-x-1/2 translate-y-1/2 transform justify-center rounded-lg bg-orange-900 px-4 py-1 text-white"
+                                onclick="cargarActividades(false)"
                             >
                                 Cargar más
                             </button>
@@ -313,7 +314,7 @@
 
             if (firstLoad) {
                 pageActividades = 1;
-                urlActividades = `/actividades/eventos-y-evaluaciones/linea-de-tiempo/obtener-actividades?page=${pageActividades}`;
+                urlActividades = `/actividades/eventos-y-evaluaciones/linea-de-tiempo/obtener-actividades?page=${pageActividades}&fecha-actividades=${document.getElementById('fecha').value}`;
                 actividadesContainer.innerHTML = '';
                 actividadesContainer.display = 'none';
                 cargarMasActividadesBtn.style.display = 'flex';
@@ -334,9 +335,7 @@
                 timelineContainerActividades.classList.add('flex');
             }
 
-            const response = await fetch(
-                urlActividades + `&fecha-actividades=${document.getElementById('fecha').value}`,
-            );
+            const response = await fetch(urlActividades);
             const data = await response.json();
 
             if (data.data.length === 0) {
@@ -411,7 +410,6 @@
     }
 
     cargarMasBtn.addEventListener('click', cargarEventos);
-    cargarMasActividadesBtn.addEventListener('click', cargarActividades);
 
     // Carga eventos automáticamente al hacer scroll
     // const observer = new IntersectionObserver(entries => {

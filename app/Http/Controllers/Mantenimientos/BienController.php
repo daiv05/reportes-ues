@@ -22,11 +22,18 @@ class BienController extends Controller
     public function index(Request $request): View
     {
         $filtroNombre = $request->input('nombre-filter');
-        $filtroTipo = $request->input('tipoBien');
+        $filtroTipo = $request->input('tipo-bien-filter');
+        $filtroEstado = $request->input('estado-bien-filter');
+        $filtroCodigo = $request->input('codigo-filter');
+
         $bienes = Bien::when($filtroTipo, function ($query, $filtroTipo) {
             return $query->where('id_tipo_bien', $filtroTipo);
         })->when($filtroNombre, function ($query, $filtroNombre) {
             return $query->where('nombre', 'like', '%' . $filtroNombre . '%');
+        })->when($filtroEstado, function ($query, $filtroEstado) {
+            return $query->where('id_estado_bien', $filtroEstado);
+        })->when($filtroCodigo, function ($query, $filtroCodigo) {
+            return $query->where('codigo', 'like', '%' . $filtroCodigo . '%');
         })->paginate(GeneralEnum::PAGINACION->value)->appends($request->query());
 
         $tiposBienes = TipoBien::where('activo', 1)->get();

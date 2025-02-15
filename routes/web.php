@@ -207,6 +207,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
         Route::post('/empleados-puestos', [EmpleadoPuestoController::class, 'store'])->middleware('permission:EMPLEADOS_CREAR')->name('empleadosPuestos.store');
         Route::put('/empleados-puestos/{id}', [EmpleadoPuestoController::class, 'update'])->middleware('permission:EMPLEADOS_EDITAR')->name('empleadosPuestos.update');
         Route::get('/empleados-puestos/{id}', [EmpleadoPuestoController::class, 'show'])->middleware('permission:EMPLEADOS_VER')->name('empleadosPuestos.show');
+        Route::post('empleados/importar', [EmpleadoPuestoController::class, 'importarDatos'])->middleware('permission:EMPLEADOS_CREAR')->name('empleados.importar');
         // Route::get('/busqueda-por-nombre/{id_entidad}', [EmpleadoPuestoController::class, 'buscarPorNombre'])->middleware('permission:ENTIDADES_EDITAR')->name('empleadosPuestos.buscarPorNombre');
         // Route::get('/busqueda-supervisor-por-nombre', [EmpleadoPuestoController::class, 'buscarSupervisorPorNombre'])->middleware('permission:ENTIDADES_EDITAR')->name('empleadosPuestos.buscarSupervisorPorNombre');
     });
@@ -221,7 +222,6 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
     });
 
     Route::get('/descargar/archivo/{seccion}', [ArchivoController::class, 'descargarArchivo']);
-
 });
 
 

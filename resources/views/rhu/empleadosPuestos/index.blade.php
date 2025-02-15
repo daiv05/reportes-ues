@@ -26,10 +26,19 @@
                     >
                         Asignar puesto
                     </x-forms.primary-button>
-                    <x-forms.primary-button id="descargarEmpleadosBtn" class="block" type="button">
-                        Descargar Formato
+
+                    <x-forms.primary-button
+                        data-modal-target="static-modal-excel"
+                        data-modal-toggle="static-modal-excel"
+                        class="block"
+                        type="button"
+                    >
+                        Importar datos
                     </x-forms.primary-button>
 
+                    <x-forms.primary-button id="descargarEmpleadosBtn" class="relative block" type="button">
+                        Descargar Formato
+                    </x-forms.primary-button>
                 @endcanany
             </x-slot>
         </x-header.main>
@@ -135,6 +144,12 @@
         <div>
             <div class="overflow-x-auto">
                 <x-table.base :headers="$headers">
+                    @if ($empleadosPuestos->isEmpty())
+                        <x-table.td colspan="{{ count($headers) }}" justify="center">
+                            <span class="text-gray-500">No se encontraron registros</span>
+                        </x-table.td>
+                    @endif
+
                     @foreach ($empleadosPuestos as $empPuesto)
                         <x-table.tr>
                             <x-table.td>
@@ -288,6 +303,62 @@
             </button>
         </x-slot>
     </x-form-modal>
+
+    <!-- Modal Importación de Excel-->
+    <x-form-modal id="static-modal-excel" class="hidden">
+        <x-slot name="header">
+            <h3 id="modal-title" class="text-2xl font-bold text-escarlata-ues">Importar empleados</h3>
+        </x-slot>
+        <x-slot name="body">
+            <form
+                id="import-excel-empleados"
+                action="{{ route('empleados.importar') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                class="grid grid-cols-1 gap-4"
+            >
+                @csrf
+                <div class="mx-auto flex w-full flex-col items-center justify-center gap-3">
+                    <label
+                        for="file"
+                        class="flex w-64 cursor-pointer flex-col items-center rounded-lg border border-orange-900 bg-white px-4 py-6 uppercase tracking-wide text-orange-900 shadow-lg hover:bg-orange-900 hover:text-white"
+                        onclick="uploadFile()"
+                    >
+                        <x-heroicon-o-cloud-arrow-up class="h-10 w-10" />
+                        <span id="file-name" class="mt-2 text-base leading-normal">Selecciona un archivo</span>
+                        <input
+                            type="file"
+                            name="excel_file"
+                            accept=".xls,.xlsx,.csv"
+                            id="excel_file"
+                            class="hidden"
+                            onchange="updateFileName(this)"
+                        />
+                        @if ($errors->has('excel_file'))
+                            <span class="text-center text-sm text-red-500">{{ $errors->first('excel_file') }}</span>
+                        @endif
+                    </label>
+                    <div id="excel-error" class="text-sm text-red-500"></div>
+                </div>
+            </form>
+        </x-slot>
+        <x-slot name="footer">
+            <button
+                data-modal-hide="static-modal-excel"
+                type="button"
+                class="rounded-lg border bg-gray-700 px-7 py-2.5 text-sm font-medium text-white focus:z-10 focus:outline-none focus:ring-4"
+            >
+                Cancelar
+            </button>
+            <button
+                type="submit"
+                form="import-excel-empleados"
+                class="ms-6 rounded-lg bg-red-700 px-8 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
+            >
+                Guardar
+            </button>
+        </x-slot>
+    </x-form-modal>
 </x-app-layout>
 
 <script>
@@ -324,6 +395,27 @@
         if (hasErrors) {
             event.preventDefault();
             document.getElementById('general-errors').innerHTML = 'Todos los campos son requeridos';
+        }
+    });
+
+    document.getElementById('import-excel-empleados').addEventListener('submit', function (event) {
+        const excelFile = document.getElementById('excel_file').value.trim();
+        let hasErrors = false;
+
+        if (!excelFile) {
+            // Cambiado: no usar .value ya que es un valor ya extraído
+            hasErrors = true;
+            document.getElementById('excel-error').innerHTML = 'El archivo es obligatorio';
+        } else {
+            const extension = excelFile.split('.').pop().toLowerCase();
+            if (extension !== 'xls' && extension !== 'xlsx' && extension !== 'csv') {
+                hasErrors = true;
+                document.getElementById('excel-error').innerHTML = 'El archivo debe ser de tipo Excel o CSV';
+            }
+        }
+
+        if (hasErrors) {
+            event.preventDefault();
         }
     });
 
@@ -419,25 +511,40 @@
     function updateTitle(title) {
         document.getElementById('modal-title').textContent = title;
     }
+
+    function updateFileName(input) {
+        const fileName = input.files[0] ? input.files[0].name : 'Selecciona un archivo';
+        document.getElementById('file-name').textContent = fileName;
+    }
+
+    function uploadFile() {
+        document.getElementById('excel_file').click();
+    }
 </script>
 
 <script>
-    document.getElementById('descargarEmpleadosBtn').addEventListener('click', function() {
+    document.getElementById('descargarEmpleadosBtn').addEventListener('click', function () {
+        this.innerHTML =
+            document.getElementById('descargarEmpleadosBtn').textContent +
+            `<div class="loader absolute transform left-[45%]"></div>`;
+        this.disabled = true;
+        this.classList.add('!text-escarlata-ues');
+
         fetch('/descargar/archivo/empleados', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-            })
-            .then(response => {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => {
                 if (response.ok) {
                     return response.blob();
                 } else {
                     throw new Error('No se pudo descargar el archivo');
                 }
             })
-            .then(blob => {
+            .then((blob) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = 'EMPLEADOS.xlsx';
@@ -445,8 +552,13 @@
                 link.click();
                 document.body.removeChild(link);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error al descargar el archivo:', error);
+            })
+            .finally(() => {
+                this.innerHTML = 'Descargar Formato';
+                this.disabled = false;
+                this.classList.remove('!text-escarlata-ues');
             });
     });
 </script>

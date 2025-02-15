@@ -27,6 +27,12 @@
     <x-container>
         <div class="mb-8 overflow-x-auto">
             <x-table.base :headers="$headers">
+                @if ($roles->isEmpty())
+                    <x-table.td colspan="{{ count($headers) }}" justify="center">
+                        <span class="text-gray-500">No se encontraron registros</span>
+                    </x-table.td>
+                @endif
+
                 @foreach ($roles as $rol)
                     <x-table.tr>
                         <x-table.td>

@@ -99,6 +99,12 @@
             </div>
         </form>
         <x-table.base :headers="$headers">
+            @if ($unidades->isEmpty())
+                <x-table.td colspan="{{ count($headers) }}" justify="center">
+                    <span class="text-gray-500">No se encontraron registros</span>
+                </x-table.td>
+            @endif
+
             @foreach ($unidades as $unidad)
                 <x-table.tr>
                     <x-table.td>

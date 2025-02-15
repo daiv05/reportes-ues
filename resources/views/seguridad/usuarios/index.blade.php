@@ -37,7 +37,13 @@
             >
                 <div class="flex w-full flex-col px-4 md:w-5/6 md:px-0">
                     <x-forms.row :columns="3">
-                        <x-forms.field maxlength="100" id="" label="Nombre" name="nombre-filter" :value="request('nombre-filter')" />
+                        <x-forms.field
+                            maxlength="100"
+                            id=""
+                            label="Nombre"
+                            name="nombre-filter"
+                            :value="request('nombre-filter')"
+                        />
 
                         <x-forms.field
                             id="email"
@@ -119,6 +125,12 @@
         {{-- TABLA --}}
         <div class="mx-auto mb-6 flex flex-col overflow-x-auto sm:rounded-lg">
             <x-table.base :headers="$headers">
+                @if ($usuarios->isEmpty())
+                    <x-table.td colspan="{{ count($headers) }}" justify="center">
+                        <span class="text-gray-500">No se encontraron registros</span>
+                    </x-table.td>
+                @endif
+
                 @foreach ($usuarios as $usuario)
                     <x-table.tr>
                         <x-table.td>
