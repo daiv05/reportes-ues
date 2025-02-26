@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Estadisticas;
 
 use App\Http\Controllers\Controller;
+use App\Models\CategoriaReporte;
 use App\Models\Mantenimientos\Fondo;
 use App\Models\Mantenimientos\Recurso;
 use App\Models\Mantenimientos\UnidadMedida;
@@ -12,9 +13,12 @@ use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\Reporte;
 use App\Models\rhu\EmpleadoPuesto;
 use App\Models\Seguridad\User;
+use Carbon\Carbon;
 use ConsoleTVs\Charts\Classes\Chartjs\Chart;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Round;
 
 use function PHPSTORM_META\map;
 
@@ -397,14 +401,21 @@ class EstadisticasController extends Controller
         );
     }
 
-    public function calcularEficienciaPorEmpleado(Request $request)
+    public function calcularEficienciaEmpleados(Request $request)
     {
-        $estadoId = Estado::where('nombre', 'ASIGNADO')->value('id');
 
-        $users = User::with([
-            'empleadosPuestos.empleadosAcciones.reporte.accionesReporte.historialAccionesReporte' => function ($query) {
-                $query->latest()->limit(1);
-            },
+        $validated = $request->validate([
+            'fecha_inicio' => 'nullable|date',
+            'fecha_final' => 'nullable|date',
+            'id_entidad' => 'nullable|integer,exists:entidades,id',
+            'nombreEmpleado' => 'nullable|string',
+            'orden' => 'nullable|string' // 'ASC' o 'DESC'
+        ]);
+
+        $estadoId = Estado::where('nombre', 'EN PROCESO')->value('id');
+
+        $users = User::select('id', 'email', 'id_persona')->with([
+            'empleadosPuestos.empleadosAcciones.reporte',
             'persona',
         ])->whereHas('empleadosPuestos', function ($query) {
             $query->where('empleados_puestos.activo', true);
@@ -417,25 +428,23 @@ class EstadisticasController extends Controller
                     ->limit(1);
             })->where('id_estado', $estadoId);
         })->get();
-        
+
         // Consolidamos los reportes en una sola lista por usuario
         $users = $users->map(function ($user) use ($estadoId) {
             $reportes = collect();
-        
             foreach ($user->empleadosPuestos as $puesto) {
                 foreach ($puesto->empleadosAcciones as $accion) {
                     $reporte = $accion->reporte;
-                    if ($reporte) {
-                        // Obtenemos el último historial de acciones
-                        $ultimoHistorial = optional($reporte->accionesReporte)->historialAccionesReporte->last();
-        
-                        if ($ultimoHistorial && $ultimoHistorial->id_estado == $estadoId) {
+                    if ($reporte && ! $reporte->no_procede) {
+                        if ($reporte->estado_ultimo_historial && $reporte->estado_ultimo_historial->id == $estadoId) {
+                            $reporte['id_categoria_reporte'] = $reporte->accionesReporte->id_categoria_reporte;
+                            // Historial ordenado por fecha created_at
+                            // $reporte['historialEstados'] = $reporte->accionesReporte->historialAccionesReporte->sortBy('created_at');
                             $reportes->push($reporte);
                         }
                     }
                 }
             }
-        
             return [
                 'id' => $user->id,
                 'nombre' => $user->persona->nombre . ' ' . $user->persona->apellido,
@@ -443,8 +452,101 @@ class EstadisticasController extends Controller
                 'reportes' => $reportes->unique('id')->values(),
             ];
         });
-    
-        dd($users);
-        return response()->json($empleadosAsignaciones);
+
+        // Calculo de eficiencia
+        $listaEmpleados = $users->map(function ($user) {
+            $categorias = CategoriaReporte::all();
+            $totalReportesAtendidos = $user['reportes']->count();
+            $user['totalReportesFinalizados'] = $totalReportesAtendidos;
+            $reportesPorCategoria = $user['reportes']->groupBy('id_categoria_reporte');
+            $sumaEficiencia = 0;
+            $sumaMinutosEnPausa = 0;
+            $sumaDuracionReal = 0;
+            // error_log($reportesPorCategoria);
+            foreach ($reportesPorCategoria as $categoriaId => $reportes) {
+                $categoria = $categorias->find($categoriaId);
+                foreach ($reportes as $reporte) {
+                    error_log($reporte->tiempo_resolucion);
+                    // Calcular tiempo de reporte en pausa
+                    $historialEstados = $reporte->accionesReporte->historialAccionesReporte;
+                    $tiempoEnPausa = 0;
+                    $estadoAnterior = null;
+                    foreach ($historialEstados as $historial) {
+                        if ($estadoAnterior && $estadoAnterior->estado->nombre == 'EN PAUSA') {
+                            $tiempoEnPausa += $estadoAnterior->created_at->diffInMinutes($historial->created_at);
+                        }
+                        $estadoAnterior = $historial;
+                    }
+                    $minutosEnPausa = $tiempoEnPausa;
+                    // Duracion real del reporte
+                    $fechaInicio = Carbon::parse($reporte->accionesReporte->fecha_inicio);
+                    $horaInicio = Carbon::parse($reporte->accionesReporte->hora_inicio);
+                    $fechaFinalizacion = Carbon::parse($reporte->accionesReporte->fecha_finalizacion);
+                    $horaFinalizacion = Carbon::parse($reporte->accionesReporte->hora_finalizacion);
+                    $duracionReal = $fechaInicio->diffInMinutes($fechaFinalizacion) + $horaInicio->diffInMinutes($horaFinalizacion) ?? 1;
+                    // Duracion maxima estimada segun categoria
+                    $duracionEstimada = $categoria->tiempo_promedio ?? 1;
+                    // error_log('---');
+                    // error_log($duracionReal);
+                    // error_log($duracionEstimada);
+                    // error_log($minutosEnPausa);
+                    // error_log(($duracionEstimada / ($duracionReal - $minutosEnPausa)));
+                    // error_log('---');
+                    // Eficiencia acumulada
+                    $sumaEficiencia += ($duracionEstimada / ($duracionReal - $minutosEnPausa));
+                    $sumaDuracionReal += $duracionReal;
+                    $sumaMinutosEnPausa += $minutosEnPausa;
+                }
+            }
+            $user['indiceEficiencia'] =  round($totalReportesAtendidos > 0 ? $sumaEficiencia / $totalReportesAtendidos : 0, 2);
+            $user['horasEnPausa'] = round($sumaMinutosEnPausa / 60, 2);
+            $user['horasTrabajadas'] = round($sumaDuracionReal / 60, 2);
+
+            return $user;
+        });
+
+        // Paginar la lista de empleados
+        $listaEmpleados = $listaEmpleados->sortBy([['indiceEficiencia', 'DESC']])->values();
+        // Define the current page and items per page
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 10;
+
+        // Slice the items for the current page
+        $currentItems = $listaEmpleados->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        // Create the paginator
+        $paginator = new LengthAwarePaginator(
+            $currentItems,
+            $listaEmpleados->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+        $chartEmpleadosEficiencia = [
+            'type' => 'bar',
+            'labels' => $currentItems->pluck('nombre'),
+            'datasets' => [
+                'data' => $currentItems->pluck('indiceEficiencia'),
+                // 10 colores diferentes
+                'backgroundColor' => [
+                    '#86E3CE',
+                    '#D0E6A5',
+                    '#FFDD94',
+                    '#FA897B',
+                    '#CCABD8',
+                    '#596EE2',
+                    '#7FACD6',
+                    '#FEAEBB',
+                    '#FFD700',
+                    '#FF6347',
+                ],
+            ]
+        ];
+
+        return view('estadisticas.empleados', [
+            'listaEmpleados' => $paginator,
+            'chartEmpleadosEficiencia' => $chartEmpleadosEficiencia,
+        ]);
     }
 }

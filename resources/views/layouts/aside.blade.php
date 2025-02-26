@@ -197,8 +197,14 @@
             'items' => [
                 [
                     'to' => 'estadisticas.index',
-                    'active' => request()->is('estadisticas/'),
-                    'label' => 'Estadíticas y graficos',
+                    'active' => request()->is('estadisticas/generales'),
+                    'label' => 'Generales',
+                    'permissions' => ['BITACORA_VER'],
+                ],
+                [
+                    'to' => 'estadisticas.eficienciaEmpleados',
+                    'active' => request()->is('estadisticas/empleados'),
+                    'label' => 'Empleados',
                     'permissions' => ['BITACORA_VER'],
                 ],
             ],
