@@ -2,6 +2,7 @@
 
 namespace App\Models\Reportes;
 
+use App\Models\CategoriaReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Seguridad\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,7 @@ class AccionesReporte extends Model implements Auditable
         'id_usuario_administracion',
         'id_entidad_asignada',
         'id_usuario_supervisor',
+        'id_categoria_reporte',
         'comentario',
         'fecha_asignacion',
         'fecha_inicio',
@@ -50,5 +52,10 @@ class AccionesReporte extends Model implements Auditable
     public function historialAccionesReporte() : HasMany
     {
         return $this->hasMany(HistorialAccionesReporte::class, 'id_acciones_reporte');
+    }
+
+    public function categoriaReporte(): BelongsTo
+    {
+        return $this->belongsTo(CategoriaReporte::class, 'id_categoria_reporte');
     }
 }

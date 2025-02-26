@@ -249,6 +249,7 @@ class ReporteController extends Controller
                 'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
                 'id_bienes' => 'array',
                 'id_bienes.*' => 'integer|exists:bienes,id',
+                'id_categoria_reporte' => 'nullable|integer|exists:categoria_reportes,id',
             ],
             [
                 'id_empleados_puestos.required' => 'Debe asignar al menos un empleado al reporte.',
@@ -266,6 +267,8 @@ class ReporteController extends Controller
                 'id_bienes.array' => 'Estructura de bienes asignados inválida.',
                 'id_bienes.*.integer' => 'Cada bien debe tener un ID válido.',
                 'id_bienes.*.exists' => 'Uno o más bienes seleccionados no existen.',
+                'id_categoria_reporte.integer' => 'El ID de la categoría de reporte debe ser un número entero.',
+                'id_categoria_reporte.exists' => 'La categoría de reporte seleccionada no existe.',
             ]
         );
 
@@ -280,6 +283,7 @@ class ReporteController extends Controller
             $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
             $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
             $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
+            $accReporte->id_categoria_reporte = $validated['id_categoria_reporte'] ?? 1;
             $accReporte->save();
 
             // Registro en HISTORIAL_ACCIONES_REPORTES

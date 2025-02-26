@@ -11,8 +11,10 @@ use App\Models\Reportes\Estado;
 use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\Reporte;
 use App\Models\rhu\EmpleadoPuesto;
+use App\Models\Seguridad\User;
 use ConsoleTVs\Charts\Classes\Chartjs\Chart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use function PHPSTORM_META\map;
 
@@ -393,5 +395,56 @@ class EstadisticasController extends Controller
                 'empleadosMenosAsignaciones' => $empleadosMenosAsignaciones,
             ]
         );
+    }
+
+    public function calcularEficienciaPorEmpleado(Request $request)
+    {
+        $estadoId = Estado::where('nombre', 'ASIGNADO')->value('id');
+
+        $users = User::with([
+            'empleadosPuestos.empleadosAcciones.reporte.accionesReporte.historialAccionesReporte' => function ($query) {
+                $query->latest()->limit(1);
+            },
+            'persona',
+        ])->whereHas('empleadosPuestos', function ($query) {
+            $query->where('empleados_puestos.activo', true);
+        })->whereHas('empleadosPuestos.empleadosAcciones.reporte.accionesReporte.historialAccionesReporte', function ($query) use ($estadoId) {
+            $query->where('id', function ($query) {
+                $query->select('id')
+                    ->from('historial_acciones_reportes')
+                    ->whereColumn('id_acciones_reporte', 'acciones_reportes.id')
+                    ->latest()
+                    ->limit(1);
+            })->where('id_estado', $estadoId);
+        })->get();
+        
+        // Consolidamos los reportes en una sola lista por usuario
+        $users = $users->map(function ($user) use ($estadoId) {
+            $reportes = collect();
+        
+            foreach ($user->empleadosPuestos as $puesto) {
+                foreach ($puesto->empleadosAcciones as $accion) {
+                    $reporte = $accion->reporte;
+                    if ($reporte) {
+                        // Obtenemos el último historial de acciones
+                        $ultimoHistorial = optional($reporte->accionesReporte)->historialAccionesReporte->last();
+        
+                        if ($ultimoHistorial && $ultimoHistorial->id_estado == $estadoId) {
+                            $reportes->push($reporte);
+                        }
+                    }
+                }
+            }
+        
+            return [
+                'id' => $user->id,
+                'nombre' => $user->persona->nombre . ' ' . $user->persona->apellido,
+                'email' => $user->email,
+                'reportes' => $reportes->unique('id')->values(),
+            ];
+        });
+    
+        dd($users);
+        return response()->json($empleadosAsignaciones);
     }
 }
