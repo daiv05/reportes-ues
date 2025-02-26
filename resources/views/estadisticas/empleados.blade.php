@@ -6,6 +6,19 @@
         ['text' => 'No. de reportes finalizados', 'align' => 'center'],
         ['text' => 'Índice de eficiencia', 'align' => 'center'],
     ];
+
+    $ordenes = [
+        'ASC' => 'Ascendente',
+        'DESC' => 'Descendente',
+    ];
+
+    $ordenarPor = [
+        'nombre' => 'Nombre',
+        'horasTrabajadas' => 'Horas trabajadas',
+        'horasEnPausa' => 'Horas de reporte en pausa',
+        'totalReportesFinalizados' => 'No. de reportes finalizados',
+        'indiceEficiencia' => 'Índice de eficiencia',
+    ];
 @endphp
 
 <x-app-layout>
@@ -15,102 +28,39 @@
     </x-slot>
     <x-container>
         {{-- Filtros --}}
+        <div class="flex-column flex flex-wrap items-center gap-3 space-y-4 pb-4 sm:flex-row sm:space-y-0">
         <div class="flex w-full flex-col flex-wrap items-center justify-between space-y-4 pb-4 sm:flex-row sm:space-y-0">
-            <form action="{{ route('estadisticas.index') }}" method="GET"
+            <form action="{{ route('estadisticas.eficienciaEmpleados') }}" method="GET"
                 class="mt-4 flex w-full flex-row flex-wrap items-center space-x-8">
                 <div class="flex w-full flex-col px-4 md:w-3/12 md:px-0">
-                    <x-forms.row :columns="1">
-                        <div class="w-full">
-                            <button id="dropdownRadioButton" data-dropdown-toggle="dropdownRadio"
-                                class="mt-4 inline-flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-                                type="button">
-                                <div class="flex items-center">
-                                    <svg class="me-3 h-3 w-3 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
-                                    </svg>
-                                    <span id="selection" class="text-sm font-medium dark:text-gray-300">Filtrar</span>
-                                </div>
-                                <svg class="ms-2.5 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <!-- Dropdown menu -->
-                            <div id="dropdownRadio"
-                                class="z-10 hidden w-48 divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700">
-                                <ul class="space-y-1 p-3 text-sm text-gray-700 dark:text-gray-200"
-                                    aria-labelledby="dropdownRadioButton">
-                                    <li>
-                                        <div
-                                            class="flex items-center rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                            <input id="filter-radio-example-1" type="radio" value="hoy"
-                                                name="filter-radio" onchange="updateSelection('Hoy')"
-                                                class="h-4 w-4 border-gray-300 bg-gray-100 text-red-600 focus:ring-2 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-red-600 dark:focus:ring-offset-gray-800"
-                                                {{ request('filter-radio') == 'hoy' ? 'checked' : '' }} />
-                                            <label for="filter-radio-example-1"
-                                                class="ms-2 w-full rounded text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                Hoy
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div
-                                            class="flex items-center rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                            <input id="filter-radio-example-2" type="radio" value="7_dias"
-                                                name="filter-radio" onchange="updateSelection('Últimos 7 días')"
-                                                class="h-4 w-4 border-gray-300 bg-gray-100 text-red-600 focus:ring-2 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-red-600 dark:focus:ring-offset-gray-800"
-                                                {{ request('filter-radio') == '7_dias' ? 'checked' : '' }} />
-                                            <label for="filter-radio-example-2"
-                                                class="ms-2 w-full rounded text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                Últimos 7 días
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div
-                                            class="flex items-center rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                            <input id="filter-radio-example-3" type="radio" value="30_dias"
-                                                name="filter-radio" onchange="updateSelection('Últimos 30 días')"
-                                                class="h-4 w-4 border-gray-300 bg-gray-100 text-red-600 focus:ring-2 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-red-600 dark:focus:ring-offset-gray-800"
-                                                {{ request('filter-radio') == '30_dias' ? 'checked' : '' }} />
-                                            <label for="filter-radio-example-3"
-                                                class="ms-2 w-full rounded text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                Últimos 30 días
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div
-                                            class="flex items-center rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                            <input id="filter-radio-example-4" type="radio" value="mes"
-                                                name="filter-radio" onchange="updateSelection('Último mes')"
-                                                class="h-4 w-4 border-gray-300 bg-gray-100 text-red-600 focus:ring-2 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-red-600 dark:focus:ring-offset-gray-800"
-                                                {{ request('filter-radio') == 'mes' ? 'checked' : '' }} />
-                                            <label for="filter-radio-example-4"
-                                                class="ms-2 w-full rounded text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                Último mes
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div
-                                            class="flex items-center rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                            <input id="filter-radio-example-5" type="radio" value="anio"
-                                                name="filter-radio" onchange="updateSelection('Último año')"
-                                                class="h-4 w-4 border-gray-300 bg-gray-100 text-red-600 focus:ring-2 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-red-600 dark:focus:ring-offset-gray-800"
-                                                {{ request('filter-radio') == 'anio' ? 'checked' : '' }} />
-                                            <label for="filter-radio-example-5"
-                                                class="ms-2 w-full rounded text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                Último año
-                                            </label>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                    <x-forms.row :columns="3">
+                        <x-forms.select
+                            id="id_entidad"
+                            label="Entidad"
+                            name="id_entidad"
+                            :options="$entidades"
+                            selected="{{ request('id_entidad') }}"
+                        />
+                        <x-forms.select
+                            name="orden"
+                            label="Orden"
+                            :options="$ordenes"
+                            selected="{{ request('orden') }}"
+                        />
+                        <x-forms.select
+                            name="orderBy"
+                            label="Ordenar Por"
+                            :options="$ordenarPor"
+                            selected="{{ request('orderBy') }}"
+                        />
+                    </x-forms.row>
+                    <x-forms.row :columns="3">
+                        <x-forms.field
+                            id="nombreEmpleado"
+                            label="Nombre del empleado"
+                            name="nombreEmpleado"
+                            :value="request('nombreEmpleado')"
+                        />
                     </x-forms.row>
                 </div>
                 <div class="flex flex-wrap space-x-4">
@@ -146,6 +96,7 @@
                     </div>
                 </div>
             </form>
+        </div>
         </div>
 
         {{-- EMPLEADOS Y SU INDICE DE EFICIENCIA --}}

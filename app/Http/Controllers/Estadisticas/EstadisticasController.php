@@ -4,23 +4,18 @@ namespace App\Http\Controllers\Estadisticas;
 
 use App\Http\Controllers\Controller;
 use App\Models\CategoriaReporte;
-use App\Models\Mantenimientos\Fondo;
 use App\Models\Mantenimientos\Recurso;
-use App\Models\Mantenimientos\UnidadMedida;
 use App\Models\Reportes\EmpleadoAccion;
 use App\Models\Reportes\Estado;
 use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\Reporte;
 use App\Models\rhu\EmpleadoPuesto;
+use App\Models\rhu\Entidades;
 use App\Models\Seguridad\User;
 use Carbon\Carbon;
-use ConsoleTVs\Charts\Classes\Chartjs\Chart;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Round;
 
-use function PHPSTORM_META\map;
 
 class EstadisticasController extends Controller
 {
@@ -409,7 +404,8 @@ class EstadisticasController extends Controller
             'fecha_final' => 'nullable|date',
             'id_entidad' => 'nullable|integer,exists:entidades,id',
             'nombreEmpleado' => 'nullable|string',
-            'orden' => 'nullable|string' // 'ASC' o 'DESC'
+            'orden' => 'nullable|string', // 'ASC' o 'DESC'
+            'orderBy' => 'nullable|string', // 'horasTrabajo', 'horasPausa', 'cantidadReportes', 'indiceEficiencia'
         ]);
 
         $estadoId = Estado::where('nombre', 'EN PROCESO')->value('id');
@@ -445,6 +441,7 @@ class EstadisticasController extends Controller
                     }
                 }
             }
+            
             return [
                 'id' => $user->id,
                 'nombre' => $user->persona->nombre . ' ' . $user->persona->apellido,
@@ -462,11 +459,9 @@ class EstadisticasController extends Controller
             $sumaEficiencia = 0;
             $sumaMinutosEnPausa = 0;
             $sumaDuracionReal = 0;
-            // error_log($reportesPorCategoria);
             foreach ($reportesPorCategoria as $categoriaId => $reportes) {
                 $categoria = $categorias->find($categoriaId);
                 foreach ($reportes as $reporte) {
-                    error_log($reporte->tiempo_resolucion);
                     // Calcular tiempo de reporte en pausa
                     $historialEstados = $reporte->accionesReporte->historialAccionesReporte;
                     $tiempoEnPausa = 0;
@@ -486,12 +481,6 @@ class EstadisticasController extends Controller
                     $duracionReal = $fechaInicio->diffInMinutes($fechaFinalizacion) + $horaInicio->diffInMinutes($horaFinalizacion) ?? 1;
                     // Duracion maxima estimada segun categoria
                     $duracionEstimada = $categoria->tiempo_promedio ?? 1;
-                    // error_log('---');
-                    // error_log($duracionReal);
-                    // error_log($duracionEstimada);
-                    // error_log($minutosEnPausa);
-                    // error_log(($duracionEstimada / ($duracionReal - $minutosEnPausa)));
-                    // error_log('---');
                     // Eficiencia acumulada
                     $sumaEficiencia += ($duracionEstimada / ($duracionReal - $minutosEnPausa));
                     $sumaDuracionReal += $duracionReal;
@@ -544,9 +533,12 @@ class EstadisticasController extends Controller
             ]
         ];
 
+        $entidades = Entidades::all();
+
         return view('estadisticas.empleados', [
             'listaEmpleados' => $paginator,
             'chartEmpleadosEficiencia' => $chartEmpleadosEficiencia,
+            'entidades' => $entidades
         ]);
     }
 }

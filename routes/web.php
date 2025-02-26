@@ -218,8 +218,10 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
     });
 
     Route::prefix('estadisticas')->group(function () {
-        Route::get('/', [EstadisticasController::class, 'index'])->middleware('permission:BITACORA_VER')->name('estadisticas.index');
-        Route::get('/test', [EstadisticasController::class, 'calcularEficienciaPorEmpleado'])->name('estadisticas.calcularEficienciaPorEmpleado');
+        Route::get('/generales', [EstadisticasController::class, 'index'])->middleware('permission:BITACORA_VER')->name('estadisticas.index');
+        Route::get('/test', [EstadisticasController::class, 'calcularEficienciaEmpleados'])->name('estadisticas.test');
+        Route::get('/empleados', [EstadisticasController::class, 'calcularEficienciaEmpleados'])->name('estadisticas.eficienciaEmpleados');
+
     });
 
     Route::get('/descargar/archivo/{seccion}', [ArchivoController::class, 'descargarArchivo']);
