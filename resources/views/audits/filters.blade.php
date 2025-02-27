@@ -24,6 +24,6 @@
 </x-forms.row>
 
 <x-forms.row :columns="2">
-        <x-date.date-input name="start_date" label="Fecha Inicial" />
-        <x-date.date-input name="end_date" label="Fecha Inicial" />
+        <x-date.date-input name="start_date" label="Fecha Inicial" :maxDate="true" />
+        <x-date.date-input name="end_date" label="Fecha Inicial" :maxDate="true"/>
 </x-forms.row>
