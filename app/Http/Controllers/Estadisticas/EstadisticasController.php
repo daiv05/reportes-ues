@@ -402,7 +402,7 @@ class EstadisticasController extends Controller
         $validated = $request->validate([
             'fecha_inicio' => 'nullable|date',
             'fecha_final' => 'nullable|date',
-            'id_entidad' => 'nullable|integer,exists:entidades,id',
+            'id_entidad' => 'nullable|integer|exists:entidades,id',
             'nombreEmpleado' => 'nullable|string',
             'orden' => 'nullable|string', // 'ASC' o 'DESC'
             'orderBy' => 'nullable|string', // 'horasTrabajo', 'horasPausa', 'cantidadReportes', 'indiceEficiencia'

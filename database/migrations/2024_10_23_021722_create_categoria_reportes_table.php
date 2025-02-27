@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre', 50);
             $table->text('descripcion', 255);
-            $table->string('icono', 50);
             $table->string('tiempo_promedio', 50);
-            $table->decimal('peso', 5, 2);
             $table->timestamps();
         });
     }
