@@ -16,6 +16,7 @@ class CategoriaReporte extends Model
         'nombre',
         'descripcion',
         'tiempo_promedio',
+        'activo',
     ];
 
     public function accionesReportes()

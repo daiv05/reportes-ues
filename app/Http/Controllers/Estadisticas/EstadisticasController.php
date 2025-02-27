@@ -408,7 +408,7 @@ class EstadisticasController extends Controller
             'orderBy' => 'nullable|string', // 'horasTrabajo', 'horasPausa', 'cantidadReportes', 'indiceEficiencia'
         ]);
 
-        $estadoId = Estado::where('nombre', 'EN PROCESO')->value('id');
+        $estadoId = Estado::where('nombre', 'FINALIZADO')->value('id');
 
         $users = User::select('id', 'email', 'id_persona')->with([
             'empleadosPuestos.empleadosAcciones.reporte',

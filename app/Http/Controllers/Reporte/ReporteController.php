@@ -613,6 +613,7 @@ class ReporteController extends Controller
             $recursos = Recurso::where('activo', true)->get();
             $unidades_medida = DB::table('unidades_medida')->where('activo', true)->get();
             $tiposBienes = DB::table('tipos_bienes')->where('activo', true)->get();
+            $categoriasReporte = DB::table('categoria_reportes')->where('activo', true)->get();
 
             return [
                 'reporte' => $reporte,
@@ -625,7 +626,8 @@ class ReporteController extends Controller
                 'recursos' => $recursos,
                 'unidadesMedida' => $unidades_medida,
                 'tiposBienes' => $tiposBienes,
-                'reporteBienes' => $reporte->reporteBienes
+                'reporteBienes' => $reporte->reporteBienes,
+                'categoriasReporte' => $categoriasReporte
             ];
         } else {
             return [
@@ -638,7 +640,8 @@ class ReporteController extends Controller
                 'recursos' => [],
                 'unidadesMedida' => [],
                 'tiposBienes' => [],
-                'reporteBienes' => []
+                'reporteBienes' => [],
+                'categoriasReporte' => []
             ];
         }
     }
