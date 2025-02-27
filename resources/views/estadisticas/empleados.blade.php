@@ -13,7 +13,6 @@
     ];
 
     $ordenarPor = [
-        'nombre' => 'Nombre',
         'horasTrabajadas' => 'Horas trabajadas',
         'horasEnPausa' => 'Horas de reporte en pausa',
         'totalReportesFinalizados' => 'No. de reportes finalizados',

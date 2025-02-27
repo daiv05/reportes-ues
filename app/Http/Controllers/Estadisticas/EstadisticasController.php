@@ -404,18 +404,47 @@ class EstadisticasController extends Controller
             'fecha_final' => 'nullable|date',
             'id_entidad' => 'nullable|integer|exists:entidades,id',
             'nombreEmpleado' => 'nullable|string',
-            'orden' => 'nullable|string', // 'ASC' o 'DESC'
-            'orderBy' => 'nullable|string', // 'horasTrabajo', 'horasPausa', 'cantidadReportes', 'indiceEficiencia'
+            'order' => 'nullable|string', // 'ASC' o 'DESC'
+            'orderBy' => 'nullable|string',// 'horasTrabajadas', 'horasEnPausa', 'totalReportesFinalizados', 'indiceEficiencia'
         ]);
 
         $estadoId = Estado::where('nombre', 'FINALIZADO')->value('id');
 
-        $users = User::select('id', 'email', 'id_persona')->with([
+        $userQuery = User::query();
+
+        $userQuery->select('id', 'email', 'id_persona')->with([
             'empleadosPuestos.empleadosAcciones.reporte',
             'persona',
         ])->whereHas('empleadosPuestos', function ($query) {
             $query->where('empleados_puestos.activo', true);
-        })->whereHas('empleadosPuestos.empleadosAcciones.reporte.accionesReporte.historialAccionesReporte', function ($query) use ($estadoId) {
+        });
+
+        if ($validated['nombreEmpleado']) {
+            $userQuery->whereHas('persona', function ($query) use ($validated) {
+                $query->where('nombre', 'like', '%' . $validated['nombreEmpleado'] . '%')
+                    ->orWhere('apellido', 'like', '%' . $validated['nombreEmpleado'] . '%');
+            });
+        }
+
+        if ($validated['id_entidad']) {
+            $userQuery->whereHas('empleadosPuestos.puesto.entidad', function ($query) use ($validated) {
+                $query->where('id', $validated['id_entidad']);
+            });
+        }
+
+        if ($validated['fecha_inicio']) {
+            $userQuery->whereHas('empleadosPuestos.empleadosAcciones.reporte.accionesReporte', function ($query) use ($validated) {
+                $query->where('created_at', '>=', $validated['fecha_inicio']);
+            });
+        }
+
+        if ($validated['fecha_final']) {
+            $userQuery->whereHas('empleadosPuestos.empleadosAcciones.reporte.accionesReporte', function ($query) use ($validated) {
+                $query->where('created_at', '<=', $validated['fecha_final']);
+            });
+        }
+
+        $userQuery->whereHas('empleadosPuestos.empleadosAcciones.reporte.accionesReporte.historialAccionesReporte', function ($query) use ($estadoId) {
             $query->where('id', function ($query) {
                 $query->select('id')
                     ->from('historial_acciones_reportes')
@@ -423,7 +452,10 @@ class EstadisticasController extends Controller
                     ->latest()
                     ->limit(1);
             })->where('id_estado', $estadoId);
-        })->get();
+        });
+
+        $users = $userQuery->get();
+
 
         // Consolidamos los reportes en una sola lista por usuario
         $users = $users->map(function ($user) use ($estadoId) {
@@ -441,7 +473,7 @@ class EstadisticasController extends Controller
                     }
                 }
             }
-            
+
             return [
                 'id' => $user->id,
                 'nombre' => $user->persona->nombre . ' ' . $user->persona->apellido,
@@ -495,7 +527,7 @@ class EstadisticasController extends Controller
         });
 
         // Paginar la lista de empleados
-        $listaEmpleados = $listaEmpleados->sortBy([['indiceEficiencia', 'DESC']])->values();
+        $listaEmpleados = $listaEmpleados->sortBy([[$validated['orderBy'] ?? 'indiceEficiencia', $validated['order'] ?? 'DESC']])->values();
         // Define the current page and items per page
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $perPage = 10;
