@@ -1,5 +1,9 @@
 @props([
-    'footerLinks' => [],  // Enlaces de pie de página
+    'footerLinks' => [
+        ['label' => 'FIA', 'url' => 'https://www.fia.ues.edu.sv/'],
+        ['label' => 'EISI', 'url' => 'https://eisi.fia.ues.edu.sv/'],
+        ['label' => 'UES', 'url' => 'https://www.ues.edu.sv/'],
+    ],
 ])
 
 <div class="footer">

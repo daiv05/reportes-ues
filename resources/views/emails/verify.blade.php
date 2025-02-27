@@ -14,9 +14,9 @@
     </x-emails.email-body>
 
     <x-emails.email-footer :footerLinks="[
-        ['label' => 'Página oficial', 'url' => 'https://www.ues.edu.sv'],
-        ['label' => 'Contacto', 'url' => 'https://www.ues.edu.sv/contacto/'],
-        ['label' => 'Noticias', 'url' => 'https://www.ues.edu.sv/noticias/'],
+        ['label' => 'FIA', 'url' => 'https://www.fia.ues.edu.sv/'],
+        ['label' => 'EISI', 'url' => 'https://eisi.fia.ues.edu.sv/'],
+        ['label' => 'UES', 'url' => 'https://www.ues.edu.sv/'],
     ]" />
 </x-emails.email-container>
 
