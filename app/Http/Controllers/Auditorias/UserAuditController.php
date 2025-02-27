@@ -43,14 +43,12 @@ class UserAuditController extends Controller
             }
         }
 
-
         if ($request->has('start_date') && $request->has('end_date') && $request->start_date && $request->end_date) {
-            $startDate = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
-            $endDate = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
-            $query->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$startDate, $endDate]);
+            $inicio = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
+            $fin = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
+            $query->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$inicio, $fin]);
             $filtersApplied = true;
         }
-
 
 
         if (!$filtersApplied) {

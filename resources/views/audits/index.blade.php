@@ -62,8 +62,7 @@
                                 aria-hidden="true"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
+                                xmlns="http://www.w3.org/2000/svg"                            >
                                 <path
                                     fill-rule="evenodd"
                                     d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -93,8 +92,7 @@
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
+                                viewBox="0 0 20 20">
                                 <path
                                     d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
                                 />
@@ -105,7 +103,7 @@
                             name="start_date"
                             id="start_date"
                             type="text"
-                            value="{{ old('start_date', request('start_date')) }}"
+                            value="start_date"
                             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
                             placeholder="Seleccione una fecha"
                         />
@@ -134,7 +132,7 @@
                             name="end_date"
                             id="end_date"
                             type="text"
-                            value="{{ old('end_date', request('end_date')) }}"
+                            value="end_date"
                             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
                             placeholder="Seleccione una fecha"
                         />
@@ -311,4 +309,16 @@
             }
         });
     });
+</script>
+
+<script>
+
+flatpickr("#start_date", {
+    dateFormat: "d/m/Y",  // Ensure the date format matches the PHP parsing
+});
+
+flatpickr("#end_date", {
+    dateFormat: "d/m/Y",  // Ensure the date format matches the PHP parsing
+});
+
 </script>
