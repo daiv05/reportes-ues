@@ -11,7 +11,11 @@
         <input datepicker datepicker-format="dd/mm/yyyy" name="{{ $name }}" id="{{ $name }}" type="text"
             value="{{ old($name) ? old($name) : (request($name) ?: '') }}"
             class="block w-full rounded-lg border border-gray-300 p-2.5 ps-10 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
-            placeholder="{{ $placeholder ?? 'Seleccione una fecha' }}" />
+            placeholder="{{ $placeholder ?? 'Seleccione una fecha' }}"
+            @if($maxDate)
+            datepicker-max-date="{{ \Carbon\Carbon::now()->format('d-m-Y') }}"
+        @endif
+           />
     </div>
     <x-forms.input-error :messages="$errors->get($name)" class="mt-2" />
 </div>

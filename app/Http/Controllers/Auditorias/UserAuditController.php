@@ -43,11 +43,28 @@ class UserAuditController extends Controller
             }
         }
 
-        if ($request->has('start_date') && $request->has('end_date') && $request->start_date && $request->end_date) {
-            $inicio = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
-            $fin = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
-            $query->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$inicio, $fin]);
-            $filtersApplied = true;
+        if ($request->has('start_date') || $request->has('end_date')) {
+            if (!$request->start_date && !$request->end_date) {
+
+            }
+            elseif ((!$request->has('start_date') || !$request->start_date) || (!$request->has('end_date') || !$request->end_date)) {
+                return redirect()->route('general.index')->with('message', [
+                    'type' => 'warning',
+                    'content' => 'Debe ingresar ambas fechas (inicio y fin) para realizar la búsqueda.'
+                ]);
+            }
+            else {
+                $inicio = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
+                $fin = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
+                if ($fin < $inicio) {
+                    return redirect()->route('general.index')->with('message', [
+                        'type' => 'warning',
+                        'content' => 'La fecha de fin no puede ser menor que la fecha de inicio.'
+                    ]);
+                }
+                $query->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$inicio, $fin]);
+                $filtersApplied = true;
+            }
         }
 
 
@@ -66,9 +83,7 @@ class UserAuditController extends Controller
                 ->distinct()
                 ->get();
         }
-
         $users = User::all();
-
         return view('audits.index', compact('audits', 'models', 'events', 'users'));
     }
     public function getEvents(Request $request)
@@ -78,10 +93,8 @@ class UserAuditController extends Controller
                 ->where('auditable_type', $request->model)
                 ->distinct()
                 ->get();
-
             return response()->json($events);
         }
-
         return response()->json([]);
     }
 }
