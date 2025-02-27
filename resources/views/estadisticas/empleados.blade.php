@@ -53,25 +53,43 @@
                                 selected="{{ request('id_entidad') }}"
                             />
                             <x-forms.select
-                                name="orden"
-                                label="Orden"
-                                :options="$ordenes"
-                                selected="{{ request('orden') }}"
-                            />
-                            <x-forms.select
                                 name="orderBy"
                                 label="Ordenar Por"
                                 :options="$ordenarPor"
                                 selected="{{ request('orderBy') }}"
                             />
+                            <x-forms.select
+                                name="orden"
+                                label="Orden"
+                                :options="$ordenes"
+                                selected="{{ request('orden') }}"
+                            />
                         </x-forms.row>
-                        <x-forms.row :columns="2">
+                        <x-forms.row :columns="3">
                             <x-forms.field
                                 id="nombreEmpleado"
                                 label="Nombre del empleado"
                                 name="nombreEmpleado"
                                 :value="request('nombreEmpleado')"
                             />
+                            <div class="space-y-1">
+                                <x-forms.input-label for="fecha" :value="__('Desde')" />
+                                <x-forms.date-input
+                                    type="date"
+                                    name="fecha_inicio"
+                                    :value="request('fecha_inicio')"
+                                    class="mt-1 w-full"
+                                />
+                            </div>
+                            <div class="space-y-1">
+                                <x-forms.input-label for="fecha" :value="__('Hasta')" />
+                                <x-forms.date-input
+                                    type="date"
+                                    name="fecha_final"
+                                    :value="request('fecha_final')"
+                                    class="mt-1 w-full"
+                                />
+                            </div>
                             <div class="flex align-bottom items-end space-x-4">
                                 <div class="flex align-bottom items-end space-x-4">
                                     <button
@@ -195,10 +213,10 @@
             <div class="bg-white p-4 shadow-sm dark:bg-gray-800 sm:rounded-lg">
                 <h3 class="text-md py-2 font-bold text-escarlata-ues dark:text-gray-300">Nota</h3>
                 <p class="text-base text-gray-700 dark:text-gray-300">
-                    El cálculo del índice de eficiencia se realiza tomando en cuenta los tiempos de resolución de las
-                    asignaciones de cada empleado y el valor estimado de resolución según la categoría del reporte.
+                    El cálculo del índice de eficiencia por reporte se realiza tomando en cuenta los tiempos de resolución de las
+                    asignaciones de cada empleado y el tiempo estimado de resolución según la categoría del reporte.
                 </p>
-                <div class="mt-4">
+                <div class="my-4">
                     <p class="text-base text-gray-700 dark:text-gray-300">
                         <span class="font-bold">Índice de eficiencia</span>
                         =
@@ -207,6 +225,9 @@
                         <span class="font-bold">Tiempo real (sin contar pausas)</span>
                     </p>
                 </div>
+                <p class="text-base text-gray-700 dark:text-gray-300">
+                    El total es promediado para obtener el índice de eficiencia de cada empleado.
+                </p>
             </div>
         </div>
     </x-container>
