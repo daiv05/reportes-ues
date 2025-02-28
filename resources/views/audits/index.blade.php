@@ -106,7 +106,9 @@
                             <h3 class="text-2xl font-bold text-escarlata-ues">Datos Nuevos</h3>
                         </x-slot>
                         <x-slot name="body">
-                            <pre>{{ json_encode($audi->new_values, JSON_PRETTY_PRINT) }}</pre>
+                            <div class="overflow-x-auto">
+                                <pre>{{ json_encode($audi->new_values, JSON_PRETTY_PRINT) }}</pre>
+                            </div>
                         </x-slot>
                         <x-slot name="footer">
                             <button data-modal-hide="modalNuevo-{{ $audi->id }}" type="button"
@@ -126,7 +128,9 @@
                             <h3 class="text-2xl font-bold text-escarlata-ues">Datos Viejos</h3>
                         </x-slot>
                         <x-slot name="body">
-                            <pre>{{ json_encode($audi->old_values, JSON_PRETTY_PRINT) }}</pre>
+                            <div class="overflow-x-auto">
+                                <pre>{{ json_encode($audi->old_values, JSON_PRETTY_PRINT) }}</pre>
+                            </div>
                         </x-slot>
                         <x-slot name="footer">
                             <button data-modal-hide="modalViejo-{{ $audi->id }}" type="button"
