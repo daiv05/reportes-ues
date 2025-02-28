@@ -8,8 +8,8 @@
     ];
 
     $ordenes = [
-        'ASC' => 'Ascendente',
-        'DESC' => 'Descendente',
+        'asc' => 'Ascendente',
+        'desc' => 'Descendente',
     ];
 
     $ordenarPor = [
@@ -35,9 +35,7 @@
     <x-container>
         {{-- Filtros --}}
         <div class="flex-column flex flex-wrap items-center gap-3 space-y-4 sm:flex-row sm:space-y-0">
-            <div
-                class="flex w-full flex-col flex-wrap items-center justify-between space-y-4 sm:flex-row sm:space-y-0"
-            >
+            <div class="flex w-full flex-col flex-wrap items-center justify-between space-y-4 sm:flex-row sm:space-y-0">
                 <form
                     action="{{ route('estadisticas.eficienciaEmpleados') }}"
                     method="GET"
@@ -59,10 +57,10 @@
                                 selected="{{ request('orderBy') }}"
                             />
                             <x-forms.select
-                                name="orden"
+                                name="order"
                                 label="Orden"
                                 :options="$ordenes"
-                                selected="{{ request('orden') }}"
+                                selected="{{ request('order') }}"
                             />
                         </x-forms.row>
                         <x-forms.row :columns="3">
@@ -90,8 +88,8 @@
                                     class="mt-1 w-full"
                                 />
                             </div>
-                            <div class="flex align-bottom items-end space-x-4">
-                                <div class="flex align-bottom items-end space-x-4">
+                            <div class="flex items-end space-x-4 align-bottom">
+                                <div class="flex items-end space-x-4 align-bottom">
                                     <button
                                         type="submit"
                                         data-tooltip-target="tooltip-aplicar-filtros"
@@ -171,6 +169,11 @@
                 <div class="overflow-x-auto">
                     {{-- TABLA --}}
                     <x-table.base :headers="$headersEmpleadosEficiencia">
+                        @if ($listaEmpleados->isEmpty())
+                            <x-table.td colspan="{{ count($headersEmpleadosEficiencia) }}" justify="center">
+                                <span class="text-gray-500">No se encontraron registros</span>
+                            </x-table.td>
+                        @endif
                         @foreach ($listaEmpleados as $emp)
                             <x-table.tr>
                                 <x-table.td>
@@ -213,8 +216,9 @@
             <div class="bg-white p-4 shadow-sm dark:bg-gray-800 sm:rounded-lg">
                 <h3 class="text-md py-2 font-bold text-escarlata-ues dark:text-gray-300">Nota</h3>
                 <p class="text-base text-gray-700 dark:text-gray-300">
-                    El cálculo del índice de eficiencia por reporte se realiza tomando en cuenta los tiempos de resolución de las
-                    asignaciones de cada empleado y el tiempo estimado de resolución según la categoría del reporte.
+                    El cálculo del índice de eficiencia por reporte se realiza tomando en cuenta los tiempos de
+                    resolución de las asignaciones de cada empleado y el tiempo estimado de resolución según la
+                    categoría del reporte.
                 </p>
                 <div class="my-4">
                     <p class="text-base text-gray-700 dark:text-gray-300">

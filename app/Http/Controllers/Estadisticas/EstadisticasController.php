@@ -399,14 +399,16 @@ class EstadisticasController extends Controller
     public function calcularEficienciaEmpleados(Request $request)
     {
 
-        $orderEnum = ['ASC', 'DESC'];
+        $orderEnum = ['asc', 'desc'];
         $orderByEnum = ['horasTrabajadas', 'horasEnPausa', 'totalReportesFinalizados', 'indiceEficiencia'];
 
         $validated = $request->validate([
+            'fecha_inicio' => 'nullable|date_format:d/m/Y',
+            'fecha_final' => 'nullable|date_format:d/m/Y',
             'id_entidad' => 'nullable|integer|exists:entidades,id',
             'nombreEmpleado' => 'nullable|string|max:50|regex:/^[a-zA-Z\sáéíóúñÁÉÍÓÚÑ]+$/',
-            'order' => 'nullable|in:' . implode(',', $orderEnum),
-            'orderBy' => 'nullable|in:' . implode(',', $orderByEnum),
+            'order' => 'nullable|string|in:' . implode(',', $orderEnum),
+            'orderBy' => 'nullable|string|in:' . implode(',', $orderByEnum),
         ], [
             'id_entidad.integer' => 'El id de la entidad debe ser un número entero',
             'id_entidad.exists' => 'La entidad seleccionada no existe',
@@ -415,6 +417,8 @@ class EstadisticasController extends Controller
             'nombreEmpleado.regex' => 'El nombre del empleado solo puede contener letras y espacios',
             'order.in' => 'El ordenamiento debe ser ASC o DESC',
             'orderBy.in' => 'El campo por el cual ordenar no es válido',
+            'fecha_inicio.date_format' => 'La fecha de inicio no tiene un formato válido',
+            'fecha_final.date_format' => 'La fecha final no tiene un formato válido',
         ]);
 
         $estadoId = Estado::where('nombre', 'FINALIZADO')->value('id');
@@ -428,27 +432,16 @@ class EstadisticasController extends Controller
             $query->where('empleados_puestos.activo', true);
         });
 
-        if ($request->has('nombreEmpleado')) {
+        if (isset($validated['nombreEmpleado'])) {
             $userQuery->whereHas('persona', function ($query) use ($validated) {
                 $query->where('nombre', 'like', '%' . $validated['nombreEmpleado'] . '%')
                     ->orWhere('apellido', 'like', '%' . $validated['nombreEmpleado'] . '%');
             });
         }
         
-        if ($request->has('id_entidad')) {
+        if (isset($validated['id_entidad'])) {
             $userQuery->whereHas('empleadosPuestos.puesto.entidad', function ($query) use ($validated) {
                 $query->where('id', $validated['id_entidad']);
-            });
-        }
-
-        if ($request->has('fecha_inicio') || $request->has('fecha_final')) {
-            $userQuery->whereHas('empleadosPuestos.empleadosAcciones.reporte.accionesReporte', function ($query) use ($validated) {
-            if (isset($validated['fecha_inicio'])) {
-                $query->where('created_at', '>=', Carbon::createFromFormat('d/m/Y', $validated['fecha_inicio'] )->format('Y-m-d'));
-            }
-            if (isset($validated['fecha_final'])) {
-                $query->where('created_at', '<=', Carbon::createFromFormat('d/m/Y', $validated['fecha_final'] )->format('Y-m-d'));
-            }
             });
         }
 
@@ -460,14 +453,11 @@ class EstadisticasController extends Controller
                     ->latest()
                     ->limit(1);
             })->where('id_estado', $estadoId);
-
-            if ($request->has('fecha_inicio') || $request->has('fecha_final')) {
-                if (isset($validated['fecha_inicio'])) {
-                    $query->where('created_at', '>=', Carbon::createFromFormat('d/m/Y', $validated['fecha_inicio'] )->format('Y-m-d'));
-                }
-                if (isset($validated['fecha_final'])) {
-                    $query->where('created_at', '<=', Carbon::createFromFormat('d/m/Y', $validated['fecha_final'] )->format('Y-m-d'));
-                }
+            if (isset($validated['fecha_inicio'])) {
+                $query->where('created_at', '>=', Carbon::createFromFormat('d/m/Y', $validated['fecha_inicio'] )->format('Y-m-d 00:00:00'));
+            }
+            if (isset($validated['fecha_final'])) {
+                $query->where('created_at', '<=', Carbon::createFromFormat('d/m/Y', $validated['fecha_final'] )->format('Y-m-d 23:59:59'));
             }
         });
 
@@ -539,14 +529,13 @@ class EstadisticasController extends Controller
             $user['indiceEficiencia'] =  round($totalReportesAtendidos > 0 ? $sumaEficiencia / $totalReportesAtendidos : 0, 2);
             $user['horasEnPausa'] = round($sumaMinutosEnPausa / 60, 2);
             $user['horasTrabajadas'] = round($sumaDuracionReal / 60, 2);
-
             return $user;
         });
 
         $listaEmpleados = $listaEmpleados->sortBy([
             [
-                $request->has('orderBy') ? $validated['orderBy'] : 'indiceEficiencia',
-                $request->has('order') ? $validated['order'] : 'DESC'
+                isset($validated['orderBy']) ? $validated['orderBy'] : 'indiceEficiencia',
+                isset($validated['order']) ? $validated['order'] : 'desc'
             ]
         ])->values();
 
@@ -560,7 +549,7 @@ class EstadisticasController extends Controller
             $listaEmpleados->count(),
             $perPage,
             $currentPage,
-            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+            ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
         );
 
         $chartEmpleadosEficiencia = [
