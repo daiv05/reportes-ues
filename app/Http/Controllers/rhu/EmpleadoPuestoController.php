@@ -25,14 +25,11 @@ class EmpleadoPuestoController extends Controller
         $entidadFiltro = $request->get('entidad-filtro');
         $puestoFiltro = $request->get('puesto-filtro');
         $empleadoFiltro = $request->get('empleado-filtro');
+        $rolFilter = $request->get('role-filter');
 
-        $empleadosPuestos = EmpleadoPuesto::with('puesto.entidad', 'usuario', 'usuario.persona')
+        $empleadosPuestos = EmpleadoPuesto::with('puesto.entidad', 'usuario', 'usuario.persona','usuario.roles' )
             ->when($entidadFiltro, function ($query, $entidadFiltro) {
                 return $query->whereHas('puesto.entidad', function ($query) use ($entidadFiltro) {
-                    // $entidadesHijas = $this->obtenerEntidadesConHijos($entidadFiltro);
-                    // $query->whereIn('id', array_map(function ($entidad) {
-                    //     return $entidad->id;
-                    // }, $entidadesHijas));
                     $query->where('id', '=', $entidadFiltro);
                 });
             })
@@ -44,7 +41,13 @@ class EmpleadoPuestoController extends Controller
                     $query->whereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ["%{$empleadoFiltro}%"]);
                 });
             })
+            ->when($rolFilter, function ($query, $rolFilter) {
+                return $query->whereHas('usuario.roles', function ($query) use ($rolFilter) {
+                    $query->where('roles.id', '=', $rolFilter);
+                });
+            })
             ->paginate(GeneralEnum::PAGINACION->value);
+
         $entidades = [];
         $entidadesBackup = Entidades::where('activo', true)->get();
         foreach ($entidadesBackup as $entidad) {
@@ -61,6 +64,8 @@ class EmpleadoPuestoController extends Controller
             ];
         });
 
+        $roles = Role::where('activo', 1)->get();
+        $roles = $roles->pluck('name', 'id');
         $empleados = $empleados->pluck('empleado', 'id');
 
         $estados = [
@@ -68,7 +73,7 @@ class EmpleadoPuestoController extends Controller
             0 => 'INACTIVO',
         ];
 
-        return view('rhu.empleadosPuestos.index', compact('empleadosPuestos', 'entidades', 'puestos', 'empleados', 'estados'));
+        return view('rhu.empleadosPuestos.index', compact('empleadosPuestos', 'entidades', 'puestos', 'empleados', 'estados','roles'));
     }
 
     public function store(Request $request)

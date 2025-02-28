@@ -22,7 +22,8 @@
     </x-slot>
 
     <x-container>
-        <form action="{{ route('general.index') }}" method="GET">
+        <form action="{{ route('general.index') }}" method="GET"
+        class="mt-4 flex w-full flex-row flex-wrap items-center space-x-8">
             @include('audits.filters')
         </form>
         <div class="overflow-x-auto">
