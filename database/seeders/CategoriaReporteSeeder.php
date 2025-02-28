@@ -20,14 +20,34 @@ class CategoriaReporteSeeder extends Seeder
             ],
             [
                 'nombre' => 'Baja (Simple)',
-                'descripcion' => 'Cambios de focos, revisiones',
+                'descripcion' => 'Cambios de focos, revisiones de software',
                 'tiempo_promedio' => '60',
             ],
             [
                 'nombre' => 'Media (Estándar)',
-                'descripcion' => 'Reparación de muebles',
+                'descripcion' => 'Reparación de muebles, mantenimientos eléctricos menores',
                 'tiempo_promedio' => '180',
             ],
+            [
+                'nombre' => 'Alta (Compleja)',
+                'descripcion' => 'Reparación de tuberías, mantenimiento de aires acondicionados',
+                'tiempo_promedio' => '480',
+            ],
+            [
+                'nombre' => 'Muy Alta (Crítica)',
+                'descripcion' => 'Remodelaciones, reparaciones de emergencia',
+                'tiempo_promedio' => '7200',
+            ],
+            [
+                'nombre' => 'Prolongada (Larga duración)',
+                'descripcion' => 'Construcción, proyectos estructurales',
+                'tiempo_promedio' => '86400',
+            ],
+            [
+                'nombre' => 'Extensiva (Muy larga duración)',
+                'descripcion' => 'Obras grandes, implementación de sistemas completos',
+                'tiempo_promedio' => '130000',
+            ]
         ];
 
         foreach ($categorias as $categoria) {
