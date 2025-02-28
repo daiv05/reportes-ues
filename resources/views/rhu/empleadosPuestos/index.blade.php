@@ -3,6 +3,7 @@
         ['text' => 'Empleado', 'align' => 'left'],
         ['text' => 'Entidad', 'align' => 'left'],
         ['text' => 'Puesto', 'align' => 'left'],
+        ['text' => 'Roles', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
         ['text' => 'Acciones', 'align' => 'left'],
     ];
@@ -77,6 +78,13 @@
                             :options="$puestos[request('entidad-filtro')] ?? []"
                             :selected="request('puesto-filtro')"
                         />
+
+                        <x-forms.select
+                        name="role-filter"
+                        label="Rol"
+                        :options="$roles"
+                        selected="{{ request('role-filter') }}"
+                    />
                     </x-forms.row>
                 </div>
                 <div class="relative flex flex-wrap space-x-4">
@@ -157,6 +165,9 @@
                             </x-table.td>
                             <x-table.td>{{ $empPuesto->puesto->entidad->nombre }}</x-table.td>
                             <x-table.td>{{ $empPuesto->puesto->nombre }}</x-table.td>
+                            <x-table.td>
+                                {{ implode(', ', $empPuesto->usuario->roles->pluck('name')->toArray()) }}
+                            </x-table.td>
                             <x-table.td justify="center">
                                 <x-status.is-active :active="$empPuesto->activo" />
                             </x-table.td>
