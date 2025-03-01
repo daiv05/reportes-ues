@@ -15,6 +15,8 @@
     ) {
         $updateAvailable = true;
     }
+
+    $nombreEstadoActual = $reporte->estado_ultimo_historial?->nombre ?? null;
 @endphp
 
 <x-app-layout>
@@ -25,7 +27,7 @@
     </x-slot>
 
     <div class="mb-8 mt-12">
-        @if ($reporte->estado_ultimo_historial?->nombre === 'FINALIZADO')
+        @if ($nombreEstadoActual === 'FINALIZADO')
             <div class="flex justify-center">
                 @canany(['REPORTES_REVISION_SOLUCION', 'REPORTES_ASIGNAR'])
                     <a
@@ -190,10 +192,7 @@
                         </div>
                         <div class="basis-2/3">
                             @if ($reporte->no_procede === 0)
-                                <x-status.chips
-                                    :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
-                                    class="mb-2"
-                                />
+                                <x-status.chips :text="$nombreEstadoActual ?? 'NO ASIGNADO'" class="mb-2" />
                             @else
                                 <x-status.chips text="NO PROCEDE" class="mb-2" />
                             @endif
@@ -230,6 +229,16 @@
                             </p>
                         </div>
                     </div>
+                    <div class="mb-4 flex flex-row">
+                        <div class="basis-1/3">
+                            <p class="font-semibold text-gray-500">Categoría</p>
+                        </div>
+                        <div class="basis-2/3">
+                            <p class="font-semibold text-black">
+                                {{ $reporte?->accionesReporte?->categoriaReporte?->nombre ?? 'N/A' }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -242,11 +251,11 @@
                 auth()
                     ->user()
                     ->can('REPORTES_ASIGNAR') &&
-                ! $reporte->estado_ultimo_historial?->nombre) ||
-            ($reporte->no_procede === 0 && $reporte->estado_ultimo_historial?->nombre)        )
+                ! $nombreEstadoActual) ||
+            ($reporte->no_procede === 0 && $nombreEstadoActual)        )
             <x-reportes.detail.container>
-                <x-reportes.detail.header title="Asignación">
-                    @if (! $reporte->estado_ultimo_historial?->nombre)
+                <x-reportes.detail.header title="Asignación" :required="!$nombreEstadoActual">
+                    @if (! $nombreEstadoActual)
                         <div>
                             @canany(['REPORTES_ASIGNAR'])
                                 <button
@@ -271,9 +280,13 @@
                 @csrf
                 <x-reportes.detail.container>
                     <x-reportes.detail.block>
-                        <x-reportes.detail.subheader subtitle="Entidad" icon="heroicon-o-briefcase" />
+                        <x-reportes.detail.subheader
+                            subtitle="Entidad"
+                            icon="heroicon-o-briefcase"
+                            :required="!$nombreEstadoActual"
+                        />
                         <x-reportes.detail.subheader-content>
-                            @if (! $reporte->estado_ultimo_historial?->nombre)
+                            @if (! $nombreEstadoActual)
                                 <select
                                     id="entidad"
                                     class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
@@ -331,9 +344,13 @@
                         </x-reportes.detail.subheader-content>
                     </x-reportes.detail.block>
                     <x-reportes.detail.block>
-                        <x-reportes.detail.subheader subtitle="Subalternos" icon="heroicon-o-shopping-bag" />
+                        <x-reportes.detail.subheader
+                            subtitle="Subalternos"
+                            icon="heroicon-o-shopping-bag"
+                            :required="!$nombreEstadoActual"
+                        />
                         <x-reportes.detail.subheader-content>
-                            @if (! $reporte->estado_ultimo_historial?->nombre)
+                            @if (! $nombreEstadoActual)
                                 <x-picklist.picklist
                                     :items="$empleadosPorEntidad"
                                     :asignados="[]"
@@ -375,9 +392,13 @@
                         </x-reportes.detail.subheader-content>
                     </x-reportes.detail.block>
                     <x-reportes.detail.block>
-                        <x-reportes.detail.subheader subtitle="Supervisor" icon="heroicon-o-check-badge" />
+                        <x-reportes.detail.subheader
+                            subtitle="Supervisor"
+                            icon="heroicon-o-check-badge"
+                            :required="!$nombreEstadoActual"
+                        />
                         <x-reportes.detail.subheader-content>
-                            @if (! $reporte->estado_ultimo_historial?->nombre)
+                            @if (! $nombreEstadoActual)
                                 <select
                                     id="supervisor"
                                     name="id_empleado_supervisor"
@@ -419,7 +440,7 @@
                     <x-reportes.detail.block>
                         <x-reportes.detail.subheader subtitle="Bienes" icon="heroicon-o-clipboard-document-list" />
                         <x-reportes.detail.subheader-content>
-                            @if (! $reporte->estado_ultimo_historial?->nombre)
+                            @if (! $nombreEstadoActual)
                                 <div class="pb-4">
                                     <span class="text-gray-600">
                                         Si el reporte involucra la reparación/mantenimiento de un bien de la facultad,
@@ -463,7 +484,7 @@
                             icon="heroicon-o-chat-bubble-bottom-center-text"
                         />
                         <x-reportes.detail.subheader-content>
-                            @if (! $reporte->estado_ultimo_historial?->nombre)
+                            @if (! $nombreEstadoActual)
                                 <textarea
                                     id="comentario"
                                     name="comentario"
@@ -491,11 +512,22 @@
                         </x-reportes.detail.subheader-content>
                     </x-reportes.detail.block>
                     <x-reportes.detail.block>
-                        <x-reportes.detail.subheader subtitle="Asignar categoria" icon="heroicon-o-tag" />
+                        <x-reportes.detail.subheader
+                            subtitle="Asignar categoria"
+                            icon="heroicon-o-tag"
+                            :required="!$nombreEstadoActual"
+                        />
                         <x-reportes.detail.subheader-content>
-                            @if (! $reporte->estado_ultimo_historial?->nombre)
+                            @if (! $nombreEstadoActual)
+                                <div class="pb-4">
+                                    <span class="text-gray-600">
+                                        Asigna una categoría al reporte basado en el tiempo máximo de resolución que se
+                                        espera
+                                    </span>
+                                </div>
                                 <select
                                     id="id_categoria_reporte"
+                                    onchange="actualizarDescripcionCategoria(this.value)"
                                     name="id_categoria_reporte"
                                     class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                                 >
@@ -505,7 +537,7 @@
                                             value="{{ $categoria->id }}"
                                             {{ request()->get('id_categoria_reporte') == $categoria->id ? 'selected' : '' }}
                                         >
-                                            {{ $categoria->nombre }}
+                                            {{ $categoria->nombre . ' - (' . $categoria->tiempo_promedio . ' ' . $categoria->unidad_tiempo . ')' }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -515,6 +547,9 @@
                                         'messages' => $errors->get('id_categoria_reporte'),
                                     ]
                                 )
+                                <div class="pb-4">
+                                    <span id="dsp-ctg" class="text-gray-600 text-sm"></span>
+                                </div>
                             @else
                                 <select
                                     id="entidad"
@@ -532,11 +567,20 @@
                                     @endforeach
                                 </select>
                             @endif
+
+
+                            <script>
+                                function actualizarDescripcionCategoria(idCategoria) {
+                                    const categoria = @json($categoriasReporte);
+                                    const categoriaSeleccionada = categoria.find((cat) => cat.id == idCategoria);
+                                    document.getElementById('dsp-ctg').innerText = `Descripción: ${categoriaSeleccionada.descripcion}`;
+                                }
+                            </script>
                         </x-reportes.detail.subheader-content>
                     </x-reportes.detail.block>
                 </x-reportes.detail.container>
 
-                @if (! $reporte->estado_ultimo_historial?->nombre)
+                @if (! $nombreEstadoActual)
                     <div class="mt-8 flex w-full flex-col justify-center lg:flex-row">
                         @canany(['REPORTES_ASIGNAR'])
                             <button
