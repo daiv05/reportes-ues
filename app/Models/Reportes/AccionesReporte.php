@@ -2,7 +2,7 @@
 
 namespace App\Models\Reportes;
 
-use App\Models\CategoriaReporte;
+use App\Models\Mantenimientos\CategoriaReporte;
 use App\Models\rhu\Entidades;
 use App\Models\Seguridad\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

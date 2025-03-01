@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Estadisticas;
 
 use App\Http\Controllers\Controller;
-use App\Models\CategoriaReporte;
+use App\Models\Mantenimientos\CategoriaReporte;
 use App\Models\Mantenimientos\Recurso;
 use App\Models\Reportes\EmpleadoAccion;
 use App\Models\Reportes\Estado;
@@ -500,6 +500,15 @@ class EstadisticasController extends Controller
             $sumaDuracionReal = 0;
             foreach ($reportesPorCategoria as $categoriaId => $reportes) {
                 $categoria = $categorias->find($categoriaId);
+                $enumUnidadTiempo = ['minutos', 'horas', 'dias', 'meses'];
+                $multiOperando = 1;
+                if ($categoria->unidad_tiempo == 'horas') {
+                    $multiOperando = 60;
+                } else if ($categoria->unidad_tiempo == 'dias') {
+                    $multiOperando = 60 * 24;
+                } else if ($categoria->unidad_tiempo == 'meses') {
+                    $multiOperando = 60 * 24 * 30;
+                }
                 foreach ($reportes as $reporte) {
                     // Calcular tiempo de reporte en pausa
                     $historialEstados = $reporte->accionesReporte->historialAccionesReporte;
@@ -519,7 +528,7 @@ class EstadisticasController extends Controller
                     $horaFinalizacion = Carbon::parse($reporte->accionesReporte->hora_finalizacion);
                     $duracionReal = $fechaInicio->diffInMinutes($fechaFinalizacion) + $horaInicio->diffInMinutes($horaFinalizacion) ?? 1;
                     // Duracion maxima estimada segun categoria
-                    $duracionEstimada = $categoria->tiempo_promedio ?? 1;
+                    $duracionEstimada = (int)$categoria->tiempo_promedio * $multiOperando;
                     // Eficiencia acumulada
                     $sumaEficiencia += ($duracionEstimada / ($duracionReal - $minutosEnPausa));
                     $sumaDuracionReal += $duracionReal;

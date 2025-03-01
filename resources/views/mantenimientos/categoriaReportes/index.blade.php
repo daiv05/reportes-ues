@@ -345,7 +345,7 @@
 
     document.querySelectorAll('[data-modal-hide="static-modal"]').forEach((button) => {
         button.addEventListener('click', function () {
-            updateModalTitle('Añadir Tipo de Bien');
+            updateModalTitle('Añadir Categoría de Reportes');
 
             resetForm();
 
@@ -365,7 +365,7 @@
             const descripcion = this.getAttribute('data-descripcion');
             const activo = this.getAttribute('data-activo');
 
-            updateModalTitle('Editar categoría de reportes]');
+            updateModalTitle('Editar Categoría de reportes');
 
             document.getElementById('categoria-reporte-form').action = `/mantenimientos/categorias-reportes/${id}`;
             document.getElementById('categoria-reporte-form').method = 'POST';
