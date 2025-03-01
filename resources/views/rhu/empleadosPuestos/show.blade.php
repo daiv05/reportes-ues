@@ -2,11 +2,9 @@
     $headersReports = [
         ['text' => 'Título', 'align' => 'left'],
         ['text' => 'Fecha y Hora', 'align' => 'left'],
-        ['text' => 'Reportado por', 'align' => 'left'],
-        ['text' => 'Entidad', 'align' => 'left'],
-        ['text' => 'Tipo', 'align' => 'left'],
+        ['text' => 'Tiempo de resolución', 'align' => 'center'],
         ['text' => 'Estado', 'align' => 'center'],
-        ['text' => 'Acciones', 'align' => 'left'],
+        ['text' => 'Acciones', 'align' => 'center']
     ];
 @endphp
 
@@ -79,15 +77,10 @@
                             <x-table.td>
                                 {{ \Carbon\Carbon::parse($empAccion->reporte->fecha_reporte . ' ' . $empAccion->reporte->hora_reporte)->format('d/m/Y, h:i A') }}
                             </x-table.td>
-                            <x-table.td>
-                                {{ $empAccion->reporte->usuarioReporta?->persona?->nombre }}
-                                {{ $empAccion->reporte->usuarioReporta?->persona?->apellido }}
+                            <x-table.td justify="center">
+                                {{ $empAccion->reporte->tiempo_resolucion ?? '-' }}
                             </x-table.td>
-                            <x-table.td>
-                                {{ $empAccion->reporte->accionesReporte?->entidadAsignada?->nombre ?? '-' }}
-                            </x-table.td>
-                            <x-table.td>{{ $empAccion->reporte->actividad ? 'Actividad' : 'General' }}</x-table.td>
-                            <x-table.td>
+                            <x-table.td justify="center">
                                 <x-status.chips
                                     :text="$empAccion->reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
                                     class="mb-2"

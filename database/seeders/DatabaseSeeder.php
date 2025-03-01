@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CategoriaReporte;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DiaSeeder::class);
         $this->call(TipoEventoSeeder::class);
         $this->call(AulaSeeder::class);
+        $this->call(CategoriaReporteSeeder::class);
         //$this->call(AsignaturaSeeder::class);
         $this->call(ReporteSeeder::class);
         $this->call(EstadoSeeder::class);

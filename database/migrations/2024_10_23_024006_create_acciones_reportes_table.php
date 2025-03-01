@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_usuario_administracion');
             $table->unsignedBigInteger('id_entidad_asignada');
             $table->unsignedBigInteger('id_usuario_supervisor');
+            $table->unsignedBigInteger('id_categoria_reporte');
             $table->text('comentario')->nullable();
             $table->date('fecha_asignacion');
             $table->date('fecha_inicio')->nullable();
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->foreign('id_usuario_administracion')->references('id')->on('users')->onDelete('restrict');
             $table->foreign('id_entidad_asignada')->references('id')->on('entidades')->onDelete('restrict');
             $table->foreign('id_usuario_supervisor')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('id_categoria_reporte')->references('id')->on('categoria_reportes')->onDelete('restrict');
         
         });
     }

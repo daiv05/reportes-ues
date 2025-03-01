@@ -1,8 +1,7 @@
 <x-emails.email-container>
     <x-emails.email-body>
         <x-emails.email-header
-            title="Reestablecer Contraseña"
-            logoSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3JjWq5hKtAVSofTTo72ynt7SlCxi2G6WXmA&s" />
+            title="Reestablecer Contraseña" />
         <p>
             Estás a punto de reestablecer la contraseña de tu cuenta.
             Tu código de verificación es:
@@ -13,9 +12,5 @@
         </p>
     </x-emails.email-body>
 
-    <x-emails.email-footer :footerLinks="[
-        ['label' => 'Página oficial', 'url' => 'https://www.ues.edu.sv'],
-        ['label' => 'Contacto', 'url' => 'https://www.ues.edu.sv/contacto/'],
-        ['label' => 'Noticias', 'url' => 'https://www.ues.edu.sv/noticias/'],
-    ]" />
+    <x-emails.email-footer />
 </x-emails.email-container>
