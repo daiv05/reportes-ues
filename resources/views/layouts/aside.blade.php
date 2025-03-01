@@ -198,19 +198,19 @@
             'active' => request()->is('estadisticas/*'),
             'icon' => 'heroicon-s-chart-bar-square',
             'label' => 'Estadísticas',
-            'permissions' => ['BITACORA_VER'],
+            'permissions' => ['ESTADISTICAS_VER'],
             'items' => [
                 [
                     'to' => 'estadisticas.index',
                     'active' => request()->is('estadisticas/generales'),
                     'label' => 'Generales',
-                    'permissions' => ['BITACORA_VER'],
+                    'permissions' => ['ESTADISTICAS_VER'],
                 ],
                 [
                     'to' => 'estadisticas.eficienciaEmpleados',
                     'active' => request()->is('estadisticas/empleados'),
-                    'label' => 'Empleados',
-                    'permissions' => ['BITACORA_VER'],
+                    'label' => 'Tiempos y eficiencia',
+                    'permissions' => ['ESTADISTICAS_VER'],
                 ],
             ],
         ],

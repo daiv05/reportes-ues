@@ -18,7 +18,7 @@
             ['text' => 'Asignado como', 'align' => 'left'],
             ['text' => 'Unidad', 'align' => 'left'],
             ['text' => 'Estado', 'align' => 'center'],
-            ['text' => 'Acciones', 'align' => 'left'],
+            ['text' => 'Acciones', 'align' => 'center'],
         ];
     @endphp
 @endcanany
@@ -59,7 +59,7 @@
                             {{ $reporte->relacion_usuario['supervisor'] ? 'SUPERVISOR' : 'SUBALTERNO' }}
                         </x-table.td>
                         <x-table.td>{{ $reporte->accionesReporte?->entidadAsignada?->nombre }}</x-table.td>
-                        <x-table.td>
+                        <x-table.td justify="center">
                             @if ($reporte->no_procede === 0)
                                 <x-status.chips
                                     :text="$reporte->estado_ultimo_historial?->nombre ?? 'NO ASIGNADO'"
@@ -69,7 +69,7 @@
                                 <x-status.chips text="NO PROCEDE" class="mb-2" />
                             @endif
                         </x-table.td>
-                        <x-table.td>
+                        <x-table.td justify="center">
                             <div class="relative flex justify-center space-x-2">
                                 @canany(['REPORTES_ACTUALIZAR_ESTADO', 'REPORTES_REVISION_SOLUCION'])
                                     <a
