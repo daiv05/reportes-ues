@@ -244,7 +244,7 @@
                             id="descripcion"
                             label="Descripción"
                             name="descripcion"
-                            pattern="^.{1,250}$"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ,¡! _-]{1,250}$"
                             patternMessage="Solo se permiten 250 caracteres"
                             :value="old('descripcion')"
                             :error="$errors->get('descripcion')"

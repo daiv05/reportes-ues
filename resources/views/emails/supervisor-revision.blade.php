@@ -1,8 +1,6 @@
 <x-emails.email-container>
     <x-emails.email-body>
-        <x-emails.email-header
-            logoSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3JjWq5hKtAVSofTTo72ynt7SlCxi2G6WXmA&s" />
-        <!-- Mensaje -->
+        <x-emails.email-header />
         <p>
             Estimado usuario, el reporte al que fue asignado, con codigo:
             <strong>#{{ $tableData['reporte']->id }}</strong>
@@ -64,9 +62,5 @@
         </p>
     </x-emails.email-body>
 
-    <x-emails.email-footer :footerLinks="[
-        ['label' => 'Página oficial', 'url' => 'https://www.ues.edu.sv'],
-        ['label' => 'Contacto', 'url' => 'https://www.ues.edu.sv/contacto/'],
-        ['label' => 'Noticias', 'url' => 'https://www.ues.edu.sv/noticias/'],
-    ]" />
+    <x-emails.email-footer />
 </x-emails.email-container>

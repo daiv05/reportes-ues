@@ -184,7 +184,12 @@
                     'label' => 'Bienes',
                     'permissions' => ['BIENES_VER'],
                 ],
-
+                [
+                    'to' => 'categoriaReportes.index',
+                    'active' => request()->is('mantenimientos/categorias-reportes'),
+                    'label' => 'Categorías de reportes',
+                    'permissions' => ['CATEGORIAS_REPORTES_VER'],
+                ],
             ],
         ],
         [
@@ -197,8 +202,14 @@
             'items' => [
                 [
                     'to' => 'estadisticas.index',
-                    'active' => request()->is('estadisticas/'),
-                    'label' => 'Estadíticas y graficos',
+                    'active' => request()->is('estadisticas/generales'),
+                    'label' => 'Generales',
+                    'permissions' => ['BITACORA_VER'],
+                ],
+                [
+                    'to' => 'estadisticas.eficienciaEmpleados',
+                    'active' => request()->is('estadisticas/empleados'),
+                    'label' => 'Empleados',
                     'permissions' => ['BITACORA_VER'],
                 ],
             ],

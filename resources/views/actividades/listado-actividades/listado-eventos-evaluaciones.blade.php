@@ -569,7 +569,7 @@
                             name="comentario"
                             label="Comentarios"
                             rows="2"
-                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,250}$"
+                            pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ,¡! _-]{1,250}$"
                             patternMessage="Solo se permiten 250 caracteres que sean letras, números, puntos o espacios"
                             :value="old('comentario')"
                             :error="$errors->get('comentario')"

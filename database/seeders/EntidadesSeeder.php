@@ -19,19 +19,27 @@ class EntidadesSeeder extends Seeder
             ],
             [
                 'nombre' => 'DESARROLLO E INFRAESTRUCTURA',
-                'descripcion' => 'Descripcion'
+                'descripcion' => 'Descripcion',
+                'id_entidad' => 1,
+                'jerarquia' => 1
             ],
             [
                 'nombre' => 'LOGISTICA Y GESTION',
-                'descripcion' => 'Descripcion'
+                'descripcion' => 'Descripcion',
+                'id_entidad' => 1,
+                'jerarquia' => 1
             ],
             [
                 'nombre' => 'REGISTRO Y ESTADISTICAS',
-                'descripcion' => 'Descripcion'
+                'descripcion' => 'Descripcion',
+                'id_entidad' => 1,
+                'jerarquia' => 1
             ],
             [
                 'nombre' => 'MANTENIMIENTO Y SERVICIOS GENERALES',
-                'descripcion' => 'Descripcion'
+                'descripcion' => 'Descripcion',
+                'id_entidad' => 1,
+                'jerarquia' => 1
             ]
         ];
 

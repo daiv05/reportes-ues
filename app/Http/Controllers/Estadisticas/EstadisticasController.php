@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Estadisticas;
 
 use App\Http\Controllers\Controller;
-use App\Models\Mantenimientos\Fondo;
+use App\Models\CategoriaReporte;
 use App\Models\Mantenimientos\Recurso;
-use App\Models\Mantenimientos\UnidadMedida;
 use App\Models\Reportes\EmpleadoAccion;
 use App\Models\Reportes\Estado;
 use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\Reporte;
 use App\Models\rhu\EmpleadoPuesto;
-use ConsoleTVs\Charts\Classes\Chartjs\Chart;
+use App\Models\rhu\Entidades;
+use App\Models\Seguridad\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-use function PHPSTORM_META\map;
 
 class EstadisticasController extends Controller
 {
@@ -393,5 +394,191 @@ class EstadisticasController extends Controller
                 'empleadosMenosAsignaciones' => $empleadosMenosAsignaciones,
             ]
         );
+    }
+
+    public function calcularEficienciaEmpleados(Request $request)
+    {
+
+        $orderEnum = ['asc', 'desc'];
+        $orderByEnum = ['horasTrabajadas', 'horasEnPausa', 'totalReportesFinalizados', 'indiceEficiencia'];
+
+        $validated = $request->validate([
+            'fecha_inicio' => 'nullable|date_format:d/m/Y',
+            'fecha_final' => 'nullable|date_format:d/m/Y',
+            'id_entidad' => 'nullable|integer|exists:entidades,id',
+            'nombreEmpleado' => 'nullable|string|max:50|regex:/^[a-zA-Z\sáéíóúñÁÉÍÓÚÑ]+$/',
+            'order' => 'nullable|string|in:' . implode(',', $orderEnum),
+            'orderBy' => 'nullable|string|in:' . implode(',', $orderByEnum),
+        ], [
+            'id_entidad.integer' => 'El id de la entidad debe ser un número entero',
+            'id_entidad.exists' => 'La entidad seleccionada no existe',
+            'nombreEmpleado.string' => 'El nombre del empleado debe ser una cadena de texto',
+            'nombreEmpleado.max' => 'El nombre del empleado no debe exceder los 50 caracteres',
+            'nombreEmpleado.regex' => 'El nombre del empleado solo puede contener letras y espacios',
+            'order.in' => 'El ordenamiento debe ser ASC o DESC',
+            'orderBy.in' => 'El campo por el cual ordenar no es válido',
+            'fecha_inicio.date_format' => 'La fecha de inicio no tiene un formato válido',
+            'fecha_final.date_format' => 'La fecha final no tiene un formato válido',
+        ]);
+
+        $estadoId = Estado::where('nombre', 'FINALIZADO')->value('id');
+
+        $userQuery = User::query();
+
+        $userQuery->select('id', 'email', 'id_persona')->with([
+            'empleadosPuestos.empleadosAcciones.reporte',
+            'persona',
+        ])->whereHas('empleadosPuestos', function ($query) {
+            $query->where('empleados_puestos.activo', true);
+        });
+
+        if (isset($validated['nombreEmpleado'])) {
+            $userQuery->whereHas('persona', function ($query) use ($validated) {
+                $query->where('nombre', 'like', '%' . $validated['nombreEmpleado'] . '%')
+                    ->orWhere('apellido', 'like', '%' . $validated['nombreEmpleado'] . '%');
+            });
+        }
+        
+        if (isset($validated['id_entidad'])) {
+            $userQuery->whereHas('empleadosPuestos.puesto.entidad', function ($query) use ($validated) {
+                $query->where('id', $validated['id_entidad']);
+            });
+        }
+
+        $userQuery->whereHas('empleadosPuestos.empleadosAcciones.reporte.accionesReporte.historialAccionesReporte', function ($query) use ($estadoId, $request, $validated) {
+            $query->where('id', function ($query) {
+                $query->select('id')
+                    ->from('historial_acciones_reportes')
+                    ->whereColumn('id_acciones_reporte', 'acciones_reportes.id')
+                    ->latest()
+                    ->limit(1);
+            })->where('id_estado', $estadoId);
+            if (isset($validated['fecha_inicio'])) {
+                $query->where('created_at', '>=', Carbon::createFromFormat('d/m/Y', $validated['fecha_inicio'] )->format('Y-m-d 00:00:00'));
+            }
+            if (isset($validated['fecha_final'])) {
+                $query->where('created_at', '<=', Carbon::createFromFormat('d/m/Y', $validated['fecha_final'] )->format('Y-m-d 23:59:59'));
+            }
+        });
+
+        $users = $userQuery->get();
+
+
+        // Consolidamos los reportes en una sola lista por usuario
+        $users = $users->map(function ($user) use ($estadoId) {
+            $reportes = collect();
+            foreach ($user->empleadosPuestos as $puesto) {
+                foreach ($puesto->empleadosAcciones as $accion) {
+                    $reporte = $accion->reporte;
+                    if ($reporte && ! $reporte->no_procede) {
+                        if ($reporte->estado_ultimo_historial && $reporte->estado_ultimo_historial->id == $estadoId) {
+                            $reporte['id_categoria_reporte'] = $reporte->accionesReporte->id_categoria_reporte;
+                            // Historial ordenado por fecha created_at
+                            // $reporte['historialEstados'] = $reporte->accionesReporte->historialAccionesReporte->sortBy('created_at');
+                            $reportes->push($reporte);
+                        }
+                    }
+                }
+            }
+
+            return [
+                'id' => $user->id,
+                'nombre' => $user->persona->nombre . ' ' . $user->persona->apellido,
+                'email' => $user->email,
+                'reportes' => $reportes->unique('id')->values(),
+            ];
+        });
+
+        // Calculo de eficiencia
+        $listaEmpleados = $users->map(function ($user) {
+            $categorias = CategoriaReporte::all();
+            $totalReportesAtendidos = $user['reportes']->count();
+            $user['totalReportesFinalizados'] = $totalReportesAtendidos;
+            $reportesPorCategoria = $user['reportes']->groupBy('id_categoria_reporte');
+            $sumaEficiencia = 0;
+            $sumaMinutosEnPausa = 0;
+            $sumaDuracionReal = 0;
+            foreach ($reportesPorCategoria as $categoriaId => $reportes) {
+                $categoria = $categorias->find($categoriaId);
+                foreach ($reportes as $reporte) {
+                    // Calcular tiempo de reporte en pausa
+                    $historialEstados = $reporte->accionesReporte->historialAccionesReporte;
+                    $tiempoEnPausa = 0;
+                    $estadoAnterior = null;
+                    foreach ($historialEstados as $historial) {
+                        if ($estadoAnterior && $estadoAnterior->estado->nombre == 'EN PAUSA') {
+                            $tiempoEnPausa += $estadoAnterior->created_at->diffInMinutes($historial->created_at);
+                        }
+                        $estadoAnterior = $historial;
+                    }
+                    $minutosEnPausa = $tiempoEnPausa;
+                    // Duracion real del reporte
+                    $fechaInicio = Carbon::parse($reporte->accionesReporte->fecha_inicio);
+                    $horaInicio = Carbon::parse($reporte->accionesReporte->hora_inicio);
+                    $fechaFinalizacion = Carbon::parse($reporte->accionesReporte->fecha_finalizacion);
+                    $horaFinalizacion = Carbon::parse($reporte->accionesReporte->hora_finalizacion);
+                    $duracionReal = $fechaInicio->diffInMinutes($fechaFinalizacion) + $horaInicio->diffInMinutes($horaFinalizacion) ?? 1;
+                    // Duracion maxima estimada segun categoria
+                    $duracionEstimada = $categoria->tiempo_promedio ?? 1;
+                    // Eficiencia acumulada
+                    $sumaEficiencia += ($duracionEstimada / ($duracionReal - $minutosEnPausa));
+                    $sumaDuracionReal += $duracionReal;
+                    $sumaMinutosEnPausa += $minutosEnPausa;
+                }
+            }
+            $user['indiceEficiencia'] =  round($totalReportesAtendidos > 0 ? $sumaEficiencia / $totalReportesAtendidos : 0, 2);
+            $user['horasEnPausa'] = round($sumaMinutosEnPausa / 60, 2);
+            $user['horasTrabajadas'] = round($sumaDuracionReal / 60, 2);
+            return $user;
+        });
+
+        $listaEmpleados = $listaEmpleados->sortBy([
+            [
+                isset($validated['orderBy']) ? $validated['orderBy'] : 'indiceEficiencia',
+                isset($validated['order']) ? $validated['order'] : 'desc'
+            ]
+        ])->values();
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 10;
+
+        $currentItems = $listaEmpleados->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        $paginator = new LengthAwarePaginator(
+            $currentItems,
+            $listaEmpleados->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
+        );
+
+        $chartEmpleadosEficiencia = [
+            'type' => 'bar',
+            'labels' => $currentItems->pluck('nombre'),
+            'datasets' => [
+                'data' => $currentItems->pluck('indiceEficiencia'),
+                // 10 colores diferentes
+                'backgroundColor' => [
+                    '#86E3CE',
+                    '#D0E6A5',
+                    '#FFDD94',
+                    '#FA897B',
+                    '#CCABD8',
+                    '#596EE2',
+                    '#7FACD6',
+                    '#FEAEBB',
+                    '#FFD700',
+                    '#FF6347',
+                ],
+            ]
+        ];
+
+        $entidades = Entidades::all();
+
+        return view('estadisticas.empleados', [
+            'listaEmpleados' => $paginator,
+            'chartEmpleadosEficiencia' => $chartEmpleadosEficiencia,
+            'entidades' => $entidades
+        ]);
     }
 }

@@ -399,7 +399,7 @@
                                                 name="comentarios[]"
                                                 label="Comentarios"
                                                 rows="2"
-                                                pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]{1,250}$"
+                                                pattern="^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ,¡! _-]{1,250}$"
                                                 patternMessage="Solo se permiten 250 caracteres que sean letras, números, puntos o espacios"
                                                 :value="old('comentarios.' . $loop->index, $row['comentarios'])"
                                                 :error="$errors->get('comentarios.' . $loop->index)"
