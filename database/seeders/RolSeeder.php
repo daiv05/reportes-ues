@@ -35,6 +35,9 @@ class RolSeeder extends Seeder
                 PermisosEnum::FONDOS_VER->value,
                 PermisosEnum::FONDOS_CREAR->value,
                 PermisosEnum::FONDOS_EDITAR->value,
+                PermisosEnum::CATEGORIAS_REPORTES_CREAR->value,
+                PermisosEnum::CATEGORIAS_REPORTES_VER->value,
+                PermisosEnum::CATEGORIAS_REPORTES_EDITAR->value,
             ],
             'SUPERVISOR_REPORTE' => [
                 PermisosEnum::REPORTES_CREAR->value,
