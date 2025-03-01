@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Mantenimientos;
 
 use App\Models\Reportes\AccionesReporte;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +15,7 @@ class CategoriaReporte extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
+        'unidad_tiempo',
         'tiempo_promedio',
         'activo',
     ];

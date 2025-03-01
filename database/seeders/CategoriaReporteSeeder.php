@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Mantenimientos\CategoriaReporte;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,16 +18,19 @@ class CategoriaReporteSeeder extends Seeder
                 'nombre' => 'Muy Baja (Rutina)',
                 'descripcion' => 'Limpieza de basura',
                 'tiempo_promedio' => '30',
+                'unidad_tiempo' => 'minutos',
             ],
             [
                 'nombre' => 'Baja (Simple)',
                 'descripcion' => 'Cambios de focos, revisiones de software',
                 'tiempo_promedio' => '60',
+                'unidad_tiempo' => 'minutos',
             ],
             [
                 'nombre' => 'Media (Estándar)',
                 'descripcion' => 'Reparación de muebles, mantenimientos eléctricos menores',
                 'tiempo_promedio' => '180',
+                'unidad_tiempo' => 'minutos',
             ],
             [
                 'nombre' => 'Alta (Compleja)',
@@ -51,7 +55,7 @@ class CategoriaReporteSeeder extends Seeder
         ];
 
         foreach ($categorias as $categoria) {
-            \App\Models\CategoriaReporte::create($categoria);
+            CategoriaReporte::create($categoria);
         }
     }
 }

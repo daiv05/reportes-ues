@@ -22,6 +22,7 @@ use App\Http\Controllers\Estadisticas\EstadisticasController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\Mantenimientos\BienController;
 use App\Http\Controllers\Mantenimientos\TipoBienController;
+use App\Http\Controllers\Mantenimientos\CategoriaReporteController;
 use App\Http\Controllers\Mantenimientos\FondoController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -155,6 +156,12 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
             Route::get('/', [TipoBienController::class, 'index'])->middleware('permission:TIPOS_BIENES_VER')->name('tiposBienes.index');
             Route::post('/', [TipoBienController::class, 'store'])->middleware('permission:TIPOS_BIENES_CREAR')->name('tiposBienes.store');
             Route::put('/{id}', [TipoBienController::class, 'update'])->middleware('permission:TIPOS_BIENES_EDITAR')->name('tiposBienes.update');
+        });
+
+        Route::prefix('categorias-reportes')->group(function () {
+            Route::get('/', [CategoriaReporteController::class, 'index'])->middleware('permission:CATEGORIAS_REPORTES_VER')->name('categoriaReportes.index');
+            Route::post('/', [CategoriaReporteController::class, 'store'])->middleware('permission:CATEGORIAS_REPORTES_CREAR')->name('categoriaReportes.store');
+            Route::put('/{id}', [CategoriaReporteController::class, 'update'])->middleware('permission:CATEGORIAS_REPORTES_EDITAR')->name('categoriaReportes.update');
         });
 
         // Fondos

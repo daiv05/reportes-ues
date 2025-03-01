@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre', 50);
             $table->text('descripcion', 255);
             $table->string('tiempo_promedio', 50);
+            $table->enum('unidad_tiempo', ['minutos', 'horas', 'dias', 'meses']);
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });

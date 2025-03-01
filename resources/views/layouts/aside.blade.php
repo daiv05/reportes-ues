@@ -184,7 +184,12 @@
                     'label' => 'Bienes',
                     'permissions' => ['BIENES_VER'],
                 ],
-
+                [
+                    'to' => 'categoriaReportes.index',
+                    'active' => request()->is('mantenimientos/categorias-reportes'),
+                    'label' => 'Categorías de reportes',
+                    'permissions' => ['CATEGORIAS_REPORTES_VER'],
+                ],
             ],
         ],
         [
