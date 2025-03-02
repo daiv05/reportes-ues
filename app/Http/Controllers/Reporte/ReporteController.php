@@ -249,6 +249,7 @@ class ReporteController extends Controller
                 'id_empleado_supervisor' => 'required|integer|exists:empleados_puestos,id',
                 'id_bienes' => 'array',
                 'id_bienes.*' => 'integer|exists:bienes,id',
+                'id_categoria_reporte' => 'required|integer|exists:categoria_reportes,id',
             ],
             [
                 'id_empleados_puestos.required' => 'Debe asignar al menos un empleado al reporte.',
@@ -266,6 +267,9 @@ class ReporteController extends Controller
                 'id_bienes.array' => 'Estructura de bienes asignados inválida.',
                 'id_bienes.*.integer' => 'Cada bien debe tener un ID válido.',
                 'id_bienes.*.exists' => 'Uno o más bienes seleccionados no existen.',
+                'id_categoria_reporte.required' => 'Debe asignar una categoría al reporte.',
+                'id_categoria_reporte.integer' => 'El ID de la categoría de reporte debe ser un número entero.',
+                'id_categoria_reporte.exists' => 'La categoría de reporte seleccionada no existe.',
             ]
         );
 
@@ -280,6 +284,7 @@ class ReporteController extends Controller
             $accReporte->fecha_asignacion = Carbon::now()->format('Y-m-d');
             $accReporte->fecha_inicio = Carbon::now()->format('Y-m-d');
             $accReporte->hora_inicio = Carbon::now()->format('H:i:s');
+            $accReporte->id_categoria_reporte = $validated['id_categoria_reporte'] ?? 1;
             $accReporte->save();
 
             // Registro en HISTORIAL_ACCIONES_REPORTES
@@ -609,6 +614,7 @@ class ReporteController extends Controller
             $recursos = Recurso::where('activo', true)->get();
             $unidades_medida = DB::table('unidades_medida')->where('activo', true)->get();
             $tiposBienes = DB::table('tipos_bienes')->where('activo', true)->get();
+            $categoriasReporte = DB::table('categoria_reportes')->where('activo', true)->get();
 
             return [
                 'reporte' => $reporte,
@@ -621,7 +627,8 @@ class ReporteController extends Controller
                 'recursos' => $recursos,
                 'unidadesMedida' => $unidades_medida,
                 'tiposBienes' => $tiposBienes,
-                'reporteBienes' => $reporte->reporteBienes
+                'reporteBienes' => $reporte->reporteBienes,
+                'categoriasReporte' => $categoriasReporte
             ];
         } else {
             return [
@@ -634,7 +641,8 @@ class ReporteController extends Controller
                 'recursos' => [],
                 'unidadesMedida' => [],
                 'tiposBienes' => [],
-                'reporteBienes' => []
+                'reporteBienes' => [],
+                'categoriasReporte' => []
             ];
         }
     }

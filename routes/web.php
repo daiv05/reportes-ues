@@ -22,6 +22,7 @@ use App\Http\Controllers\Estadisticas\EstadisticasController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\Mantenimientos\BienController;
 use App\Http\Controllers\Mantenimientos\TipoBienController;
+use App\Http\Controllers\Mantenimientos\CategoriaReporteController;
 use App\Http\Controllers\Mantenimientos\FondoController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -157,6 +158,12 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
             Route::put('/{id}', [TipoBienController::class, 'update'])->middleware('permission:TIPOS_BIENES_EDITAR')->name('tiposBienes.update');
         });
 
+        Route::prefix('categorias-reportes')->group(function () {
+            Route::get('/', [CategoriaReporteController::class, 'index'])->middleware('permission:CATEGORIAS_REPORTES_VER')->name('categoriaReportes.index');
+            Route::post('/', [CategoriaReporteController::class, 'store'])->middleware('permission:CATEGORIAS_REPORTES_CREAR')->name('categoriaReportes.store');
+            Route::put('/{id}', [CategoriaReporteController::class, 'update'])->middleware('permission:CATEGORIAS_REPORTES_EDITAR')->name('categoriaReportes.update');
+        });
+
         // Fondos
         Route::prefix('fondos')->group(function () {
             Route::get('/', [FondoController::class, 'index'])->middleware('permission:FONDOS_VER')->name('fondos.index');
@@ -218,7 +225,10 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
     });
 
     Route::prefix('estadisticas')->group(function () {
-        Route::get('/', [EstadisticasController::class, 'index'])->middleware('permission:BITACORA_VER')->name('estadisticas.index');
+        Route::get('/generales', [EstadisticasController::class, 'index'])->middleware('permission:BITACORA_VER')->name('estadisticas.index');
+        Route::get('/test', [EstadisticasController::class, 'calcularEficienciaEmpleados'])->name('estadisticas.test');
+        Route::get('/empleados', [EstadisticasController::class, 'calcularEficienciaEmpleados'])->name('estadisticas.eficienciaEmpleados');
+
     });
 
     Route::get('/descargar/archivo/{seccion}', [ArchivoController::class, 'descargarArchivo']);

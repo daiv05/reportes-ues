@@ -5,6 +5,7 @@ namespace App\Models\Reportes;
 use App\Models\Actividades\Actividad;
 use App\Models\Mantenimientos\Aulas;
 use App\Models\Seguridad\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
+use Carbon\CarbonInterface;
 
 class Reporte extends Model implements Auditable
 {
@@ -22,6 +24,7 @@ class Reporte extends Model implements Auditable
 
     protected $appends = [
         'estado_ultimo_historial',
+        'tiempo_resolucion',
         'relacion_usuario'
     ];
 
@@ -64,6 +67,30 @@ class Reporte extends Model implements Auditable
     public function reporteBienes(): HasMany
     {
         return $this->hasMany(ReporteBien::class, 'id_reporte');
+    }
+
+    public function getTiempoResolucionAttribute()
+    {
+        if ($this->accionesReporte == null) {
+            return null;
+        } else {
+            $historialEstados = $this->accionesReporte->historialAccionesReporte;
+            $fechaInicio = $this->accionesReporte->created_at;
+            $fechaFin = $historialEstados->last()->created_at;
+            $ultimoEstado = $historialEstados->last()->nombre;
+            $options = [
+                'join' => ', ',
+                'parts' => 2,
+                'syntax' => CarbonInterface::DIFF_ABSOLUTE,
+            ];
+            if ($ultimoEstado == 'FINALIZADO') {
+                $diferencia = $fechaInicio->diffForHumans($fechaFin, $options);
+                return $diferencia;
+            } else {
+                $diferencia = $fechaInicio->diffForHumans(Carbon::now(), $options);
+                return $diferencia;
+            }
+        }
     }
 
     public function getEstadoUltimoHistorialAttribute()

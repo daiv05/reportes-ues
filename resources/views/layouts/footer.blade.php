@@ -1,27 +1,25 @@
 <footer>
-    <div class="mx-auto w-full md:px-4 md:flex md:items-center justify-center md:justify-between">
-        <div class="flex items-center justify-center mb-2">
-            <img src="{{ Vite::asset('resources/img/ues-logo.webp') }}" alt="logo" class="h-10 w-fit mr-2">
-            <span class="font-bold text-xl text-orange-900 mr-4">{{ config('app.name') }}</span>
+    <div class="mx-auto w-full max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+        <div class="mb-2 flex items-center">
+            <img src="{{ Vite::asset('resources/img/ues-logo.webp') }}" alt="logo" class="mr-2 h-10 w-fit" />
+            <span class="mr-4 text-xl font-bold text-orange-900">{{ config('app.name') }}</span>
             <span class="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
-                © 2024
+                &copy; {{ date('Y') }}
                 <a href="{{ config('app.url') }}" class="hover:underline">{{ config('app.name') }}</a>
-                . Todos los derechos reservados.
+                - Todos los derechos reservados.
             </span>
         </div>
         <ul
-            class="mt-3 flex flex-wrap items-center justify-center text-sm font-medium dark:text-gray-400 sm:mt-0 text-orange-900">
+            class="mt-3 flex flex-wrap items-center text-sm font-medium text-orange-900 dark:text-gray-400 sm:mt-0"
+        >
             <li>
-                <a href="#" class="me-4 hover:underline md:me-6">FIA - UES</a>
+                <a href="https://www.fia.ues.edu.sv/" target="_blank" class="me-4 hover:underline md:me-6">FIA</a>
             </li>
             <li>
-                <a href="#" class="me-4 hover:underline md:me-6">Universidad</a>
+                <a href="https://eisi.fia.ues.edu.sv/" target="_blank" class="me-4 hover:underline md:me-6">EISI</a>
             </li>
             <li>
-                <a href="#" class="me-4 hover:underline md:me-6">Eel</a>
-            </li>
-            <li>
-                <a href="#" class="hover:underline">Contacto</a>
+                <a href="https://www.ues.edu.sv/" target="_blank" class="me-4 hover:underline md:me-6">UES</a>
             </li>
         </ul>
     </div>

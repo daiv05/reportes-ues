@@ -1,9 +1,9 @@
 @props([
-    'logoSrc',  // La fuente de la imagen del logo
-    'title' => 'Asignación de Reporte',  // Título predeterminado
+    'logoSrc' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3JjWq5hKtAVSofTTo72ynt7SlCxi2G6WXmA&s',
+    'title' => 'Asignación de Reporte',
 ])
 
 <div class="header text-center">
-    <img src="{{ $logoSrc }}" class="h-36" alt="logo"  />
+    <img src="{{ Vite::asset('resources/img/ues-logo.webp') }}" class="h-36" alt="logo"  />
     <h2 class="text-xl font-semibold text-gray-800">{{ $title }}</h2>
 </div>
