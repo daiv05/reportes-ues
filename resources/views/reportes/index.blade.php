@@ -7,7 +7,7 @@
         ['text' => 'Entidad', 'align' => 'left'],
         ['text' => 'Tipo', 'align' => 'left'],
         ['text' => 'Estado', 'align' => 'center'],
-        ['text' => 'Acciones', 'align' => 'left'],
+        ['text' => 'Acciones', 'align' => 'center'],
     ];
 @endphp
 
@@ -62,37 +62,35 @@
                         </x-table.td>
                         <x-table.td justify="center">
                             <div class="relative flex justify-center space-x-2">
-                                @canany(['REPORTES_ASIGNAR', 'REPORTES_ACTUALIZAR_ESTADO', 'REPORTES_REVISION_SOLUCION'])
-                                    <a
-                                        href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
-                                        class="font-medium text-gray-700 hover:underline"
-                                        data-tooltip-target="tooltip-edit-{{ $reporte->id }}"
+                                <a
+                                    href="{{ route('detalle-reporte', ['id' => $reporte->id]) }}"
+                                    class="font-medium text-gray-700 hover:underline"
+                                    data-tooltip-target="tooltip-edit-{{ $reporte->id }}"
+                                >
+                                    <svg
+                                        class="h-6 w-6"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <svg
-                                            class="h-6 w-6"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M4 6h16M4 12h16m-7 6h7"
-                                            ></path>
-                                        </svg>
-                                    </a>
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M4 6h16M4 12h16m-7 6h7"
+                                        ></path>
+                                    </svg>
+                                </a>
 
-                                    <div
-                                        id="tooltip-edit-{{ $reporte->id }}"
-                                        role="tooltip"
-                                        class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-800 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
-                                    >
-                                        Ver detalle del reporte
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                @endcanany
+                                <div
+                                    id="tooltip-edit-{{ $reporte->id }}"
+                                    role="tooltip"
+                                    class="shadow-xs tooltip z-40 inline-block !text-nowrap rounded-lg bg-gray-800 px-3 py-2 !text-center text-sm font-medium text-white opacity-0 transition-opacity duration-300 dark:bg-gray-700"
+                                >
+                                    Ver detalle del reporte
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
                             </div>
                         </x-table.td>
                     </x-table.tr>
