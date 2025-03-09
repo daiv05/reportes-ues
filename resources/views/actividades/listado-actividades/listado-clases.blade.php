@@ -180,6 +180,7 @@
                             </x-table.td>
                             <x-table.td justify="center">
                                 <div class="relative flex justify-center space-x-2">
+                                    @canany(['CLASES_EDITAR'])
                                     <a
                                         href="#"
                                         class="edit-button font-medium text-green-600 hover:underline dark:text-green-400"
@@ -187,8 +188,8 @@
                                         data-fecha="{{ \Carbon\Carbon::parse($clase->fecha)->format('d/m/Y') }}"
                                         data-materia="{{ $clase->actividad->asignaturas[0]->nombre }}"
                                         data-aulas="{{ $clase->actividad->aulas->pluck('nombre')->implode(', ') }}"
-                                        data-hora-inicio="{{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('H:i') }}"
-                                        data-hora-fin="{{ \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('H:i') }}"
+                                        data-hora-inicio="{{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('h:i a') }}"
+                                        data-hora-fin="{{ \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('h:i a') }}"
                                         data-tipo-clase="{{ $clase->tipoClase->id }}"
                                         data-modalidad="{{ $clase->actividad->modalidad->id }}"
                                         data-grupo="{{ $clase->numero_grupo }}"
@@ -208,6 +209,7 @@
                                         Editar clase
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
+                                    @endcanany
 
                                     <button
                                         data-modal-target="static-modal-details"
@@ -217,8 +219,8 @@
                                         data-fecha="{{ \Carbon\Carbon::parse($clase->fecha)->format('d/m/Y') }}"
                                         data-materia="{{ $clase->actividad->asignaturas[0]->nombre }}"
                                         data-aulas="{{ $clase->actividad->aulas->pluck('nombre')->implode(', ') }}"
-                                        data-hora-inicio="{{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('H:i') }}"
-                                        data-hora-fin="{{ \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('H:i') }}"
+                                        data-hora-inicio="{{ \Carbon\Carbon::parse($clase->actividad->hora_inicio)->format('h:i a') }}"
+                                        data-hora-fin="{{ \Carbon\Carbon::parse($clase->actividad->hora_fin)->format('h:i a') }}"
                                         data-tipo-clase="{{ $clase->tipoClase->id }}"
                                         data-modalidad="{{ $clase->actividad->modalidad->id }}"
                                         data-grupo="{{ $clase->numero_grupo }}"
