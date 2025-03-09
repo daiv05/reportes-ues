@@ -231,7 +231,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
 
     });
 
-    Route::get('/descargar/archivo/{seccion}', [ArchivoController::class, 'descargarArchivo']);
+    Route::get('/descargar/archivo/{seccion}', [ArchivoController::class, 'descargarArchivo'])->middleware('permission:FORMATOS_DESCARGAR');
 });
 
 
