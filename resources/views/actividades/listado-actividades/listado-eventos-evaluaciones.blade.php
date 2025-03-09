@@ -185,6 +185,7 @@
                             </x-table.td>
                             <x-table.td justify="center">
                                 <div class="relative flex justify-center space-x-2">
+                                    @canany(['EVENTOS_EDITAR'])
                                     <a
                                         href="#"
                                         class="edit-button flex font-medium text-green-600 hover:underline dark:text-green-400"
@@ -213,7 +214,7 @@
                                         Editar evento
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
-
+                                    @endcanany
                                     <button
                                         href="#"
                                         data-modal-target="static-modal-details"

@@ -67,7 +67,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
         Route::post('/clases', [ActividadController::class, 'storeOneClass'])->middleware('permission:CLASES_CREAR')->name('clase.store');
         Route::put('/clases/{id}', [ActividadController::class, 'updateClass'])->middleware('permission:CLASES_EDITAR')->name('clase.update');
         Route::post('/eventos-y-evaluaciones', [ActividadController::class, 'storeOneEvent'])->middleware('permission:EVENTOS_CREAR')->name('evento.store');
-        Route::put('/eventos-y-evaluaciones/{id}', [ActividadController::class, 'updateEvent'])->middleware('permission:CLASES_EDITAR')->name('evento.update');
+        Route::put('/eventos-y-evaluaciones/{id}', [ActividadController::class, 'updateEvent'])->middleware('permission:EVENTOS_EDITAR')->name('evento.update');
         Route::get('/eventos-y-evaluaciones', [ActividadController::class, 'listadoEventos'])->middleware('permission:EVENTOS_VER')->name('listado-eventos-evaluaciones');
         Route::get('/linea-de-tiempo', [ActividadController::class, 'lineaDeTiempoEventosView'])->middleware('permission:EVENTOS_VER')->name('timeline-eventos-evaluaciones');
         Route::get('/eventos-y-evaluaciones/linea-de-tiempo/obtener-eventos', [ActividadController::class, 'lineaDeTiempoEventos'])->middleware('permission:EVENTOS_VER')->name('timeline-obtener-eventos');
