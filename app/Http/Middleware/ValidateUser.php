@@ -14,6 +14,11 @@ class ValidateUser
     {
         $user = $request->user();
 
+        // Usuario SUPERADMIN por defecto
+        if ($user->id === 1) {
+            return $next($request);
+        }
+
         // Usuario activo
         $validUser = true;
         if ($user->activo === 0) {
