@@ -10,7 +10,7 @@
             </span>
         </div>
         <ul
-            class="mt-3 flex flex-wrap items-center text-sm font-medium text-orange-900 dark:text-gray-400 sm:mt-0"
+            class="mt-3 flex flex-wrap items-center justify-center md:justify-end text-sm font-medium text-orange-900 dark:text-gray-400 sm:mt-0"
         >
             <li>
                 <a href="https://www.fia.ues.edu.sv/" target="_blank" class="me-4 hover:underline md:me-6">FIA</a>

@@ -182,6 +182,28 @@
                         </div>
                     </div>
                 @endif
+
+                <!-- Evidencia -->
+                @if (count($reporte->reporteEvidencias) > 0)
+                    <div class="mb-4">
+                        <!-- Fila 3 -->
+                        <div class="font-semibold">
+                            <div class="flex flex-row gap-6">
+                                <x-heroicon-o-camera class="h-6 w-6" />
+                                Evidencia
+                            </div>
+                            <div class="ml-12 mt-2">
+                                <button
+                                    id="button"
+                                    type="button"
+                                    class="w-full rounded-lg bg-red-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto"
+                                >
+                                    Ver
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
             <!-- Columna derecha (40%) -->
             <div class="flex w-full justify-center pb-8 pt-16 text-start sm:px-8 lg:w-[40%] lg:justify-start lg:pt-24">
@@ -218,17 +240,21 @@
                             </p>
                         </div>
                     </div>
-                    <div class="mb-4 flex flex-row">
-                        <div class="basis-1/3">
-                            <p class="font-semibold text-gray-500">Usuario</p>
+                    {{-- Solo si no es estudiante --}}
+                    @if (! Auth::user()->es_estudiante)
+                        <div class="mb-4 flex flex-row">
+                            <div class="basis-1/3">
+                                <p class="font-semibold text-gray-500">Usuario</p>
+                            </div>
+                            <div class="basis-2/3">
+                                <p class="font-semibold text-black">
+                                    {{ $reporte->usuarioReporta?->persona?->nombre }}
+                                    {{ $reporte->usuarioReporta?->persona?->apellido }}
+                                </p>
+                            </div>
                         </div>
-                        <div class="basis-2/3">
-                            <p class="font-semibold text-black">
-                                {{ $reporte->usuarioReporta?->persona?->nombre }}
-                                {{ $reporte->usuarioReporta?->persona?->apellido }}
-                            </p>
-                        </div>
-                    </div>
+                    @endif
+
                     <div class="mb-4 flex flex-row">
                         <div class="basis-1/3">
                             <p class="font-semibold text-gray-500">Categoría</p>
@@ -508,10 +534,7 @@
                                         rows="8"
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
                                         disabled
-                                    >
-                                    {{ $reporte->accionesReporte->comentario }}
-                                </textarea
-                                    >
+                                    >{{ $reporte->accionesReporte->comentario }}</textarea>
                                 @endif
                             </x-reportes.detail.subheader-content>
                         </x-reportes.detail.block>
