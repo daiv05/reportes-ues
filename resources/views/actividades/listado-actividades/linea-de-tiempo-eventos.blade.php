@@ -402,8 +402,6 @@
             cargarMasActividadesBtn.disabled = false;
             cargarMasActividadesBtn.innerHTML = 'Cargar más';
             cargarMasActividadesBtn.blur();
-
-            console.log(pageActividades);
         } catch (error) {
             console.error('Error al cargar actividades:', error);
         }
