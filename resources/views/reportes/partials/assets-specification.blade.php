@@ -100,12 +100,10 @@
                                 });
                                 initializeTooltips();
                         } catch (error) {
-                            console.log(error);
                             if (error.id_tipo_bien) {
                                 noty(error.id_tipo_bien[0], 'warning');
                             }
                             if (error.search) {
-                                console.log(error.search[0]);
                                 noty(error.search[0], 'warning');
                             }
                         }
@@ -171,7 +169,6 @@
                             if (tooltipEl) {
                                 new Tooltip(tooltipEl, tooltipTriggerEl);
                             }
-                            console.log(tooltipEl, tooltipTriggerEl);
                         });
                     }
 

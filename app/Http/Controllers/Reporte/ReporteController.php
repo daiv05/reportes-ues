@@ -19,6 +19,7 @@ use App\Models\Mantenimientos\Recurso;
 use App\Models\Reportes\Estado;
 use App\Models\Reportes\RecursoReporte;
 use App\Models\Reportes\ReporteBien;
+use App\Models\Reportes\ReporteEvidencia;
 use App\Models\rhu\EmpleadoPuesto;
 use App\Models\Seguridad\User;
 use Carbon\Carbon;
@@ -102,8 +103,10 @@ class ReporteController extends Controller
             [
                 'id_aula' => 'nullable|integer|exists:aulas,id',
                 'id_actividad' => 'nullable|integer|exists:actividades,id',
-                'descripcion' => 'required|string|max:255|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ_\- ]+$/',
+                'descripcion' => 'required|string|max:255|regex:/^[a-zA-Z0-9.,ñÑáéíóúÁÉÍÓÚüÜ_\- ]+$/',
                 'titulo' => 'required|string|max:50|regex:/^[a-zA-Z0-9.ñÑáéíóúÁÉÍÓÚüÜ ]+$/',
+                'comprobantes' => 'nullable|array|max:5',
+                'comprobantes.*' => 'required|image|mimes:png,jpg,jpeg|max:10240',
             ],
             [
                 'id_aula.exists' => 'El aula no existe',
@@ -116,6 +119,11 @@ class ReporteController extends Controller
                 'titulo.regex' => 'El titulo solo puede contener letras, números y espacios',
                 'descripcion.string' => 'La descripción debe ser un texto válido',
                 'descripcion.regex' => 'La descripción solo puede contener letras, números, espacios y guiones',
+                'comprobantes.array' => 'Estructura de comprobantes inválida',
+                'comprobantes.*.required' => 'Debe adjuntar una imagen',
+                'comprobantes.*.image' => 'El comprobante adjuntado debe ser una imagen válida',
+                'comprobantes.*.mimes' => 'Los comprobantes solo pueden ser: png, jpg o jpeg',
+                'comprobantes.*.max' => 'Cada imagen de comprobante no debe exceder los 10MB',
             ]
         );
 
@@ -129,6 +137,22 @@ class ReporteController extends Controller
         $reporte->id_actividad = $validated['id_actividad'] ?? null; // Asignar null si no se seleccionó aula
 
         $reporte->save();
+
+        // Guardar evidencias
+        if ($request->hasFile('comprobantes')) {
+            foreach ($request->file('comprobantes') as $evidencia) {
+                $fileName = Str::random(40);
+                $path = $evidencia->storeAs(
+                    "reportes/comprobante",
+                    $fileName . "." . $evidencia->getClientOriginalExtension(),
+                    'public'
+                );
+                $reporteEvidencia = new ReporteEvidencia();
+                $reporteEvidencia->id_reporte = $reporte->id;
+                $reporteEvidencia->ruta = $path;
+                $reporteEvidencia->save();
+            }
+        }
 
         return redirect()->route('reportes-generales')->with('message', [
             'type' => 'success',

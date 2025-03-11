@@ -11,11 +11,11 @@
         </div>
 
         <div class="my-8">
-            <form id="reporteForm" class="md:mx-16" method="POST" action="{{ route('reportes.store') }}">
+            <form id="reporteForm" class="md:mx-16" method="POST" action="{{ route('reportes.store') }}" enctype="multipart/form-data">
                 @csrf
                 <!-- Titulo -->
                 <div class="mb-5">
-                    <label for="titulo" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                    <label for="titulo" class="mb-2 block text-md font-medium text-gray-900 dark:text-white">
                         Titulo del reporte
                         <x-forms.input-required />
                     </label>
@@ -42,7 +42,8 @@
                             maxlength="50"
                             autocomplete="off"
                             class="block w-full rounded-lg border border-gray-300 p-2.5 ps-10 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
-                            placeholder="Titulo corto del reporte"
+                            placeholder=""
+                            value="{{ old('titulo') }}"
                         />
                         {{--
                             <x-forms.field name="titulo"
@@ -52,10 +53,13 @@
                             maxlength="20" :value="old('titulo')" :error="$errors->get('titulo')" />
                         --}}
                     </div>
+                    <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="titulo_hint">
+                        Proporcione un título corto y descriptivo
+                    </div>
                 </div>
                 <!-- Descripción -->
                 <div class="mb-5">
-                    <label for="descripcion" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                    <label for="descripcion" class="mb-2 block text-md font-medium text-gray-900 dark:text-white">
                         Descripción
                         <x-forms.input-required />
                     </label>
@@ -65,10 +69,10 @@
                         rows="4"
                         maxlength="255"
                         class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
-                        placeholder="Describa a detalle el problema, mencione elementos, ubicación y cualquier otro detalle relevante"
-                    ></textarea>
+                        placeholder=""
+                    >{{ old('descripcion') }}</textarea>
                     <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="descripcion_hint">
-                        Recuerda ser claro y conciso
+                        Describa a detalle el problema, mencione elementos, ubicación y cualquier otro detalle relevante
                     </div>
                 </div>
 
@@ -90,7 +94,7 @@
                         />
                     @endif
                     <div class="mb-5">
-                        <label for="titulo" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                        <label for="titulo" class="mb-2 block text-md font-medium text-gray-900 dark:text-white">
                             Actividad seleccionada
                         </label>
 
@@ -182,7 +186,7 @@
 
                 <!-- Selección de Aula -->
                 <div class="mb-5">
-                    <label for="id_aula" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                    <label for="id_aula" class="mb-2 block text-md font-medium text-gray-900 dark:text-white">
                         Lugar
                     </label>
                     <x-forms.search-select
@@ -193,29 +197,30 @@
                         id_key="id"
                         name_key="nombre"
                         maxlength="50"
+                        autocomplete="off"
+                        value="{{ old('id_aula') }}"
                     />
-                    {{--
-                        <select id="id_aula" name="id_aula"
-                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
-                        <option value="">Seleccionar instalación</option>
-                        @foreach ($aulas as $aula)
-                        <option value="{{ $aula->id }}">{{ $aula->nombre }}</option>
-                        @endforeach
-                        </select>
-                    --}}
                     @include('components.forms.input-error', ['messages' => $errors->get('id_aula')])
                     <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="descripcion_hint">
-                        Especifique si considera necesario
+                        Pueda selecionar el lugar exacto o el más cercano.
                     </div>
                 </div>
 
-                <div class="flex justify-center py-8">
+                <!-- Imágenes como comprobante del reporte -->
+                <div class="mb-5">
+                    <label for="comprobantes" class="mb-2 block text-md font-medium text-gray-900 dark:text-white">
+                        Evidencia
+                    </label>
+                    @include('reportes.partials.comprobantes')
+                </div>
+
+                <div class="flex justify-center pt-8">
                     @canany(['REPORTES_CREAR'])
                         <button
                             type="button"
                             data-modal-target="send-modal"
                             data-modal-toggle="send-modal"
-                            class="w-full rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto"
+                            class="w-full rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto"
                         >
                             Enviar reporte
                         </button>
@@ -226,4 +231,6 @@
             </form>
         </div>
     </div>
+
+    <script></script>
 </x-app-layout>

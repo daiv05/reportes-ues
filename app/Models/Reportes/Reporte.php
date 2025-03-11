@@ -69,6 +69,11 @@ class Reporte extends Model implements Auditable
         return $this->hasMany(ReporteBien::class, 'id_reporte');
     }
 
+    public function reporteEvidencias(): HasMany
+    {
+        return $this->hasMany(ReporteEvidencia::class, 'id_reporte');
+    }
+
     public function getTiempoResolucionAttribute()
     {
         if ($this->accionesReporte == null) {
