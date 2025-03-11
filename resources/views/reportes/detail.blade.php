@@ -192,14 +192,17 @@
                                 <x-heroicon-o-camera class="h-6 w-6" />
                                 Evidencia
                             </div>
-                            <div class="ml-12 mt-2">
+                            <div class="ml-12 mt-2 w-auto">
                                 <button
                                     id="button"
                                     type="button"
-                                    class="w-full rounded-lg bg-red-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto"
+                                    x-data
+                                    x-on:click="$dispatch('open-modal', 'gallery-evidencia-modal')"
+                                    class="w-auto rounded-lg bg-red-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto"
                                 >
                                     Ver
                                 </button>
+                                @include('reportes.partials.modal-gallery')
                             </div>
                         </div>
                     </div>
