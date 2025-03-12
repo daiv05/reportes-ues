@@ -57,6 +57,7 @@
                 <label for="evidencia"
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Evidencia</label>
                 <input type="file" id="evidencia" name="evidencia" accept="image/png, image/jpeg, image/jpg"
+                    capture="environment"
                     class="mt-1 block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:border-indigo-500 focus:ring-indigo-500">
                 <span id="evidencia_error" class="text-red-500 text-sm"></span>
                 @include('components.forms.input-error', ['messages' => $errors->get('evidencia')])
