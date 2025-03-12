@@ -6,6 +6,7 @@
             name="comprobantes[]"
             accept="image/png, image/jpeg, image/jpg"
             multiple
+            capture="environment"
             class="hidden"
             value="{{ old('comprobantes') }}"
         />
