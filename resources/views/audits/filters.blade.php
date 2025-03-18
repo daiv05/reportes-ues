@@ -18,7 +18,7 @@
 
         </div>
         <x-date.date-input name="start_date" label="Fecha Inicial" :maxDate="true" />
-        <x-date.date-input name="end_date" label="Fecha Inicial" :maxDate="true" />
+        <x-date.date-input name="end_date" label="Fecha Final" :maxDate="true" />
     </x-forms.row>
 
 </div>
