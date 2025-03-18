@@ -9,7 +9,7 @@
             </svg>
         </div>
         <input datepicker datepicker-format="dd/mm/yyyy" name="{{ $name }}" id="{{ $name }}" type="text"
-            value="{{ old($name) ? old($name) : (request($name) ?: '') }}"
+            value="{{ old($name) ? old($name) : (request($name) ?: '') }}" readonly
             class="block w-full rounded-lg border border-gray-300 p-2.5 ps-10 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-red-500 dark:focus:ring-red-500"
             placeholder="{{ $placeholder ?? 'Seleccione una fecha' }}"
             @if($maxDate)
