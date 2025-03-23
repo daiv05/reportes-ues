@@ -102,56 +102,12 @@
                             DE REPORTES E INCIDENCIAS
                         </h1>
                         <p class="mb-4 text-gray-700">
-                            Mantente informado de las últimas novedades en las actividades programadas de la
-                            universidad, reporta cualquier tipo de incidencia y ayuda a tus compañeros.
+                            Reporta cualquier tipo de incidencia y ayuda a mantener el orden y la limpieza en la
+                            facultad.
                         </p>
                         <div class="space-y-4">
-                            <button
-                                class="flex items-center gap-2 rounded border border-black bg-transparent px-4 py-2 text-black"
-                            >
-                                <span>Ver últimos reportes</span>
-                                <svg
-                                    width="20px"
-                                    height="20px"
-                                    viewBox="0 0 32 32"
-                                    version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
-                                    fill="#000000"
-                                >
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <title>book-album</title>
-                                        <desc>Created with Sketch Beta.</desc>
-                                        <defs></defs>
-                                        <g
-                                            id="Page-1"
-                                            stroke="none"
-                                            stroke-width="1"
-                                            fill="none"
-                                            fill-rule="evenodd"
-                                            sketch:type="MSPage"
-                                        >
-                                            <g
-                                                id="Icon-Set-Filled"
-                                                sketch:type="MSLayerGroup"
-                                                transform="translate(-414.000000, -101.000000)"
-                                                fill="#000000"
-                                            >
-                                                <path
-                                                    d="M418,101 C415.791,101 414,102.791 414,105 L414,126 C414,128.209 415.885,129.313 418,130 L429,133 L429,104 C423.988,102.656 418,101 418,101 L418,101 Z M442,101 C442,101 436.212,102.594 430.951,104 L431,104 L431,133 C436.617,131.501 442,130 442,130 C444.053,129.469 446,128.209 446,126 L446,105 C446,102.791 444.209,101 442,101 L442,101 Z"
-                                                    id="book-album"
-                                                    sketch:type="MSShapeGroup"
-                                                ></path>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </svg>
-                            </button>
-                            <button class="flex items-center gap-2 rounded bg-red-600 px-4 py-2 text-white">
-                                <span>Reportar un problema</span>
+                            <a class="flex items-center gap-2 w-min rounded bg-red-600 px-4 py-2 text-white" href="{{ route('login') }}">
+                                <span>Reportar</span>
                                 <svg
                                     width="20px"
                                     height="20px"
@@ -169,7 +125,7 @@
                                         ></path>
                                     </g>
                                 </svg>
-                            </button>
+                            </a>
                         </div>
                     </div>
                     <div class="mt-8 w-full lg:mt-0 lg:w-1/2">
@@ -183,28 +139,26 @@
 
                 <div class="mx-auto grid w-[60%] grid-cols-1 gap-12 md:grid-cols-3">
                     <div class="text-center">
-                        <h2 class="mb-2 text-xl font-bold text-orange-900">Consulta</h2>
-                        <p class="mb-4 font-bold text-orange-900">Estate atento a cualquier cambio</p>
+                        <h2 class="mb-2 text-xl font-bold text-orange-900">Reporta</h2>
+                        <p class="mb-4 font-bold text-orange-900">Reporta cualquier problema</p>
                         <p class="text-sm text-gray-500">
-                            Revisa las actividades que se llevan acabo en cada escuela, mira el detalle de los horarios
-                            y consulta cualquier cambio, cancelación, suspensiones, cambios de horario o comentarios
-                            adicionales de tu instructor
+                            Reporta cualquier incidencia que encuentres, desde problemas de limpieza
+                            hasta problemas de infraestructura.
                         </p>
                     </div>
                     <div class="text-center">
                         <h2 class="mb-2 text-xl font-bold text-orange-900">Comparte</h2>
-                        <p class="mb-4 font-bold text-orange-900">Toca cualquier reporte y compártelo con tus amigos</p>
+                        <p class="mb-4 font-bold text-orange-900">Comparte con tus compañeros</p>
                         <p class="text-sm text-gray-500">
-                            Comenta en actividades o problemas en la facultad. Copia y comparte con quien quieras y
-                            mantén a todos informados.
+                            Comparte y comenta los reportes con tus compañeros para que estén al tanto de los problemas
+                            existentes y su solución.
                         </p>
                     </div>
                     <div class="text-center">
-                        <h2 class="mb-2 text-xl font-bold text-orange-900">Mantente al día</h2>
-                        <p class="mb-4 font-bold text-orange-900">Consulta y ayuda en el momento que quieras</p>
+                        <h2 class="mb-2 text-xl font-bold text-orange-900">Consulta</h2>
+                        <p class="mb-4 font-bold text-orange-900">Consulta los reportes</p>
                         <p class="text-sm text-gray-500">
-                            El sitio web está disponible 24/7, lo que ofrece la posibilidad de consultar como una
-                            aplicación en cualquier momento del día.
+                            Consulta el estado de los reportes y las incidencias que has reportado en la facultad.
                         </p>
                     </div>
                 </div>
