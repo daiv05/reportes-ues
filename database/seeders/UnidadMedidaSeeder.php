@@ -21,6 +21,22 @@ class UnidadMedidaSeeder extends Seeder
             ['nombre' => 'Onzas'],
             ['nombre' => 'Centímetros'],
             ['nombre' => 'Rollos'],
+            ['nombre' => 'Kilogramos'],
+            ['nombre' => 'Gramos'],
+            ['nombre' => 'Unidades'],
+            ['nombre' => 'Galones'],
+            ['nombre' => 'Libras'],
+            ['nombre' => 'Pulgadas'],
+            ['nombre' => 'Cajas'],
+            ['nombre' => 'Bolsas'],
+            ['nombre' => 'Paquetes'],
+            ['nombre' => 'Docenas'],
+            ['nombre' => 'Pares'],
+            ['nombre' => 'Botellas'],
+            ['nombre' => 'Barriles'],
+            ['nombre' => 'Cubetas'],
+            ['nombre' => 'Tazas'],
+            ['nombre' => 'Unidades']
         ];
 
         foreach($unidades as $u) {
