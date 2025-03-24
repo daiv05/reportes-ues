@@ -2,6 +2,7 @@
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         <form id="marcarNoProcede" method="POST" action="{{ route('reportes.noProcede', ['id' => $reporte->id]) }}">
             @csrf
+            @method('PUT')
             <div class="p-6">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                     Confirmación
