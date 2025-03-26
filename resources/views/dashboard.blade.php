@@ -41,17 +41,18 @@
             >
                 <div class="mb-6">
                     <div class="mb-1 text-lg font-bold text-escarlata-ues dark:text-orange-100 md:text-xl">
-                        Ver Incidencias Reportadas
+                        {{ auth()->user()->es_estudiante ?  'Ver Mis Reportes de Incidencias' : 'Ver Incidencias Reportadas' }}
                     </div>
                     <div class="text-[14px] text-gray-800">Revisa y actualiza las incidencias en curso</div>
                 </div>
                 <div>
+                    {{ json_encode(auth()->user()->es_estudiante) }}
                     <a
-                        href="{{ route('reportes-generales') }}"
+                        href="{{ auth()->user()->es_estudiante ?  route('reportes.misReportes') : route('reportes-generales') }}"
                         class="flex w-full items-center justify-center gap-3 rounded-md bg-orange-100 p-1.5 text-sm text-escarlata-ues hover:bg-orange-300"
                     >
                         <x-heroicon-o-clock class="mr-2 h-4 w-4" />
-                        Incidencias Activas
+                        {{ auth()->user()->es_estudiante ?  'Mis Reportes de Incidencias Activos' : 'Incidencias Activas' }}
                     </a>
                 </div>
             </div>
