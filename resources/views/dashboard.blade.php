@@ -46,7 +46,6 @@
                     <div class="text-[14px] text-gray-800">Revisa y actualiza las incidencias en curso</div>
                 </div>
                 <div>
-                    {{ json_encode(auth()->user()->es_estudiante) }}
                     <a
                         href="{{ auth()->user()->es_estudiante ?  route('reportes.misReportes') : route('reportes-generales') }}"
                         class="flex w-full items-center justify-center gap-3 rounded-md bg-orange-100 p-1.5 text-sm text-escarlata-ues hover:bg-orange-300"
