@@ -22,7 +22,6 @@ return new class extends Migration
             $table->time('hora_reporte');
             $table->boolean('no_procede')->default(false);
             $table->boolean('activo')->default(true);
-            $table->text('descripcion_no_procede')->nullable();
             $table->timestamps();
 
             $table->foreign('id_aula')->references('id')->on('aulas')->onDelete('restrict');

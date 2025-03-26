@@ -225,15 +225,15 @@ class ReporteController extends Controller
     public function marcarNoProcede(Request $request, $id_reporte): RedirectResponse
     {
         $request->validate([
-            'txtNoProcede' => 'required|string|min:1|not_regex:/^\s*$/',
+            'justificacion' => 'required|string|min:1|regex:/^[a-zA-Z0-9.,ñÑáéíóúÁÉÍÓÚüÜ_\- ]+$/',
         ], [
-            'txtNoProcede.required' => 'El campo "Descripción" es obligatorio.',
-            'txtNoProcede.not_regex' => 'El campo "Descripción" no puede contener solo espacios.',
+            'justificacion.required' => 'Debe ingresar una justificación',
+            'justificacion.regex' => 'La justificación solo puede contener letras, números, espacios y guiones',
         ]);
         $reporte = Reporte::find($id_reporte);
         if (isset($reporte)) {
             $reporte->no_procede = !$reporte->no_procede;
-            $reporte->descripcion_no_procede=$request->txtNoProcede;
+            $reporte->descripcion_no_procede = $request->justificacion;
             $reporte->save();
             Session::flash('message', [
                 'type' => 'success',
