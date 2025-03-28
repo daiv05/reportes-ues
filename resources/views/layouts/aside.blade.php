@@ -37,7 +37,7 @@
             'active' => request()->is('reportes/*'),
             'icon' => 'heroicon-s-document-chart-bar',
             'label' => 'Reportes',
-            'permissions' => ['REPORTES_VER_LISTADO_GENERAL'],
+            'permissions' => ['REPORTES_CREAR'],
             'items' => [
                 [
                     'to' => 'reportes-generales',
