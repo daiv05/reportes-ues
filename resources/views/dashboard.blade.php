@@ -41,9 +41,9 @@
             >
                 <div class="mb-6">
                     <div class="mb-1 text-lg font-bold text-escarlata-ues dark:text-orange-100 md:text-xl">
-                        {{ auth()->user()->es_estudiante ?  'Ver Mis Reportes de Incidencias' : 'Ver Incidencias Reportadas' }}
+                        {{ auth()->user()->es_estudiante ?  'Ver mis Reportes de Incidencias' : 'Ver Incidencias Reportadas' }}
                     </div>
-                    <div class="text-[14px] text-gray-800">Revisa y actualiza las incidencias en curso</div>
+                    <div class="text-[14px] text-gray-800">Revisa las actualizaciones de tus reportes</div>
                 </div>
                 <div>
                     <a
