@@ -162,6 +162,22 @@ class ReporteController extends Controller
 
     public function detalle(Request $request, $id_reporte)
     {
+        $isEstudiante = auth()->user()->es_estudiante;
+
+        // Verificamos que solamente acceda a aquellos reportes hechos por este estudiante
+        if ($isEstudiante) {
+            $reporte = Reporte::where('id', $id_reporte)->first();
+            if (isset($reporte)) {
+                if ($reporte->id_usuario_reporta !== auth()->user()->id) {
+                    Session::flash('message', [
+                        'type' => 'error',
+                        'content' => 'No puedes acceder a este recurso'
+                    ]);
+                    return redirect()->route('reportes.misReportes');
+                }
+            }
+        }
+
         $infoReporte = $this->infoDetalleReporte($request, $id_reporte);
         if (isset($infoReporte['reporte'])) {
             return view('reportes.detail', array_merge($infoReporte));
@@ -170,7 +186,7 @@ class ReporteController extends Controller
                 'type' => 'error',
                 'content' => 'El reporte especificado no existe'
             ]);
-            return redirect()->route('reportes-generales');
+            return $isEstudiante ? redirect()->route('reportes.misReportes') : redirect()->route('reportes-generales');
         }
     }
 
