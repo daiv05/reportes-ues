@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 
 class InicioController extends Controller
 {
-    function inicio(){
-
+    function inicio()
+    {
         $estados = Estado::orderBy('id')->pluck('nombre');
         $estados->push('NO ASIGNADO');
         $estados->push('NO PROCEDE');
@@ -57,26 +57,26 @@ class InicioController extends Controller
         })->count();
         $reportesNoProcede15Dias = $reportesNoProcede15Dias->where('updated_at', '>=', now()->subDays(15))->where('updated_at', '<', now()->subDays(7))->count();
 
-        //Ahora brindame el porcentaje ya sea negativo o positivo de los reportes en los ultimos 7 dias
-        if ($reportesNuevos15Dias == 0){
+        // Ahora brindame el porcentaje ya sea negativo o positivo de los reportes en los ultimos 7 dias
+        if ($reportesNuevos15Dias == 0) {
             $porcentajeReportesNuevos7Dias = $reportesNuevos7Dias > 0 ? 100 : 0;
         } else {
             $porcentajeReportesNuevos7Dias = round((($reportesNuevos7Dias - $reportesNuevos15Dias) / $reportesNuevos15Dias) * 100, 2);
         }
 
-        if($reportesEnProceso15Dias == 0){
+        if ($reportesEnProceso15Dias == 0) {
             $porcentajeReportesEnProceso7Dias = $reportesEnProceso7Dias > 0 ? 100 : 0;
         } else {
             $porcentajeReportesEnProceso7Dias = round((($reportesEnProceso7Dias - $reportesEnProceso15Dias) / $reportesEnProceso15Dias) * 100, 2);
         }
 
-        if($reportesFinalizados15Dias == 0){
+        if ($reportesFinalizados15Dias == 0) {
             $porcentajeReportesFinalizados7Dias = $reportesFinalizados7Dias > 0 ? 100 : 0;
         } else {
             $porcentajeReportesFinalizados7Dias = round((($reportesFinalizados7Dias - $reportesFinalizados15Dias) / $reportesFinalizados15Dias) * 100, 2);
         }
 
-        if($reportesNoProcede15Dias == 0){
+        if ($reportesNoProcede15Dias == 0) {
             $porcentajeReportesNoProcede7Dias = $reportesNoProcede7Dias > 0 ? 100 : 0;
         } else {
             $porcentajeReportesNoProcede7Dias = round((($reportesNoProcede7Dias - $reportesNoProcede15Dias) / $reportesNoProcede15Dias) * 100, 2);
@@ -85,25 +85,25 @@ class InicioController extends Controller
         $dataReportesNuevos = [
             'reportesNuevos7Dias' => $reportesNuevos7Dias,
             'reportesNuevos15Dias' => $reportesNuevos15Dias,
-            'porcentajeReportesNuevos' => $porcentajeReportesNuevos7Dias >= 0 ? '+'.$porcentajeReportesNuevos7Dias : $porcentajeReportesNuevos7Dias
+            'porcentajeReportesNuevos' => $porcentajeReportesNuevos7Dias >= 0 ? '+' . $porcentajeReportesNuevos7Dias : $porcentajeReportesNuevos7Dias
         ];
 
         $dataReportesEnProceso = [
             'reportesEnProceso7Dias' => $reportesEnProceso7Dias,
             'reportesEnProceso15Dias' => $reportesEnProceso15Dias,
-            'porcentajeReportesEnProceso' => $porcentajeReportesEnProceso7Dias >= 0 ? '+'.$porcentajeReportesEnProceso7Dias : $porcentajeReportesEnProceso7Dias
+            'porcentajeReportesEnProceso' => $porcentajeReportesEnProceso7Dias >= 0 ? '+' . $porcentajeReportesEnProceso7Dias : $porcentajeReportesEnProceso7Dias
         ];
 
         $dataReportesFinalizados = [
             'reportesFinalizados7Dias' => $reportesFinalizados7Dias,
             'reportesFinalizados15Dias' => $reportesFinalizados15Dias,
-            'porcentajeReportesFinalizados' => $porcentajeReportesFinalizados7Dias >= 0 ? '+'.$porcentajeReportesFinalizados7Dias : $porcentajeReportesFinalizados7Dias
+            'porcentajeReportesFinalizados' => $porcentajeReportesFinalizados7Dias >= 0 ? '+' . $porcentajeReportesFinalizados7Dias : $porcentajeReportesFinalizados7Dias
         ];
 
         $dataReportesNoProcede = [
             'reportesNoProcede7Dias' => $reportesNoProcede7Dias,
             'reportesNoProcede15Dias' => $reportesNoProcede15Dias,
-            'porcentajeReportesNoProcede' => $porcentajeReportesNoProcede7Dias >= 0 ? '+'.$porcentajeReportesNoProcede7Dias : $porcentajeReportesNoProcede7Dias
+            'porcentajeReportesNoProcede' => $porcentajeReportesNoProcede7Dias >= 0 ? '+' . $porcentajeReportesNoProcede7Dias : $porcentajeReportesNoProcede7Dias
         ];
 
         // Dame los 5 reportes que se han asignado mas recientemente
@@ -154,11 +154,14 @@ class InicioController extends Controller
             $actividadReciente[$key]['fecha'] = $actividad['fecha']->format('d/m/Y H:i:s');
         }
 
-        if(count($actividadReciente) > 5) {
+        if (count($actividadReciente) > 5) {
             $actividadReciente = array_slice($actividadReciente, 0, 5);
         }
         // dd($actividadReciente);
 
-        return view('dashboard', compact('dataReportesNuevos', 'dataReportesEnProceso', 'dataReportesFinalizados', 'dataReportesNoProcede', 'actividadReciente'));
+        // Obtener el tipo de usuario
+        $userRoleEstudiante = auth()->user()->es_estudiante;
+
+        return view('dashboard', compact('dataReportesNuevos', 'dataReportesEnProceso', 'dataReportesFinalizados', 'dataReportesNoProcede', 'actividadReciente', 'userRoleEstudiante'));
     }
 }
