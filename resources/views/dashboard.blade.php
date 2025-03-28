@@ -14,7 +14,20 @@
     <div class="mx-auto mt-20 px-4">
         <div class="mb-8 text-center">
             <h2 class="mb-4 text-4xl font-bold text-escarlata-ues">Bienvenido al Sistema de Reportes de Incidencias</h2>
-            <p class="text-xl text-gray-600">Gestiona tus incidencias de manera eficiente y efectiva</p>
+            @canany(['ASIGNAR_PUESTOS_EMPLEADOS'])
+                <p class="text-xl text-gray-600">Gestiona tus incidencias de manera eficiente y efectiva</p>
+            @endcanany
+
+            @cannot('ASIGNAR_PUESTOS_EMPLEADOS')
+                @if ($userRoleEstudiante === 0)
+                    <p class="text-xl text-gray-600">Administra y da seguimiento a los reportes asignados de manera
+                        eficiente</p>
+                @endif
+            @endcannot
+
+            @if ($userRoleEstudiante === 1)
+                <p class="text-xl text-gray-600">Reporta incidencias y sigue su estado fácilmente</p>
+            @endif
         </div>
         <div class="mb-12 grid gap-8 md:m-12 md:grid-cols-2 lg:m-20 lg:gap-12">
             <div
@@ -31,7 +44,7 @@
                         href="{{ route('crear-reporte') }}"
                         class="flex w-full items-center justify-center gap-3 rounded-md bg-escarlata-ues p-1.5 text-sm text-white hover:bg-orange-900/90"
                     >
-                        <x-heroicon-o-plus-circle class="mr-2 h-4 w-4" />
+                        <x-heroicon-o-plus-circle class="mr-2 h-4 w-4"/>
                         Crear Incidencia
                     </a>
                 </div>
@@ -41,17 +54,17 @@
             >
                 <div class="mb-6">
                     <div class="mb-1 text-lg font-bold text-escarlata-ues dark:text-orange-100 md:text-xl">
-                        Ver Incidencias Reportadas
+                        {{ auth()->user()->es_estudiante ?  'Ver mis Reportes de Incidencias' : 'Ver Incidencias Reportadas' }}
                     </div>
-                    <div class="text-[14px] text-gray-800">Revisa y actualiza las incidencias en curso</div>
+                    <div class="text-[14px] text-gray-800">Revisa las actualizaciones de tus reportes</div>
                 </div>
                 <div>
                     <a
-                        href="{{ route('reportes-generales') }}"
+                        href="{{ auth()->user()->es_estudiante ?  route('reportes.misReportes') : route('reportes-generales') }}"
                         class="flex w-full items-center justify-center gap-3 rounded-md bg-orange-100 p-1.5 text-sm text-escarlata-ues hover:bg-orange-300"
                     >
-                        <x-heroicon-o-clock class="mr-2 h-4 w-4" />
-                        Incidencias Activas
+                        <x-heroicon-o-clock class="mr-2 h-4 w-4"/>
+                        {{ auth()->user()->es_estudiante ?  'Mis Reportes de Incidencias Activos' : 'Incidencias Activas' }}
                     </a>
                 </div>
             </div>
