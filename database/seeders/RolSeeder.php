@@ -73,7 +73,6 @@ class RolSeeder extends Seeder
             ],
             'USUARIO' => [
                 PermisosEnum::REPORTES_CREAR->value,
-                PermisosEnum::REPORTES_VER_LISTADO_GENERAL->value,
                 PermisosEnum::ACTIVIDADES_CREAR_REPORTE->value,
                 PermisosEnum::CLASES_VER->value,
                 PermisosEnum::EVENTOS_VER->value,

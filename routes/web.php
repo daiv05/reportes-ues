@@ -50,7 +50,7 @@ Route::middleware('auth', 'validate_user', 'verified', 'two_factor')->group(func
         Route::get('/listado-general', [ReporteController::class, 'index'])->middleware('permission:REPORTES_VER_LISTADO_GENERAL')->name('reportes-generales');
         Route::get('/registrar', [ReporteController::class, 'create'])->middleware('permission:REPORTES_CREAR')->name('crear-reporte');
         Route::post('/store', [ReporteController::class, 'store'])->middleware('permission:REPORTES_CREAR')->name('reportes.store');
-        Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->middleware('permission:REPORTES_VER_LISTADO_GENERAL')->name('detalle-reporte');
+        Route::get('/detalle/{id}', [ReporteController::class, 'detalle'])->middleware('permission:REPORTES_CREAR')->name('detalle-reporte');
         Route::get('/reportes/ver-informe/{id}', [ReporteController::class, 'verInforme'])->middleware('permission:REPORTES_ASIGNAR|REPORTES_REVISION_SOLUCION')->name('reportes.verInforme');
         Route::put('/marcar-no-procede/{id}', [ReporteController::class, 'marcarNoProcede'])->middleware('permission:REPORTES_ASIGNAR')->name('reportes.noProcede');
         Route::post('/realizar-asignacion/{id}', [ReporteController::class, 'realizarAsignacion'])->middleware('permission:REPORTES_ASIGNAR')->name('reportes.realizarAsignacion');

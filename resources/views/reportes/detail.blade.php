@@ -223,7 +223,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="mb-4 flex flex-row">
+                    <div class="mb-5 flex flex-row">
                         <div class="basis-1/3">
                             <p class="font-semibold text-gray-500">Fecha</p>
                         </div>
@@ -233,7 +233,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="mb-4 flex flex-row">
+                    <div class="mb-5 flex flex-row">
                         <div class="basis-1/3">
                             <p class="font-semibold text-gray-500">Hora</p>
                         </div>
@@ -245,7 +245,7 @@
                     </div>
                     {{-- Solo si no es estudiante --}}
                     @if (! Auth::user()->es_estudiante)
-                        <div class="mb-4 flex flex-row">
+                        <div class="mb-5 flex flex-row">
                             <div class="basis-1/3">
                                 <p class="font-semibold text-gray-500">Usuario</p>
                             </div>
@@ -258,7 +258,7 @@
                         </div>
                     @endif
 
-                    <div class="mb-4 flex flex-row">
+                    <div class="mb-5 flex flex-row">
                         <div class="basis-1/3">
                             <p class="font-semibold text-gray-500">Categoría</p>
                         </div>
@@ -273,6 +273,25 @@
         </div>
 
         <x-general.divider />
+        @if ($reporte->no_procede === 1)
+            <x-reportes.detail.container>
+                <x-reportes.detail.header title="No procede" />
+                <x-reportes.detail.block>
+                    <x-reportes.detail.subheader subtitle="Justificación" icon="heroicon-o-archive-box-x-mark" />
+                    <x-reportes.detail.subheader-content>
+                        <div class="mb-5 flex flex-col">
+                            <textarea
+                                id="comentario"
+                                name="comentario"
+                                rows="8"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
+                                disabled
+                            >{{ $reporte->descripcion_no_procede }}</textarea>
+                        </div>
+                    </x-reportes.detail.subheader-content>
+                </x-reportes.detail.block>
+            </x-reportes.detail.container>
+        @endif
 
         @canany(['REPORTES_ACTUALIZAR_ESTADO', 'REPORTES_REVISION_SOLUCION'])
             @if (
@@ -301,14 +320,14 @@
                             @include('reportes.partials.modal-not-valid-report')
                         @endif
                     </x-reportes.detail.header>
-                </x-reportes.detail.container>
-                <form
-                    method="POST"
-                    action="{{ route('reportes.realizarAsignacion', ['id' => $reporte->id]) }}"
-                    enctype="multipart/form-data"
-                >
-                    @csrf
-                    <x-reportes.detail.container>
+                    {{-- </x-reportes.detail.container> --}}
+                    <form
+                        method="POST"
+                        action="{{ route('reportes.realizarAsignacion', ['id' => $reporte->id]) }}"
+                        enctype="multipart/form-data"
+                    >
+                        @csrf
+                        {{-- <x-reportes.detail.container> --}}
                         <x-reportes.detail.block>
                             <x-reportes.detail.subheader
                                 subtitle="Entidad"
@@ -537,7 +556,8 @@
                                         rows="8"
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
                                         disabled
-                                    >{{ $reporte->accionesReporte->comentario }}</textarea>
+                                    >{{ $reporte->accionesReporte->comentario }}</textarea
+                                    >
                                 @endif
                             </x-reportes.detail.subheader-content>
                         </x-reportes.detail.block>
@@ -608,21 +628,21 @@
                                 </script>
                             </x-reportes.detail.subheader-content>
                         </x-reportes.detail.block>
-                    </x-reportes.detail.container>
 
-                    @if (! $nombreEstadoActual)
-                        <div class="mt-8 flex w-full flex-col justify-center lg:flex-row">
-                            @canany(['REPORTES_ASIGNAR'])
-                                <button
-                                    id="enviarAsignacion"
-                                    class="rounded bg-escarlata-ues px-4 py-2 text-sm text-white hover:bg-red-700"
-                                >
-                                    Enviar Asignación
-                                </button>
-                            @endcanany
-                        </div>
-                    @endif
-                </form>
+                        @if (! $nombreEstadoActual)
+                            <div class="mt-8 flex w-full flex-col justify-center lg:flex-row">
+                                @canany(['REPORTES_ASIGNAR'])
+                                    <button
+                                        id="enviarAsignacion"
+                                        class="rounded bg-escarlata-ues px-4 py-2 text-sm text-white hover:bg-red-700"
+                                    >
+                                        Enviar Asignación
+                                    </button>
+                                @endcanany
+                            </div>
+                        @endif
+                    </form>
+                </x-reportes.detail.container>
 
                 @if ($reporte->accionesReporte)
                     <x-general.divider />

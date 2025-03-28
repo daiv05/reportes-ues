@@ -26,13 +26,15 @@
                 <div class="flex flex-wrap gap-3">
                     <x-button-redirect to="reportes-generales" label="Ver listado de reportes" />
                     @if (isset($cicloActivo))
-                        <x-forms.primary-button
-                            data-modal-target="static-modal"
-                            data-modal-toggle="static-modal"
-                            type="button"
-                        >
-                            Añadir
-                        </x-forms.primary-button>
+                        @canany(['EVENTOS_CREAR'])
+                            <x-forms.primary-button
+                                data-modal-target="static-modal"
+                                data-modal-toggle="static-modal"
+                                type="button"
+                            >
+                                Añadir
+                            </x-forms.primary-button>
+                        @endcanany
 
                         <x-button-redirect to="timeline-eventos-evaluaciones" label="Línea de tiempo" />
                     @endif

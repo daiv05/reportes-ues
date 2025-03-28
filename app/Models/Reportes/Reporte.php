@@ -37,6 +37,7 @@ class Reporte extends Model implements Auditable
         'descripcion',
         'titulo',
         'no_procede',
+        'descripcion_no_procede',
     ];
 
     public function aula(): BelongsTo
