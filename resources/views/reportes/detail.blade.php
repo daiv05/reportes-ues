@@ -6,10 +6,7 @@
         ['text' => 'Correo electrónico', 'align' => 'left'],
     ];
 
-    $headersSupervisor = [
-        ['text' => 'Empleado', 'align' => 'left'],
-        ['text' => 'Correo electrónico', 'align' => 'left'],
-    ];
+    $headersSupervisor = [['text' => 'Empleado', 'align' => 'left'], ['text' => 'Correo electrónico', 'align' => 'left']];
 
     $updateAvailable = false;
     if (
@@ -33,8 +30,10 @@
         @if ($nombreEstadoActual === 'FINALIZADO')
             <div class="flex justify-center">
                 @canany(['REPORTES_REVISION_SOLUCION', 'REPORTES_ASIGNAR'])
-                    <a href="{{ route('reportes.verInforme', ['id' => $reporte->id]) }}"
-                        class="cursor-pointer rounded bg-green-500 px-10 py-2 text-sm text-white hover:bg-green-700">
+                    <a
+                        href="{{ route('reportes.verInforme', ['id' => $reporte->id]) }}"
+                        class="cursor-pointer rounded bg-green-500 px-10 py-2 text-sm text-white hover:bg-green-700"
+                    >
                         Ver informe del reporte
                     </a>
                 @endcanany
@@ -47,7 +46,8 @@
                 <div class="mb-4">
                     <!-- Fila 1 -->
                     <div
-                        class="mb-8 flex justify-center text-center text-3xl font-bold md:ml-12 md:justify-start md:text-start">
+                        class="mb-8 flex justify-center text-center text-3xl font-bold md:ml-12 md:justify-start md:text-start"
+                    >
                         <p>{{ $reporte->titulo }}</p>
                     </div>
                 </div>
@@ -74,9 +74,13 @@
                                 Lugar
                             </div>
                             <div class="ml-12 mt-2">
-                                <input type="text"
+                                <input
+                                    type="text"
                                     class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                    placeholder="Aula de ejemplo" value="{{ $reporte->aula?->nombre }}" disabled />
+                                    placeholder="Aula de ejemplo"
+                                    value="{{ $reporte->aula?->nombre }}"
+                                    disabled
+                                />
                             </div>
                         </div>
                     </div>
@@ -93,7 +97,8 @@
                                 <div>
                                     <table class="text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
                                         <thead
-                                            class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                                            class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
+                                        >
                                             <tr>
                                                 @if ($reporte->actividad->clase)
                                                     <th scope="col" class="px-6 py-3">Asignaturas</th>
@@ -136,9 +141,11 @@
                                                         {{ $reporte->actividad->asignaturas[0]->escuela->nombre }}
                                                     </x-table.td>
                                                     <x-table.td>
-                                                        {{ Carbon\Carbon::parse($reporte->actividad->hora_inicio)->format('h:i A') .
-                                                            ' - ' .
-                                                            Carbon\Carbon::parse($reporte->actividad->hora_fin)->format('h:i A') }}
+                                                        {{
+                                                            Carbon\Carbon::parse($reporte->actividad->hora_inicio)->format('h:i A') .
+                                                                ' - ' .
+                                                                Carbon\Carbon::parse($reporte->actividad->hora_fin)->format('h:i A')
+                                                        }}
                                                     </x-table.td>
                                                 @else
                                                     <x-table.td>
@@ -160,9 +167,11 @@
                                                         {{ Carbon\Carbon::parse($reporte->actividad->fecha)->format('d/m/Y') }}
                                                     </x-table.td>
                                                     <x-table.td>
-                                                        {{ Carbon\Carbon::parse($reporte->actividad->hora_inicio)->format('h:i A') .
-                                                            ' - ' .
-                                                            Carbon\Carbon::parse($reporte->actividad->hora_fin)->format('h:i A') }}
+                                                        {{
+                                                            Carbon\Carbon::parse($reporte->actividad->hora_inicio)->format('h:i A') .
+                                                                ' - ' .
+                                                                Carbon\Carbon::parse($reporte->actividad->hora_fin)->format('h:i A')
+                                                        }}
                                                     </x-table.td>
                                                 @endif
                                             </x-table.tr>
@@ -184,9 +193,13 @@
                                 Evidencia
                             </div>
                             <div class="ml-12 mt-2 w-auto">
-                                <button id="button" type="button" x-data
+                                <button
+                                    id="button"
+                                    type="button"
+                                    x-data
                                     x-on:click="$dispatch('open-modal', 'gallery-evidencia-modal')"
-                                    class="w-auto rounded-lg bg-red-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto">
+                                    class="w-auto rounded-lg bg-red-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 sm:w-auto"
+                                >
                                     Ver
                                 </button>
                                 @include('reportes.partials.modal-gallery')
@@ -231,7 +244,7 @@
                         </div>
                     </div>
                     {{-- Solo si no es estudiante --}}
-                    @if (!Auth::user()->es_estudiante)
+                    @if (! Auth::user()->es_estudiante)
                         <div class="mb-5 flex flex-row">
                             <div class="basis-1/3">
                                 <p class="font-semibold text-gray-500">Usuario</p>
@@ -244,6 +257,7 @@
                             </div>
                         </div>
                     @endif
+
                     <div class="mb-5 flex flex-row">
                         <div class="basis-1/3">
                             <p class="font-semibold text-gray-500">Categoría</p>
@@ -254,36 +268,51 @@
                             </p>
                         </div>
                     </div>
-                    @if ($reporte->no_procede === 1)
-                        <div class="mb-5 flex flex-row">
-                            <div class="basis-1/3">
-                                <p class="font-semibold text-gray-500">Detalle</p>
-                            </div>
-                            <div class="basis-2/3">
-                                <textarea id="txtNoProcede" name="txtNoProcede" required disabled="true" rows="2"
-                                    class="block p-2.5 w-full text-lg text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Detalla el motivo...">  {{ $reporte->descripcion_no_procede }}</textarea>
-                            </div>
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
 
         <x-general.divider />
+        @if ($reporte->no_procede === 1)
+            <x-reportes.detail.container>
+                <x-reportes.detail.header title="No procede" />
+                <x-reportes.detail.block>
+                    <x-reportes.detail.subheader subtitle="Justificación" icon="heroicon-o-archive-box-x-mark" />
+                    <x-reportes.detail.subheader-content>
+                        <div class="mb-5 flex flex-col">
+                            <textarea
+                                id="comentario"
+                                name="comentario"
+                                rows="8"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
+                                disabled
+                            >{{ $reporte->descripcion_no_procede }}</textarea>
+                        </div>
+                    </x-reportes.detail.subheader-content>
+                </x-reportes.detail.block>
+            </x-reportes.detail.container>
+        @endif
 
         @canany(['REPORTES_ACTUALIZAR_ESTADO', 'REPORTES_REVISION_SOLUCION'])
             @if (
-                ($reporte->no_procede === 0 && auth()->user()->can('REPORTES_ASIGNAR') && !$nombreEstadoActual) ||
-                    ($reporte->no_procede === 0 && $nombreEstadoActual))
+
+                ($reporte->no_procede === 0 &&
+                    auth()
+                        ->user()
+                        ->can('REPORTES_ASIGNAR') &&
+                    ! $nombreEstadoActual) ||
+                ($reporte->no_procede === 0 && $nombreEstadoActual)            )
                 <x-reportes.detail.container>
                     <x-reportes.detail.header title="Asignación" :required="!$nombreEstadoActual">
-                        @if (!$nombreEstadoActual)
+                        @if (! $nombreEstadoActual)
                             <div>
                                 @canany(['REPORTES_ASIGNAR'])
-                                    <button id="marcarNoProcede"
-                                        class="rounded bg-red-700 px-4 py-2 text-sm text-white hover:bg-red-500" x-data
-                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')">
+                                    <button
+                                        id="marcarNoProcede"
+                                        class="rounded bg-red-700 px-4 py-2 text-sm text-white hover:bg-red-500"
+                                        x-data
+                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-modal')"
+                                    >
                                         No Procede
                                     </button>
                                 @endcanany
@@ -291,35 +320,52 @@
                             @include('reportes.partials.modal-not-valid-report')
                         @endif
                     </x-reportes.detail.header>
-                </x-reportes.detail.container>
-                <form method="POST" action="{{ route('reportes.realizarAsignacion', ['id' => $reporte->id]) }}"
-                    enctype="multipart/form-data">
-                    @csrf
-                    <x-reportes.detail.container>
+                    {{-- </x-reportes.detail.container> --}}
+                    <form
+                        method="POST"
+                        action="{{ route('reportes.realizarAsignacion', ['id' => $reporte->id]) }}"
+                        enctype="multipart/form-data"
+                    >
+                        @csrf
+                        {{-- <x-reportes.detail.container> --}}
                         <x-reportes.detail.block>
-                            <x-reportes.detail.subheader subtitle="Entidad" icon="heroicon-o-briefcase"
-                                :required="!$nombreEstadoActual" />
+                            <x-reportes.detail.subheader
+                                subtitle="Entidad"
+                                icon="heroicon-o-briefcase"
+                                :required="!$nombreEstadoActual"
+                            />
                             <x-reportes.detail.subheader-content>
-                                @if (!$nombreEstadoActual)
-                                    <select id="entidad"
+                                @if (! $nombreEstadoActual)
+                                    <select
+                                        id="entidad"
                                         class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                        onchange="document.getElementById('id_entidad').value = this.value; location.href='?entidad=' + this.value;">
+                                        onchange="document.getElementById('id_entidad').value = this.value; location.href='?entidad=' + this.value;"
+                                    >
                                         <option value="" disabled selected>Selecciona una entidad</option>
                                         @foreach ($entidades as $entidad)
-                                            <option value="{{ $entidad->id }}"
-                                                {{ request()->get('entidad') == $entidad->id ? 'selected' : '' }}>
+                                            <option
+                                                value="{{ $entidad->id }}"
+                                                {{ request()->get('entidad') == $entidad->id ? 'selected' : '' }}
+                                            >
                                                 {{ $entidad->nombre }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @include('components.forms.input-error', [
-                                        'messages' => $errors->get('id_entidad'),
-                                    ])
-                                    <input type="hidden" id="id_entidad" name="id_entidad"
-                                        value="{{ request()->get('entidad') }}" />
+                                    @include(
+                                        'components.forms.input-error',
+                                        [
+                                            'messages' => $errors->get('id_entidad'),
+                                        ]
+                                    )
+                                    <input
+                                        type="hidden"
+                                        id="id_entidad"
+                                        name="id_entidad"
+                                        value="{{ request()->get('entidad') }}"
+                                    />
 
                                     <script>
-                                        document.addEventListener('DOMContentLoaded', function() {
+                                        document.addEventListener('DOMContentLoaded', function () {
                                             const urlParams = new URLSearchParams(window.location.search);
                                             const entidadId = urlParams.get('entidad');
                                             if (entidadId) {
@@ -328,13 +374,17 @@
                                         });
                                     </script>
                                 @else
-                                    <select id="entidad"
+                                    <select
+                                        id="entidad"
                                         class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                        disabled>
+                                        disabled
+                                    >
                                         <option value="" disabled selected>Selecciona una entidad</option>
                                         @foreach ($entidades as $entidad)
-                                            <option value="{{ $entidad->id }}"
-                                                {{ $reporte->accionesReporte->id_entidad_asignada == $entidad->id ? 'selected' : '' }}>
+                                            <option
+                                                value="{{ $entidad->id }}"
+                                                {{ $reporte->accionesReporte->id_entidad_asignada == $entidad->id ? 'selected' : '' }}
+                                            >
                                                 {{ $entidad->nombre }}
                                             </option>
                                         @endforeach
@@ -343,17 +393,29 @@
                             </x-reportes.detail.subheader-content>
                         </x-reportes.detail.block>
                         <x-reportes.detail.block>
-                            <x-reportes.detail.subheader subtitle="Subalternos" icon="heroicon-o-shopping-bag"
-                                :required="!$nombreEstadoActual" />
+                            <x-reportes.detail.subheader
+                                subtitle="Subalternos"
+                                icon="heroicon-o-shopping-bag"
+                                :required="!$nombreEstadoActual"
+                            />
                             <x-reportes.detail.subheader-content>
-                                @if (!$nombreEstadoActual)
-                                    <x-picklist.picklist :items="$empleadosPorEntidad" :asignados="[]" :empleados="true"
-                                        tituloDisponibles="Empleados disponibles" tituloAsignados="Empleados asignados"
+                                @if (! $nombreEstadoActual)
+                                    <x-picklist.picklist
+                                        :items="$empleadosPorEntidad"
+                                        :asignados="[]"
+                                        :empleados="true"
+                                        tituloDisponibles="Empleados disponibles"
+                                        tituloAsignados="Empleados asignados"
                                         placeholderDisponibles="Buscar empleados..."
-                                        placeholderAsignados="Buscar asignados..." inputName="id_empleados_puestos" />
-                                    @include('components.forms.input-error', [
-                                        'messages' => $errors->get('id_empleados_puestos'),
-                                    ])
+                                        placeholderAsignados="Buscar asignados..."
+                                        inputName="id_empleados_puestos"
+                                    />
+                                    @include(
+                                        'components.forms.input-error',
+                                        [
+                                            'messages' => $errors->get('id_empleados_puestos'),
+                                        ]
+                                    )
                                 @else
                                     <div class="mt-6 overflow-x-auto bg-white text-center shadow sm:rounded-lg">
                                         <div class="border-gray-200">
@@ -379,12 +441,18 @@
                             </x-reportes.detail.subheader-content>
                         </x-reportes.detail.block>
                         <x-reportes.detail.block>
-                            <x-reportes.detail.subheader subtitle="Supervisor" icon="heroicon-o-check-badge"
-                                :required="!$nombreEstadoActual" />
+                            <x-reportes.detail.subheader
+                                subtitle="Supervisor"
+                                icon="heroicon-o-check-badge"
+                                :required="!$nombreEstadoActual"
+                            />
                             <x-reportes.detail.subheader-content>
-                                @if (!$nombreEstadoActual)
-                                    <select id="supervisor" name="id_empleado_supervisor"
-                                        class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
+                                @if (! $nombreEstadoActual)
+                                    <select
+                                        id="supervisor"
+                                        name="id_empleado_supervisor"
+                                        class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    >
                                         <option value="" disabled selected>Selecciona un supervisor</option>
                                         @foreach ($supervisores as $supervisor)
                                             <option value="{{ $supervisor->id_empleado_puesto }}">
@@ -394,9 +462,12 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    @include('components.forms.input-error', [
-                                        'messages' => $errors->get('id_empleado_supervisor'),
-                                    ])
+                                    @include(
+                                        'components.forms.input-error',
+                                        [
+                                            'messages' => $errors->get('id_empleado_supervisor'),
+                                        ]
+                                    )
                                 @else
                                     <div class="overflow-x-auto">
                                         <div class="border-gray-200">
@@ -418,7 +489,7 @@
                         <x-reportes.detail.block>
                             <x-reportes.detail.subheader subtitle="Bienes" icon="heroicon-o-clipboard-document-list" />
                             <x-reportes.detail.subheader-content>
-                                @if (!$nombreEstadoActual)
+                                @if (! $nombreEstadoActual)
                                     <div class="pb-4">
                                         <span class="text-gray-600">
                                             Si el reporte involucra la reparación/mantenimiento de un bien de la
@@ -459,58 +530,88 @@
                             </x-reportes.detail.subheader-content>
                         </x-reportes.detail.block>
                         <x-reportes.detail.block>
-                            <x-reportes.detail.subheader subtitle="Comentario de administración"
-                                icon="heroicon-o-chat-bubble-bottom-center-text" />
+                            <x-reportes.detail.subheader
+                                subtitle="Comentario de administración"
+                                icon="heroicon-o-chat-bubble-bottom-center-text"
+                            />
                             <x-reportes.detail.subheader-content>
-                                @if (!$nombreEstadoActual)
-                                    <textarea id="comentario" name="comentario" rows="8" maxlength="255"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"></textarea>
-                                    @include('components.forms.input-error', [
-                                        'messages' => $errors->get('comentario'),
-                                    ])
-                                @else
-                                    <textarea id="comentario" name="comentario" rows="8"
+                                @if (! $nombreEstadoActual)
+                                    <textarea
+                                        id="comentario"
+                                        name="comentario"
+                                        rows="8"
+                                        maxlength="255"
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
-                                        disabled>{{ $reporte->accionesReporte->comentario }}</textarea>
+                                    ></textarea>
+                                    @include(
+                                        'components.forms.input-error',
+                                        [
+                                            'messages' => $errors->get('comentario'),
+                                        ]
+                                    )
+                                @else
+                                    <textarea
+                                        id="comentario"
+                                        name="comentario"
+                                        rows="8"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
+                                        disabled
+                                    >{{ $reporte->accionesReporte->comentario }}</textarea
+                                    >
                                 @endif
                             </x-reportes.detail.subheader-content>
                         </x-reportes.detail.block>
                         <x-reportes.detail.block>
-                            <x-reportes.detail.subheader subtitle="Asignar categoria" icon="heroicon-o-tag"
-                                :required="!$nombreEstadoActual" />
+                            <x-reportes.detail.subheader
+                                subtitle="Asignar categoria"
+                                icon="heroicon-o-tag"
+                                :required="!$nombreEstadoActual"
+                            />
                             <x-reportes.detail.subheader-content>
-                                @if (!$nombreEstadoActual)
+                                @if (! $nombreEstadoActual)
                                     <div class="pb-4">
                                         <span class="text-gray-600">
                                             Asigna una categoría al reporte basado en el tiempo máximo de resolución que
                                             se espera
                                         </span>
                                     </div>
-                                    <select id="id_categoria_reporte"
-                                        onchange="actualizarDescripcionCategoria(this.value)" name="id_categoria_reporte"
-                                        class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
+                                    <select
+                                        id="id_categoria_reporte"
+                                        onchange="actualizarDescripcionCategoria(this.value)"
+                                        name="id_categoria_reporte"
+                                        class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    >
                                         <option value="" disabled selected>Seleccionar categoria</option>
                                         @foreach ($categoriasReporte as $categoria)
-                                            <option value="{{ $categoria->id }}"
-                                                {{ request()->get('id_categoria_reporte') == $categoria->id ? 'selected' : '' }}>
+                                            <option
+                                                value="{{ $categoria->id }}"
+                                                {{ request()->get('id_categoria_reporte') == $categoria->id ? 'selected' : '' }}
+                                            >
                                                 {{ $categoria->nombre . ' - (' . $categoria->tiempo_promedio . ' ' . $categoria->unidad_tiempo . ')' }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @include('components.forms.input-error', [
-                                        'messages' => $errors->get('id_categoria_reporte'),
-                                    ])
+                                    @include(
+                                        'components.forms.input-error',
+                                        [
+                                            'messages' => $errors->get('id_categoria_reporte'),
+                                        ]
+                                    )
                                     <div class="pb-4">
                                         <span id="dsp-ctg" class="text-sm text-gray-600"></span>
                                     </div>
                                 @else
-                                    <select id="entidad"
+                                    <select
+                                        id="entidad"
                                         class="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:outline-none focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                        disabled>
+                                        disabled
+                                    >
                                         <option value="" disabled>Selecciona una entidad</option>
                                         @foreach ($categoriasReporte as $categoria)
-                                            <option value="{{ $categoria->id }}"
-                                                {{ $reporte->accionesReporte->id_categoria_reporte == $categoria->id ? 'selected' : '' }}>
+                                            <option
+                                                value="{{ $categoria->id }}"
+                                                {{ $reporte->accionesReporte->id_categoria_reporte == $categoria->id ? 'selected' : '' }}
+                                            >
                                                 {{ $categoria->nombre }}
                                             </option>
                                         @endforeach
@@ -527,19 +628,21 @@
                                 </script>
                             </x-reportes.detail.subheader-content>
                         </x-reportes.detail.block>
-                    </x-reportes.detail.container>
 
-                    @if (!$nombreEstadoActual)
-                        <div class="mt-8 flex w-full flex-col justify-center lg:flex-row">
-                            @canany(['REPORTES_ASIGNAR'])
-                                <button id="enviarAsignacion"
-                                    class="rounded bg-escarlata-ues px-4 py-2 text-sm text-white hover:bg-red-700">
-                                    Enviar Asignación
-                                </button>
-                            @endcanany
-                        </div>
-                    @endif
-                </form>
+                        @if (! $nombreEstadoActual)
+                            <div class="mt-8 flex w-full flex-col justify-center lg:flex-row">
+                                @canany(['REPORTES_ASIGNAR'])
+                                    <button
+                                        id="enviarAsignacion"
+                                        class="rounded bg-escarlata-ues px-4 py-2 text-sm text-white hover:bg-red-700"
+                                    >
+                                        Enviar Asignación
+                                    </button>
+                                @endcanany
+                            </div>
+                        @endif
+                    </form>
+                </x-reportes.detail.container>
 
                 @if ($reporte->accionesReporte)
                     <x-general.divider />
@@ -550,9 +653,12 @@
                             @if ($updateAvailable)
                                 <div>
                                     @canany(['REPORTES_ACTUALIZAR_ESTADO'])
-                                        <button id="abrirActualizarSeguimiento"
+                                        <button
+                                            id="abrirActualizarSeguimiento"
                                             class="mb-4 flex items-center rounded bg-escarlata-ues px-4 py-2 text-sm text-white hover:bg-red-500"
-                                            x-data x-on:click="$dispatch('open-modal', 'actualizar-seguimiento-modal')">
+                                            x-data
+                                            x-on:click="$dispatch('open-modal', 'actualizar-seguimiento-modal')"
+                                        >
                                             <p class="mr-2">Actualizar</p>
                                             <x-heroicon-o-bell-alert class="h-6 w-6" />
                                         </button>
