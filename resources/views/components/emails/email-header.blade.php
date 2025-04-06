@@ -4,6 +4,6 @@
 ])
 
 <div class="header text-center">
-    <img src="{{ Vite::asset('resources/img/ues-logo.webp') }}" class="h-36" alt="logo"  />
+    <img src="{{ config('app.url') . '/assets/img/ues-logo.webp' }}" class="h-36" alt="logo"  />
     <h2 class="text-xl font-semibold text-gray-800">{{ $title }}</h2>
 </div>
