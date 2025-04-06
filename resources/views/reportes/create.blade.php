@@ -202,7 +202,7 @@
                     />
                     @include('components.forms.input-error', ['messages' => $errors->get('id_aula')])
                     <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="descripcion_hint">
-                        Pueda selecionar el lugar exacto o el más cercano.
+                        Puede selecionar el lugar exacto o el más cercano.
                     </div>
                 </div>
 
