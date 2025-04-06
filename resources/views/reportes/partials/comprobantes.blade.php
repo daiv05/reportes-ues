@@ -84,6 +84,7 @@
     const empty = document.getElementById('empty');
 
     let FILES = {};
+    let dataTransfer = new DataTransfer(); // CREAMOS un nuevo objeto DataTransfer para almacenar los archivos
 
     function addFile(target, file) {
         const objectURL = URL.createObjectURL(file);
@@ -113,12 +114,22 @@
     document.getElementById('button').onclick = () => hidden.click();
     hidden.onchange = (e) => {
         for (const file of e.target.files) {
-            const isImage = file.type.match('image.png|image.jpeg|image.jpg');
+            if (gallery.querySelectorAll('li:not(#empty)').length >= 5) { // Validamos si hay más de 5 archivos
+                noty('Solo se permiten 5 archivos', 'error');
+                return;
+            }
+            if (file.size > 10485760) { // Validamos el tamaño máximo de 10MB
+                noty('El tamaño máximo permitido es de 10MB', 'error');
+                return;
+            }
+            const isImage = file.type.match('image.png|image.jpeg|image.jpg'); // Validamos el tipo de archivo
             if (!isImage) {
                 noty('Solo se permiten imágenes en formato PNG, JPEG o JPG', 'error');
                 return;
             }
             addFile(gallery, file);
+            dataTransfer.items.add(file); // AÑADIMOS al DataTransfer
+            hidden.files = dataTransfer.files; // ACTUALIZAMOS el input con los archivos acumulados
         }
     };
 
@@ -159,6 +170,15 @@
             document.getElementById(ou).remove(ou);
             gallery.children.length === 1 && empty.classList.remove('hidden');
             delete FILES[ou];
+
+            // RECONSTRUIMOS el objeto DataTransfer sin el archivo eliminado
+            dataTransfer = new DataTransfer();
+            Object.values(FILES).forEach(file => dataTransfer.items.add(file));
+            hidden.files = dataTransfer.files;
+
+            if (Object.keys(FILES).length === 0) {
+                empty.classList.remove('hidden');
+            }
         }
     };
 </script>
